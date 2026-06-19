@@ -27,6 +27,7 @@ book/output/html/*
 book/output/pdf/*
 !book/output/pdf/
 !book/output/pdf/.gitkeep
+book/output/assets/*
 
 # OS/editor files
 .DS_Store
