@@ -16,7 +16,7 @@
 | LLM을 활용한 오류 해결 실습 | 30분 |
 | 연습 문제와 오류 해결 과제 | 60~90분 |
 
-기본 수업은 약 3시간을 기준으로 구성되어 있습니다. 개인 PC 환경 차이로 설치 오류를 해결하거나 심화 과제까지 수행하면 최대 5시간 정도가 필요할 수 있습니다.
+핵심 실습은 약 3시간 내외로 진행할 수 있습니다. 개인 PC 환경 차이로 설치 오류를 해결하거나 심화 과제까지 수행하면 4~5시간 정도가 필요할 수 있습니다.
 
 ## 1. 학습 목표
 
@@ -131,6 +131,8 @@ VS Code는 프로젝트 전체 폴더 구조를 확인하고, 실습 데이터, 
 
 특히 `data`, `notebooks`, `scripts`, `book`, `reports` 폴더의 역할을 이해하면 이후 실습과 프로젝트 제출을 더 안정적으로 진행할 수 있습니다.
 
+VS Code에서 Python 실습을 원활하게 진행하려면 확장 기능도 확인해야 합니다. 왼쪽 Extensions 메뉴에서 Microsoft가 제공하는 `Python` 확장과 `Jupyter` 확장을 설치합니다. 이 확장이 있어야 VS Code가 Python 인터프리터와 Notebook 커널을 더 쉽게 인식합니다.
+
 ### 3.4 강사 저장소와 개인 저장소의 차이
 
 수업에서 제공하는 강사 GitHub 저장소는 실습 원본 자료를 제공하는 저장소입니다. 강사 저장소에는 샘플 데이터 생성 코드, 기본 Notebook, 교재 원고, 공통 스크립트가 포함될 수 있습니다.
@@ -152,6 +154,15 @@ VS Code는 프로젝트 전체 폴더 구조를 확인하고, 실습 데이터, 
 | 포함 내용 | 기본 코드, 샘플 데이터 생성 스크립트, 교재 자료 | 수정한 Notebook, 과제, 보고서, 실험 코드 |
 | 제출 용도 | 직접 제출 대상 아님 | 과제 제출 및 포트폴리오용 |
 | 관리 주체 | 강사 | 학습자 |
+
+GitHub를 처음 사용하는 학습자는 다음 용어를 먼저 구분해 둡니다.
+
+| 용어 | 의미 |
+| --- | --- |
+| Repository | 코드와 문서를 저장하는 GitHub 저장소 |
+| Clone | GitHub 저장소를 내 PC로 내려받는 작업 |
+| Commit | 변경 내용을 하나의 기록으로 저장하는 작업 |
+| Push | 로컬 commit을 GitHub 원격 저장소에 업로드하는 작업 |
 
 ### 3.5 주요 도구 역할 비교
 
@@ -197,6 +208,8 @@ llm-data-analysis-course/
 
 `.venv` 폴더는 개인 PC에서만 필요한 실행 환경입니다. GitHub에 올리지 않습니다. 이미 `.gitignore`에 포함되어 있어야 합니다.
 
+`.gitignore`는 GitHub에 올리지 않을 파일과 폴더를 지정하는 설정 파일입니다. 예를 들어 `.venv`, `.env`, `__pycache__`, `.ipynb_checkpoints`처럼 개인 PC 환경이나 민감정보가 포함될 수 있는 파일은 `.gitignore`에 등록해 관리합니다.
+
 ### 3.8 주요 패키지 역할
 
 | 패키지 | 역할 |
@@ -224,6 +237,20 @@ LLM API를 사용할 때는 API Key가 필요할 수 있습니다. API Key는 �
 ```text
 GEMINI_API_KEY=your_gemini_api_key_here
 GEMINI_MODEL_NAME=gemini-2.0-flash-lite
+```
+
+실습에서는 `.env.example` 파일을 복사해 `.env` 파일을 만듭니다. `.env.example`은 어떤 항목이 필요한지 보여주는 예시이고, `.env`는 실제 수업용 환경값을 입력하는 개인 파일입니다. `.env` 파일은 절대 GitHub에 올리지 않습니다.
+
+Windows PowerShell에서는 다음처럼 복사할 수 있습니다.
+
+```powershell
+Copy-Item .env.example .env
+```
+
+macOS/Linux에서는 다음 명령을 사용할 수 있습니다.
+
+```bash
+cp .env.example .env
 ```
 
 보안 원칙은 다음과 같습니다.
@@ -259,6 +286,8 @@ GEMINI_MODEL_NAME=gemini-2.0-flash-lite
 
 실습 환경은 하나의 도구만으로 구성되지 않습니다. 강사 저장소에서 원본 자료를 확인하고, 본인 개인 저장소를 만든 뒤, VS Code에서 프로젝트를 열고, Python 가상환경에서 패키지를 실행하며, Jupyter Notebook에서 실습 결과를 확인하는 흐름으로 진행합니다.
 
+오류가 발생하면 먼저 어느 단계에서 문제가 생겼는지 구분합니다. 설치 오류인지, 가상환경 활성화 오류인지, 파일 경로 오류인지, GitHub 인증 오류인지 나누어 보면 해결이 쉬워집니다. LLM에게 질문할 때도 오류 메시지와 함께 현재 단계, 실행한 명령어, 작업 폴더를 함께 알려주면 더 정확한 도움을 받을 수 있습니다.
+
 <figure class="figure">
   <img src="../assets/images/ch02/ch02_python_jupyter_vscode_github.png" alt="Python/Jupyter/VS Code/GitHub 실습 환경 구성도">
   <figcaption>그림 2-4. Python/Jupyter/VS Code/GitHub 실습 환경 구성도</figcaption>
@@ -282,6 +311,8 @@ pip install -r requirements.txt
 python scripts/generate_sample_data.py
 jupyter notebook
 ```
+
+`requirements.txt`를 설치하기 전에 어떤 패키지가 들어 있는지 한 번 열어 보는 습관을 들이면 좋습니다. 이 파일은 수업 실습에 필요한 패키지 목록이며, 다른 사람이 같은 환경을 재현할 때도 사용합니다.
 
 각 명령어의 의미는 다음과 같습니다.
 
@@ -313,6 +344,8 @@ Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 
 `-Scope Process` 옵션은 현재 PowerShell 창에만 적용됩니다. 시스템 전체 설정을 바꾸는 것이 아니므로 수업 실습에서는 비교적 안전하게 사용할 수 있습니다. 그래도 명령어의 의미를 이해한 뒤 실행해야 합니다.
 
+PowerShell에서 계속 문제가 발생하면 명령 프롬프트(cmd)나 VS Code 터미널의 다른 셸을 사용할 수 있습니다. 터미널을 바꾼 뒤에는 가상환경 활성화 명령도 해당 셸에 맞게 다시 확인합니다.
+
 ### 5.2 macOS/Linux 기준 실습 명령어
 
 macOS 또는 Linux에서는 가상환경 활성화 명령어가 다릅니다.
@@ -330,6 +363,14 @@ Python 명령어가 `python`이 아니라 `python3`일 수 있습니다. 터미�
 ### 5.3 GitHub 저장소 준비하기
 
 수업에서 제공하는 강사 GitHub 저장소는 실습 원본 자료를 내려받기 위한 저장소입니다. 학습자는 강사 저장소를 직접 수정하는 것이 아니라, 본인 GitHub 계정에 별도의 개인 저장소를 만들어 실습을 진행합니다.
+
+먼저 Git과 GitHub 계정을 확인합니다. 터미널에서 다음 명령이 실행되면 Git이 설치된 상태입니다.
+
+```bash
+git --version
+```
+
+명령을 찾을 수 없다는 메시지가 나오면 Git을 설치한 뒤 VS Code나 터미널을 다시 시작합니다. GitHub 계정이 없다면 무료 계정을 만들고 이메일 인증을 완료해야 저장소를 만들 수 있습니다. 강사 GitHub 저장소 주소는 수업 오리엔테이션 자료 또는 LMS 공지에서 확인합니다.
 
 권장 방식은 두 가지입니다.
 
@@ -386,7 +427,29 @@ code .
 File → Open Folder → my-llm-data-analysis-course 선택
 ```
 
-### 5.5 샘플 데이터 생성 확인
+### 5.5 GitHub에 변경 내용 commit/push하기
+
+실습 중 수정한 Notebook, README, 보고서 파일은 본인 개인 저장소에 commit/push합니다. 기본 흐름은 다음과 같습니다.
+
+```bash
+git status
+git add .
+git commit -m "Add chapter 2 environment setup notes"
+git push
+```
+
+각 명령어의 의미는 다음과 같습니다.
+
+| 명령어 | 의미 |
+| --- | --- |
+| `git status` | 변경된 파일 목록 확인 |
+| `git add .` | 변경 파일을 commit 대상으로 추가 |
+| `git commit -m "메시지"` | 변경 내용을 하나의 기록으로 저장 |
+| `git push` | 로컬 commit을 GitHub 개인 저장소에 업로드 |
+
+push 후에는 GitHub 웹 화면에서 파일이 반영되었는지 확인합니다. 처음 push할 때 로그인이나 인증 화면이 나올 수 있습니다.
+
+### 5.6 샘플 데이터 생성 확인
 
 아래 명령을 실행하면 `data/raw` 폴더에 4개의 CSV 파일이 생성됩니다.
 
@@ -401,7 +464,7 @@ python scripts/generate_sample_data.py
 - `orders.csv`
 - `order_items.csv`
 
-### 5.6 Jupyter Notebook 환경 점검 코드
+### 5.7 Jupyter Notebook 환경 점검 코드
 
 Jupyter Notebook에서 아래 코드를 실행합니다. 이 코드는 Python 버전, 현재 작업 폴더, CSV 파일 존재 여부, `customers.csv` 로드 결과를 확인합니다.
 
@@ -430,6 +493,10 @@ customers = pd.read_csv(data_dir / "customers.csv")
 display(customers.head())
 print("customers shape:", customers.shape)
 ```
+
+`display()`는 Jupyter Notebook에서 표를 보기 좋게 출력하는 함수입니다. 일반 Python 파일이나 터미널에서는 `print(customers.head())`로 대체할 수 있습니다.
+
+Notebook 오른쪽 상단의 커널 이름도 확인합니다. 커널이 현재 프로젝트의 `.venv`를 사용하고 있어야 `requirements.txt`로 설치한 패키지를 인식할 수 있습니다. `.venv` 커널이 보이지 않으면 Python/Jupyter 확장이 설치되어 있는지 확인하고, VS Code나 Jupyter Notebook을 다시 시작합니다.
 
 만약 `FileNotFoundError`가 발생한다면 현재 Notebook의 작업 폴더가 예상과 다를 수 있습니다. 아래 코드를 실행해 어느 경로가 맞는지 확인합니다.
 
@@ -629,16 +696,22 @@ print(customers.shape)
 | 점검 항목 | 확인 |
 | --- | --- |
 | 강사 저장소와 본인 개인 저장소의 차이를 이해했는가? | □ |
+| Git이 설치되어 있고 `git --version`을 확인했는가? | □ |
+| GitHub 계정을 만들고 이메일 인증을 완료했는가? | □ |
 | 본인 개인 GitHub 저장소를 생성했는가? | □ |
 | 개인 저장소를 로컬 PC에 내려받았는가? | □ |
 | 프로젝트 폴더를 VS Code에서 열었는가? | □ |
+| VS Code에 Python/Jupyter 확장을 설치했는가? | □ |
 | `.venv` 가상환경을 생성했는가? | □ |
 | 가상환경을 활성화했는가? | □ |
 | `requirements.txt` 설치를 완료했는가? | □ |
 | Jupyter Notebook을 실행할 수 있는가? | □ |
+| Notebook 커널이 프로젝트 `.venv`를 사용하고 있는가? | □ |
 | `data/raw` 폴더에 CSV 파일이 생성되었는가? | □ |
 | pandas로 CSV 파일을 불러올 수 있는가? | □ |
+| `.env.example`을 복사해 `.env` 파일을 만들었는가? | □ |
 | `.env` 파일이 GitHub에 올라가지 않도록 설정했는가? | □ |
+| `.gitignore`가 `.venv`, `.env`, 캐시 폴더를 제외하는지 확인했는가? | □ |
 | API Key를 코드나 프롬프트에 직접 노출하지 않았는가? | □ |
 | 실습 결과를 본인 저장소에 commit/push할 수 있는가? | □ |
 | 오류 발생 시 작업 폴더와 가상환경을 먼저 확인했는가? | □ |
@@ -708,5 +781,20 @@ Python은 분석 코드를 실행하는 언어이고, Jupyter Notebook은 코드
 샘플 데이터는 `scripts/generate_sample_data.py`로 생성하며, `data/raw` 폴더에 저장됩니다. Jupyter Notebook에서 CSV 파일을 불러올 때 오류가 발생하면 먼저 현재 작업 폴더와 파일 경로를 확인해야 합니다.
 
 LLM은 설치 오류, 파일 경로 오류, 가상환경 개념 이해를 도와줄 수 있습니다. 그러나 API Key, 비밀번호, 토큰, 개인정보를 프롬프트에 포함해서는 안 됩니다. LLM이 제안한 명령어도 실행 전에 의미를 확인해야 합니다.
+
+### 이 장에서 사용한 주요 용어
+
+| 용어 | 설명 |
+| --- | --- |
+| 가상환경 | 프로젝트별로 독립적인 Python 실행 환경을 만드는 기능 |
+| `.venv` | 이번 교재에서 사용하는 가상환경 폴더 이름 |
+| `requirements.txt` | 설치해야 할 Python 패키지 목록 |
+| `.env` | API Key 같은 개인 환경값을 저장하는 파일 |
+| `.env.example` | `.env`에 어떤 항목이 필요한지 보여주는 예시 파일 |
+| `.gitignore` | GitHub에 올리지 않을 파일과 폴더를 지정하는 설정 파일 |
+| 커널 | Jupyter Notebook이 코드를 실행할 때 사용하는 Python 환경 |
+| clone | GitHub 저장소를 로컬 PC로 내려받는 작업 |
+| commit | 변경 내용을 Git 기록으로 저장하는 작업 |
+| push | 로컬 commit을 GitHub 원격 저장소에 업로드하는 작업 |
 
 다음 장에서는 생성한 샘플 CSV 파일을 본격적으로 불러오고, 행과 열, 컬럼명, 데이터 타입, 결측치 여부를 확인하면서 데이터 구조를 파악합니다.
