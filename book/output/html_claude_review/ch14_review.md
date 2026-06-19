@@ -3,38 +3,35 @@
 > **대상 독자**: 파이썬 기초 경험이 있는 비전공자, 데이터 분석 기본 개념 보유 학생  
 > **검토 기준**: 한 학기 강의 교재로서 독립적 학습 가능 여부  
 > **작성일**: 2026-06-19  
-> **검토 파일**: `book/chapters/ch14_airflow_pipeline.md`
+> **검토 파일**: `book/chapters/ch14_airflow_pipeline.md`  
+> **상태**: GPT 타당성 재검토 반영본
 
 ---
 
-## ⚠️ 긴급 빌드 오류 — ch14 HTML 파일 내용 오류
+## 검토 지침
 
-**현상**  
-`book/output/html/ch14_airflow_pipeline.html` 파일을 열면 ch14 Airflow 강의 내용이 아닌 **ch09 HTML 검수 요청 프롬프트**가 그대로 들어 있다:
-
-```
-첨부된 ch09_llm_prompt_analysis.html, ch09_llm_prompt_analysis.md, 
-ch09_llm_prompt_analysis_images.md를 기준으로 Chapter 9 HTML 파일을 최종 검수하고 보완해 주세요.
-```
-
-이는 `scripts/build_book_html.py` 실행 시 ch14 소스가 아닌 잘못된 파일이 입력으로 사용되었거나, 이전 빌드 결과가 덮어쓰여졌음을 의미한다.
-
-**즉각 조치 필요**  
-```bash
-# HTML 재빌드
-python scripts/build_book_html.py
-# 또는 ch14만 개별 재빌드
-```
-재빌드 후 `ch14_airflow_pipeline.html`의 `<title>` 태그가 "14장 Airflow 기반 데이터 분석 파이프라인"인지 확인한다.
-
-이하 검토는 **Markdown 소스 `ch14_airflow_pipeline.md` 기준**으로 작성되었다.
+**[필수 수정]** = 실행 오류가 발생하거나 학습 흐름에 직접 혼란을 주는 항목  
+**[보완 권장]** = 수정하면 실습 안정성 또는 학습 효과가 높아지는 항목  
+**[참고/선택]** = 강의 운영 방식에 따라 선택적으로 반영할 수 있는 항목  
+**[반영 제외]** = 현재 원문 기준으로 사실관계가 맞지 않거나 필수 오류로 보기 어려운 항목
 
 ---
 
-## 검토 지침 (Codex Prompt Format)
+## 0. GPT 타당성 재검토 결과 요약
 
-**[필수 수정]** = 학습에 직접적 혼란을 야기하는 항목  
-**[보완 권장]** = 추가 시 학습 효과가 크게 향상되는 항목
+| Claude 지적 | 재검토 판단 | 조정 결과 |
+|---|---|---|
+| `book/output/html/ch14_airflow_pipeline.html`에 ch09 내용이 있다는 긴급 오류 | 현재 저장소에서 해당 경로는 확인되지 않으며, `book/chapters/ch14_airflow_pipeline.html`은 ch14 제목으로 정상 생성되어 있음 | 긴급 오류에서 제외. 빌드 산출물 경로 정책 확인 항목으로 조정 |
+| 수업 시간 합계와 본문 불일치 | 표 합계와 본문 기준 시간이 실제로 맞지 않음 | 필수 수정 유지 |
+| 전처리 스크립트 `price` 컬럼 참조 | `order_items` 예시 구조와 맞지 않아 `KeyError` 가능성이 큼 | 필수 수정 유지 |
+| 분석 스크립트 `price` 컬럼 참조 | `unit_price` 또는 `line_total` 사용이 더 일관적임 | 필수 수정 유지 |
+| `to_csv()` 인코딩 없음 | Windows Excel 친화성 보완에는 타당하나 실행 오류는 아님 | 보완 권장으로 하향 |
+| DAG의 `/opt/airflow` 경로 하드코딩 | 원문에 “자신의 Airflow 실행 환경에 맞게 조정” 안내가 이미 있음 | 필수에서 보완 권장으로 하향 |
+| `write_text(encoding="utf-8")` BOM 없음 | Markdown 파일은 UTF-8 사용이 일반적이며 BOM 강제는 필수 아님 | 참고/선택으로 하향 |
+| Notebook 파일 언급 없음 | ch14는 Airflow DAG와 스크립트 중심 실습이므로 Notebook 미사용 자체는 오류가 아님 | 보완 권장으로 하향 |
+| `__file__` Notebook 실행 불가 | 스크립트형 실습이면 자연스럽지만 초보자 혼동 방지를 위해 안내하면 좋음 | 보완 권장 유지 |
+| Airflow 설치 방법 미안내 | 실습 진입 장벽에 영향이 큼 | 보완 권장 중 높은 우선순위 유지 |
+| 한글 폰트, 취소 주문, 채점 기준, 용어 정리 | 학습 품질 개선에는 유효하나 실행 필수 오류는 아님 | 참고/선택 또는 보완 권장으로 유지 |
 
 ---
 
@@ -42,154 +39,98 @@ python scripts/build_book_html.py
 
 ---
 
-### [1-1] 수업 시간 합계와 본문 불일치 — [수업 시간 구성 표]
+### [1-1] 수업 시간 합계와 본문 불일치 — [수업 시간 구성]
 
-**문제**  
-수업 시간 구성 표 합계 (연습 문제 60~90분 제외):  
-30+40+35+30+45+45+40+30 = **295분 = 4시간 55분**  
-본문: "기본 수업은 약 3시간을 기준으로 구성되어 있습니다"  
-약 2시간 격차. ch01~ch14 전 장 반복 문제.
+**판단**: 필수 수정 유지
 
-**수정 지시**  
-방법 A: 각 항목 시간을 줄여 합계 180분 이내로 재편성한다.  
-방법 B: 본문을 "기본 수업은 약 5시간을 기준으로 구성되어 있습니다"로 수정한다.
+**근거**  
+수업 시간 구성 표에서 연습 문제 60~90분을 제외해도 다음 합계가 나온다.
+
+- 30 + 40 + 35 + 30 + 45 + 45 + 40 + 30 = 295분
+- 295분 = 4시간 55분
+
+그런데 본문에는 “기본 수업은 약 3시간을 기준으로 구성되어 있습니다”라고 되어 있다. Airflow 설치, DAG 실행, 로그 확인까지 포함되는 장의 특성을 고려하면 3시간 기준과 표 구성이 맞지 않는다.
+
+**수정 방향**
+
+- 방법 A: 본문을 “기본 수업은 약 5시간을 기준으로 구성되어 있습니다”로 수정한다.
+- 방법 B: 표의 각 항목 시간을 줄여 180분 내외로 재구성한다.
+- 방법 C: “3시간 압축 운영안”과 “5시간 실습 확장안”을 분리한다.
+
+**권장**  
+ch14는 Airflow 실행 환경 준비가 포함되므로 방법 C가 가장 적절하다.
 
 ---
 
 ### [1-2] 전처리 스크립트에서 `price` 컬럼 참조 오류 — [섹션 7.1]
 
+**판단**: 필수 수정 유지
+
 **문제**  
-섹션 7.1 전처리 스크립트에서:
+전처리 스크립트에서 다음 코드가 사용된다.
+
 ```python
 order_items = order_items.dropna(subset=["order_id", "product_id", "quantity", "price"])
 ```
-실제 `order_items_clean.csv` / `order_items.csv`의 컬럼은 `order_id, product_id, quantity, unit_price, line_total`이다. `price` 컬럼은 `products` 테이블에 있으므로 `KeyError`가 발생한다.
 
-**수정 지시**  
+그러나 기존 장의 주문 상세 데이터 구조는 일반적으로 다음 컬럼을 사용한다.
+
+```text
+order_id, product_id, quantity, unit_price, line_total
+```
+
+`price`는 상품 테이블의 가격 컬럼으로 사용되는 경우가 많고, `order_items`에서는 `unit_price` 또는 `line_total`을 기준으로 처리하는 편이 자연스럽다. 이 상태로 실행하면 `KeyError`가 발생할 가능성이 높다.
+
+**수정 방향**
+
 ```python
-# 수정 전
-order_items = order_items.dropna(subset=["order_id", "product_id", "quantity", "price"])
+order_items = order_items.dropna(
+    subset=["order_id", "product_id", "quantity", "unit_price"]
+)
+```
 
-# 수정 후
-order_items = order_items.dropna(subset=["order_id", "product_id", "quantity", "unit_price"])
+추가로 `line_total`이 없을 때만 계산하도록 안내하면 더 안정적이다.
+
+```python
+if "line_total" not in order_items.columns:
+    order_items["line_total"] = order_items["quantity"] * order_items["unit_price"]
 ```
 
 ---
 
 ### [1-3] 분석 스크립트에서 `price` 컬럼 참조 오류 — [섹션 7.2]
 
+**판단**: 필수 수정 유지
+
 **문제**  
-섹션 7.2 분석 스크립트에서:
+분석 스크립트에서 다음 코드가 사용된다.
+
 ```python
 order_items["sales"] = order_items["quantity"] * order_items["price"]
 ```
-`order_items`에는 `price` 컬럼이 없다. `unit_price` 컬럼을 사용해야 하며, 이미 전처리된 데이터라면 `line_total`을 그대로 사용하는 것이 더 일관성 있다.
 
-**수정 지시**  
-선택 A — `unit_price` 사용:
+`order_items_clean.csv`가 `unit_price` 또는 `line_total` 구조라면 `price` 컬럼이 없어 오류가 발생한다.
+
+**수정 방향**
+
+가장 단순한 수정은 다음과 같다.
+
 ```python
 order_items["sales"] = order_items["quantity"] * order_items["unit_price"]
 ```
 
-선택 B — 이미 계산된 `line_total` 사용:
-```python
-# line_total이 이미 quantity * unit_price 결과이므로 바로 사용
-# order_items["sales"] = order_items["line_total"]  # 컬럼 이름만 달리함
-daily_sales = (
-    merged.assign(order_day=merged["order_date"].dt.date)
-    .groupby("order_day", as_index=False)["line_total"]
-    .sum()
-    .sort_values("order_day")
-)
-```
-
-선택 B가 전처리된 데이터의 `line_total`을 재계산 없이 활용하므로 더 일관성 있다.
-
----
-
-### [1-4] `to_csv()` 저장에 인코딩 없음 — [섹션 7.1, 7.2]
-
-**문제**  
-섹션 7.1에서 4개 CSV 저장(`orders_clean.csv`, `order_items_clean.csv`, `products_clean.csv`, `customers_clean.csv`), 섹션 7.2에서 `ch14_daily_sales.csv` 저장 — 모두 `encoding` 없음. 한글 데이터가 포함된 경우 Windows Excel에서 깨진다.
-
-**수정 지시**  
-```python
-# 섹션 7.1
-orders.to_csv(PROCESSED_DIR / "orders_clean.csv", index=False, encoding="utf-8-sig")
-order_items.to_csv(PROCESSED_DIR / "order_items_clean.csv", index=False, encoding="utf-8-sig")
-products.to_csv(PROCESSED_DIR / "products_clean.csv", index=False, encoding="utf-8-sig")
-customers.to_csv(PROCESSED_DIR / "customers_clean.csv", index=False, encoding="utf-8-sig")
-
-# 섹션 7.2
-daily_sales.to_csv(REPORT_DIR / "ch14_daily_sales.csv", index=False, encoding="utf-8-sig")
-```
-
----
-
-### [1-5] DAG에서 `/opt/airflow` 경로 하드코딩 — [섹션 7.5]
-
-**문제**  
-DAG 파일에서 경로를 다음처럼 하드코딩했다:
-```python
-BASE_DIR = Path("/opt/airflow")
-```
-Docker 컨테이너 기반 Airflow 환경(공식 이미지 기본 경로)을 전제로 하는데, 다른 설정의 Docker 이미지나 로컬 Airflow 설치 환경에서는 경로가 다를 수 있다. 학생이 경로를 변경해야 함을 설명하지 않는다.
-
-**수정 지시**  
-코드 앞에 다음 주석을 추가한다:
+다만 전처리 단계에서 이미 `line_total`을 생성했다면 다음 방식이 더 일관적이다.
 
 ```python
-# ⚠️ BASE_DIR은 Airflow 컨테이너의 마운트 경로에 맞게 수정해야 합니다.
-# Docker Compose 환경에서 volumes에 설정한 마운트 경로를 사용하세요.
-# 예: docker-compose.yml에서 - ./:/opt/airflow 로 마운트한 경우 Path("/opt/airflow")
-# 예: Windows 환경에서 직접 설치한 경우 Path("C:/Users/계정명/airflow")
-BASE_DIR = Path("/opt/airflow")
+order_items["sales"] = order_items["line_total"]
 ```
 
-또한 `automation/airflow/docker-compose.yml`이 workspace에 이미 존재하므로, 교재 섹션 5.2에서 이 파일을 명시적으로 참조한다.
+**권장**  
+학생 혼동을 줄이려면 ch14 전체에서 매출 기준 컬럼명을 하나로 통일한다.
 
----
-
-### [1-6] 보고서 `write_text(encoding="utf-8")` — BOM 없음 — [섹션 7.4]
-
-**문제**  
-섹션 7.4 보고서 생성 스크립트에서:
-```python
-(REPORT_DIR / "ch14_airflow_report.md").write_text(report_text, encoding="utf-8")
-```
-ch12 [1-7], ch13 [1-4]와 동일한 문제.
-
-**수정 지시**  
-```python
-# 수정 전
-(REPORT_DIR / "ch14_airflow_report.md").write_text(report_text, encoding="utf-8")
-
-# 수정 후
-(REPORT_DIR / "ch14_airflow_report.md").write_text(report_text, encoding="utf-8-sig")
-```
-
----
-
-### [1-7] Notebook 파일 언급 없음 — [섹션 전체]
-
-**문제**  
-`notebooks/ch14_airflow_pipeline.ipynb`가 workspace에 존재하지만, ch14 강의안에서 이 Notebook을 언급하지 않는다. 대신 `scripts/ch14_*.py`와 `dags/` 파일 중심으로 실습이 진행된다. 
-
-다른 장들은 "이번 장의 전체 실습은 다음 Notebook에서 진행합니다"라고 명시하는데, ch14만 Notebook 언급이 없어 학생이 ch14 Notebook을 어떻게 활용해야 하는지 알 수 없다.
-
-**수정 지시**  
-두 가지 선택지:
-
-선택 A — Notebook을 실습 탐색 용도로 명시:
-```markdown
-이번 장의 개념 탐색과 스크립트 테스트는 다음 Notebook에서 진행할 수 있습니다.
-
-notebooks/ch14_airflow_pipeline.ipynb
-
-단, 실제 Airflow DAG 실행은 Notebook이 아닌 Airflow 환경에서 진행합니다.
-```
-
-선택 B — Notebook 파일을 ch14 실습과 무관하게 처리하고, `notebooks/` 폴더 설명에 "ch14는 Airflow 환경 기반 실습이므로 Notebook 대신 scripts/와 dags/ 파일을 사용합니다"를 명시한다.
+- 원본 주문 상세: `unit_price`, `quantity`
+- 전처리 산출: `line_total`
+- 분석 산출: `sales`
 
 ---
 
@@ -197,164 +138,185 @@ notebooks/ch14_airflow_pipeline.ipynb
 
 ---
 
-### [2-1] `__file__` 사용 — Notebook에서 실행 불가 — [섹션 7.1~7.4]
+### [2-1] `to_csv()` 저장 시 인코딩 안내 — [섹션 7.1, 7.2]
 
-**문제**  
-섹션 7.1~7.4의 Python 스크립트에서 `Path(__file__).resolve().parents[1]`로 `BASE_DIR`을 설정한다. 이 코드는 `.py` 파일로 실행할 때는 정상 동작하지만, Notebook에서 직접 셀로 실행하면 `NameError: name '__file__' is not defined`가 발생한다.
+**판단**: 필수에서 보완 권장으로 하향
 
-**보완 지시**  
-스크립트 파일 앞에 다음 주석을 추가한다:
+**이유**  
+`encoding="utf-8-sig"`는 Windows Excel에서 한글 CSV를 열 때 유용하지만, pandas 실행 자체를 막는 오류는 아니다. 따라서 “필수 수정”보다는 “Windows Excel 사용자를 위한 보완”으로 보는 것이 적절하다.
+
+**보완 방향**
 
 ```python
-# 이 스크립트는 python scripts/ch14_preprocessing.py 명령으로 실행하세요.
-# Notebook 셀에서 직접 실행하면 __file__이 정의되지 않아 오류가 발생합니다.
-# Notebook에서 테스트하려면 BASE_DIR을 직접 설정하세요:
-# BASE_DIR = Path("..")  # notebooks/ 폴더에서 실행 시
+orders.to_csv(PROCESSED_DIR / "orders_clean.csv", index=False, encoding="utf-8-sig")
+order_items.to_csv(PROCESSED_DIR / "order_items_clean.csv", index=False, encoding="utf-8-sig")
+products.to_csv(PROCESSED_DIR / "products_clean.csv", index=False, encoding="utf-8-sig")
+customers.to_csv(PROCESSED_DIR / "customers_clean.csv", index=False, encoding="utf-8-sig")
+daily_sales.to_csv(REPORT_DIR / "ch14_daily_sales.csv", index=False, encoding="utf-8-sig")
 ```
 
 ---
 
-### [2-2] Airflow 설치 방법 미안내 — [섹션 5.2]
+### [2-2] DAG의 `/opt/airflow` 경로 하드코딩 설명 보완 — [섹션 7.5]
 
-**문제**  
-섹션 5.2에서 Docker 기반 Airflow 환경이나 강사 준비 환경을 언급하지만, 실제 설치 방법 안내가 없다. workspace에 이미 `automation/airflow/docker-compose.yml`이 존재하는데 교재에서 이를 참조하지 않는다.
+**판단**: 필수에서 보완 권장으로 하향
 
-**보완 지시**  
-섹션 5.2에 다음 안내를 추가한다:
+**이유**  
+원문에는 “학습자는 경로를 자신의 Airflow 실행 환경에 맞게 조정해야 합니다”라는 설명이 이미 있다. 따라서 완전 누락은 아니다. 다만 초보자에게는 `/opt/airflow`가 Docker 컨테이너 내부 경로라는 점이 낯설 수 있으므로 주석을 추가하면 좋다.
+
+**보완 방향**
+
+```python
+# BASE_DIR은 Airflow 컨테이너 내부의 작업 경로입니다.
+# Docker Compose에서 현재 프로젝트 폴더를 /opt/airflow로 마운트한 경우에 사용합니다.
+# 자신의 환경에서 마운트 경로가 다르면 이 값을 수정해야 합니다.
+BASE_DIR = Path("/opt/airflow")
+```
+
+---
+
+### [2-3] ch14 Notebook 활용 방식 안내 — [전체]
+
+**판단**: 필수에서 보완 권장으로 하향
+
+**이유**  
+ch14는 Notebook 중심 장이 아니라 Airflow DAG와 독립 Python 스크립트 중심 장이다. 따라서 Notebook 언급이 없다고 해서 반드시 오류는 아니다. 다만 저장소에 `notebooks/ch14_airflow_pipeline.ipynb`가 있다면, 학생이 어떤 용도로 사용해야 하는지 한 줄 안내가 있으면 좋다.
+
+**보완 방향**
 
 ```markdown
-## Airflow Docker 환경 실행
-
-이 교재에서는 Docker Compose를 사용해 Airflow를 실행합니다.
-
-```bash
-# automation/airflow/ 폴더로 이동
-cd automation/airflow
-
-# Airflow 초기화 (최초 1회)
-docker compose up airflow-init
-
-# Airflow 시작
-docker compose up -d
-
-# Airflow Web UI 접속
-# http://localhost:8080 (기본 계정: airflow / airflow)
-```
-
-📁 DAG 파일 위치: `automation/airflow/dags/`
-📁 이 폴더에 `ch14_analysis_pipeline_dag.py`를 복사하면 Airflow가 자동으로 인식합니다.
+이번 장은 Airflow DAG와 Python 스크립트 중심 실습입니다.
+`notebooks/ch14_airflow_pipeline.ipynb`는 개념 확인과 코드 조각 테스트용으로 사용할 수 있으며,
+실제 DAG 실행은 Airflow 환경에서 진행합니다.
 ```
 
 ---
 
-### [2-3] 시각화 스크립트에서 한글 폰트 미설정 — [섹션 7.3]
+### [2-4] Airflow 실행 환경 안내 보완 — [섹션 5.2]
 
-**문제**  
-섹션 7.3에서 그래프 제목이 영문("Daily Sales")으로 작성되어 있다. 한글 제목으로 변경하면 ch07에서 지적한 한글 폰트 문제(`Malgun Gothic` 하드코딩)가 발생할 수 있다. 현재 영문으로 두는 것은 실용적이지만, 교재 전반에서 한글 폰트 처리 방법을 일관되게 제시하지 않는다는 문제가 있다.
+**판단**: 보완 권장 유지, 우선순위 높음
 
-**보완 지시**  
-섹션 7.3 상단에 다음 안내를 추가한다:
+**이유**  
+Airflow는 pandas, matplotlib처럼 단순 `pip install`만으로 끝내기 어려운 경우가 많다. Docker Compose 기반 실습 환경을 제공한다면, 교재에서 해당 폴더와 실행 절차를 명확히 안내하는 것이 좋다.
 
-```python
-# 그래프 제목은 영문으로 설정합니다.
-# 한글 제목을 사용하려면 ch07에서 다룬 폰트 설정이 필요합니다.
-# Windows: plt.rc("font", family="Malgun Gothic")
-# macOS: plt.rc("font", family="AppleGothic")
+**보완 방향**
+
+```markdown
+이 교재에서는 Docker Compose 기반 Airflow 환경 사용을 권장합니다.
+실습 환경이 제공된 경우 `automation/airflow/` 폴더의 안내에 따라 Airflow를 실행합니다.
+
+DAG 파일은 Airflow의 `dags/` 폴더에 위치해야 하며,
+`ch14_analysis_pipeline_dag.py`를 해당 폴더에 배치하면 Web UI에서 확인할 수 있습니다.
 ```
 
 ---
 
-### [2-4] 취소 주문 처리 기준 언급 없음 — [섹션 7.1, 7.2]
+### [2-5] `__file__` 사용 코드의 실행 위치 안내 — [섹션 7.1~7.4]
 
-**문제**  
-ch06~ch13에서 반복 언급된 취소 주문 처리 기준이 ch14 분석 스크립트(섹션 7.2)에서도 없다. `daily_sales` 집계 시 `order_status = 'cancelled'` 필터링이 없으면 취소 주문도 매출로 계산된다.
+**판단**: 보완 권장 유지
 
-**보완 지시**  
-섹션 7.2 `daily_sales` 집계 전에 다음 코드를 추가한다:
+**이유**  
+`Path(__file__).resolve().parents[1]`는 `.py` 파일 실행에는 적절하지만, Notebook 셀에서 그대로 실행하면 `__file__`이 정의되지 않아 오류가 발생한다. ch14가 스크립트 중심 장이라는 점을 명확히 안내하면 된다.
+
+**보완 방향**
 
 ```python
-# 주문 상태 확인
+# 이 코드는 Notebook 셀이 아니라 .py 스크립트 파일로 실행하는 것을 전제로 합니다.
+# 예: python scripts/ch14_preprocessing.py
+BASE_DIR = Path(__file__).resolve().parents[1]
+```
+
+---
+
+### [2-6] 취소 주문 처리 기준 안내 — [섹션 7.2]
+
+**판단**: 보완 권장 유지
+
+**이유**  
+취소 주문 포함 여부는 분석 목적에 따라 달라진다. 모든 장에서 무조건 제외해야 하는 것은 아니지만, 매출 분석에서는 기준을 명시하는 것이 좋다.
+
+**보완 방향**
+
+```python
 print("주문 상태 분포:")
 print(orders["order_status"].value_counts())
 
-# 매출 분석에 포함할 주문 상태를 결정합니다.
-# 취소 주문을 제외하려면 아래 줄의 주석을 해제하세요.
+# 매출 분석에서 취소 주문을 제외하려면 아래 조건을 사용합니다.
 # orders = orders[orders["order_status"] != "cancelled"]
 ```
 
 ---
 
-### [2-5] 연습 문제 힌트/채점 기준 없음 — [섹션 11]
-
-**문제**  
-ch01~ch13과 동일. ch14는 기본 문제(11.1), 실습 문제(11.2), 심화 문제(11.3)로 3단계로 구분되어 있어 다른 장보다 잘 구조화되어 있다. 그러나 각 문제에 채점 기준이 없다.
-
-**보완 지시**  
-심화 문제 평가 기준 예시:
-
-```
-평가 기준 (Airflow 파이프라인 개선안):
-- 원본 데이터 없을 때 이후 Task 실행 방지 로직이 있는가? (20%)
-- 분석 결과 행 수 0 조건이 구현되었는가? (20%)
-- 결과 파일 검증 Task가 포함되었는가? (20%)
-- Make 연계 조건이 검증 통과 후에 연결되는가? (20%)
-- 로그 기록 및 운영 문서 작성이 포함되었는가? (20%)
-```
+## 3. 참고/선택 보완 항목
 
 ---
 
-### [2-6] 핵심 용어 정리 섹션 부재 — [전체 구조]
+### [3-1] `write_text(encoding="utf-8")`를 `utf-8-sig`로 강제 변경
 
-**문제**  
-ch01~ch13과 동일. ch14 신규 용어: DAG(Directed Acyclic Graph), Task, BashOperator, PythonOperator, Dependency, Schedule, catchup, retries, retry_delay, 파이프라인, 파이프라인 모니터링.
+**판단**: 참고/선택으로 하향
 
-**보완 지시**  
-섹션 12(정리) 이후에 "이 장에서 사용한 주요 용어" 표를 추가한다:
-
-| 용어 | 설명 |
-|------|------|
-| DAG | 유향 비순환 그래프. Airflow에서 전체 작업 흐름을 정의 |
-| Task | DAG 안의 개별 실행 단위 |
-| BashOperator | 셸 명령을 실행하는 Operator |
-| PythonOperator | Python 함수를 실행하는 Operator |
-| Dependency | Task 실행 순서를 정의하는 `>>` 연산자 |
-| Schedule | DAG 실행 주기 (`@daily`, cron 등) |
-| catchup | 과거 미실행 DAG 자동 실행 여부 |
-| retries | 실패 시 재시도 횟수 |
-| retry_delay | 재시도 전 대기 시간 |
+**이유**  
+Markdown 파일은 UTF-8 저장이 일반적이며, BOM이 반드시 필요한 것은 아니다. Excel에서 직접 여는 CSV와 달리 Markdown 보고서 파일은 `utf-8` 유지가 더 자연스럽다. Windows 메모장 호환성까지 고려할 때만 `utf-8-sig`를 선택하면 된다.
 
 ---
 
-## 3. 우선순위 요약
+### [3-2] 시각화 스크립트 한글 폰트 안내
 
-| 우선순위 | 항목 | 분류 |
-|---------|------|------|
-| 🚨 긴급 | [빌드 오류] `ch14_airflow_pipeline.html`에 ch09 내용이 들어 있음 | 즉각 수정 |
-| 🔴 높음 | [1-2] 전처리 스크립트 `price` 컬럼 참조 오류 → `KeyError` 발생 | 필수 수정 |
-| 🔴 높음 | [1-3] 분석 스크립트 `price` 컬럼 참조 오류 → `KeyError` 발생 | 필수 수정 |
-| 🟠 중간 | [1-1] 수업 시간 합계 격차 (295분 vs "약 3시간") | 필수 수정 |
-| 🟠 중간 | [1-4] `to_csv()` 인코딩 5회 누락 | 필수 수정 |
-| 🟠 중간 | [1-5] DAG 경로 하드코딩 미설명 | 필수 수정 |
-| 🟠 중간 | [1-7] Notebook 파일 활용 방법 미안내 | 필수 수정 |
-| 🟡 낮음 | [1-6] `write_text(encoding="utf-8")` BOM 없음 (반복) | 필수 수정 |
-| 🔴 높음 | [2-2] Airflow Docker 환경 설치 방법 미안내 | 보완 권장 |
-| 🟢 권장 | [2-1] `__file__` 사용 — Notebook 실행 불가 경고 없음 | 보완 권장 |
-| 🟢 권장 | [2-4] 취소 주문 처리 기준 없음 (ch06~ch14 반복) | 보완 권장 |
-| 🟢 참고 | [2-3] 시각화 한글 폰트 미설정 | 보완 권장 |
-| 🟢 참고 | [2-5] 연습 문제 채점 기준 없음 | 보완 권장 |
-| 🟢 참고 | [2-6] 핵심 용어 정리 섹션 부재 | 보완 권장 |
+**판단**: 참고/선택 유지
+
+**이유**  
+현재 그래프 제목과 축 라벨이 영문이므로 한글 폰트 설정이 없어도 실행 오류가 발생하지 않는다. 한글 제목으로 바꿀 경우에만 ch07의 폰트 설정 안내를 참고하도록 연결하면 충분하다.
 
 ---
 
-## 4. 전반적 평가
+### [3-3] 연습 문제 채점 기준 추가
 
-**잘 된 점**
-- 섹션 3.2의 DAG/Task/Operator/Dependency/Schedule 5개 개념을 표 하나로 명확히 정의한 것이 탁월하다.
-- 섹션 3.3의 Python 분석 스크립트 vs Airflow DAG 역할 분담 표가 ch13의 Python vs Make 역할 표와 유사한 구조로 일관성 있게 확장되었다.
-- 섹션 7.5 DAG 코드에서 `_check_input_files`와 `_validate_outputs` 함수를 PythonOperator에 연결해 검증 로직이 DAG 안에 직접 통합된 것이 실용적이다.
-- 섹션 7.5의 Task 의존성 `>>` 한 줄이 전체 파이프라인을 표현한 패턴(`check_input_files >> ... >> validate_outputs`)이 비전공자에게 Airflow 개념을 직관적으로 전달한다.
-- 연습 문제가 기본(11.1), 실습(11.2), 심화(11.3) 3단계로 구분된 것이 다른 장보다 잘 구조화되어 있다.
-- 섹션 9의 결과 해석 표에서 "Airflow UI의 DAG Runs, Graph, Log"를 구체적으로 참조한 것이 실습 후 확인 방법을 명확히 안내한다.
+**판단**: 참고/선택 유지
 
-**전체적 방향 제안**  
-ch14는 ch13에서 Make로 외부 앱 연계를 배운 학생이 더 강력한 파이프라인 도구인 Airflow로 자연스럽게 진화하는 구성이 잘 설계되어 있다. 가장 긴급한 두 가지 이슈는 **(1) HTML 빌드 오류** — 즉시 재빌드가 필요하다 **(2) `price` 컬럼 참조 오류** — 전처리/분석 스크립트 2개 모두에서 `KeyError`가 발생하므로 학생이 DAG를 실행하면 첫 실습부터 실패한다. 이 두 가지를 수정하면 ch14의 학습 경험이 크게 향상된다. `automation/airflow/docker-compose.yml`이 이미 workspace에 존재하므로 교재에서 명시적으로 참조하면 Airflow 설치 진입 장벽을 크게 낮출 수 있다.
+**이유**  
+ch14 연습 문제는 기본, 실습, 심화로 이미 구조화되어 있다. 채점 기준을 추가하면 과제 운영에는 도움이 되지만, 본문 실행 오류는 아니다.
+
+---
+
+### [3-4] 핵심 용어 정리 섹션 추가
+
+**판단**: 참고/선택 유지
+
+**이유**  
+DAG, Task, Operator, Dependency, Schedule은 본문 3.2에서 이미 표로 설명되어 있다. 별도 용어 정리 표는 복습용으로는 좋지만 필수 누락은 아니다.
+
+---
+
+### [3-5] `book/output/html/ch14_airflow_pipeline.html` 긴급 오류 지적
+
+**판단**: 현재 기준 반영 제외 또는 별도 빌드 산출물 확인
+
+**이유**  
+리뷰 원문은 `book/output/html/ch14_airflow_pipeline.html`에 ch09 내용이 들어 있다고 지적했으나, 현재 저장소에서는 해당 경로가 확인되지 않는다. 반면 `book/chapters/ch14_airflow_pipeline.html`은 ch14 제목으로 정상 생성되어 있다.
+
+따라서 이 항목은 현재 `ch14_review.md`의 필수 수정 사항으로 유지하기보다, 빌드 스크립트가 실제로 어느 경로에 HTML을 생성해야 하는지 확인하는 별도 관리 항목으로 분리하는 것이 적절하다.
+
+---
+
+## 4. 최종 우선순위 요약
+
+| 우선순위 | 항목 | 최종 분류 |
+|---|---|---|
+| 🔴 높음 | [1-2] 전처리 스크립트 `price` 컬럼 참조 오류 | 필수 수정 |
+| 🔴 높음 | [1-3] 분석 스크립트 `price` 컬럼 참조 오류 | 필수 수정 |
+| 🟠 중간 | [1-1] 수업 시간 합계와 본문 기준 불일치 | 필수 수정 |
+| 🟠 중간 | [2-4] Airflow 실행 환경/Docker Compose 안내 보완 | 보완 권장 |
+| 🟠 중간 | [2-2] `/opt/airflow` 경로 의미와 수정 기준 안내 | 보완 권장 |
+| 🟡 보완 | [2-3] ch14 Notebook 활용 방식 안내 | 보완 권장 |
+| 🟡 보완 | [2-5] `__file__` 사용 코드 실행 위치 안내 | 보완 권장 |
+| 🟡 보완 | [2-6] 취소 주문 처리 기준 안내 | 보완 권장 |
+| 🟢 참고 | CSV 인코딩, Markdown BOM, 한글 폰트, 채점 기준, 용어 정리 | 참고/선택 |
+| ⚪ 별도 확인 | `book/output/html/` 빌드 산출물 경로 정책 | 별도 관리 |
+
+---
+
+## 5. 전반적 평가
+
+ch14는 Chapter 13의 Make 자동화에서 한 단계 더 나아가, 데이터 분석 파이프라인을 Airflow DAG와 Task 단위로 운영하는 흐름을 잘 설명하고 있다. 특히 Python 분석 스크립트와 Airflow DAG의 역할 분담, Task 의존성, 실패 재시도, 결과 파일 검증 Task를 함께 다룬 점은 실무형 강의에 적합하다.
+
+다만 현재 본문 코드에는 `price` 컬럼 참조 오류가 두 군데 있어 실제 실습 실행 시 바로 실패할 수 있다. 이 부분은 반드시 `unit_price` 또는 `line_total` 기준으로 통일해야 한다. Airflow 실행 환경은 초보자에게 진입 장벽이 높으므로 Docker Compose 기반 환경, `/opt/airflow` 경로 의미, `.py` 스크립트 실행 위치를 더 분명히 안내하면 학습 안정성이 크게 높아진다.
