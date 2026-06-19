@@ -15,12 +15,18 @@ venv/
 .env
 
 # Data and generated outputs
-reports/outputs/
+reports/outputs/*
 !reports/outputs/
 !reports/outputs/.gitkeep
-data/processed/
+data/processed/*
 !data/processed/
 !data/processed/.gitkeep
+book/output/html/*
+!book/output/html/
+!book/output/html/.gitkeep
+book/output/pdf/*
+!book/output/pdf/
+!book/output/pdf/.gitkeep
 
 # OS/editor files
 .DS_Store
