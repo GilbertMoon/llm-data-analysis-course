@@ -1,0 +1,939 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>11장 분석 결과 해석과 인사이트 도출</title>
+  <style>
+:root {
+  color: #1f2933;
+  background: #ffffff;
+  font-family: "Noto Sans KR", "Malgun Gothic", "Apple SD Gothic Neo", Arial, sans-serif;
+  line-height: 1.7;
+}
+
+@page {
+  size: A4;
+  margin: 18mm 16mm 20mm 16mm;
+}
+
+body {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 48px 28px 72px;
+  font-size: 16px;
+}
+
+.chapter {
+  page-break-before: always;
+}
+
+.chapter:first-of-type {
+  page-break-before: auto;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  line-height: 1.35;
+  color: #111827;
+}
+
+h1 {
+  margin: 0 0 32px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #d7dee8;
+  font-size: 2.1rem;
+}
+
+h2 {
+  margin-top: 40px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 1.45rem;
+}
+
+h3 {
+  margin-top: 28px;
+  font-size: 1.15rem;
+}
+
+h4 {
+  margin-top: 22px;
+  font-size: 1rem;
+}
+
+p {
+  margin: 12px 0;
+}
+
+ul,
+ol {
+  margin: 14px 0 18px 1.4rem;
+  padding-left: 1.1rem;
+}
+
+li {
+  margin: 6px 0;
+}
+
+table {
+  width: 100%;
+  margin: 24px 0;
+  border-collapse: collapse;
+  table-layout: fixed;
+  word-break: keep-all;
+  font-size: 0.95rem;
+}
+
+th,
+td {
+  padding: 10px 12px;
+  border: 1px solid #d7dee8;
+  vertical-align: top;
+  overflow-wrap: break-word;
+}
+
+th {
+  background: #f3f6fa;
+  font-weight: 700;
+}
+
+code {
+  padding: 0.15em 0.35em;
+  border: 1px solid #d7dee8;
+  border-radius: 4px;
+  background: #f6f8fa;
+  color: #0f172a;
+  font-family: "D2Coding", "Cascadia Code", "Consolas", monospace;
+  font-size: 0.92em;
+}
+
+pre {
+  margin: 22px 0;
+  padding: 18px 20px;
+  border: 1px solid #cbd5e1;
+  border-left: 5px solid #64748b;
+  border-radius: 8px;
+  background: #f8fafc;
+  color: #111827;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.6;
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+pre code {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font-size: 0.92rem;
+}
+
+blockquote {
+  margin: 20px 0;
+  padding: 12px 18px;
+  border-left: 4px solid #94a3b8;
+  background: #f8fafc;
+  color: #334155;
+}
+
+
+.figure {
+  margin: 28px 0;
+  text-align: center;
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+.figure img {
+  width: 100%;
+  max-width: 100%;
+  border: 1px solid #d7dee8;
+  border-radius: 10px;
+  background: #ffffff;
+}
+
+.figure figcaption {
+  margin-top: 8px;
+  color: #475569;
+  font-size: 0.92rem;
+  text-align: center;
+}
+
+img {
+  max-width: 100%;
+}
+
+.toc {
+  margin: 24px 0 34px;
+  padding: 18px 22px;
+  border: 1px solid #d7dee8;
+  border-radius: 8px;
+  background: #f8fafc;
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+.toc-title {
+  margin: 0 0 10px;
+  color: #111827;
+  font-weight: 700;
+}
+
+.toc ol {
+  margin: 0;
+  padding-left: 1.3rem;
+}
+
+.toc li {
+  margin: 4px 0;
+}
+
+.toc a {
+  color: #1d4ed8;
+  text-decoration: none;
+}
+
+.toc a:hover {
+  text-decoration: underline;
+}
+
+@media print {
+  body {
+    max-width: none;
+    padding: 0;
+    font-size: 11pt;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  table,
+  pre,
+  blockquote,
+  .figure {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  thead {
+    display: table-header-group;
+  }
+
+  tr {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  p,
+  li {
+    orphans: 2;
+    widows: 2;
+  }
+}
+
+@media (max-width: 640px) {
+  body {
+    padding: 28px 18px 56px;
+    font-size: 15px;
+  }
+
+  table {
+    font-size: 0.9rem;
+  }
+
+  th,
+  td {
+    padding: 8px 10px;
+  }
+}
+
+  </style>
+</head>
+<body>
+  <main class="chapter">
+<h1 id="chapter-title">11장 분석 결과 해석과 인사이트 도출</h1>
+<nav class="toc" aria-label="목차">
+<p class="toc-title">목차</p>
+<ol>
+<li><a href="#h2-1">수업 시간 구성</a></li>
+<li><a href="#h2-2">1. 학습 목표</a></li>
+<li><a href="#h2-3">2. 이번 장에서 만들 결과물</a></li>
+<li><a href="#h2-4">3. 핵심 개념</a></li>
+<li><a href="#h2-5">4. 실습 시나리오</a></li>
+<li><a href="#h2-6">5. 실습 코드</a></li>
+<li><a href="#h2-7">6. LLM 활용 프롬프트</a></li>
+<li><a href="#h2-8">7. 결과 해석</a></li>
+<li><a href="#h2-9">8. 실무 적용 포인트</a></li>
+<li><a href="#h2-10">9. 연습 문제</a></li>
+<li><a href="#h2-11">10. 정리</a></li>
+</ol>
+</nav>
+<p>이 장에서는 지금까지 계산한 분석 결과를 바탕으로 해석 문장을 작성하고, 인사이트를 도출하는 방법을 배웁니다. Chapter 10에서는 LLM을 활용해 분석 코드를 생성하고 검증하는 방법을 다루었다면, 이번 장에서는 그 결과를 사람이 이해할 수 있는 의미 있는 문장으로 바꾸는 과정에 집중합니다.</p>
+<p>데이터 분석에서 중요한 것은 표와 그래프를 만드는 것에서 끝나지 않습니다. 카테고리별 매출표, 월별 매출 그래프, 고객별 구매 금액표가 있어도 그것이 무엇을 의미하는지 설명하지 못하면 분석 결과를 실무에 활용하기 어렵습니다.</p>
+<p>하지만 해석은 조심해야 합니다. 매출이 높은 카테고리를 보고 바로 “고객이 이 카테고리를 좋아한다”고 단정하면 안 됩니다. 매출이 높은 이유는 판매 수량이 많아서일 수도 있고, 상품 단가가 높아서일 수도 있으며, 특정 기간의 프로모션 때문일 수도 있습니다. 데이터에 없는 원인을 단정하는 순간 분석 결과의 신뢰도가 떨어집니다.</p>
+<p>이번 장의 핵심은 <strong>분석 결과에서 관찰, 해석, 가설, 인사이트, 실행 제안을 구분하는 능력</strong>입니다.</p>
+<h2 id="h2-1">수업 시간 구성</h2>
+<table>
+<thead><tr><th>구성</th><th>권장 시간</th></tr></thead>
+<tbody><tr><td>분석 결과 해석의 개념 이해</td><td>30분</td></tr>
+<tr><td>관찰·해석·가설·인사이트 구분</td><td>40분</td></tr>
+<tr><td>주요 지표 검증과 해석 실습</td><td>45분</td></tr>
+<tr><td>카테고리별 매출 해석 실습</td><td>45분</td></tr>
+<tr><td>월별 매출 해석 실습</td><td>40분</td></tr>
+<tr><td>고객별 구매 금액 해석 실습</td><td>45분</td></tr>
+<tr><td>인사이트 카드 작성</td><td>45분</td></tr>
+<tr><td>LLM 해석 문장 검토</td><td>40분</td></tr>
+<tr><td>연습 문제 및 심화 과제</td><td>60~90분</td></tr></tbody>
+</table>
+<p>기본 수업은 약 5시간 30분을 기준으로 구성되어 있습니다. 인사이트 카드 작성, 발표용 문장 작성, LLM 해석 검증과 연습 문제까지 포함하면 6~7시간 분량으로 확장할 수 있습니다.</p>
+<h2 id="h2-2">1. 학습 목표</h2>
+<p>이 장을 마치면 학습자는 다음을 할 수 있습니다.</p>
+<ul>
+<li>분석 결과 해석이 왜 중요한지 설명할 수 있습니다.</li>
+<li>관찰, 해석, 가설, 인사이트, 실행 제안을 구분할 수 있습니다.</li>
+<li>표와 그래프에서 데이터로 확인 가능한 사실을 추출할 수 있습니다.</li>
+<li>데이터에 없는 원인을 단정하지 않는 문장을 작성할 수 있습니다.</li>
+<li>카테고리별 매출 결과를 판매 수량, 단가, 비중 관점에서 해석할 수 있습니다.</li>
+<li>월별 매출 결과를 주문 수와 평균 주문 금액 관점에서 해석할 수 있습니다.</li>
+<li>고객별 구매 금액 결과를 주문 횟수와 평균 주문 금액 관점에서 해석할 수 있습니다.</li>
+<li>분석 결과를 인사이트 카드 형식으로 정리할 수 있습니다.</li>
+<li>LLM이 작성한 해석 문장에서 과장, 추측, 원인 단정을 찾아 수정할 수 있습니다.</li>
+<li>보고서에 넣을 수 있는 실무형 해석 문장을 작성할 수 있습니다.</li>
+</ul>
+<h2 id="h2-3">2. 이번 장에서 만들 결과물</h2>
+<p>이번 장에서는 분석 결과를 해석하고 인사이트로 정리한 산출물을 만듭니다.</p>
+<p>이번 장에서 만들 결과물은 다음과 같습니다.</p>
+<ul>
+<li>주요 분석 결과 검증표</li>
+<li>관찰·가설·추가 분석 질문 정리표</li>
+<li>카테고리별 매출 인사이트 카드</li>
+<li>월별 매출 인사이트 카드</li>
+<li>고객별 구매 금액 인사이트 카드</li>
+<li>주문 상태별 주문 수 해석 메모</li>
+<li>LLM 해석 문장 검토표</li>
+<li>안전한 해석 문장 예시 모음</li>
+<li><code>reports/ch11_insight_cards.csv</code></li>
+<li><code>reports/ch11_interpretation_summary.md</code></li>
+<li><code>reports/ch11_llm_interpretation_review.md</code></li>
+</ul>
+<p>아래 그림은 분석 결과가 해석과 인사이트로 이어지는 전체 흐름을 보여줍니다.</p>
+<figure class="figure">
+  <img src="../assets/images/ch11/ch11_interpretation_overview_flow.png" alt="분석 결과 해석과 인사이트 도출 전체 흐름도">
+  <figcaption>그림 11-1. 분석 결과 해석과 인사이트 도출 전체 흐름도</figcaption>
+</figure>
+<h2 id="h2-4">3. 핵심 개념</h2>
+<h3 id="h3-1">3.1 분석 결과 해석이란 무엇인가</h3>
+<p>분석 결과 해석은 표, 그래프, 지표가 무엇을 의미하는지 설명하는 과정입니다.</p>
+<p>예를 들어 다음과 같은 결과가 있다고 가정해 보겠습니다.</p>
+<pre><code class="language-text">전자기기 카테고리 매출 비중: 42.5%
+생활용품 카테고리 매출 비중: 26.5%
+패션 카테고리 매출 비중: 21.1%
+식품 카테고리 매출 비중: 9.9%</code></pre>
+<p>이 결과에서 바로 말할 수 있는 사실은 다음입니다.</p>
+<pre><code class="language-text">전자기기 카테고리의 매출 비중이 가장 높다.</code></pre>
+<p>하지만 다음 문장은 조심해야 합니다.</p>
+<pre><code class="language-text">고객들이 전자기기를 가장 좋아하기 때문에 전자기기 매출이 높다.</code></pre>
+<p>이 문장은 “고객 선호”라는 원인을 단정하고 있습니다. 하지만 현재 데이터에 고객 선호도 조사나 클릭 로그가 없다면 이 원인을 직접 확인할 수 없습니다.</p>
+<p>더 안전한 해석은 다음과 같습니다.</p>
+<pre><code class="language-text">전자기기 카테고리의 매출 비중이 가장 높게 나타났습니다. 다만 이 결과가 판매 수량 때문인지, 상품 단가 때문인지, 특정 기간의 프로모션 때문인지는 추가 분석이 필요합니다.</code></pre>
+<h3 id="h3-2">3.2 관찰, 해석, 가설, 인사이트, 실행 제안</h3>
+<p>분석 결과를 보고서에 쓸 때는 다음 단계를 구분해야 합니다.</p>
+<table>
+<thead><tr><th>구분</th><th>의미</th><th>예시</th></tr></thead>
+<tbody><tr><td>관찰</td><td>데이터에서 직접 확인한 사실</td><td>전자기기 매출 비중이 가장 높다</td></tr>
+<tr><td>해석</td><td>관찰 결과의 의미를 설명</td><td>전자기기가 전체 매출에 크게 기여한다</td></tr>
+<tr><td>가설</td><td>가능한 원인을 조심스럽게 제시</td><td>단가가 높거나 판매 수량이 많았을 가능성이 있다</td></tr>
+<tr><td>인사이트</td><td>의사결정에 도움이 되는 핵심 메시지</td><td>전자기기 매출 구조를 판매 수량과 단가로 분해해 볼 필요가 있다</td></tr>
+<tr><td>실행 제안</td><td>다음 행동 방향</td><td>카테고리별 판매 수량과 평균 단가를 추가 분석한다</td></tr></tbody>
+</table>
+<p>이 구분을 하지 않으면 데이터로 확인한 사실과 추측이 섞이게 됩니다.</p>
+<p>아래 그림은 관찰에서 실행 제안까지 이어지는 흐름을 보여줍니다.</p>
+<figure class="figure">
+  <img src="../assets/images/ch11/ch11_observation_insight_action.png" alt="관찰 해석 가설 인사이트 실행 제안의 관계">
+  <figcaption>그림 11-2. 관찰·해석·가설·인사이트·실행 제안의 관계</figcaption>
+</figure>
+<h3 id="h3-3">3.3 좋은 인사이트의 조건</h3>
+<p>좋은 인사이트는 단순한 숫자 설명이 아닙니다. 의사결정에 도움이 되는 메시지여야 합니다.</p>
+<p>좋은 인사이트는 다음 조건을 만족합니다.</p>
+<table>
+<thead><tr><th>조건</th><th>설명</th></tr></thead>
+<tbody><tr><td>데이터 기반</td><td>실제 분석 결과에 근거해야 함</td></tr>
+<tr><td>구체성</td><td>어떤 지표가 어떻게 다른지 명확해야 함</td></tr>
+<tr><td>해석 가능성</td><td>왜 중요한지 설명할 수 있어야 함</td></tr>
+<tr><td>한계 인식</td><td>데이터로 알 수 없는 부분을 구분해야 함</td></tr>
+<tr><td>실행 연결</td><td>다음 분석이나 업무 행동으로 이어져야 함</td></tr></tbody>
+</table>
+<p>예를 들어 다음 문장은 단순한 관찰입니다.</p>
+<pre><code class="language-text">전자기기 매출이 가장 높다.</code></pre>
+<p>다음 문장은 인사이트에 더 가깝습니다.</p>
+<pre><code class="language-text">전자기기 카테고리가 전체 매출에서 가장 큰 비중을 차지하므로, 해당 카테고리의 매출 구조를 판매 수량과 평균 단가로 분해해 추가 확인할 필요가 있습니다.</code></pre>
+<p>두 번째 문장은 데이터 기반 관찰에서 출발해 다음 분석 방향까지 제안하고 있습니다.</p>
+<h3 id="h3-4">3.4 과장된 해석과 안전한 해석</h3>
+<p>LLM이나 초보 분석자가 자주 하는 실수는 결과를 과장하거나 원인을 단정하는 것입니다.</p>
+<table>
+<thead><tr><th>위험한 문장</th><th>문제점</th><th>안전한 문장</th></tr></thead>
+<tbody><tr><td>전자기기는 고객 선호도가 가장 높다</td><td>선호도 데이터 없음</td><td>전자기기의 매출 비중이 가장 높다</td></tr>
+<tr><td>4월 프로모션이 성공했다</td><td>프로모션 데이터 없음</td><td>4월 매출이 증가했으며 원인 확인이 필요하다</td></tr>
+<tr><td>상위 고객은 충성 고객이다</td><td>반복 구매 여부 확인 필요</td><td>상위 고객은 총 구매 금액이 높다</td></tr>
+<tr><td>식품은 인기가 없다</td><td>매출만으로 인기 단정 불가</td><td>식품 카테고리의 매출 비중이 낮다</td></tr>
+<tr><td>매출이 계속 성장하고 있다</td><td>기간이 짧을 수 있음</td><td>관찰 기간 내 일부 월에서 증가 흐름이 보인다</td></tr></tbody>
+</table>
+<p>보고서에서는 데이터로 직접 확인한 사실과 추가 확인이 필요한 가설을 구분해야 합니다.</p>
+<h3 id="h3-5">3.5 증거 수준을 확인해야 하는 이유</h3>
+<p>모든 분석 결과가 같은 수준의 증거를 갖는 것은 아닙니다.</p>
+<p>예를 들어 다음은 데이터로 직접 확인할 수 있는 사실입니다.</p>
+<ul>
+<li>카테고리별 매출 합계</li>
+<li>월별 주문 수</li>
+<li>고객별 총 구매 금액</li>
+<li>주문 상태별 주문 수</li>
+</ul>
+<p>반면 다음은 추가 데이터가 필요한 해석입니다.</p>
+<ul>
+<li>고객 선호도</li>
+<li>프로모션 효과</li>
+<li>광고 효과</li>
+<li>재구매 의도</li>
+<li>이탈 원인</li>
+</ul>
+<p>따라서 해석을 작성할 때는 “현재 데이터로 확인 가능”, “추가 분석 필요”, “현재 데이터로 판단 불가”를 구분해야 합니다.</p>
+<p>아래 그림은 분석 결과의 증거 수준을 점검하는 기준을 보여줍니다.</p>
+<figure class="figure">
+  <img src="../assets/images/ch11/ch11_evidence_validation_matrix.png" alt="분석 해석의 증거 수준 검증 매트릭스">
+  <figcaption>그림 11-3. 분석 해석의 증거 수준 검증 매트릭스</figcaption>
+</figure>
+<h3 id="h3-6">3.6 인사이트 카드란 무엇인가</h3>
+<p>인사이트 카드는 분석 결과를 간결하게 정리하는 템플릿입니다. 보고서나 발표 자료를 만들 때 유용합니다.</p>
+<p>이번 장에서는 다음 구조의 인사이트 카드를 사용합니다.</p>
+<table>
+<thead><tr><th>항목</th><th>내용</th></tr></thead>
+<tbody><tr><td>분석 질문</td><td>무엇을 알고 싶었는가</td></tr>
+<tr><td>핵심 지표</td><td>어떤 지표를 봤는가</td></tr>
+<tr><td>관찰 결과</td><td>데이터에서 확인한 사실</td></tr>
+<tr><td>해석</td><td>결과가 의미하는 바</td></tr>
+<tr><td>가설</td><td>가능한 원인</td></tr>
+<tr><td>추가 확인</td><td>더 분석해야 할 내용</td></tr>
+<tr><td>제안</td><td>다음 행동 또는 분석 방향</td></tr></tbody>
+</table>
+<p>아래 그림은 인사이트 카드의 구조를 보여줍니다.</p>
+<figure class="figure">
+  <img src="../assets/images/ch11/ch11_insight_card_structure.png" alt="인사이트 카드 구조">
+  <figcaption>그림 11-4. 인사이트 카드 구조</figcaption>
+</figure>
+<h2 id="h2-5">4. 실습 시나리오</h2>
+<p>이번 장의 실습 시나리오는 다음과 같습니다.</p>
+<blockquote>온라인 쇼핑몰 운영 데이터를 분석한 결과, 카테고리별 매출, 월별 매출, 고객별 구매 금액, 주문 상태별 주문 수 결과가 만들어졌습니다. 이제 데이터 분석가는 이 결과를 운영자에게 설명할 수 있도록 해석 문장을 작성하고, 추가 분석 질문과 실행 제안을 정리해야 합니다. 단, 데이터에 없는 원인을 단정하지 않고 관찰과 가설을 구분해야 합니다.</blockquote>
+<p>이번 장에서 해석할 주요 분석 결과는 다음과 같습니다.</p>
+<table>
+<thead><tr><th>분석 결과</th><th>핵심 질문</th><th>해석 포인트</th></tr></thead>
+<tbody><tr><td>카테고리별 매출</td><td>어떤 카테고리가 매출에 기여하는가?</td><td>매출 비중, 판매 수량, 평균 단가</td></tr>
+<tr><td>월별 매출</td><td>매출은 시간에 따라 어떻게 변하는가?</td><td>매출 추세, 주문 수, 평균 주문 금액</td></tr>
+<tr><td>고객별 구매 금액</td><td>구매 금액이 높은 고객은 누구인가?</td><td>총 구매 금액, 주문 횟수, 평균 주문 금액</td></tr>
+<tr><td>주문 상태별 주문 수</td><td>주문 상태는 어떻게 분포하는가?</td><td>완료, 취소, 대기 주문 비중</td></tr>
+<tr><td>상품 가격과 판매 수량</td><td>가격과 판매 수량은 관계가 있는가?</td><td>산점도 패턴, 추가 분석 필요</td></tr></tbody>
+</table>
+<h2 id="h2-6">5. 실습 코드</h2>
+<p>이번 장의 전체 실습은 다음 Notebook에서 진행합니다.</p>
+<pre><code class="language-text">notebooks/ch11_insight_generation.ipynb</code></pre>
+<p>본문에는 핵심 코드만 제공합니다.</p>
+<h3 id="h3-7">5.1 기본 패키지 불러오기</h3>
+<pre><code class="language-python">from pathlib import Path
+import pandas as pd</code></pre>
+<p>실습 파일을 프로젝트 루트에서 실행하는 경우와 <code>notebooks</code> 폴더 안에서 실행하는 경우에는 상대 경로가 달라질 수 있습니다. 아래 코드는 현재 실행 위치를 확인한 뒤 공통 기준 폴더를 자동으로 설정합니다.</p>
+<pre><code class="language-python">current_dir = Path.cwd()
+
+if current_dir.name == &quot;notebooks&quot;:
+    base_dir = current_dir.parent
+else:
+    base_dir = current_dir
+
+report_dir = base_dir / &quot;reports&quot;
+report_dir.mkdir(parents=True, exist_ok=True)
+
+print(&quot;report_dir:&quot;, report_dir)</code></pre>
+<p>이 코드는 프로젝트 루트에서 실행하든 <code>notebooks</code> 폴더에서 실행하든 같은 방식으로 동작합니다.</p>
+<p><code>to_markdown()</code>을 사용하려면 환경에 따라 <code>tabulate</code> 패키지가 필요할 수 있습니다. 오류가 발생하면 터미널 또는 노트북에서 <code>pip install tabulate</code>를 실행하세요.</p>
+<pre><code class="language-text">pip install tabulate</code></pre>
+<h3 id="h3-8">5.2 이전 장 분석 결과 불러오기</h3>
+<p>Chapter 8 또는 Chapter 10에서 저장한 분석 결과를 불러옵니다.</p>
+<pre><code class="language-python">category_sales = pd.read_csv(report_dir / &quot;ch08_category_sales.csv&quot;)
+monthly_sales = pd.read_csv(report_dir / &quot;ch08_monthly_sales.csv&quot;)
+customer_sales = pd.read_csv(report_dir / &quot;ch08_customer_sales.csv&quot;)</code></pre>
+<p>파일이 없는 경우에는 Chapter 8의 중간 프로젝트 Notebook을 먼저 실행해야 합니다. 이 장의 예시는 Chapter 8에서 저장한 <code>ch08_category_sales.csv</code>, <code>ch08_monthly_sales.csv</code>, <code>ch08_customer_sales.csv</code>를 기준으로 진행합니다.</p>
+<pre><code class="language-python">print(category_sales.head())
+print(monthly_sales.head())
+print(customer_sales.head())</code></pre>
+<h3 id="h3-9">5.3 분석 결과 기본 검증하기</h3>
+<p>해석 전에 결과가 비어 있지 않은지 확인합니다.</p>
+<pre><code class="language-python">print(&quot;category_sales:&quot;, category_sales.shape)
+print(&quot;monthly_sales:&quot;, monthly_sales.shape)
+print(&quot;customer_sales:&quot;, customer_sales.shape)</code></pre>
+<p>주요 컬럼을 확인합니다.</p>
+<pre><code class="language-python">print(&quot;category_sales columns:&quot;, list(category_sales.columns))
+print(&quot;monthly_sales columns:&quot;, list(monthly_sales.columns))
+print(&quot;customer_sales columns:&quot;, list(customer_sales.columns))</code></pre>
+<p>해석은 검증된 결과를 바탕으로 작성해야 합니다.</p>
+<h3 id="h3-10">5.4 카테고리별 매출 결과 해석 준비</h3>
+<p>카테고리별 매출 상위 항목을 확인합니다.</p>
+<pre><code class="language-python">category_sales_sorted = category_sales.sort_values(&quot;total_sales&quot;, ascending=False)
+category_sales_sorted</code></pre>
+<p>가장 매출이 높은 카테고리를 추출합니다.</p>
+<pre><code class="language-python">top_category = category_sales_sorted.iloc[0]
+
+top_category_name = top_category[&quot;category&quot;]
+top_category_sales = top_category[&quot;total_sales&quot;]
+top_category_ratio = top_category[&quot;sales_ratio&quot;]
+
+print(&quot;매출 1위 카테고리:&quot;, top_category_name)
+print(&quot;매출:&quot;, top_category_sales)
+print(&quot;매출 비중:&quot;, top_category_ratio)</code></pre>
+<p>카테고리별 판매 수량과 매출을 함께 봅니다.</p>
+<pre><code class="language-python">category_sales_sorted[[&quot;category&quot;, &quot;total_quantity&quot;, &quot;total_sales&quot;, &quot;sales_ratio&quot;]]</code></pre>
+<p>판매 수량과 매출은 서로 다른 의미를 가집니다. 판매 수량이 많아서 매출이 높은 것인지, 단가가 높아서 매출이 높은 것인지 추가 확인이 필요합니다.</p>
+<h3 id="h3-11">5.5 카테고리별 평균 판매 단가 계산하기</h3>
+<p>카테고리별 평균 판매 단가를 계산합니다.</p>
+<pre><code class="language-python">category_sales_sorted[&quot;avg_unit_revenue&quot;] = (
+    category_sales_sorted[&quot;total_sales&quot;] / category_sales_sorted[&quot;total_quantity&quot;]
+).round(0)
+
+category_sales_sorted</code></pre>
+<p>이 지표를 사용하면 매출이 높은 이유를 조금 더 조심스럽게 탐색할 수 있습니다.</p>
+<pre><code class="language-python">category_interpretation = f&quot;&quot;&quot;
+카테고리별 매출 결과에서 {top_category_name} 카테고리의 매출 비중이 가장 높게 나타났습니다.
+이는 해당 카테고리가 전체 매출에 크게 기여하고 있음을 의미합니다.
+다만 매출이 높은 이유가 판매 수량 때문인지, 평균 판매 단가 때문인지는 추가로 확인해야 합니다.
+따라서 카테고리별 total_quantity와 avg_unit_revenue를 함께 비교하는 것이 필요합니다.
+&quot;&quot;&quot;
+
+print(category_interpretation)</code></pre>
+<h3 id="h3-12">5.6 월별 매출 결과 해석 준비</h3>
+<p>월별 매출을 확인합니다.</p>
+<pre><code class="language-python">monthly_sales_sorted = monthly_sales.sort_values(&quot;order_month&quot;)
+monthly_sales_sorted</code></pre>
+<p>매출이 가장 높은 월을 확인합니다.</p>
+<pre><code class="language-python">top_month = monthly_sales_sorted.sort_values(&quot;total_sales&quot;, ascending=False).iloc[0]
+
+top_month_name = top_month[&quot;order_month&quot;]
+top_month_sales = top_month[&quot;total_sales&quot;]
+top_month_orders = top_month[&quot;order_count&quot;]
+
+print(&quot;매출이 가장 높은 월:&quot;, top_month_name)
+print(&quot;매출:&quot;, top_month_sales)
+print(&quot;주문 수:&quot;, top_month_orders)</code></pre>
+<p>전월 대비 증감률을 계산합니다.</p>
+<pre><code class="language-python">monthly_sales_sorted[&quot;sales_change&quot;] = monthly_sales_sorted[&quot;total_sales&quot;].diff()
+monthly_sales_sorted[&quot;sales_change_ratio&quot;] = (
+    monthly_sales_sorted[&quot;total_sales&quot;].pct_change() * 100
+).round(2)
+
+monthly_sales_sorted</code></pre>
+<p>월별 매출 해석 문장을 작성합니다.</p>
+<pre><code class="language-python">monthly_interpretation = f&quot;&quot;&quot;
+월별 매출 결과에서 {top_month_name}의 매출이 가장 높게 나타났습니다.
+이 월의 주문 수는 {top_month_orders}건입니다.
+다만 매출 증가의 원인이 주문 수 증가 때문인지, 평균 주문 금액 증가 때문인지는 추가 확인이 필요합니다.
+월별 total_sales, order_count, avg_order_value를 함께 비교해야 더 안전한 해석이 가능합니다.
+&quot;&quot;&quot;
+
+print(monthly_interpretation)</code></pre>
+<h3 id="h3-13">5.7 고객별 구매 금액 결과 해석 준비</h3>
+<p>구매 금액 상위 고객을 확인합니다.</p>
+<pre><code class="language-python">customer_sales_sorted = customer_sales.sort_values(&quot;total_sales&quot;, ascending=False)
+customer_sales_sorted.head(10)</code></pre>
+<p>고객별 구매 금액을 해석할 때는 총 구매 금액만 보지 않고 주문 횟수와 평균 주문 금액도 함께 봐야 합니다.</p>
+<pre><code class="language-python">if &quot;avg_order_value&quot; not in customer_sales_sorted.columns:
+    customer_sales_sorted[&quot;avg_order_value&quot;] = (
+        customer_sales_sorted[&quot;total_sales&quot;] / customer_sales_sorted[&quot;order_count&quot;]
+    ).round(0)
+
+customer_sales_sorted.head(10)</code></pre>
+<p>상위 고객의 해석 문장을 작성합니다.</p>
+<pre><code class="language-python">top_customer = customer_sales_sorted.iloc[0]
+
+customer_interpretation = f&quot;&quot;&quot;
+구매 금액 기준 상위 고객은 전체 고객 중 총 구매 금액이 가장 높은 고객입니다.
+다만 총 구매 금액이 높다는 사실만으로 충성 고객이라고 단정할 수는 없습니다.
+주문 횟수가 많은 반복 구매 고객인지, 한 번에 큰 금액을 구매한 고객인지 구분해야 합니다.
+따라서 total_sales와 함께 order_count, avg_order_value를 함께 확인해야 합니다.
+&quot;&quot;&quot;
+
+print(customer_interpretation)</code></pre>
+<h3 id="h3-14">5.8 관찰·가설·추가 분석 질문 정리표 만들기</h3>
+<p>분석 결과별로 관찰, 가설, 추가 질문을 정리합니다.</p>
+<pre><code class="language-python">interpretation_table = pd.DataFrame({
+    &quot;analysis_area&quot;: [
+        &quot;카테고리별 매출&quot;,
+        &quot;월별 매출&quot;,
+        &quot;고객별 구매 금액&quot;
+    ],
+    &quot;observation&quot;: [
+        f&quot;{top_category_name} 카테고리의 매출 비중이 가장 높게 나타났습니다.&quot;,
+        f&quot;{top_month_name}의 월별 매출이 가장 높게 나타났습니다.&quot;,
+        &quot;구매 금액 상위 고객은 전체 고객 중 총 구매 금액이 높은 고객입니다.&quot;
+    ],
+    &quot;hypothesis&quot;: [
+        &quot;판매 수량이 많거나 평균 판매 단가가 높았을 가능성이 있습니다.&quot;,
+        &quot;주문 수 증가 또는 평균 주문 금액 증가가 영향을 주었을 가능성이 있습니다.&quot;,
+        &quot;반복 구매 또는 일회성 고액 구매가 영향을 주었을 가능성이 있습니다.&quot;
+    ],
+    &quot;additional_question&quot;: [
+        &quot;카테고리별 판매 수량과 평균 판매 단가는 어떻게 다른가?&quot;,
+        &quot;해당 월의 주문 수와 평균 주문 금액은 어떻게 변했는가?&quot;,
+        &quot;상위 고객은 주문 횟수가 많은가, 평균 주문 금액이 높은가?&quot;
+    ]
+})
+
+interpretation_table</code></pre>
+<p>저장합니다.</p>
+<pre><code class="language-python">interpretation_table.to_csv(report_dir / &quot;ch11_interpretation_table.csv&quot;, index=False)</code></pre>
+<h3 id="h3-15">5.9 인사이트 카드 만들기</h3>
+<p>인사이트 카드는 분석 결과를 보고서나 발표 자료에 바로 활용할 수 있는 형태로 정리한 것입니다.</p>
+<pre><code class="language-python">insight_cards = pd.DataFrame({
+    &quot;insight_title&quot;: [
+        &quot;카테고리별 매출 기여도 확인&quot;,
+        &quot;월별 매출 변동 확인&quot;,
+        &quot;구매 금액 상위 고객 특성 확인&quot;
+    ],
+    &quot;analysis_question&quot;: [
+        &quot;카테고리별 매출은 어떻게 다른가?&quot;,
+        &quot;월별 매출과 주문 수는 어떻게 변하는가?&quot;,
+        &quot;구매 금액 상위 고객은 누구인가?&quot;
+    ],
+    &quot;key_metric&quot;: [
+        &quot;total_sales, sales_ratio, total_quantity&quot;,
+        &quot;total_sales, order_count, avg_order_value&quot;,
+        &quot;total_sales, order_count, avg_order_value&quot;
+    ],
+    &quot;observation&quot;: [
+        f&quot;{top_category_name} 카테고리의 매출 비중이 가장 높게 나타났습니다.&quot;,
+        f&quot;{top_month_name}의 매출이 가장 높게 나타났습니다.&quot;,
+        &quot;구매 금액 상위 고객은 총 구매 금액 기준으로 확인되었습니다.&quot;
+    ],
+    &quot;interpretation&quot;: [
+        &quot;해당 카테고리가 전체 매출에 크게 기여하고 있습니다.&quot;,
+        &quot;특정 월에 매출이 집중되었을 가능성이 있습니다.&quot;,
+        &quot;상위 고객군은 매출 기여도가 높아 별도 분석 가치가 있습니다.&quot;
+    ],
+    &quot;caution&quot;: [
+        &quot;매출이 높은 이유를 고객 선호로 단정할 수 없습니다.&quot;,
+        &quot;매출 증가 원인을 프로모션이나 계절성으로 단정할 수 없습니다.&quot;,
+        &quot;총 구매 금액만으로 충성 고객이라고 단정할 수 없습니다.&quot;
+    ],
+    &quot;next_step&quot;: [
+        &quot;판매 수량과 평균 판매 단가를 함께 분석합니다.&quot;,
+        &quot;주문 수와 평균 주문 금액 변화를 함께 확인합니다.&quot;,
+        &quot;주문 횟수와 평균 주문 금액을 기준으로 고객 유형을 나눕니다.&quot;
+    ]
+})
+
+insight_cards</code></pre>
+<p>저장합니다.</p>
+<pre><code class="language-python">insight_cards.to_csv(report_dir / &quot;ch11_insight_cards.csv&quot;, index=False)</code></pre>
+<h3 id="h3-16">5.10 LLM 해석 문장 검토표 만들기</h3>
+<p>LLM이 작성한 해석 문장을 검토하기 위한 표를 만듭니다.</p>
+<pre><code class="language-python">llm_interpretation_review = pd.DataFrame({
+    &quot;llm_sentence&quot;: [
+        &quot;전자기기 매출이 가장 높은 이유는 고객들이 전자기기를 가장 선호하기 때문입니다.&quot;,
+        &quot;4월 매출이 증가했으므로 프로모션이 성공했다고 볼 수 있습니다.&quot;,
+        &quot;구매 금액 상위 고객은 충성 고객입니다.&quot;
+    ],
+    &quot;problem&quot;: [
+        &quot;고객 선호도 데이터가 없는데 원인을 단정했습니다.&quot;,
+        &quot;프로모션 데이터가 없는데 원인을 단정했습니다.&quot;,
+        &quot;반복 구매 여부를 확인하지 않고 충성 고객으로 단정했습니다.&quot;
+    ],
+    &quot;safe_sentence&quot;: [
+        &quot;전자기기 카테고리의 매출 비중이 가장 높게 나타났습니다. 다만 고객 선호, 단가, 판매 수량 중 어떤 요인이 영향을 주었는지는 추가 분석이 필요합니다.&quot;,
+        &quot;4월 매출이 증가한 것으로 나타났습니다. 다만 이 증가가 프로모션 때문인지는 관련 데이터가 추가로 필요합니다.&quot;,
+        &quot;구매 금액 상위 고객은 매출 기여도가 높은 고객입니다. 다만 충성 고객 여부는 주문 횟수와 재구매 패턴을 함께 확인해야 합니다.&quot;
+    ]
+})
+
+llm_interpretation_review</code></pre>
+<p>저장합니다.</p>
+<pre><code class="language-python">llm_interpretation_review.to_csv(report_dir / &quot;ch11_llm_interpretation_review.csv&quot;, index=False)</code></pre>
+<p>아래 그림은 LLM이 작성한 해석 문장을 사람이 검토하고 수정하는 흐름을 보여줍니다.</p>
+<figure class="figure">
+  <img src="../assets/images/ch11/ch11_llm_interpretation_review_flow.png" alt="LLM 해석 문장 검토 흐름도">
+  <figcaption>그림 11-5. LLM 해석 문장 검토 흐름도</figcaption>
+</figure>
+<h3 id="h3-17">5.11 해석 요약 보고서 작성하기</h3>
+<pre><code class="language-python">summary_text = f&quot;&quot;&quot;
+# Chapter 11 분석 결과 해석과 인사이트 요약 보고서
+
+## 1. 목적
+
+이번 보고서는 온라인 쇼핑몰 분석 결과를 바탕으로 관찰, 해석, 가설, 추가 분석 질문을 구분해 정리하는 것을 목적으로 합니다.
+
+## 2. 주요 해석 결과
+
+{interpretation_table.to_markdown(index=False)}
+
+## 3. 인사이트 카드
+
+{insight_cards.to_markdown(index=False)}
+
+## 4. LLM 해석 문장 검토
+
+{llm_interpretation_review.to_markdown(index=False)}
+
+## 5. 해석 시 주의사항
+
+- 데이터로 확인한 사실과 원인 가설을 구분해야 합니다.
+- 매출이 높다는 사실만으로 고객 선호를 단정할 수 없습니다.
+- 월별 매출 변화의 원인을 설명하려면 프로모션, 계절성, 광고, 재고 등의 추가 데이터가 필요합니다.
+- 고객별 구매 금액만으로 충성 고객 여부를 판단하기 어렵습니다.
+- LLM이 작성한 해석 문장은 반드시 데이터 근거와 비교해 검토해야 합니다.
+
+## 6. 다음 단계
+
+- 카테고리별 매출을 판매 수량과 평균 판매 단가로 분해합니다.
+- 월별 매출을 주문 수와 평균 주문 금액으로 분해합니다.
+- 고객별 구매 금액을 주문 횟수와 평균 주문 금액으로 나누어 고객 유형을 분석합니다.
+- 검증된 해석 문장을 바탕으로 최종 분석 보고서를 작성합니다.
+&quot;&quot;&quot;
+
+summary_path = report_dir / &quot;ch11_interpretation_summary.md&quot;
+summary_path.write_text(summary_text, encoding=&quot;utf-8&quot;)</code></pre>
+<h3 id="h3-18">5.12 LLM 검토 보고서 작성하기</h3>
+<pre><code class="language-python">llm_review_text = f&quot;&quot;&quot;
+# Chapter 11 LLM 해석 문장 검토 보고서
+
+## 1. 검토 목적
+
+LLM이 작성한 분석 해석 문장이 실제 데이터에 근거하는지, 원인을 과도하게 단정하지 않는지 검토했습니다.
+
+## 2. 검토 결과
+
+{llm_interpretation_review.to_markdown(index=False)}
+
+## 3. 주요 수정 원칙
+
+- 원인 단정 표현을 피합니다.
+- 데이터로 확인한 사실과 가설을 구분합니다.
+- 현재 데이터로 확인할 수 없는 내용은 추가 분석 필요로 표시합니다.
+- 고객 선호, 프로모션 효과, 충성 고객 여부처럼 추가 데이터가 필요한 표현은 조심해서 사용합니다.
+
+## 4. 결론
+
+LLM은 자연스러운 해석 문장을 작성하는 데 도움을 줄 수 있지만, 해석의 타당성은 사람이 데이터 기준으로 검토해야 합니다.
+&quot;&quot;&quot;
+
+llm_review_path = report_dir / &quot;ch11_llm_interpretation_review.md&quot;
+llm_review_path.write_text(llm_review_text, encoding=&quot;utf-8&quot;)</code></pre>
+<h2 id="h2-7">6. LLM 활용 프롬프트</h2>
+<p>LLM은 분석 결과 해석 문장을 작성하는 데 도움을 줄 수 있습니다. 하지만 LLM이 원인을 단정하거나 데이터에 없는 내용을 추측할 수 있으므로 검토가 필요합니다.</p>
+<h3 id="h3-19">6.1 분석 결과 해석 요청</h3>
+<pre><code class="language-text">당신은 데이터 분석 보고서 작성 도우미입니다.
+
+다음은 온라인 쇼핑몰 카테고리별 매출 분석 결과입니다.
+
+category,total_quantity,total_sales,sales_ratio
+전자기기,320,12500000,42.5
+생활용품,510,7800000,26.5
+패션,260,6200000,21.1
+식품,430,2900000,9.9
+
+요청:
+1. 데이터로 확인 가능한 관찰 내용을 작성해 주세요.
+2. 가능한 원인 가설을 조심스럽게 작성해 주세요.
+3. 추가로 확인해야 할 분석 질문을 제안해 주세요.
+4. 보고서에 넣을 수 있는 문장으로 정리해 주세요.
+
+조건:
+- 고객 선호, 프로모션 효과 같은 원인을 단정하지 마세요.
+- 데이터에 없는 내용을 추측하지 마세요.
+- 관찰과 가설을 구분해 주세요.</code></pre>
+<h3 id="h3-20">6.2 과장된 해석 수정 요청</h3>
+<pre><code class="language-text">다음 문장은 데이터 분석 보고서에 넣기에는 과장된 표현이 포함되어 있습니다.
+
+문장:
+전자기기 매출이 가장 높은 이유는 고객들이 전자기기를 가장 좋아하기 때문입니다. 따라서 전자기기 상품을 더 많이 팔면 매출이 증가할 것입니다.
+
+요청:
+1. 이 문장의 문제점을 설명해 주세요.
+2. 데이터로 확인한 사실과 추측을 구분해 주세요.
+3. 더 안전한 보고서 문장으로 수정해 주세요.
+4. 추가로 확인해야 할 데이터 항목을 제안해 주세요.</code></pre>
+<h3 id="h3-21">6.3 월별 매출 해석 요청</h3>
+<pre><code class="language-text">다음은 월별 매출 분석 결과입니다.
+
+order_month,total_sales,order_count,avg_order_value
+2024-01,3200000,42,76190
+2024-02,4100000,51,80392
+2024-03,3900000,49,79591
+2024-04,5200000,63,82540
+
+요청:
+1. 월별 매출 흐름을 해석해 주세요.
+2. 매출 증가가 주문 수 때문인지 평균 주문 금액 때문인지 확인할 방법을 설명해 주세요.
+3. 원인을 단정하지 않는 안전한 문장으로 작성해 주세요.
+4. 추가 분석 질문 3개를 제안해 주세요.</code></pre>
+<h3 id="h3-22">6.4 고객별 구매 금액 해석 요청</h3>
+<pre><code class="language-text">다음은 고객별 구매 금액 상위 결과입니다.
+
+customer_id,city,order_count,total_sales,avg_order_value
+C001,Seoul,2,950000,475000
+C014,Busan,8,870000,108750
+C032,Incheon,1,810000,810000
+
+요청:
+1. 총 구매 금액 기준 상위 고객을 해석해 주세요.
+2. 일회성 고액 구매 고객과 반복 구매 고객을 구분해야 하는 이유를 설명해 주세요.
+3. 충성 고객이라고 단정하지 않는 안전한 표현으로 작성해 주세요.
+4. 추가로 확인해야 할 지표를 제안해 주세요.</code></pre>
+<h3 id="h3-23">6.5 인사이트 카드 작성 요청</h3>
+<pre><code class="language-text">다음 분석 결과를 바탕으로 인사이트 카드를 작성해 주세요.
+
+분석 질문:
+카테고리별 매출은 어떻게 다른가?
+
+주요 결과:
+전자기기 카테고리의 매출 비중이 가장 높음
+
+사용 가능한 지표:
+- total_sales
+- sales_ratio
+- total_quantity
+- avg_unit_revenue
+
+인사이트 카드 형식:
+1. 분석 질문
+2. 핵심 지표
+3. 관찰 결과
+4. 해석
+5. 가능한 가설
+6. 추가 확인 사항
+7. 다음 행동 제안
+
+조건:
+- 데이터에 없는 원인을 단정하지 말 것
+- 고객 선호라고 단정하지 말 것
+- 추가 분석 질문을 포함할 것</code></pre>
+<h3 id="h3-24">6.6 LLM 해석 문장 검토 요청</h3>
+<pre><code class="language-text">다음은 LLM이 작성한 분석 해석 문장입니다.
+
+1. 전자기기 매출이 가장 높은 이유는 고객들이 전자기기를 가장 선호하기 때문입니다.
+2. 4월 매출이 증가했으므로 프로모션이 성공했다고 볼 수 있습니다.
+3. 구매 금액 상위 고객은 충성 고객입니다.
+
+현재 데이터에는 고객 선호도, 프로모션 여부, 재구매 의도 데이터가 없습니다.
+
+요청:
+1. 각 문장의 문제점을 설명해 주세요.
+2. 데이터로 확인 가능한 표현으로 수정해 주세요.
+3. 추가로 필요한 데이터나 분석을 제안해 주세요.</code></pre>
+<h2 id="h2-8">7. 결과 해석</h2>
+<p>이번 장의 결과는 분석 결과를 더 깊이 이해하기 위한 해석과 인사이트입니다.</p>
+<h3 id="h3-25">7.1 카테고리별 매출 해석</h3>
+<p>카테고리별 매출 결과에서 가장 먼저 볼 것은 매출 합계와 매출 비중입니다.</p>
+<pre><code class="language-text">카테고리별 매출 결과에서 특정 카테고리의 매출 비중이 가장 높게 나타났다면, 해당 카테고리가 전체 매출에 크게 기여하고 있다고 해석할 수 있습니다.</code></pre>
+<p>하지만 매출이 높다는 사실만으로 고객 선호를 단정할 수 없습니다. 판매 수량이 많았는지, 평균 판매 단가가 높았는지, 특정 기간의 주문이 집중되었는지 추가 분석이 필요합니다.</p>
+<h3 id="h3-26">7.2 월별 매출 해석</h3>
+<p>월별 매출 결과는 시간에 따른 변화를 보여줍니다.</p>
+<pre><code class="language-text">월별 매출 결과를 통해 특정 월의 매출 증가 또는 감소를 확인할 수 있습니다.</code></pre>
+<p>하지만 특정 월의 매출 증가를 프로모션 성공이나 계절성으로 바로 해석하면 안 됩니다. 현재 데이터에 프로모션, 광고, 시즌 이벤트 정보가 없다면 원인 분석은 가설 수준으로만 표현해야 합니다.</p>
+<h3 id="h3-27">7.3 고객별 구매 금액 해석</h3>
+<p>고객별 구매 금액 결과는 매출 기여도가 높은 고객을 확인하는 데 유용합니다.</p>
+<pre><code class="language-text">총 구매 금액이 높은 고객은 매출 기여도가 높은 고객으로 볼 수 있습니다.</code></pre>
+<p>그러나 총 구매 금액이 높다고 해서 곧바로 충성 고객이라고 판단하면 안 됩니다. 충성 고객 여부를 판단하려면 반복 구매 횟수, 구매 주기, 최근 구매일, 재구매율 같은 추가 지표가 필요합니다.</p>
+<h3 id="h3-28">7.4 주문 상태별 주문 수 해석</h3>
+<p>주문 상태별 주문 수는 완료, 취소, 대기 주문의 분포를 보여줍니다.</p>
+<pre><code class="language-text">주문 상태별 주문 수를 확인하면 분석에 포함해야 할 주문과 제외해야 할 주문을 판단하는 데 도움이 됩니다.</code></pre>
+<p>취소 주문이 매출 계산에 포함되어 있다면 실제 매출이 과대 계산될 수 있습니다. 따라서 매출 분석에서는 주문 상태 처리 기준을 명확히 기록해야 합니다.</p>
+<h2 id="h2-9">8. 실무 적용 포인트</h2>
+<p>실무에서 분석 결과를 해석할 때는 다음 원칙을 지켜야 합니다.</p>
+<ol>
+<li>데이터로 확인한 사실부터 작성합니다.</li>
+<li>원인은 단정하지 않고 가설로 표현합니다.</li>
+<li>추가 분석이 필요한 부분을 명시합니다.</li>
+<li>한 가지 지표만 보고 결론을 내리지 않습니다.</li>
+<li>매출은 판매 수량과 단가로 나누어 봅니다.</li>
+<li>월별 변화는 주문 수와 평균 주문 금액을 함께 봅니다.</li>
+<li>고객별 구매 금액은 주문 횟수와 함께 해석합니다.</li>
+<li>취소 주문이나 환불 주문 처리 기준을 확인합니다.</li>
+<li>LLM이 작성한 해석 문장은 반드시 검토합니다.</li>
+<li>인사이트는 다음 행동이나 추가 분석으로 연결되어야 합니다.</li>
+</ol>
+<h3 id="h3-29">분석 결과 해석 체크리스트</h3>
+<table>
+<thead><tr><th>점검 항목</th><th>확인</th></tr></thead>
+<tbody><tr><td>데이터로 확인한 사실을 먼저 작성했는가?</td><td>□</td></tr>
+<tr><td>원인 단정 표현을 피했는가?</td><td>□</td></tr>
+<tr><td>관찰과 가설을 구분했는가?</td><td>□</td></tr>
+<tr><td>추가 분석 질문을 제시했는가?</td><td>□</td></tr>
+<tr><td>매출을 판매 수량과 단가 관점에서 검토했는가?</td><td>□</td></tr>
+<tr><td>월별 매출을 주문 수와 평균 주문 금액으로 함께 봤는가?</td><td>□</td></tr>
+<tr><td>고객별 구매 금액을 주문 횟수와 함께 해석했는가?</td><td>□</td></tr>
+<tr><td>현재 데이터로 판단할 수 없는 내용을 구분했는가?</td><td>□</td></tr>
+<tr><td>LLM 해석 문장에서 과장 표현을 수정했는가?</td><td>□</td></tr>
+<tr><td>인사이트가 다음 행동 또는 추가 분석으로 연결되는가?</td><td>□</td></tr></tbody>
+</table>
+<h2 id="h2-10">9. 연습 문제</h2>
+<h3 id="h3-30">기본 연습 문제</h3>
+<ol>
+<li>카테고리별 매출 결과에서 가장 매출이 높은 카테고리를 찾고 해석 문장을 작성하세요.
+<ul>
+<li>제출 형식: 코드와 해석 문장</li>
+<li>조건: 고객 선호라고 단정하지 말 것</li>
+</ul></li>
+<li>월별 매출 결과에서 매출이 가장 높은 월을 찾고 해석 문장을 작성하세요.
+<ul>
+<li>제출 형식: 코드와 해석 문장</li>
+<li>조건: 프로모션이나 계절성을 단정하지 말 것</li>
+</ul></li>
+<li>고객별 구매 금액 상위 10명을 확인하고 해석 문장을 작성하세요.
+<ul>
+<li>제출 형식: 결과표와 해석 문장</li>
+<li>조건: 충성 고객이라고 단정하지 말 것</li>
+</ul></li>
+<li>관찰, 가설, 추가 분석 질문을 구분한 표를 작성하세요.
+<ul>
+<li>제출 형식: DataFrame 또는 Markdown 표</li>
+<li>포함 항목: 분석 영역, 관찰, 가설, 추가 질문</li>
+</ul></li>
+<li>LLM이 작성한 과장된 해석 문장을 안전한 문장으로 수정하세요.
+<ul>
+<li>제출 형식: 원문, 문제점, 수정 문장</li>
+</ul></li>
+</ol>
+<h3 id="h3-31">심화 과제</h3>
+<ol>
+<li>카테고리별 매출을 판매 수량과 평균 판매 단가로 분해해 해석하세요.
+<ul>
+<li>제출 형식: 코드, 결과표, 해석 문장</li>
+</ul></li>
+<li>월별 매출 변화를 주문 수와 평균 주문 금액으로 나누어 해석하세요.
+<ul>
+<li>제출 형식: 코드, 결과표, 해석 문장</li>
+</ul></li>
+<li>고객별 구매 금액 상위 고객을 반복 구매형과 고액 구매형으로 구분하는 기준을 제안하세요.
+<ul>
+<li>제출 형식: 기준표와 설명</li>
+</ul></li>
+<li>인사이트 카드 3개를 작성하세요.
+<ul>
+<li>제출 형식: Markdown 표 또는 CSV</li>
+<li>포함 항목: 분석 질문, 관찰, 해석, 가설, 추가 확인, 제안</li>
+</ul></li>
+<li><code>reports/ch11_interpretation_summary.md</code> 파일을 작성하세요.
+<ul>
+<li>제출 형식: Markdown 파일</li>
+<li>포함 항목: 주요 해석 결과, 인사이트 카드, LLM 문장 검토, 다음 단계</li>
+</ul></li>
+</ol>
+<h2 id="h2-11">10. 정리</h2>
+<p>이번 장에서는 분석 결과를 해석하고 인사이트로 정리하는 방법을 배웠습니다. 데이터 분석에서 표와 그래프를 만드는 것만큼 중요한 것은 그 결과를 정확하고 신중하게 설명하는 것입니다.</p>
+<p>분석 결과를 해석할 때는 관찰, 해석, 가설, 인사이트, 실행 제안을 구분해야 합니다. 데이터로 직접 확인한 사실은 관찰이고, 그 의미를 설명하는 것은 해석입니다. 원인은 추가 데이터나 분석이 필요할 수 있으므로 가설로 표현해야 합니다.</p>
+<p>카테고리별 매출 결과는 매출 비중을 보여주지만, 고객 선호를 직접 보여주는 것은 아닙니다. 월별 매출 결과는 시간에 따른 변화를 보여주지만, 프로모션이나 계절성의 효과를 바로 증명하지는 않습니다. 고객별 구매 금액은 매출 기여도가 높은 고객을 보여주지만, 충성 고객 여부를 판단하려면 반복 구매 지표가 필요합니다.</p>
+<p>LLM은 해석 문장을 작성하는 데 도움을 줄 수 있지만, 과장 표현이나 원인 단정 문장이 포함될 수 있습니다. 따라서 LLM이 작성한 해석 문장은 반드시 데이터에 근거하는지 검토해야 합니다.</p>
+<p>다음 장에서는 이번 장에서 정리한 인사이트를 바탕으로 분석 보고서를 자동으로 작성하고, 보고서 구조를 체계화하는 방법을 배웁니다.</p>
+  </main></body></html>

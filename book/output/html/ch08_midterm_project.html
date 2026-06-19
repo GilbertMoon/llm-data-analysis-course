@@ -1,0 +1,1012 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>8장 중간 실습 프로젝트</title>
+  <style>
+:root {
+  color: #1f2933;
+  background: #ffffff;
+  font-family: "Noto Sans KR", "Malgun Gothic", "Apple SD Gothic Neo", Arial, sans-serif;
+  line-height: 1.7;
+}
+
+@page {
+  size: A4;
+  margin: 18mm 16mm 20mm 16mm;
+}
+
+body {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 48px 28px 72px;
+  font-size: 16px;
+}
+
+.chapter {
+  page-break-before: always;
+}
+
+.chapter:first-of-type {
+  page-break-before: auto;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  line-height: 1.35;
+  color: #111827;
+}
+
+h1 {
+  margin: 0 0 32px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #d7dee8;
+  font-size: 2.1rem;
+}
+
+h2 {
+  margin-top: 40px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 1.45rem;
+}
+
+h3 {
+  margin-top: 28px;
+  font-size: 1.15rem;
+}
+
+h4 {
+  margin-top: 22px;
+  font-size: 1rem;
+}
+
+p {
+  margin: 12px 0;
+}
+
+ul,
+ol {
+  margin: 14px 0 18px 1.4rem;
+  padding-left: 1.1rem;
+}
+
+li {
+  margin: 6px 0;
+}
+
+table {
+  width: 100%;
+  margin: 24px 0;
+  border-collapse: collapse;
+  table-layout: fixed;
+  word-break: keep-all;
+  font-size: 0.95rem;
+}
+
+th,
+td {
+  padding: 10px 12px;
+  border: 1px solid #d7dee8;
+  vertical-align: top;
+  overflow-wrap: break-word;
+}
+
+th {
+  background: #f3f6fa;
+  font-weight: 700;
+}
+
+code {
+  padding: 0.15em 0.35em;
+  border: 1px solid #d7dee8;
+  border-radius: 4px;
+  background: #f6f8fa;
+  color: #0f172a;
+  font-family: "D2Coding", "Cascadia Code", "Consolas", monospace;
+  font-size: 0.92em;
+}
+
+pre {
+  margin: 22px 0;
+  padding: 18px 20px;
+  border: 1px solid #cbd5e1;
+  border-left: 5px solid #64748b;
+  border-radius: 8px;
+  background: #f8fafc;
+  color: #111827;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.6;
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+pre code {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font-size: 0.92rem;
+}
+
+blockquote {
+  margin: 20px 0;
+  padding: 12px 18px;
+  border-left: 4px solid #94a3b8;
+  background: #f8fafc;
+  color: #334155;
+}
+
+
+.figure {
+  margin: 28px 0;
+  text-align: center;
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+.figure img {
+  width: 100%;
+  max-width: 100%;
+  border: 1px solid #d7dee8;
+  border-radius: 10px;
+  background: #ffffff;
+}
+
+.figure figcaption {
+  margin-top: 8px;
+  color: #475569;
+  font-size: 0.92rem;
+  text-align: center;
+}
+
+img {
+  max-width: 100%;
+}
+
+.toc {
+  margin: 24px 0 34px;
+  padding: 18px 22px;
+  border: 1px solid #d7dee8;
+  border-radius: 8px;
+  background: #f8fafc;
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+.toc-title {
+  margin: 0 0 10px;
+  color: #111827;
+  font-weight: 700;
+}
+
+.toc ol {
+  margin: 0;
+  padding-left: 1.3rem;
+}
+
+.toc li {
+  margin: 4px 0;
+}
+
+.toc a {
+  color: #1d4ed8;
+  text-decoration: none;
+}
+
+.toc a:hover {
+  text-decoration: underline;
+}
+
+@media print {
+  body {
+    max-width: none;
+    padding: 0;
+    font-size: 11pt;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  table,
+  pre,
+  blockquote,
+  .figure {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  thead {
+    display: table-header-group;
+  }
+
+  tr {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  p,
+  li {
+    orphans: 2;
+    widows: 2;
+  }
+}
+
+@media (max-width: 640px) {
+  body {
+    padding: 28px 18px 56px;
+    font-size: 15px;
+  }
+
+  table {
+    font-size: 0.9rem;
+  }
+
+  th,
+  td {
+    padding: 8px 10px;
+  }
+}
+
+  </style>
+</head>
+<body>
+  <main class="chapter">
+<h1 id="chapter-title">8장 중간 실습 프로젝트</h1>
+<nav class="toc" aria-label="목차">
+<p class="toc-title">목차</p>
+<ol>
+<li><a href="#h2-1">수업 시간 구성</a></li>
+<li><a href="#h2-2">1. 학습 목표</a></li>
+<li><a href="#h2-3">2. 이번 장에서 만들 결과물</a></li>
+<li><a href="#h2-4">3. 핵심 개념</a></li>
+<li><a href="#h2-5">4. 프로젝트 시나리오</a></li>
+<li><a href="#h2-6">5. 실습 코드</a></li>
+<li><a href="#h2-7">6. LLM 활용 프롬프트</a></li>
+<li><a href="#h2-8">7. 결과 해석</a></li>
+<li><a href="#h2-9">8. 평가 기준</a></li>
+<li><a href="#h2-10">9. 제출 체크리스트</a></li>
+<li><a href="#h2-11">10. 정리</a></li>
+</ol>
+</nav>
+<p>이 장에서는 Chapter 3부터 Chapter 7까지 학습한 내용을 하나의 실습 프로젝트로 통합합니다. 지금까지 데이터 불러오기, 구조 파악, pandas 기본 분석, 데이터 전처리, EDA, 데이터 시각화를 각각 따로 연습했다면, 이번 장에서는 이 과정을 하나의 분석 흐름으로 연결합니다.</p>
+<p>중간 실습 프로젝트의 목표는 복잡한 모델을 만드는 것이 아닙니다. 실제 데이터 분석 업무처럼 원본 데이터를 확인하고, 전처리하고, 분석 질문을 만들고, pandas로 지표를 계산하고, 그래프로 시각화한 뒤, 최종 보고서 형태로 정리하는 것입니다.</p>
+<p>이번 프로젝트에서는 온라인 쇼핑몰 운영 데이터를 사용해 고객, 상품, 주문, 매출 관점의 기본 현황을 분석합니다. 학습자는 Notebook 코드, 분석 결과 CSV, 시각화 이미지, Markdown 보고서를 함께 제출합니다.</p>
+<p>이번 장의 핵심은 <strong>분석 전 과정을 하나의 재현 가능한 프로젝트로 완성하는 능력</strong>입니다.</p>
+<h2 id="h2-1">수업 시간 구성</h2>
+<table>
+<thead><tr><th>구성</th><th>권장 시간</th></tr></thead>
+<tbody><tr><td>프로젝트 목표와 제출물 안내</td><td>30분</td></tr>
+<tr><td>데이터 구조 재확인</td><td>30분</td></tr>
+<tr><td>전처리 코드 작성</td><td>50분</td></tr>
+<tr><td>분석 질문 설계</td><td>40분</td></tr>
+<tr><td>pandas 집계 분석</td><td>60분</td></tr>
+<tr><td>시각화 작성</td><td>50분</td></tr>
+<tr><td>결과 해석과 보고서 작성</td><td>60분</td></tr>
+<tr><td>LLM 활용 검토 및 보완</td><td>30분</td></tr>
+<tr><td>최종 제출물 정리</td><td>40분</td></tr></tbody>
+</table>
+<p>기본 수업은 약 6시간 30분을 기준으로 구성되어 있습니다. 개인별 프로젝트 수행과 피드백까지 포함하면 1~2회차 프로젝트 수업으로 확장할 수 있습니다.</p>
+<h2 id="h2-2">1. 학습 목표</h2>
+<p>이 장을 마치면 학습자는 다음을 할 수 있습니다.</p>
+<ul>
+<li>데이터 분석 프로젝트의 전체 흐름을 설명할 수 있습니다.</li>
+<li>원본 데이터를 불러오고 구조를 점검할 수 있습니다.</li>
+<li>결측치, 중복값, 데이터 타입, 이상값을 확인하고 처리할 수 있습니다.</li>
+<li>분석 질문을 직접 정의할 수 있습니다.</li>
+<li>분석 질문을 pandas 집계 코드로 연결할 수 있습니다.</li>
+<li>고객, 상품, 주문, 매출 관점의 기본 지표를 계산할 수 있습니다.</li>
+<li>분석 결과를 그래프로 시각화할 수 있습니다.</li>
+<li>시각화 결과를 보고서 문장으로 해석할 수 있습니다.</li>
+<li>LLM이 제안한 코드와 해석을 검증할 수 있습니다.</li>
+<li>Notebook, CSV, 이미지, Markdown 보고서를 하나의 프로젝트 산출물로 정리할 수 있습니다.</li>
+</ul>
+<h2 id="h2-3">2. 이번 장에서 만들 결과물</h2>
+<p>이번 장에서는 중간 실습 프로젝트 산출물을 만듭니다.</p>
+<p>제출해야 할 결과물은 다음과 같습니다.</p>
+<ul>
+<li><code>notebooks/ch08_midterm_project.ipynb</code></li>
+<li><code>reports/ch08_midterm_report.md</code></li>
+<li><code>reports/ch08_dataset_summary.csv</code></li>
+<li><code>reports/ch08_category_sales.csv</code></li>
+<li><code>reports/ch08_monthly_sales.csv</code></li>
+<li><code>reports/ch08_customer_sales.csv</code></li>
+<li><code>reports/figures/ch08_category_sales.png</code></li>
+<li><code>reports/figures/ch08_monthly_sales.png</code></li>
+<li><code>reports/figures/ch08_top_customers.png</code></li>
+<li>프로젝트 수행 체크리스트</li>
+<li>LLM 활용 내역과 검증 결과</li>
+</ul>
+<p>아래 그림은 중간 실습 프로젝트의 전체 흐름을 보여줍니다.</p>
+<figure class="figure">
+  <img src="../assets/images/ch08/ch08_project_overview_flow.png" alt="중간 실습 프로젝트 전체 흐름도">
+  <figcaption>그림 8-1. 중간 실습 프로젝트 전체 흐름도</figcaption>
+</figure>
+<h2 id="h2-4">3. 핵심 개념</h2>
+<h3 id="h3-1">3.1 프로젝트형 데이터 분석이란 무엇인가</h3>
+<p>프로젝트형 데이터 분석은 단순히 개별 코드를 실행하는 것이 아니라, 분석 목적에 맞게 데이터 처리 과정을 처음부터 끝까지 구성하는 방식입니다.</p>
+<p>프로젝트형 분석에는 다음 단계가 포함됩니다.</p>
+<table>
+<thead><tr><th>단계</th><th>설명</th><th>산출물</th></tr></thead>
+<tbody><tr><td>문제 정의</td><td>무엇을 분석할지 정함</td><td>분석 질문</td></tr>
+<tr><td>데이터 확인</td><td>파일, 컬럼, 타입, 결측치 확인</td><td>데이터 구조 요약</td></tr>
+<tr><td>전처리</td><td>분석 가능한 형태로 데이터 정리</td><td>clean 데이터</td></tr>
+<tr><td>분석</td><td>질문에 필요한 지표 계산</td><td>집계표</td></tr>
+<tr><td>시각화</td><td>결과를 그래프로 표현</td><td>이미지 파일</td></tr>
+<tr><td>해석</td><td>결과의 의미와 한계 설명</td><td>해석 문장</td></tr>
+<tr><td>보고서</td><td>전체 과정을 문서화</td><td>Markdown 보고서</td></tr>
+<tr><td>검증</td><td>코드와 해석의 오류 확인</td><td>체크리스트</td></tr></tbody>
+</table>
+<p>중요한 것은 각 단계를 분리해서 생각하면서도, 최종적으로는 하나의 흐름으로 연결하는 것입니다.</p>
+<h3 id="h3-2">3.2 좋은 프로젝트 질문의 조건</h3>
+<p>중간 프로젝트에서 가장 중요한 것은 분석 질문입니다. 좋은 질문이 있어야 필요한 데이터와 코드, 그래프가 결정됩니다.</p>
+<p>좋은 프로젝트 질문은 다음 조건을 만족해야 합니다.</p>
+<ul>
+<li>현재 데이터로 답할 수 있어야 합니다.</li>
+<li>계산 가능한 지표로 바꿀 수 있어야 합니다.</li>
+<li>분석 결과가 표나 그래프로 표현 가능해야 합니다.</li>
+<li>결과 해석이 실무적 의미를 가질 수 있어야 합니다.</li>
+<li>데이터에 없는 내용을 억지로 추측하지 않아야 합니다.</li>
+</ul>
+<p>예를 들어 다음 질문은 현재 데이터로 분석하기 좋습니다.</p>
+<ul>
+<li>카테고리별 매출은 어떻게 다른가?</li>
+<li>월별 매출과 주문 수는 어떻게 변하는가?</li>
+<li>구매 금액 상위 고객은 누구인가?</li>
+<li>주문 상태별 주문 수는 어떻게 분포하는가?</li>
+<li>상품 가격과 판매 수량 사이에 관계가 있는가?</li>
+</ul>
+<p>반대로 다음 질문은 현재 데이터만으로 답하기 어렵습니다.</p>
+<ul>
+<li>고객이 왜 이탈했는가?</li>
+<li>고객 만족도는 어떤가?</li>
+<li>광고가 매출에 어떤 영향을 주었는가?</li>
+<li>재구매 의도는 높은가?</li>
+</ul>
+<p>이런 질문은 관련 데이터가 추가로 있어야 분석할 수 있습니다.</p>
+<h3 id="h3-3">3.3 분석 파이프라인이란 무엇인가</h3>
+<p>분석 파이프라인은 데이터가 입력되어 결과 보고서가 나오기까지의 처리 흐름입니다.</p>
+<p>이번 프로젝트에서는 다음 파이프라인을 사용합니다.</p>
+<ol>
+<li>원본 데이터 불러오기</li>
+<li>데이터 구조 확인</li>
+<li>전처리 수행</li>
+<li>분석용 데이터 병합</li>
+<li>주요 지표 계산</li>
+<li>시각화 생성</li>
+<li>결과 저장</li>
+<li>보고서 작성</li>
+<li>LLM 검토</li>
+<li>최종 제출</li>
+</ol>
+<p>아래 그림은 이번 프로젝트에서 사용할 분석 파이프라인을 보여줍니다.</p>
+<figure class="figure">
+  <img src="../assets/images/ch08/ch08_analysis_pipeline.png" alt="중간 프로젝트 분석 파이프라인">
+  <figcaption>그림 8-2. 중간 프로젝트 분석 파이프라인</figcaption>
+</figure>
+<h3 id="h3-4">3.4 재현 가능한 분석이란 무엇인가</h3>
+<p>재현 가능한 분석은 다른 사람이 같은 코드를 실행했을 때 같은 결과를 얻을 수 있는 분석입니다.</p>
+<p>재현 가능한 분석을 위해서는 다음을 지켜야 합니다.</p>
+<ul>
+<li>파일 경로를 명확히 작성합니다.</li>
+<li>원본 데이터와 결과 데이터를 분리합니다.</li>
+<li>코드 실행 순서를 Notebook에 정리합니다.</li>
+<li>중간 결과를 변수명으로 명확히 저장합니다.</li>
+<li>결과 CSV와 이미지 파일을 저장합니다.</li>
+<li>보고서에 전처리 기준과 분석 기준을 기록합니다.</li>
+<li>LLM이 만든 코드는 검증 후 사용합니다.</li>
+</ul>
+<p>재현 가능성이 낮으면 보고서 결과를 신뢰하기 어렵습니다.</p>
+<h3 id="h3-5">3.5 프로젝트 보고서 구조</h3>
+<p>중간 프로젝트 보고서는 단순한 코드 설명이 아니라 분석 목적, 방법, 결과, 해석, 한계를 정리하는 문서입니다.</p>
+<p>이번 장에서는 다음 구조를 사용합니다.</p>
+<table>
+<thead><tr><th>섹션</th><th>포함 내용</th></tr></thead>
+<tbody><tr><td>분석 목적</td><td>무엇을 분석하려는지 설명</td></tr>
+<tr><td>데이터 개요</td><td>사용한 파일과 주요 컬럼</td></tr>
+<tr><td>전처리 내용</td><td>결측치, 중복, 타입 변환 등</td></tr>
+<tr><td>분석 질문</td><td>이번 프로젝트에서 답할 질문</td></tr>
+<tr><td>주요 분석 결과</td><td>표와 그래프 중심 결과</td></tr>
+<tr><td>결과 해석</td><td>관찰 내용과 추가 확인 필요 사항</td></tr>
+<tr><td>한계점</td><td>현재 데이터로 알 수 없는 것</td></tr>
+<tr><td>다음 단계</td><td>추가 분석 또는 개선 방향</td></tr></tbody>
+</table>
+<p>아래 그림은 중간 프로젝트 보고서의 기본 구조를 보여줍니다.</p>
+<figure class="figure">
+  <img src="../assets/images/ch08/ch08_report_structure.png" alt="중간 프로젝트 보고서 구조">
+  <figcaption>그림 8-3. 중간 프로젝트 보고서 구조</figcaption>
+</figure>
+<h2 id="h2-5">4. 프로젝트 시나리오</h2>
+<p>이번 장의 프로젝트 시나리오는 다음과 같습니다.</p>
+<blockquote>온라인 쇼핑몰 운영자가 최근 주문 데이터를 바탕으로 기본 매출 현황과 고객 구매 패턴을 파악하려고 합니다. 운영자는 어떤 카테고리가 매출에 많이 기여하는지, 월별 매출 흐름은 어떤지, 구매 금액이 높은 고객은 누구인지, 주문 상태는 어떻게 분포하는지 알고 싶어 합니다. 학습자는 데이터 분석가로서 원본 데이터를 점검하고, 전처리하고, 주요 지표와 그래프를 만들어 간단한 분석 보고서를 작성해야 합니다.</blockquote>
+<p>이번 프로젝트의 핵심 분석 질문은 다음과 같습니다.</p>
+<table>
+<thead><tr><th>번호</th><th>분석 질문</th><th>주요 지표</th><th>결과 형태</th></tr></thead>
+<tbody><tr><td>1</td><td>카테고리별 매출은 어떻게 다른가?</td><td><code>total_sales</code>, <code>sales_ratio</code></td><td>표, 막대그래프</td></tr>
+<tr><td>2</td><td>월별 매출과 주문 수는 어떻게 변하는가?</td><td><code>total_sales</code>, <code>order_count</code></td><td>표, 선 그래프</td></tr>
+<tr><td>3</td><td>구매 금액 상위 고객은 누구인가?</td><td><code>total_sales</code>, <code>order_count</code>, <code>avg_order_value</code></td><td>표, 가로 막대그래프</td></tr>
+<tr><td>4</td><td>주문 상태별 주문 수는 어떻게 분포하는가?</td><td><code>order_count</code></td><td>표</td></tr>
+<tr><td>5</td><td>상품 가격과 판매 수량은 관계가 있는가?</td><td><code>price</code>, <code>total_quantity</code></td><td>산점도</td></tr></tbody>
+</table>
+<p>아래 그림은 프로젝트에서 다룰 핵심 분석 질문을 한 화면에 요약한 것입니다.</p>
+<figure class="figure">
+  <img src="../assets/images/ch08/ch08_project_questions_map.png" alt="중간 프로젝트 분석 질문 맵">
+  <figcaption>그림 8-4. 중간 프로젝트 분석 질문 맵</figcaption>
+</figure>
+<h2 id="h2-6">5. 실습 코드</h2>
+<p>이번 장의 전체 실습은 다음 Notebook에서 진행합니다.</p>
+<pre><code class="language-text">notebooks/ch08_midterm_project.ipynb</code></pre>
+<p>본문에는 핵심 코드만 제공합니다.</p>
+<h3 id="h3-6">5.1 기본 패키지 불러오기</h3>
+<pre><code class="language-python">from pathlib import Path
+import pandas as pd
+import matplotlib.pyplot as plt</code></pre>
+<p>한글 폰트와 실행 경로를 설정합니다. 프로젝트 루트에서 실행하는 경우와 <code>notebooks</code> 폴더 안에서 실행하는 경우에는 상대 경로가 달라질 수 있습니다. 초보자는 두 경로 예시를 모두 실행하지 말고, 아래처럼 현재 실행 위치를 기준으로 <code>base_dir</code>를 자동으로 정한 뒤 사용하는 것이 안전합니다.</p>
+<pre><code class="language-python">plt.rcParams[&quot;font.family&quot;] = &quot;Malgun Gothic&quot;
+plt.rcParams[&quot;axes.unicode_minus&quot;] = False</code></pre>
+<p>현재 실행 위치를 기준으로 프로젝트 기준 폴더를 찾습니다.</p>
+<pre><code class="language-python">current_dir = Path.cwd()
+
+if current_dir.name == &quot;notebooks&quot;:
+    base_dir = current_dir.parent
+else:
+    base_dir = current_dir</code></pre>
+<p>작업 경로를 자동으로 설정합니다.</p>
+<pre><code class="language-python">raw_dir = base_dir / &quot;data&quot; / &quot;raw&quot;
+processed_dir = base_dir / &quot;data&quot; / &quot;processed&quot;
+report_dir = base_dir / &quot;reports&quot;
+figure_dir = report_dir / &quot;figures&quot;
+
+processed_dir.mkdir(parents=True, exist_ok=True)
+report_dir.mkdir(parents=True, exist_ok=True)
+figure_dir.mkdir(parents=True, exist_ok=True)</code></pre>
+<p>설정된 경로는 <code>print(raw_dir)</code>, <code>print(processed_dir)</code>, <code>print(report_dir)</code>, <code>print(figure_dir)</code>처럼 필요할 때 각각 확인할 수 있습니다.</p>
+<p>이 코드를 사용하면 노트북을 프로젝트 루트에서 실행하든 <code>notebooks</code> 폴더에서 실행하든 같은 방식으로 동작합니다.</p>
+<p><code>to_markdown()</code>을 사용하려면 환경에 따라 <code>tabulate</code> 패키지가 필요할 수 있습니다. 오류가 발생하면 터미널 또는 노트북에서 <code>pip install tabulate</code>를 실행하세요.</p>
+<h3 id="h3-7">5.2 원본 데이터 불러오기</h3>
+<pre><code class="language-python">customers = pd.read_csv(raw_dir / &quot;customers.csv&quot;)
+products = pd.read_csv(raw_dir / &quot;products.csv&quot;)
+orders = pd.read_csv(raw_dir / &quot;orders.csv&quot;)
+order_items = pd.read_csv(raw_dir / &quot;order_items.csv&quot;)</code></pre>
+<p>데이터 크기를 확인합니다.</p>
+<pre><code class="language-python">dataset_summary = pd.DataFrame({
+    &quot;dataset&quot;: [&quot;customers&quot;, &quot;products&quot;, &quot;orders&quot;, &quot;order_items&quot;],
+    &quot;rows&quot;: [customers.shape[0], products.shape[0], orders.shape[0], order_items.shape[0]],
+    &quot;columns&quot;: [customers.shape[1], products.shape[1], orders.shape[1], order_items.shape[1]]
+})
+
+dataset_summary</code></pre>
+<p>데이터 개요를 저장합니다.</p>
+<pre><code class="language-python">dataset_summary.to_csv(report_dir / &quot;ch08_dataset_summary.csv&quot;, index=False)</code></pre>
+<h3 id="h3-8">5.3 데이터 구조 점검하기</h3>
+<pre><code class="language-python">datasets = {
+    &quot;customers&quot;: customers,
+    &quot;products&quot;: products,
+    &quot;orders&quot;: orders,
+    &quot;order_items&quot;: order_items
+}
+
+for name, df in datasets.items():
+    print(f&quot;\n===== {name} =====&quot;)
+    print(&quot;shape:&quot;, df.shape)
+    print(&quot;columns:&quot;, list(df.columns))
+    print(&quot;missing values:&quot;, df.isna().sum().sum())
+    print(&quot;duplicated rows:&quot;, df.duplicated().sum())</code></pre>
+<p>이 단계에서는 분석을 시작하기 전에 데이터가 어떤 구조인지 빠르게 확인합니다.</p>
+<h3 id="h3-9">5.4 전처리 함수 준비하기</h3>
+<p>문자열 컬럼의 앞뒤 공백을 제거하는 함수를 만듭니다. 결측치는 그대로 유지합니다.</p>
+<pre><code class="language-python">def strip_string_columns(df):
+    df = df.copy()
+    string_columns = df.select_dtypes(include=&quot;object&quot;).columns
+    
+    for col in string_columns:
+        df[col] = df[col].where(
+            df[col].isna(),
+            df[col].astype(str).str.strip()
+        )
+    
+    return df</code></pre>
+<p>문자열 숫자를 숫자형으로 변환하는 함수를 만듭니다.</p>
+<pre><code class="language-python">def to_number(series):
+    return pd.to_numeric(
+        series.astype(str).str.replace(&quot;,&quot;, &quot;&quot;, regex=False),
+        errors=&quot;coerce&quot;
+    )</code></pre>
+<h3 id="h3-10">5.5 고객 데이터 전처리</h3>
+<pre><code class="language-python">customers_clean = customers.copy()
+customers_clean = strip_string_columns(customers_clean)
+
+if &quot;age&quot; in customers_clean.columns:
+    customers_clean[&quot;age&quot;] = pd.to_numeric(customers_clean[&quot;age&quot;], errors=&quot;coerce&quot;)
+    customers_clean[&quot;age&quot;] = customers_clean[&quot;age&quot;].fillna(customers_clean[&quot;age&quot;].median())
+
+if &quot;city&quot; in customers_clean.columns:
+    customers_clean[&quot;city&quot;] = customers_clean[&quot;city&quot;].fillna(&quot;Unknown&quot;)
+
+if &quot;signup_date&quot; in customers_clean.columns:
+    customers_clean[&quot;signup_date&quot;] = pd.to_datetime(
+        customers_clean[&quot;signup_date&quot;],
+        errors=&quot;coerce&quot;
+    )
+
+customers_clean = customers_clean.drop_duplicates()</code></pre>
+<h3 id="h3-11">5.6 상품 데이터 전처리</h3>
+<pre><code class="language-python">products_clean = products.copy()
+products_clean = strip_string_columns(products_clean)
+
+if &quot;price&quot; in products_clean.columns:
+    products_clean[&quot;price&quot;] = to_number(products_clean[&quot;price&quot;])
+    products_clean = products_clean[products_clean[&quot;price&quot;] &gt; 0]
+
+products_clean = products_clean.drop_duplicates()</code></pre>
+<h3 id="h3-12">5.7 주문 데이터 전처리</h3>
+<pre><code class="language-python">orders_clean = orders.copy()
+orders_clean = strip_string_columns(orders_clean)
+
+if &quot;order_date&quot; in orders_clean.columns:
+    orders_clean[&quot;order_date&quot;] = pd.to_datetime(
+        orders_clean[&quot;order_date&quot;],
+        errors=&quot;coerce&quot;
+    )
+    orders_clean[&quot;order_month&quot;] = orders_clean[&quot;order_date&quot;].dt.to_period(&quot;M&quot;).astype(str)
+
+if &quot;order_status&quot; in orders_clean.columns:
+    status_map = {
+        &quot;complete&quot;: &quot;completed&quot;,
+        &quot;Complete&quot;: &quot;completed&quot;,
+        &quot;COMPLETED&quot;: &quot;completed&quot;,
+        &quot;완료&quot;: &quot;completed&quot;,
+        &quot;cancel&quot;: &quot;cancelled&quot;,
+        &quot;Cancel&quot;: &quot;cancelled&quot;,
+        &quot;CANCELLED&quot;: &quot;cancelled&quot;,
+        &quot;취소&quot;: &quot;cancelled&quot;
+    }
+    orders_clean[&quot;order_status&quot;] = orders_clean[&quot;order_status&quot;].replace(status_map)
+
+orders_clean = orders_clean.drop_duplicates()</code></pre>
+<h3 id="h3-13">5.8 주문 상세 데이터 전처리</h3>
+<pre><code class="language-python">order_items_clean = order_items.copy()
+order_items_clean = strip_string_columns(order_items_clean)
+
+if &quot;quantity&quot; in order_items_clean.columns:
+    order_items_clean[&quot;quantity&quot;] = to_number(order_items_clean[&quot;quantity&quot;])
+
+if &quot;unit_price&quot; in order_items_clean.columns:
+    order_items_clean[&quot;unit_price&quot;] = to_number(order_items_clean[&quot;unit_price&quot;])
+
+if &quot;quantity&quot; in order_items_clean.columns:
+    order_items_clean = order_items_clean[order_items_clean[&quot;quantity&quot;] &gt; 0]
+
+if &quot;unit_price&quot; in order_items_clean.columns:
+    order_items_clean = order_items_clean[order_items_clean[&quot;unit_price&quot;] &gt; 0]
+
+if {&quot;quantity&quot;, &quot;unit_price&quot;}.issubset(order_items_clean.columns):
+    order_items_clean[&quot;line_total&quot;] = (
+        order_items_clean[&quot;quantity&quot;] * order_items_clean[&quot;unit_price&quot;]
+    )
+
+order_items_clean = order_items_clean.drop_duplicates()</code></pre>
+<h3 id="h3-14">5.9 전처리 결과 저장하기</h3>
+<pre><code class="language-python">customers_clean.to_csv(processed_dir / &quot;customers_clean.csv&quot;, index=False)
+products_clean.to_csv(processed_dir / &quot;products_clean.csv&quot;, index=False)
+orders_clean.to_csv(processed_dir / &quot;orders_clean.csv&quot;, index=False)
+order_items_clean.to_csv(processed_dir / &quot;order_items_clean.csv&quot;, index=False)</code></pre>
+<p>전처리 전후 데이터 크기를 비교합니다.</p>
+<pre><code class="language-python">processed_summary = pd.DataFrame({
+    &quot;dataset&quot;: [&quot;customers&quot;, &quot;products&quot;, &quot;orders&quot;, &quot;order_items&quot;],
+    &quot;rows_processed&quot;: [
+        customers_clean.shape[0],
+        products_clean.shape[0],
+        orders_clean.shape[0],
+        order_items_clean.shape[0]
+    ],
+    &quot;columns_processed&quot;: [
+        customers_clean.shape[1],
+        products_clean.shape[1],
+        orders_clean.shape[1],
+        order_items_clean.shape[1]
+    ]
+})
+
+preprocessing_comparison = dataset_summary.merge(
+    processed_summary,
+    on=&quot;dataset&quot;
+)
+
+preprocessing_comparison</code></pre>
+<h3 id="h3-15">5.10 파일 간 키 관계 확인하기</h3>
+<pre><code class="language-python">invalid_customers = orders_clean[
+    ~orders_clean[&quot;customer_id&quot;].isin(customers_clean[&quot;customer_id&quot;])
+]
+
+invalid_orders = order_items_clean[
+    ~order_items_clean[&quot;order_id&quot;].isin(orders_clean[&quot;order_id&quot;])
+]
+
+invalid_products = order_items_clean[
+    ~order_items_clean[&quot;product_id&quot;].isin(products_clean[&quot;product_id&quot;])
+]
+
+print(&quot;customers에 없는 customer_id 수:&quot;, len(invalid_customers))
+print(&quot;orders에 없는 order_id 수:&quot;, len(invalid_orders))
+print(&quot;products에 없는 product_id 수:&quot;, len(invalid_products))</code></pre>
+<p>키 관계가 깨져 있으면 병합 결과에 결측치가 생길 수 있습니다. 따라서 분석 전에 반드시 확인해야 합니다.</p>
+<h3 id="h3-16">5.11 분석용 데이터 병합하기</h3>
+<p>주문 상세와 상품 데이터를 병합합니다.</p>
+<pre><code class="language-python">sales_items = order_items_clean.merge(
+    products_clean,
+    on=&quot;product_id&quot;,
+    how=&quot;left&quot;
+)</code></pre>
+<p>병합 결과를 검증합니다.</p>
+<pre><code class="language-python">print(&quot;병합 전 order_items_clean:&quot;, order_items_clean.shape)
+print(&quot;병합 후 sales_items:&quot;, sales_items.shape)
+print(&quot;상품명 누락:&quot;, sales_items[&quot;product_name&quot;].isna().sum())
+print(&quot;카테고리 누락:&quot;, sales_items[&quot;category&quot;].isna().sum())</code></pre>
+<p>주문 상세와 주문 데이터를 병합합니다.</p>
+<pre><code class="language-python">order_sales = order_items_clean.merge(
+    orders_clean,
+    on=&quot;order_id&quot;,
+    how=&quot;left&quot;
+)</code></pre>
+<p>고객 정보까지 병합합니다.</p>
+<pre><code class="language-python">customer_sales_base = order_sales.merge(
+    customers_clean,
+    on=&quot;customer_id&quot;,
+    how=&quot;left&quot;
+)</code></pre>
+<h3 id="h3-17">5.12 카테고리별 매출 분석</h3>
+<pre><code class="language-python">category_sales = (
+    sales_items
+    .groupby(&quot;category&quot;, as_index=False)
+    .agg(
+        total_quantity=(&quot;quantity&quot;, &quot;sum&quot;),
+        total_sales=(&quot;line_total&quot;, &quot;sum&quot;)
+    )
+    .sort_values(&quot;total_sales&quot;, ascending=False)
+)
+
+category_sales[&quot;sales_ratio&quot;] = (
+    category_sales[&quot;total_sales&quot;] / category_sales[&quot;total_sales&quot;].sum() * 100
+).round(2)
+
+category_sales</code></pre>
+<p>결과를 저장합니다.</p>
+<pre><code class="language-python">category_sales.to_csv(report_dir / &quot;ch08_category_sales.csv&quot;, index=False)</code></pre>
+<h3 id="h3-18">5.13 월별 매출 분석</h3>
+<pre><code class="language-python">order_sales[&quot;order_date&quot;] = pd.to_datetime(order_sales[&quot;order_date&quot;], errors=&quot;coerce&quot;)
+order_sales[&quot;order_month&quot;] = order_sales[&quot;order_date&quot;].dt.to_period(&quot;M&quot;).astype(str)
+
+monthly_sales = (
+    order_sales
+    .groupby(&quot;order_month&quot;, as_index=False)
+    .agg(
+        total_sales=(&quot;line_total&quot;, &quot;sum&quot;),
+        order_count=(&quot;order_id&quot;, &quot;nunique&quot;)
+    )
+    .sort_values(&quot;order_month&quot;)
+)
+
+monthly_sales[&quot;avg_order_value&quot;] = (
+    monthly_sales[&quot;total_sales&quot;] / monthly_sales[&quot;order_count&quot;]
+).round(0)
+
+monthly_sales</code></pre>
+<p>결과를 저장합니다.</p>
+<pre><code class="language-python">monthly_sales.to_csv(report_dir / &quot;ch08_monthly_sales.csv&quot;, index=False)</code></pre>
+<h3 id="h3-19">5.14 고객별 구매 금액 분석</h3>
+<pre><code class="language-python">customer_sales = (
+    customer_sales_base
+    .groupby([&quot;customer_id&quot;, &quot;name&quot;, &quot;city&quot;], as_index=False)
+    .agg(
+        order_count=(&quot;order_id&quot;, &quot;nunique&quot;),
+        total_sales=(&quot;line_total&quot;, &quot;sum&quot;)
+    )
+    .sort_values(&quot;total_sales&quot;, ascending=False)
+)
+
+customer_sales[&quot;avg_order_value&quot;] = (
+    customer_sales[&quot;total_sales&quot;] / customer_sales[&quot;order_count&quot;]
+).round(0)
+
+customer_sales.head(10)</code></pre>
+<p>결과를 저장합니다.</p>
+<pre><code class="language-python">customer_sales.to_csv(report_dir / &quot;ch08_customer_sales.csv&quot;, index=False)</code></pre>
+<h3 id="h3-20">5.15 주문 상태별 주문 수 분석</h3>
+<pre><code class="language-python">order_status_summary = (
+    orders_clean[&quot;order_status&quot;]
+    .value_counts()
+    .reset_index()
+)
+
+order_status_summary.columns = [&quot;order_status&quot;, &quot;order_count&quot;]
+order_status_summary</code></pre>
+<h3 id="h3-21">5.16 카테고리별 매출 시각화</h3>
+<pre><code class="language-python">plt.figure(figsize=(10, 5))
+
+plt.bar(
+    category_sales[&quot;category&quot;],
+    category_sales[&quot;total_sales&quot;]
+)
+
+plt.title(&quot;카테고리별 매출&quot;)
+plt.xlabel(&quot;카테고리&quot;)
+plt.ylabel(&quot;총매출&quot;)
+plt.xticks(rotation=45)
+plt.tight_layout()
+
+plt.savefig(figure_dir / &quot;ch08_category_sales.png&quot;, dpi=150)
+plt.show()</code></pre>
+<h3 id="h3-22">5.17 월별 매출 시각화</h3>
+<pre><code class="language-python">plt.figure(figsize=(10, 5))
+
+plt.plot(
+    monthly_sales[&quot;order_month&quot;],
+    monthly_sales[&quot;total_sales&quot;],
+    marker=&quot;o&quot;
+)
+
+plt.title(&quot;월별 매출 추이&quot;)
+plt.xlabel(&quot;주문 월&quot;)
+plt.ylabel(&quot;총매출&quot;)
+plt.xticks(rotation=45)
+plt.tight_layout()
+
+plt.savefig(figure_dir / &quot;ch08_monthly_sales.png&quot;, dpi=150)
+plt.show()</code></pre>
+<h3 id="h3-23">5.18 구매 금액 상위 고객 시각화</h3>
+<p>개인정보 보호를 위해 고객명을 직접 표시하지 않고 고객 ID 기반 라벨을 사용할 수 있습니다.</p>
+<pre><code class="language-python">top_customers = customer_sales.head(10).copy()
+top_customers[&quot;customer_label&quot;] = &quot;Customer &quot; + top_customers[&quot;customer_id&quot;].astype(str)
+top_customers = top_customers.sort_values(&quot;total_sales&quot;)</code></pre>
+<pre><code class="language-python">plt.figure(figsize=(10, 6))
+
+plt.barh(
+    top_customers[&quot;customer_label&quot;],
+    top_customers[&quot;total_sales&quot;]
+)
+
+plt.title(&quot;구매 금액 상위 10명 고객&quot;)
+plt.xlabel(&quot;총 구매 금액&quot;)
+plt.ylabel(&quot;고객&quot;)
+plt.tight_layout()
+
+plt.savefig(figure_dir / &quot;ch08_top_customers.png&quot;, dpi=150)
+plt.show()</code></pre>
+<h3 id="h3-24">5.19 분석 결과 해석 메모 만들기</h3>
+<pre><code class="language-python">interpretation_notes = pd.DataFrame({
+    &quot;analysis&quot;: [
+        &quot;카테고리별 매출&quot;,
+        &quot;월별 매출&quot;,
+        &quot;고객별 구매 금액&quot;,
+        &quot;주문 상태별 주문 수&quot;
+    ],
+    &quot;observation&quot;: [
+        &quot;매출이 높은 카테고리를 확인할 수 있습니다.&quot;,
+        &quot;시간에 따른 매출 증가와 감소 흐름을 확인할 수 있습니다.&quot;,
+        &quot;구매 금액이 높은 고객 후보를 확인할 수 있습니다.&quot;,
+        &quot;주문 상태의 분포를 확인할 수 있습니다.&quot;
+    ],
+    &quot;caution&quot;: [
+        &quot;매출이 높은 이유가 판매 수량 때문인지 단가 때문인지 추가 확인이 필요합니다.&quot;,
+        &quot;매출 변화의 원인을 설명하려면 프로모션, 계절성, 주문 수 변화 확인이 필요합니다.&quot;,
+        &quot;일회성 고액 구매 고객과 반복 구매 고객을 구분해야 합니다.&quot;,
+        &quot;취소 주문이 매출 계산에 포함되었는지 확인해야 합니다.&quot;
+    ]
+})
+
+interpretation_notes</code></pre>
+<h3 id="h3-25">5.20 중간 프로젝트 보고서 작성하기</h3>
+<pre><code class="language-python">report_text = f&quot;&quot;&quot;
+# Chapter 8 중간 실습 프로젝트 보고서
+
+## 1. 분석 목적
+
+온라인 쇼핑몰 고객, 상품, 주문, 주문 상세 데이터를 사용해 기본 매출 현황과 고객 구매 패턴을 분석했습니다.
+
+## 2. 데이터 개요
+
+{dataset_summary.to_markdown(index=False)}
+
+## 3. 전처리 전후 비교
+
+{preprocessing_comparison.to_markdown(index=False)}
+
+## 4. 주요 분석 질문
+
+1. 카테고리별 매출은 어떻게 다른가?
+2. 월별 매출과 주문 수는 어떻게 변하는가?
+3. 구매 금액 상위 고객은 누구인가?
+4. 주문 상태별 주문 수는 어떻게 분포하는가?
+
+## 5. 카테고리별 매출
+
+{category_sales.to_markdown(index=False)}
+
+## 6. 월별 매출
+
+{monthly_sales.to_markdown(index=False)}
+
+## 7. 구매 금액 상위 고객
+
+{customer_sales.head(10).to_markdown(index=False)}
+
+## 8. 해석 메모
+
+{interpretation_notes.to_markdown(index=False)}
+
+## 9. 한계점
+
+- 현재 데이터만으로 고객 만족도나 이탈 이유는 분석할 수 없습니다.
+- 매출 변화의 원인을 설명하려면 프로모션, 광고, 재고, 계절성 데이터가 추가로 필요합니다.
+- 구매 금액 상위 고객은 주문 횟수와 평균 주문 금액을 함께 해석해야 합니다.
+- 취소 주문과 환불 주문 처리 기준에 따라 매출 결과가 달라질 수 있습니다.
+
+## 10. 다음 단계
+
+- 카테고리별 판매 수량과 평균 단가를 함께 비교합니다.
+- 월별 매출 변동 원인을 추가 데이터와 함께 분석합니다.
+- 고객별 구매 금액을 기준으로 고객 세분화를 시도합니다.
+- LLM을 활용해 보고서 문장을 보완하되, 데이터에 없는 원인은 단정하지 않습니다.
+&quot;&quot;&quot;
+
+report_path = report_dir / &quot;ch08_midterm_report.md&quot;
+report_path.write_text(report_text, encoding=&quot;utf-8&quot;)</code></pre>
+<p>아래 그림은 최종 제출물의 구성을 보여줍니다.</p>
+<figure class="figure">
+  <img src="../assets/images/ch08/ch08_project_deliverables.png" alt="중간 실습 프로젝트 제출물 구성">
+  <figcaption>그림 8-5. 중간 실습 프로젝트 제출물 구성</figcaption>
+</figure>
+<h2 id="h2-7">6. LLM 활용 프롬프트</h2>
+<p>LLM은 프로젝트 수행 과정에서 코드 검토, 분석 질문 보완, 보고서 문장 작성에 도움을 줄 수 있습니다. 하지만 LLM이 만든 내용은 반드시 실제 데이터와 비교해 검증해야 합니다.</p>
+<h3 id="h3-26">6.1 프로젝트 분석 질문 검토 요청</h3>
+<pre><code class="language-text">당신은 데이터 분석 프로젝트 멘토입니다.
+
+온라인 쇼핑몰 데이터로 중간 실습 프로젝트를 진행하려고 합니다.
+
+사용 데이터:
+- customers: 고객 정보
+- products: 상품 정보
+- orders: 주문 정보
+- order_items: 주문 상세 정보
+
+초안 분석 질문:
+1. 카테고리별 매출은 어떻게 다른가?
+2. 월별 매출과 주문 수는 어떻게 변하는가?
+3. 구매 금액 상위 고객은 누구인가?
+4. 주문 상태별 주문 수는 어떻게 분포하는가?
+5. 상품 가격과 판매 수량은 관계가 있는가?
+
+각 질문이 현재 데이터로 분석 가능한지 검토해 주세요.
+각 질문에 필요한 데이터, 지표, pandas 기능을 표로 정리해 주세요.</code></pre>
+<h3 id="h3-27">6.2 전처리 코드 검토 요청</h3>
+<pre><code class="language-text">다음 전처리 코드가 안전한지 검토해 주세요.
+
+검토 기준:
+- 원본 데이터를 직접 수정하는지
+- 결측치를 &quot;nan&quot; 문자열로 바꾸는 문제가 있는지
+- 날짜 변환 실패 건수를 확인하는지
+- 숫자형 변환 실패를 확인하는지
+- 이상값을 무조건 삭제하고 있지 않은지
+- 전처리 전후 데이터 크기를 비교하는지
+- 파일 간 키 관계를 확인하는지
+
+초보자가 이해할 수 있도록 문제점과 개선 방향을 정리해 주세요.</code></pre>
+<h3 id="h3-28">6.3 분석 결과 해석 요청</h3>
+<pre><code class="language-text">다음은 중간 프로젝트의 주요 분석 결과입니다.
+
+카테고리별 매출표:
+- category
+- total_quantity
+- total_sales
+- sales_ratio
+
+월별 매출표:
+- order_month
+- total_sales
+- order_count
+- avg_order_value
+
+고객별 구매 금액표:
+- customer_id
+- city
+- order_count
+- total_sales
+- avg_order_value
+
+이 결과를 바탕으로 보고서 해석 문장을 작성해 주세요.
+
+조건:
+- 데이터에 없는 원인은 단정하지 말 것
+- 관찰 결과와 원인 가설을 구분할 것
+- 추가로 확인해야 할 분석 질문을 포함할 것
+- 실무 보고서 문체로 작성할 것</code></pre>
+<h3 id="h3-29">6.4 보고서 초안 검토 요청</h3>
+<pre><code class="language-text">다음 중간 프로젝트 보고서 초안을 검토해 주세요.
+
+검토 기준:
+1. 분석 목적이 명확한가?
+2. 데이터 개요가 충분한가?
+3. 전처리 기준이 설명되어 있는가?
+4. 분석 질문과 결과가 연결되어 있는가?
+5. 그래프 해석이 과장되지 않았는가?
+6. 데이터에 없는 원인을 단정하지 않았는가?
+7. 한계점과 다음 단계가 포함되어 있는가?
+
+수정이 필요한 부분을 표로 정리하고, 더 나은 문장 예시를 제안해 주세요.</code></pre>
+<h2 id="h2-8">7. 결과 해석</h2>
+<p>이번 프로젝트의 결과는 최종 정답이 아니라, 데이터 기반으로 현재 쇼핑몰의 기본 현황을 파악한 1차 분석 결과입니다.</p>
+<h3 id="h3-30">7.1 카테고리별 매출 해석</h3>
+<p>카테고리별 매출은 어떤 상품군이 매출에 많이 기여했는지 보여줍니다.</p>
+<pre><code class="language-text">카테고리별 매출 결과를 통해 매출 비중이 높은 상품군을 확인할 수 있습니다.
+다만 매출이 높은 이유가 판매 수량 때문인지, 상품 단가 때문인지는 추가 분석이 필요합니다.</code></pre>
+<p>추가로 확인할 질문은 다음과 같습니다.</p>
+<ul>
+<li>카테고리별 판매 수량은 어떻게 다른가?</li>
+<li>카테고리별 평균 단가는 어떻게 다른가?</li>
+<li>상품 수가 많은 카테고리가 매출도 높은가?</li>
+</ul>
+<h3 id="h3-31">7.2 월별 매출 해석</h3>
+<p>월별 매출은 시간에 따른 흐름을 보여줍니다.</p>
+<pre><code class="language-text">월별 매출과 주문 수를 함께 보면 매출 변화가 주문 수 변화와 관련이 있는지 확인할 수 있습니다.
+다만 매출 변화의 원인을 설명하려면 프로모션, 계절성, 신규 상품 출시 여부 등 추가 데이터가 필요합니다.</code></pre>
+<p>추가로 확인할 질문은 다음과 같습니다.</p>
+<ul>
+<li>특정 월의 주문 수가 증가했는가?</li>
+<li>평균 주문 금액이 증가했는가?</li>
+<li>특정 카테고리의 매출이 특정 월에 집중되었는가?</li>
+</ul>
+<h3 id="h3-32">7.3 고객별 구매 금액 해석</h3>
+<p>고객별 구매 금액은 우수 고객 후보를 확인하는 데 유용합니다.</p>
+<pre><code class="language-text">고객별 총 구매 금액을 기준으로 구매 규모가 큰 고객을 확인할 수 있습니다.
+다만 한 번에 크게 구매한 고객과 여러 번 반복 구매한 고객은 구분해서 해석해야 합니다.</code></pre>
+<p>추가로 확인할 질문은 다음과 같습니다.</p>
+<ul>
+<li>상위 고객의 주문 횟수는 많은가?</li>
+<li>평균 주문 금액이 높은 고객은 누구인가?</li>
+<li>특정 도시의 고객이 상위 구매 고객에 많이 포함되는가?</li>
+</ul>
+<h2 id="h2-9">8. 평가 기준</h2>
+<p>중간 실습 프로젝트는 다음 기준으로 평가할 수 있습니다.</p>
+<table>
+<thead><tr><th>평가 항목</th><th>배점</th><th>평가 기준</th></tr></thead>
+<tbody><tr><td>데이터 불러오기와 구조 파악</td><td>15점</td><td>4개 CSV 파일을 정확히 불러오고 구조를 점검했는가</td></tr>
+<tr><td>전처리</td><td>20점</td><td>결측치, 중복, 타입 변환, 이상값 확인을 수행했는가</td></tr>
+<tr><td>분석 질문 설계</td><td>15점</td><td>데이터로 답할 수 있는 구체적 질문을 만들었는가</td></tr>
+<tr><td>pandas 분석</td><td>20점</td><td>병합, 집계, 정렬, 비율 계산을 적절히 수행했는가</td></tr>
+<tr><td>시각화</td><td>15점</td><td>질문에 맞는 그래프를 만들고 저장했는가</td></tr>
+<tr><td>결과 해석과 보고서</td><td>15점</td><td>결과를 과장하지 않고 한계와 다음 단계를 정리했는가</td></tr></tbody>
+</table>
+<h2 id="h2-10">9. 제출 체크리스트</h2>
+<table>
+<thead><tr><th>제출 항목</th><th>확인</th></tr></thead>
+<tbody><tr><td><code>notebooks/ch08_midterm_project.ipynb</code>를 작성했는가?</td><td>□</td></tr>
+<tr><td>원본 데이터 4개를 불러왔는가?</td><td>□</td></tr>
+<tr><td>데이터 구조 요약표를 만들었는가?</td><td>□</td></tr>
+<tr><td>전처리 과정을 코드로 작성했는가?</td><td>□</td></tr>
+<tr><td>전처리 결과를 <code>data/processed</code>에 저장했는가?</td><td>□</td></tr>
+<tr><td>파일 간 키 관계를 확인했는가?</td><td>□</td></tr>
+<tr><td>분석 질문을 명확히 정리했는가?</td><td>□</td></tr>
+<tr><td>카테고리별 매출을 계산했는가?</td><td>□</td></tr>
+<tr><td>월별 매출을 계산했는가?</td><td>□</td></tr>
+<tr><td>고객별 구매 금액을 계산했는가?</td><td>□</td></tr>
+<tr><td>그래프 3개 이상을 저장했는가?</td><td>□</td></tr>
+<tr><td><code>reports/ch08_midterm_report.md</code>를 작성했는가?</td><td>□</td></tr>
+<tr><td>LLM 활용 내용을 검토하고 기록했는가?</td><td>□</td></tr>
+<tr><td>데이터에 없는 원인을 단정하지 않았는가?</td><td>□</td></tr></tbody>
+</table>
+<h2 id="h2-11">10. 정리</h2>
+<p>이번 장에서는 지금까지 학습한 데이터 분석 과정을 하나의 중간 실습 프로젝트로 통합했습니다. 데이터 분석 프로젝트는 단순히 코드를 많이 작성하는 것이 아니라, 분석 질문을 정하고, 데이터를 점검하고, 전처리하고, 지표를 계산하고, 그래프로 표현하고, 결과를 해석하는 전체 흐름을 관리하는 과정입니다.</p>
+<p>이번 프로젝트에서는 온라인 쇼핑몰 데이터를 사용해 카테고리별 매출, 월별 매출, 고객별 구매 금액, 주문 상태별 주문 수를 분석했습니다. 이 과정에서 <code>read_csv()</code>, <code>isna()</code>, <code>duplicated()</code>, <code>pd.to_datetime()</code>, <code>merge()</code>, <code>groupby()</code>, <code>agg()</code>, <code>sort_values()</code>, <code>matplotlib</code> 시각화 기능을 종합적으로 사용했습니다.</p>
+<p>전처리 단계에서는 원본 데이터를 직접 수정하지 않고 복사본을 만들고, 전처리 결과를 별도 파일로 저장하는 습관을 익혔습니다. 분석 단계에서는 질문을 계산 가능한 지표로 바꾸고, pandas 코드로 결과를 만들었습니다. 시각화 단계에서는 표로 확인한 결과를 막대그래프와 선 그래프로 표현했습니다.</p>
+<p>보고서 작성 단계에서는 결과를 과장하지 않고 관찰과 가설을 구분하는 것이 중요합니다. 매출이 높은 카테고리를 확인할 수는 있지만, 왜 높은지 설명하려면 판매 수량, 단가, 프로모션, 계절성 같은 추가 분석이 필요합니다.</p>
+<p>LLM은 코드 작성과 보고서 문장 보완에 도움을 줄 수 있지만, 분석 결과의 책임은 사람에게 있습니다. 따라서 LLM이 제안한 코드는 직접 실행해 검증하고, 해석 문장은 실제 데이터에 근거하는지 확인해야 합니다.</p>
+<p>다음 장에서는 LLM 프롬프트를 활용해 데이터 분석 업무를 보조하는 방법을 더 체계적으로 배웁니다.</p>
+  </main></body></html>

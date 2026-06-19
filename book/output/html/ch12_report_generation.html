@@ -1,0 +1,1015 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>12장 분석 보고서 자동 작성</title>
+  <style>
+:root {
+  color: #1f2933;
+  background: #ffffff;
+  font-family: "Noto Sans KR", "Malgun Gothic", "Apple SD Gothic Neo", Arial, sans-serif;
+  line-height: 1.7;
+}
+
+@page {
+  size: A4;
+  margin: 18mm 16mm 20mm 16mm;
+}
+
+body {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 48px 28px 72px;
+  font-size: 16px;
+}
+
+.chapter {
+  page-break-before: always;
+}
+
+.chapter:first-of-type {
+  page-break-before: auto;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  line-height: 1.35;
+  color: #111827;
+}
+
+h1 {
+  margin: 0 0 32px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #d7dee8;
+  font-size: 2.1rem;
+}
+
+h2 {
+  margin-top: 40px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 1.45rem;
+}
+
+h3 {
+  margin-top: 28px;
+  font-size: 1.15rem;
+}
+
+h4 {
+  margin-top: 22px;
+  font-size: 1rem;
+}
+
+p {
+  margin: 12px 0;
+}
+
+ul,
+ol {
+  margin: 14px 0 18px 1.4rem;
+  padding-left: 1.1rem;
+}
+
+li {
+  margin: 6px 0;
+}
+
+table {
+  width: 100%;
+  margin: 24px 0;
+  border-collapse: collapse;
+  table-layout: fixed;
+  word-break: keep-all;
+  font-size: 0.95rem;
+}
+
+th,
+td {
+  padding: 10px 12px;
+  border: 1px solid #d7dee8;
+  vertical-align: top;
+  overflow-wrap: break-word;
+}
+
+th {
+  background: #f3f6fa;
+  font-weight: 700;
+}
+
+code {
+  padding: 0.15em 0.35em;
+  border: 1px solid #d7dee8;
+  border-radius: 4px;
+  background: #f6f8fa;
+  color: #0f172a;
+  font-family: "D2Coding", "Cascadia Code", "Consolas", monospace;
+  font-size: 0.92em;
+}
+
+pre {
+  margin: 22px 0;
+  padding: 18px 20px;
+  border: 1px solid #cbd5e1;
+  border-left: 5px solid #64748b;
+  border-radius: 8px;
+  background: #f8fafc;
+  color: #111827;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.6;
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+pre code {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font-size: 0.92rem;
+}
+
+blockquote {
+  margin: 20px 0;
+  padding: 12px 18px;
+  border-left: 4px solid #94a3b8;
+  background: #f8fafc;
+  color: #334155;
+}
+
+
+.figure {
+  margin: 28px 0;
+  text-align: center;
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+.figure img {
+  width: 100%;
+  max-width: 100%;
+  border: 1px solid #d7dee8;
+  border-radius: 10px;
+  background: #ffffff;
+}
+
+.figure figcaption {
+  margin-top: 8px;
+  color: #475569;
+  font-size: 0.92rem;
+  text-align: center;
+}
+
+img {
+  max-width: 100%;
+}
+
+.toc {
+  margin: 24px 0 34px;
+  padding: 18px 22px;
+  border: 1px solid #d7dee8;
+  border-radius: 8px;
+  background: #f8fafc;
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+.toc-title {
+  margin: 0 0 10px;
+  color: #111827;
+  font-weight: 700;
+}
+
+.toc ol {
+  margin: 0;
+  padding-left: 1.3rem;
+}
+
+.toc li {
+  margin: 4px 0;
+}
+
+.toc a {
+  color: #1d4ed8;
+  text-decoration: none;
+}
+
+.toc a:hover {
+  text-decoration: underline;
+}
+
+@media print {
+  body {
+    max-width: none;
+    padding: 0;
+    font-size: 11pt;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  table,
+  pre,
+  blockquote,
+  .figure {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  thead {
+    display: table-header-group;
+  }
+
+  tr {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  p,
+  li {
+    orphans: 2;
+    widows: 2;
+  }
+}
+
+@media (max-width: 640px) {
+  body {
+    padding: 28px 18px 56px;
+    font-size: 15px;
+  }
+
+  table {
+    font-size: 0.9rem;
+  }
+
+  th,
+  td {
+    padding: 8px 10px;
+  }
+}
+
+  </style>
+</head>
+<body>
+  <main class="chapter">
+<h1 id="chapter-title">12장 분석 보고서 자동 작성</h1>
+<nav class="toc" aria-label="목차">
+<p class="toc-title">목차</p>
+<ol>
+<li><a href="#h2-1">수업 시간 구성</a></li>
+<li><a href="#h2-2">1. 학습 목표</a></li>
+<li><a href="#h2-3">2. 이번 장에서 만들 결과물</a></li>
+<li><a href="#h2-4">3. 핵심 개념</a></li>
+<li><a href="#h2-5">4. 실습 시나리오</a></li>
+<li><a href="#h2-6">5. 실습 코드</a></li>
+<li><a href="#h2-7">6. LLM 활용 프롬프트</a></li>
+<li><a href="#h2-8">7. 결과 해석</a></li>
+<li><a href="#h2-9">8. 실무 적용 포인트</a></li>
+<li><a href="#h2-10">9. 연습 문제</a></li>
+<li><a href="#h2-11">10. 정리</a></li>
+</ol>
+</nav>
+<p>이 장에서는 지금까지 만든 분석 결과, 표, 그래프, 인사이트를 바탕으로 분석 보고서를 자동으로 작성하는 방법을 배웁니다. Chapter 11에서는 분석 결과를 해석하고 인사이트를 도출하는 방법을 다루었다면, 이번 장에서는 그 내용을 Markdown 보고서 형태로 자동 정리하는 과정을 실습합니다.</p>
+<p>데이터 분석 프로젝트에서는 같은 형식의 보고서를 반복해서 작성해야 하는 경우가 많습니다. 예를 들어 매주 매출 현황 보고서, 월별 고객 분석 보고서, 카테고리별 판매 분석 보고서, 캠페인 성과 보고서 등을 작성해야 할 수 있습니다. 매번 표와 그래프를 복사하고 문장을 새로 작성하면 시간이 오래 걸리고 실수도 발생하기 쉽습니다.</p>
+<p>보고서 자동 작성은 pandas로 만든 분석 결과표, matplotlib으로 저장한 그래프, 사람이 검토한 해석 문장, LLM이 보조한 보고서 초안을 하나의 문서로 조립하는 과정입니다. 단, 자동 작성된 보고서도 최종 검토가 필요합니다. 숫자, 표, 그래프, 해석 문장, 파일 경로가 정확한지 사람이 반드시 확인해야 합니다.</p>
+<p>이번 장의 핵심은 <strong>분석 결과를 재사용 가능한 보고서 템플릿으로 자동 조립하고, 사람이 최종 검증하는 능력</strong>입니다.</p>
+<h2 id="h2-1">수업 시간 구성</h2>
+<table>
+<thead><tr><th>구성</th><th>권장 시간</th></tr></thead>
+<tbody><tr><td>분석 보고서 자동 작성 개념 이해</td><td>30분</td></tr>
+<tr><td>보고서 구조 설계</td><td>35분</td></tr>
+<tr><td>분석 결과 파일 불러오기</td><td>35분</td></tr>
+<tr><td>Markdown 보고서 템플릿 작성</td><td>45분</td></tr>
+<tr><td>표와 그래프 자동 삽입</td><td>50분</td></tr>
+<tr><td>LLM을 활용한 보고서 문장 보완</td><td>40분</td></tr>
+<tr><td>보고서 검증 체크리스트 작성</td><td>35분</td></tr>
+<tr><td>최종 보고서 파일 저장</td><td>30분</td></tr>
+<tr><td>연습 문제 및 심화 과제</td><td>60~90분</td></tr></tbody>
+</table>
+<p>기본 수업은 약 5시간을 기준으로 구성되어 있습니다. LLM 보고서 초안 작성, HTML/PDF 변환, 반복 보고서 자동화까지 확장하면 6시간 이상으로 운영할 수 있습니다.</p>
+<h2 id="h2-2">1. 학습 목표</h2>
+<p>이 장을 마치면 학습자는 다음을 할 수 있습니다.</p>
+<ul>
+<li>분석 보고서 자동 작성이 필요한 이유를 설명할 수 있습니다.</li>
+<li>분석 보고서의 기본 구조를 설계할 수 있습니다.</li>
+<li>분석 결과 CSV 파일을 불러와 보고서에 삽입할 수 있습니다.</li>
+<li>그래프 이미지 파일 경로를 Markdown 문서에 삽입할 수 있습니다.</li>
+<li>pandas 결과표를 Markdown 표로 변환할 수 있습니다.</li>
+<li>분석 목적, 데이터 개요, 주요 결과, 해석, 한계점, 다음 단계를 포함한 보고서를 작성할 수 있습니다.</li>
+<li>LLM을 활용해 보고서 문장 초안을 만들 수 있습니다.</li>
+<li>LLM이 작성한 문장을 데이터에 근거해 검증할 수 있습니다.</li>
+<li>자동 생성된 보고서를 Markdown 파일로 저장할 수 있습니다.</li>
+<li>보고서 검증 체크리스트를 사용해 최종 제출 전 품질을 점검할 수 있습니다.</li>
+</ul>
+<h2 id="h2-3">2. 이번 장에서 만들 결과물</h2>
+<p>이번 장에서는 분석 결과를 자동으로 정리한 보고서 산출물을 만듭니다.</p>
+<p>이번 장에서 만들 결과물은 다음과 같습니다.</p>
+<ul>
+<li>보고서 자동 작성용 분석 결과 파일 목록</li>
+<li>보고서 템플릿 구조</li>
+<li><code>reports/ch12_auto_report.md</code></li>
+<li><code>reports/ch12_report_validation_checklist.csv</code></li>
+<li><code>reports/ch12_report_generation_log.csv</code></li>
+<li>LLM 보고서 초안 작성 프롬프트</li>
+<li>LLM 보고서 검토 프롬프트</li>
+<li>보고서 검증 결과 요약</li>
+<li>최종 보고서 Markdown 파일</li>
+</ul>
+<p>아래 그림은 분석 결과가 자동 보고서로 조립되는 전체 흐름을 보여줍니다.</p>
+<figure class="figure">
+  <img src="../assets/images/ch12/ch12_report_automation_overview.png" alt="분석 보고서 자동 작성 전체 흐름도">
+  <figcaption>그림 12-1. 분석 보고서 자동 작성 전체 흐름도</figcaption>
+</figure>
+<h2 id="h2-4">3. 핵심 개념</h2>
+<h3 id="h3-1">3.1 분석 보고서 자동 작성이란 무엇인가</h3>
+<p>분석 보고서 자동 작성은 분석 결과표, 그래프, 해석 문장, 검증 내용을 정해진 템플릿에 맞게 자동으로 조립하는 과정입니다.</p>
+<p>수동 보고서 작성은 다음처럼 진행됩니다.</p>
+<ol>
+<li>분석 결과표를 복사합니다.</li>
+<li>그래프 이미지를 저장합니다.</li>
+<li>보고서 문서에 표를 붙여 넣습니다.</li>
+<li>그래프를 삽입합니다.</li>
+<li>해석 문장을 작성합니다.</li>
+<li>문장과 수치를 다시 확인합니다.</li>
+</ol>
+<p>자동 보고서 작성은 이 과정을 코드로 처리합니다.</p>
+<ol>
+<li>분석 결과 CSV를 불러옵니다.</li>
+<li>그래프 파일 경로를 확인합니다.</li>
+<li>보고서 템플릿에 표와 이미지를 삽입합니다.</li>
+<li>해석 문장을 자동으로 배치합니다.</li>
+<li>Markdown 파일로 저장합니다.</li>
+<li>사람이 최종 검토합니다.</li>
+</ol>
+<p>자동화의 목적은 사람이 검토하지 않아도 되는 보고서를 만드는 것이 아니라, 반복 작업을 줄이고 검토에 집중할 수 있게 만드는 것입니다.</p>
+<h3 id="h3-2">3.2 분석 보고서의 기본 구조</h3>
+<p>분석 보고서는 일반적으로 다음 구조를 가집니다.</p>
+<table>
+<thead><tr><th>섹션</th><th>포함 내용</th></tr></thead>
+<tbody><tr><td>제목</td><td>보고서명, 작성일, 분석 대상</td></tr>
+<tr><td>분석 목적</td><td>왜 분석했는지 설명</td></tr>
+<tr><td>데이터 개요</td><td>사용한 데이터셋과 주요 컬럼</td></tr>
+<tr><td>전처리 요약</td><td>결측치, 중복, 타입 변환 등</td></tr>
+<tr><td>주요 분석 질문</td><td>보고서에서 답할 질문</td></tr>
+<tr><td>주요 결과</td><td>표와 그래프 중심 결과</td></tr>
+<tr><td>해석과 인사이트</td><td>관찰, 가설, 추가 질문</td></tr>
+<tr><td>한계점</td><td>현재 데이터로 알 수 없는 내용</td></tr>
+<tr><td>다음 단계</td><td>추가 분석 또는 실행 제안</td></tr>
+<tr><td>검증 체크리스트</td><td>보고서 품질 점검</td></tr></tbody>
+</table>
+<p>이번 장에서는 이 구조를 Markdown 템플릿으로 만듭니다.</p>
+<p>아래 그림은 분석 보고서 템플릿의 기본 구조를 보여줍니다.</p>
+<figure class="figure">
+  <img src="../assets/images/ch12/ch12_report_template_structure.png" alt="분석 보고서 템플릿 구조">
+  <figcaption>그림 12-2. 분석 보고서 템플릿 구조</figcaption>
+</figure>
+<h3 id="h3-3">3.3 Markdown 보고서를 사용하는 이유</h3>
+<p>Markdown은 분석 보고서 자동 작성에 적합합니다.</p>
+<p>Markdown의 장점은 다음과 같습니다.</p>
+<ul>
+<li>텍스트 기반이라 코드로 쉽게 생성할 수 있습니다.</li>
+<li>제목, 표, 이미지, 목록을 간단한 문법으로 작성할 수 있습니다.</li>
+<li>GitHub, VSCode, Jupyter, Notion 등 다양한 도구에서 읽기 쉽습니다.</li>
+<li>HTML이나 PDF로 변환하기 쉽습니다.</li>
+<li>분석 결과를 버전 관리하기 좋습니다.</li>
+</ul>
+<p>Markdown에서 표는 다음처럼 작성합니다.</p>
+<pre><code class="language-markdown">| category | total_sales | sales_ratio |
+|---|---:|---:|
+| 전자기기 | 12500000 | 42.5 |
+| 생활용품 | 7800000 | 26.5 |</code></pre>
+<p>이미지는 다음처럼 삽입합니다.</p>
+<pre><code class="language-markdown">![카테고리별 매출 그래프](figures/ch08_category_sales.png)</code></pre>
+<p>교재용 HTML/PDF 변환에서는 figure 태그를 사용할 수도 있습니다.</p>
+<pre><code class="language-html">&lt;figure class=&quot;figure&quot;&gt;
+  &lt;img src=&quot;figures/ch08_category_sales.png&quot; alt=&quot;카테고리별 매출 그래프&quot;&gt;
+  &lt;figcaption&gt;카테고리별 매출 그래프&lt;/figcaption&gt;
+&lt;/figure&gt;</code></pre>
+<h3 id="h3-4">3.4 보고서 자동 작성에 필요한 입력 파일</h3>
+<p>이번 장에서는 이전 장에서 생성한 결과 파일을 사용합니다.</p>
+<table>
+<thead><tr><th>입력 파일</th><th>설명</th></tr></thead>
+<tbody><tr><td><code>reports/ch08_dataset_summary.csv</code></td><td>데이터셋 구조 요약</td></tr>
+<tr><td><code>reports/ch08_category_sales.csv</code></td><td>카테고리별 매출 결과</td></tr>
+<tr><td><code>reports/ch08_monthly_sales.csv</code></td><td>월별 매출 결과</td></tr>
+<tr><td><code>reports/ch08_customer_sales.csv</code></td><td>고객별 구매 금액 결과</td></tr>
+<tr><td><code>reports/figures/ch08_category_sales.png</code></td><td>카테고리별 매출 그래프</td></tr>
+<tr><td><code>reports/figures/ch08_monthly_sales.png</code></td><td>월별 매출 그래프</td></tr>
+<tr><td><code>reports/figures/ch08_top_customers.png</code></td><td>구매 금액 상위 고객 그래프</td></tr>
+<tr><td><code>reports/ch11_insight_cards.csv</code></td><td>인사이트 카드</td></tr>
+<tr><td><code>reports/ch11_interpretation_table.csv</code></td><td>관찰·가설·추가 질문 정리표</td></tr></tbody>
+</table>
+<p>파일이 없다면 Chapter 8과 Chapter 11 Notebook을 먼저 실행해야 합니다.</p>
+<h3 id="h3-5">3.5 보고서 자동화에서 LLM의 역할</h3>
+<p>LLM은 보고서 자동 작성에서 다음 작업을 보조할 수 있습니다.</p>
+<table>
+<thead><tr><th>작업</th><th>LLM 활용 방식</th><th>검증 필요 사항</th></tr></thead>
+<tbody><tr><td>보고서 목차 제안</td><td>분석 목적에 맞는 구조 추천</td><td>과제 요구사항과 맞는가</td></tr>
+<tr><td>해석 문장 초안</td><td>표와 지표를 바탕으로 문장 작성</td><td>원인 단정이 없는가</td></tr>
+<tr><td>요약 문장 작성</td><td>핵심 결과 요약</td><td>수치가 정확한가</td></tr>
+<tr><td>한계점 작성</td><td>현재 데이터의 한계 정리</td><td>데이터에 없는 내용 추측 여부</td></tr>
+<tr><td>다음 단계 제안</td><td>추가 분석 방향 제안</td><td>실제 데이터로 가능한가</td></tr>
+<tr><td>문장 다듬기</td><td>보고서 문체로 개선</td><td>과장 표현이 없는가</td></tr></tbody>
+</table>
+<p>LLM이 작성한 문장은 자연스럽지만, 데이터에 없는 원인을 단정할 수 있습니다. 따라서 보고서 자동화에서는 LLM 초안과 사람 검토가 함께 필요합니다.</p>
+<p>아래 그림은 LLM을 활용한 보고서 작성과 검증 흐름을 보여줍니다.</p>
+<figure class="figure">
+  <img src="../assets/images/ch12/ch12_llm_report_workflow.png" alt="LLM 기반 보고서 작성과 검증 흐름도">
+  <figcaption>그림 12-3. LLM 기반 보고서 작성과 검증 흐름도</figcaption>
+</figure>
+<h3 id="h3-6">3.6 자동 보고서도 검증이 필요한 이유</h3>
+<p>자동 생성된 보고서는 다음 문제가 생길 수 있습니다.</p>
+<table>
+<thead><tr><th>문제</th><th>예시</th></tr></thead>
+<tbody><tr><td>파일 누락</td><td>그래프 이미지가 존재하지 않음</td></tr>
+<tr><td>표 누락</td><td>CSV 파일 경로 오류</td></tr>
+<tr><td>잘못된 수치</td><td>이전 분석 결과가 갱신되지 않음</td></tr>
+<tr><td>이미지 경로 오류</td><td>Markdown에서 이미지가 보이지 않음</td></tr>
+<tr><td>과장된 해석</td><td>고객 선호도라고 단정</td></tr>
+<tr><td>오래된 결과 사용</td><td>이전 실행 결과가 남아 있음</td></tr>
+<tr><td>개인정보 노출</td><td>고객명이 그대로 표시됨</td></tr></tbody>
+</table>
+<p>따라서 자동 보고서 생성 후에는 반드시 검증 체크리스트를 사용해야 합니다.</p>
+<h2 id="h2-5">4. 실습 시나리오</h2>
+<p>이번 장의 실습 시나리오는 다음과 같습니다.</p>
+<blockquote>온라인 쇼핑몰 분석 프로젝트에서 카테고리별 매출, 월별 매출, 고객별 구매 금액, 인사이트 카드가 이미 생성되어 있습니다. 분석가는 이 결과를 매번 수동으로 정리하는 대신, Python 코드로 Markdown 분석 보고서를 자동 생성하려고 합니다. 생성된 보고서에는 분석 목적, 데이터 개요, 주요 결과표, 그래프, 해석, 한계점, 다음 단계가 포함되어야 합니다.</blockquote>
+<p>이번 장의 보고서 자동 작성 흐름은 다음과 같습니다.</p>
+<ol>
+<li>분석 결과 CSV 파일 확인</li>
+<li>그래프 이미지 파일 확인</li>
+<li>주요 결과표 불러오기</li>
+<li>인사이트 카드 불러오기</li>
+<li>Markdown 템플릿 작성</li>
+<li>표를 Markdown으로 변환</li>
+<li>그래프 이미지 경로 삽입</li>
+<li>보고서 파일 저장</li>
+<li>검증 체크리스트 작성</li>
+<li>LLM으로 문장 보완 후 사람이 검토</li>
+</ol>
+<p>아래 그림은 분석 결과 파일이 Markdown 보고서로 조립되는 과정을 보여줍니다.</p>
+<figure class="figure">
+  <img src="../assets/images/ch12/ch12_results_to_markdown_report.png" alt="분석 결과를 Markdown 보고서로 조립하는 흐름">
+  <figcaption>그림 12-4. 분석 결과를 Markdown 보고서로 조립하는 흐름</figcaption>
+</figure>
+<h2 id="h2-6">5. 실습 코드</h2>
+<p>이번 장의 전체 실습은 다음 Notebook에서 진행합니다.</p>
+<pre><code class="language-text">notebooks/ch12_report_generation.ipynb</code></pre>
+<p>본문에는 핵심 코드만 제공합니다.</p>
+<h3 id="h3-7">5.1 기본 패키지 불러오기</h3>
+<pre><code class="language-python">from pathlib import Path
+from datetime import datetime
+import pandas as pd</code></pre>
+<p>실습 파일을 프로젝트 루트에서 실행하는 경우와 <code>notebooks</code> 폴더 안에서 실행하는 경우에는 상대 경로가 달라질 수 있습니다. 아래 코드는 현재 실행 위치를 확인한 뒤 공통 기준 폴더를 자동으로 설정합니다.</p>
+<pre><code class="language-python">current_dir = Path.cwd()
+
+if current_dir.name == &quot;notebooks&quot;:
+    base_dir = current_dir.parent
+else:
+    base_dir = current_dir
+
+report_dir = base_dir / &quot;reports&quot;
+figure_dir = report_dir / &quot;figures&quot;
+
+report_dir.mkdir(parents=True, exist_ok=True)
+figure_dir.mkdir(parents=True, exist_ok=True)
+
+print(&quot;report_dir:&quot;, report_dir)
+print(&quot;figure_dir:&quot;, figure_dir)</code></pre>
+<p>이 코드는 프로젝트 루트에서 실행하든 <code>notebooks</code> 폴더에서 실행하든 같은 방식으로 동작합니다.</p>
+<p><code>to_markdown()</code>을 사용하려면 환경에 따라 <code>tabulate</code> 패키지가 필요할 수 있습니다. 오류가 발생하면 터미널 또는 노트북에서 <code>pip install tabulate</code>를 실행하세요.</p>
+<pre><code class="language-text">pip install tabulate</code></pre>
+<h3 id="h3-8">5.2 보고서 입력 파일 목록 만들기</h3>
+<p>보고서에 사용할 입력 파일을 정리합니다.</p>
+<pre><code class="language-python">input_files = {
+    &quot;dataset_summary&quot;: report_dir / &quot;ch08_dataset_summary.csv&quot;,
+    &quot;category_sales&quot;: report_dir / &quot;ch08_category_sales.csv&quot;,
+    &quot;monthly_sales&quot;: report_dir / &quot;ch08_monthly_sales.csv&quot;,
+    &quot;customer_sales&quot;: report_dir / &quot;ch08_customer_sales.csv&quot;,
+    &quot;insight_cards&quot;: report_dir / &quot;ch11_insight_cards.csv&quot;,
+    &quot;interpretation_table&quot;: report_dir / &quot;ch11_interpretation_table.csv&quot;,
+    &quot;category_sales_figure&quot;: figure_dir / &quot;ch08_category_sales.png&quot;,
+    &quot;monthly_sales_figure&quot;: figure_dir / &quot;ch08_monthly_sales.png&quot;,
+    &quot;top_customers_figure&quot;: figure_dir / &quot;ch08_top_customers.png&quot;
+}
+
+input_files</code></pre>
+<p>파일 존재 여부를 확인합니다.</p>
+<pre><code class="language-python">file_check = pd.DataFrame({
+    &quot;name&quot;: list(input_files.keys()),
+    &quot;path&quot;: [str(path) for path in input_files.values()],
+    &quot;exists&quot;: [path.exists() for path in input_files.values()]
+})
+
+file_check</code></pre>
+<p>파일이 없는 항목이 있다면 이전 장의 Notebook을 먼저 실행해야 합니다. <code>ch08_*.csv</code> 파일과 그래프가 없으면 Chapter 8 Notebook을 먼저 실행하고, <code>ch11_insight_cards.csv</code>와 <code>ch11_interpretation_table.csv</code>가 없으면 Chapter 11 Notebook을 먼저 실행합니다.</p>
+<p>그래프 이미지 파일이 없으면 Markdown 보고서는 생성되더라도 최종 보고서에서 이미지가 보이지 않을 수 있습니다. 보고서 생성 전 <code>category_sales_figure</code>, <code>monthly_sales_figure</code>, <code>top_customers_figure</code>의 <code>exists</code> 값이 모두 <code>True</code>인지 확인합니다.</p>
+<h3 id="h3-9">5.3 분석 결과 CSV 불러오기</h3>
+<pre><code class="language-python">dataset_summary = pd.read_csv(input_files[&quot;dataset_summary&quot;])
+category_sales = pd.read_csv(input_files[&quot;category_sales&quot;])
+monthly_sales = pd.read_csv(input_files[&quot;monthly_sales&quot;])
+customer_sales = pd.read_csv(input_files[&quot;customer_sales&quot;])</code></pre>
+<p>인사이트 카드 파일은 없을 수도 있으므로 안전하게 불러옵니다.</p>
+<pre><code class="language-python">if input_files[&quot;insight_cards&quot;].exists():
+    insight_cards = pd.read_csv(input_files[&quot;insight_cards&quot;])
+else:
+    insight_cards = pd.DataFrame({
+        &quot;insight_title&quot;: [],
+        &quot;analysis_question&quot;: [],
+        &quot;observation&quot;: [],
+        &quot;interpretation&quot;: [],
+        &quot;caution&quot;: [],
+        &quot;next_step&quot;: []
+    })
+
+if input_files[&quot;interpretation_table&quot;].exists():
+    interpretation_table = pd.read_csv(input_files[&quot;interpretation_table&quot;])
+else:
+    interpretation_table = pd.DataFrame({
+        &quot;analysis_area&quot;: [],
+        &quot;observation&quot;: [],
+        &quot;hypothesis&quot;: [],
+        &quot;additional_question&quot;: []
+    })</code></pre>
+<h3 id="h3-10">5.4 보고서용 요약 지표 만들기</h3>
+<p>카테고리별 매출 1위 항목을 추출합니다.</p>
+<pre><code class="language-python">category_sales_sorted = category_sales.sort_values(&quot;total_sales&quot;, ascending=False)
+top_category = category_sales_sorted.iloc[0]
+
+top_category_name = top_category[&quot;category&quot;]
+top_category_sales = top_category[&quot;total_sales&quot;]
+top_category_ratio = top_category[&quot;sales_ratio&quot;]</code></pre>
+<p>월별 매출 1위 항목을 추출합니다.</p>
+<pre><code class="language-python">monthly_sales_sorted = monthly_sales.sort_values(&quot;order_month&quot;)
+top_month = monthly_sales.sort_values(&quot;total_sales&quot;, ascending=False).iloc[0]
+
+top_month_name = top_month[&quot;order_month&quot;]
+top_month_sales = top_month[&quot;total_sales&quot;]
+top_month_order_count = top_month[&quot;order_count&quot;]</code></pre>
+<p>고객별 구매 금액 상위 10명을 준비합니다.</p>
+<pre><code class="language-python">top_customers = customer_sales.sort_values(&quot;total_sales&quot;, ascending=False).head(10).copy()
+
+if &quot;customer_label&quot; not in top_customers.columns:
+    top_customers[&quot;customer_label&quot;] = &quot;Customer &quot; + top_customers[&quot;customer_id&quot;].astype(str)
+
+top_customers_for_report = top_customers[
+    [&quot;customer_label&quot;, &quot;city&quot;, &quot;order_count&quot;, &quot;total_sales&quot;, &quot;avg_order_value&quot;]
+]</code></pre>
+<h3 id="h3-11">5.5 표를 Markdown으로 변환하기</h3>
+<p>pandas DataFrame은 <code>to_markdown()</code>으로 Markdown 표로 변환할 수 있습니다.</p>
+<pre><code class="language-python">dataset_summary_md = dataset_summary.to_markdown(index=False)
+category_sales_md = category_sales_sorted.to_markdown(index=False)
+monthly_sales_md = monthly_sales_sorted.to_markdown(index=False)
+top_customers_md = top_customers_for_report.to_markdown(index=False)</code></pre>
+<p>인사이트 카드도 Markdown 표로 변환합니다.</p>
+<pre><code class="language-python">if len(insight_cards) &gt; 0:
+    insight_cards_md = insight_cards.to_markdown(index=False)
+else:
+    insight_cards_md = &quot;인사이트 카드 파일이 없습니다. Chapter 11을 먼저 실행해 주세요.&quot;
+
+if len(interpretation_table) &gt; 0:
+    interpretation_table_md = interpretation_table.to_markdown(index=False)
+else:
+    interpretation_table_md = &quot;해석 정리표 파일이 없습니다. Chapter 11을 먼저 실행해 주세요.&quot;</code></pre>
+<h3 id="h3-12">5.6 그래프 이미지 Markdown 만들기</h3>
+<p>Markdown 보고서에서는 상대 경로로 이미지를 삽입합니다.</p>
+<pre><code class="language-python">category_sales_img = &quot;figures/ch08_category_sales.png&quot;
+monthly_sales_img = &quot;figures/ch08_monthly_sales.png&quot;
+top_customers_img = &quot;figures/ch08_top_customers.png&quot;</code></pre>
+<p>이미지 삽입 Markdown을 만듭니다.</p>
+<pre><code class="language-python">category_sales_figure_md = f&quot;&quot;&quot;
+![카테고리별 매출 그래프]({category_sales_img})
+&quot;&quot;&quot;
+
+monthly_sales_figure_md = f&quot;&quot;&quot;
+![월별 매출 그래프]({monthly_sales_img})
+&quot;&quot;&quot;
+
+top_customers_figure_md = f&quot;&quot;&quot;
+![구매 금액 상위 고객 그래프]({top_customers_img})
+&quot;&quot;&quot;</code></pre>
+<h3 id="h3-13">5.7 기본 해석 문장 만들기</h3>
+<p>보고서에 들어갈 기본 해석 문장을 작성합니다.</p>
+<pre><code class="language-python">category_interpretation = f&quot;&quot;&quot;
+카테고리별 매출 결과에서 {top_category_name} 카테고리의 매출 비중이 가장 높게 나타났습니다.
+이는 해당 카테고리가 전체 매출에 크게 기여하고 있음을 의미합니다.
+다만 매출이 높은 이유가 판매 수량 때문인지, 평균 판매 단가 때문인지, 특정 기간의 주문 집중 때문인지는 추가 분석이 필요합니다.
+&quot;&quot;&quot;
+
+monthly_interpretation = f&quot;&quot;&quot;
+월별 매출 결과에서 {top_month_name}의 매출이 가장 높게 나타났습니다.
+해당 월의 주문 수는 {top_month_order_count}건입니다.
+다만 매출 증가의 원인을 설명하려면 주문 수, 평균 주문 금액, 프로모션, 계절성 등의 추가 정보를 함께 확인해야 합니다.
+&quot;&quot;&quot;
+
+customer_interpretation = &quot;&quot;&quot;
+구매 금액 상위 고객은 전체 매출에 크게 기여한 고객군으로 볼 수 있습니다.
+다만 총 구매 금액만으로 충성 고객이라고 단정할 수는 없습니다.
+반복 구매 고객인지, 일회성 고액 구매 고객인지 구분하려면 주문 횟수와 평균 주문 금액을 함께 확인해야 합니다.
+&quot;&quot;&quot;</code></pre>
+<h3 id="h3-14">5.8 Markdown 보고서 템플릿 작성하기</h3>
+<p>보고서 작성일을 생성합니다.</p>
+<pre><code class="language-python">today = datetime.now().strftime(&quot;%Y-%m-%d&quot;)</code></pre>
+<p>보고서 본문을 만듭니다.</p>
+<pre><code class="language-python">report_text = f&quot;&quot;&quot;
+# 온라인 쇼핑몰 데이터 분석 자동 보고서
+
+작성일: {today}
+
+## 1. 분석 목적
+
+본 보고서는 온라인 쇼핑몰 고객, 상품, 주문, 주문 상세 데이터를 바탕으로 기본 매출 현황과 고객 구매 패턴을 파악하기 위해 작성되었습니다.
+
+주요 분석 질문은 다음과 같습니다.
+
+1. 카테고리별 매출은 어떻게 다른가?
+2. 월별 매출과 주문 수는 어떻게 변하는가?
+3. 구매 금액 상위 고객은 누구인가?
+4. 분석 결과에서 어떤 추가 질문을 도출할 수 있는가?
+
+## 2. 데이터 개요
+
+사용한 데이터셋의 구조는 다음과 같습니다.
+
+{dataset_summary_md}
+
+## 3. 주요 분석 결과 요약
+
+- 매출 비중이 가장 높은 카테고리: {top_category_name}
+- {top_category_name} 카테고리 매출: {top_category_sales:,.0f}
+- {top_category_name} 카테고리 매출 비중: {top_category_ratio:.2f}%
+- 매출이 가장 높은 월: {top_month_name}
+- {top_month_name} 매출: {top_month_sales:,.0f}
+- {top_month_name} 주문 수: {top_month_order_count:,.0f}
+
+## 4. 카테고리별 매출 분석
+
+{category_sales_md}
+
+{category_sales_figure_md}
+
+### 해석
+
+{category_interpretation}
+
+## 5. 월별 매출 분석
+
+{monthly_sales_md}
+
+{monthly_sales_figure_md}
+
+### 해석
+
+{monthly_interpretation}
+
+## 6. 구매 금액 상위 고객 분석
+
+{top_customers_md}
+
+{top_customers_figure_md}
+
+### 해석
+
+{customer_interpretation}
+
+## 7. 인사이트 카드
+
+{insight_cards_md}
+
+## 8. 관찰·가설·추가 분석 질문
+
+{interpretation_table_md}
+
+## 9. 한계점
+
+- 현재 데이터만으로 고객 선호도나 만족도를 직접 판단할 수 없습니다.
+- 매출 변화의 원인을 설명하려면 프로모션, 광고, 재고, 계절성 데이터가 추가로 필요합니다.
+- 구매 금액 상위 고객이 반드시 충성 고객이라는 의미는 아닙니다.
+- 취소 주문과 환불 주문 처리 기준에 따라 매출 결과가 달라질 수 있습니다.
+- 자동 생성된 보고서이므로 수치, 그래프, 해석 문장에 대한 최종 검토가 필요합니다.
+
+## 10. 다음 단계
+
+- 카테고리별 매출을 판매 수량과 평균 판매 단가로 분해합니다.
+- 월별 매출을 주문 수와 평균 주문 금액으로 나누어 확인합니다.
+- 고객별 구매 금액을 주문 횟수와 평균 주문 금액 기준으로 세분화합니다.
+- LLM을 활용해 문장을 보완하되, 데이터에 없는 원인은 단정하지 않습니다.
+- 보고서를 HTML 또는 PDF로 변환해 제출용 자료로 정리합니다.
+&quot;&quot;&quot;</code></pre>
+<h3 id="h3-15">5.9 보고서 저장하기</h3>
+<pre><code class="language-python">report_path = report_dir / &quot;ch12_auto_report.md&quot;
+report_path.write_text(report_text, encoding=&quot;utf-8&quot;)
+
+report_path</code></pre>
+<p>저장된 파일 내용을 확인합니다.</p>
+<pre><code class="language-python">print(report_path.read_text(encoding=&quot;utf-8&quot;)[:1000])</code></pre>
+<h3 id="h3-16">5.10 보고서 생성 로그 만들기</h3>
+<p>보고서 생성에 사용한 입력 파일과 생성 결과를 로그로 남깁니다.</p>
+<pre><code class="language-python">generation_log = pd.DataFrame({
+    &quot;item&quot;: [
+        &quot;dataset_summary&quot;,
+        &quot;category_sales&quot;,
+        &quot;monthly_sales&quot;,
+        &quot;customer_sales&quot;,
+        &quot;insight_cards&quot;,
+        &quot;interpretation_table&quot;,
+        &quot;output_report&quot;
+    ],
+    &quot;path&quot;: [
+        str(input_files[&quot;dataset_summary&quot;]),
+        str(input_files[&quot;category_sales&quot;]),
+        str(input_files[&quot;monthly_sales&quot;]),
+        str(input_files[&quot;customer_sales&quot;]),
+        str(input_files[&quot;insight_cards&quot;]),
+        str(input_files[&quot;interpretation_table&quot;]),
+        str(report_path)
+    ],
+    &quot;exists&quot;: [
+        input_files[&quot;dataset_summary&quot;].exists(),
+        input_files[&quot;category_sales&quot;].exists(),
+        input_files[&quot;monthly_sales&quot;].exists(),
+        input_files[&quot;customer_sales&quot;].exists(),
+        input_files[&quot;insight_cards&quot;].exists(),
+        input_files[&quot;interpretation_table&quot;].exists(),
+        report_path.exists()
+    ]
+})
+
+generation_log</code></pre>
+<p>저장합니다.</p>
+<pre><code class="language-python">generation_log.to_csv(report_dir / &quot;ch12_report_generation_log.csv&quot;, index=False)</code></pre>
+<h3 id="h3-17">5.11 보고서 검증 체크리스트 만들기</h3>
+<p>자동 생성된 보고서를 검증하기 위한 체크리스트를 만듭니다.</p>
+<pre><code class="language-python">report_validation_checklist = pd.DataFrame({
+    &quot;check_item&quot;: [
+        &quot;보고서 파일이 생성되었는가?&quot;,
+        &quot;분석 목적이 명확히 작성되었는가?&quot;,
+        &quot;데이터 개요 표가 포함되었는가?&quot;,
+        &quot;카테고리별 매출표가 포함되었는가?&quot;,
+        &quot;월별 매출표가 포함되었는가?&quot;,
+        &quot;구매 금액 상위 고객표가 포함되었는가?&quot;,
+        &quot;그래프 이미지 경로가 올바른가?&quot;,
+        &quot;인사이트 카드가 포함되었는가?&quot;,
+        &quot;해석 문장에서 원인을 단정하지 않았는가?&quot;,
+        &quot;한계점이 포함되었는가?&quot;,
+        &quot;다음 단계가 포함되었는가?&quot;,
+        &quot;개인정보가 노출되지 않았는가?&quot;,
+        &quot;수치와 표가 최신 분석 결과와 일치하는가?&quot;
+    ],
+    &quot;result&quot;: [&quot;□&quot;] * 13,
+    &quot;memo&quot;: [&quot;&quot;] * 13
+})
+
+report_validation_checklist</code></pre>
+<p>저장합니다.</p>
+<pre><code class="language-python">report_validation_checklist.to_csv(
+    report_dir / &quot;ch12_report_validation_checklist.csv&quot;,
+    index=False
+)</code></pre>
+<p>아래 그림은 자동 생성 보고서를 최종 검증하는 흐름을 보여줍니다.</p>
+<figure class="figure">
+  <img src="../assets/images/ch12/ch12_report_validation_checklist.png" alt="자동 생성 보고서 검증 체크리스트">
+  <figcaption>그림 12-5. 자동 생성 보고서 검증 체크리스트</figcaption>
+</figure>
+<h3 id="h3-18">5.12 LLM 보고서 문장 보완 프롬프트 만들기</h3>
+<p>자동 생성된 보고서를 LLM으로 보완할 때는 전체 원본 데이터를 넣지 않고, 보고서 초안 일부와 집계표를 사용합니다.</p>
+<pre><code class="language-python">llm_report_prompt = f&quot;&quot;&quot;
+당신은 데이터 분석 보고서 편집자입니다.
+
+다음은 온라인 쇼핑몰 데이터 분석 자동 보고서의 주요 결과입니다.
+
+주요 결과:
+- 매출 비중이 가장 높은 카테고리: {top_category_name}
+- {top_category_name} 카테고리 매출 비중: {top_category_ratio:.2f}%
+- 매출이 가장 높은 월: {top_month_name}
+- {top_month_name} 주문 수: {top_month_order_count}건
+
+요청:
+1. 보고서의 주요 결과 요약 문장을 자연스럽게 다듬어 주세요.
+2. 데이터로 확인한 사실과 원인 가설을 구분해 주세요.
+3. 데이터에 없는 원인을 단정하지 마세요.
+4. 추가로 확인해야 할 분석 질문을 제안해 주세요.
+5. 실무 보고서 문체로 작성해 주세요.
+
+주의:
+- 고객 선호도, 프로모션 효과, 충성 고객 여부를 단정하지 마세요.
+- 원본 고객명이나 개별 주문 데이터는 사용하지 마세요.
+&quot;&quot;&quot;
+
+print(llm_report_prompt)</code></pre>
+<p>프롬프트를 저장합니다.</p>
+<pre><code class="language-python">prompt_path = report_dir / &quot;ch12_llm_report_prompt.md&quot;
+prompt_path.write_text(llm_report_prompt, encoding=&quot;utf-8&quot;)</code></pre>
+<h2 id="h2-7">6. LLM 활용 프롬프트</h2>
+<p>LLM은 보고서 문장 보완과 구조 검토에 유용합니다. 하지만 자동 보고서의 수치와 해석을 그대로 맡기면 안 됩니다.</p>
+<h3 id="h3-19">6.1 보고서 요약 문장 작성 요청</h3>
+<pre><code class="language-text">당신은 데이터 분석 보고서 작성 도우미입니다.
+
+다음은 온라인 쇼핑몰 분석 결과 요약입니다.
+
+- 매출 비중이 가장 높은 카테고리: 전자기기
+- 전자기기 매출 비중: 42.5%
+- 매출이 가장 높은 월: 2024-04
+- 2024-04 주문 수: 63건
+
+요청:
+1. 보고서의 주요 결과 요약 문장을 작성해 주세요.
+2. 데이터로 확인한 사실과 가능한 가설을 구분해 주세요.
+3. 데이터에 없는 원인을 단정하지 마세요.
+4. 추가로 확인해야 할 분석 질문을 3개 제안해 주세요.</code></pre>
+<h3 id="h3-20">6.2 보고서 구조 검토 요청</h3>
+<pre><code class="language-text">다음 분석 보고서 목차를 검토해 주세요.
+
+보고서 목차:
+1. 분석 목적
+2. 데이터 개요
+3. 주요 분석 결과 요약
+4. 카테고리별 매출 분석
+5. 월별 매출 분석
+6. 구매 금액 상위 고객 분석
+7. 인사이트 카드
+8. 관찰·가설·추가 분석 질문
+9. 한계점
+10. 다음 단계
+
+검토 기준:
+- 데이터 분석 보고서 구조로 적절한가?
+- 빠진 항목이 있는가?
+- 순서가 자연스러운가?
+- 초보자 프로젝트 보고서에 적합한가?
+- 보완할 목차가 있다면 제안해 주세요.</code></pre>
+<h3 id="h3-21">6.3 자동 보고서 문장 검토 요청</h3>
+<pre><code class="language-text">다음 문장은 자동 생성된 분석 보고서의 해석 문장입니다.
+
+문장:
+전자기기 카테고리의 매출 비중이 가장 높게 나타났습니다. 이는 고객들이 전자기기를 가장 선호하기 때문입니다.
+
+현재 데이터에는 고객 선호도 조사나 클릭 로그가 없습니다.
+
+요청:
+1. 이 문장의 문제점을 설명해 주세요.
+2. 데이터로 확인한 사실과 추측을 구분해 주세요.
+3. 더 안전한 보고서 문장으로 수정해 주세요.
+4. 추가로 확인해야 할 데이터나 분석을 제안해 주세요.</code></pre>
+<h3 id="h3-22">6.4 보고서 한계점 작성 요청</h3>
+<pre><code class="language-text">온라인 쇼핑몰 데이터 분석 보고서의 한계점을 작성하려고 합니다.
+
+현재 사용한 데이터:
+- 고객 정보
+- 상품 정보
+- 주문 정보
+- 주문 상세 정보
+
+분석한 내용:
+- 카테고리별 매출
+- 월별 매출
+- 고객별 구매 금액
+- 주문 상태별 주문 수
+
+현재 없는 데이터:
+- 고객 만족도
+- 클릭 로그
+- 광고비
+- 프로모션 정보
+- 재고 정보
+- 반품 상세 사유
+
+요청:
+보고서에 넣을 수 있는 한계점 문장을 작성해 주세요.
+조건:
+- 과장하지 말 것
+- 현재 데이터로 알 수 없는 내용을 명확히 구분할 것
+- 추가 데이터가 필요한 항목을 제안할 것</code></pre>
+<h3 id="h3-23">6.5 최종 보고서 검토 요청</h3>
+<pre><code class="language-text">다음 기준으로 분석 보고서 최종본을 검토해 주세요.
+
+검토 기준:
+1. 분석 목적이 명확한가?
+2. 데이터 개요가 포함되어 있는가?
+3. 주요 결과표가 포함되어 있는가?
+4. 그래프 설명이 충분한가?
+5. 해석 문장에서 원인을 단정하지 않았는가?
+6. 한계점이 포함되어 있는가?
+7. 다음 단계가 구체적인가?
+8. 개인정보 노출 위험은 없는가?
+9. 수치와 그래프가 서로 일치하는가?
+10. 보고서 문체가 실무 보고서에 적합한가?
+
+출력 형식:
+- 점검 항목
+- 문제 여부
+- 수정 제안
+- 수정 문장 예시</code></pre>
+<h2 id="h2-8">7. 결과 해석</h2>
+<p>이번 장의 결과는 자동 생성된 Markdown 보고서입니다. 보고서 자동 작성은 분석 결과를 문서 형태로 빠르게 정리하는 데 유용합니다.</p>
+<h3 id="h3-24">7.1 자동 보고서의 장점</h3>
+<p>자동 보고서는 다음 장점이 있습니다.</p>
+<pre><code class="language-text">분석 결과 CSV와 그래프 이미지를 정해진 템플릿에 자동으로 삽입할 수 있습니다.
+보고서 구조가 일정하게 유지되므로 반복 보고서 작성에 유리합니다.</code></pre>
+<p>특히 주간 보고서나 월간 보고서처럼 형식이 반복되는 문서에 적합합니다.</p>
+<h3 id="h3-25">7.2 자동 보고서의 한계</h3>
+<p>자동 보고서는 최종 검토 없이 제출하면 위험합니다.</p>
+<pre><code class="language-text">자동 보고서는 수치, 이미지 경로, 해석 문장이 잘못 포함될 수 있으므로 반드시 사람이 최종 검토해야 합니다.</code></pre>
+<p>예를 들어 이전 분석 결과 파일이 갱신되지 않았다면 오래된 결과가 보고서에 들어갈 수 있습니다. 이미지 경로가 틀리면 그래프가 보이지 않을 수도 있습니다.</p>
+<h3 id="h3-26">7.3 LLM 보완 문장의 주의점</h3>
+<p>LLM은 보고서 문장을 자연스럽게 다듬는 데 도움이 됩니다. 하지만 원인 단정 표현이 들어갈 수 있습니다.</p>
+<p>위험한 문장:</p>
+<pre><code class="language-text">전자기기 매출이 높은 이유는 고객들이 전자기기를 선호하기 때문입니다.</code></pre>
+<p>안전한 문장:</p>
+<pre><code class="language-text">전자기기 카테고리의 매출 비중이 가장 높게 나타났습니다. 다만 이 결과가 고객 선호 때문인지, 상품 단가 때문인지, 판매 수량 때문인지는 추가 분석이 필요합니다.</code></pre>
+<p>LLM 문장은 항상 데이터 근거와 비교해야 합니다.</p>
+<h2 id="h2-9">8. 실무 적용 포인트</h2>
+<p>실무에서 보고서 자동 작성을 사용할 때는 다음 원칙을 지켜야 합니다.</p>
+<ol>
+<li>보고서 구조를 먼저 템플릿으로 설계합니다.</li>
+<li>분석 결과 파일명과 경로를 일관되게 관리합니다.</li>
+<li>표와 그래프를 자동 삽입합니다.</li>
+<li>보고서 작성일과 사용 데이터 기준일을 표시합니다.</li>
+<li>수치 요약은 코드로 자동 계산합니다.</li>
+<li>해석 문장은 자동 생성 후 사람이 검토합니다.</li>
+<li>LLM이 작성한 문장은 원인 단정 여부를 확인합니다.</li>
+<li>개인정보가 포함된 표나 그래프는 익명화합니다.</li>
+<li>보고서 생성 로그를 남깁니다.</li>
+<li>최종 제출 전 검증 체크리스트를 사용합니다.</li>
+</ol>
+<h3 id="h3-27">분석 보고서 자동 작성 체크리스트</h3>
+<table>
+<thead><tr><th>점검 항목</th><th>확인</th></tr></thead>
+<tbody><tr><td>보고서 템플릿 구조가 명확한가?</td><td>□</td></tr>
+<tr><td>입력 CSV 파일이 모두 존재하는가?</td><td>□</td></tr>
+<tr><td>그래프 이미지 파일이 모두 존재하는가?</td><td>□</td></tr>
+<tr><td>보고서 작성일이 포함되었는가?</td><td>□</td></tr>
+<tr><td>데이터 개요 표가 포함되었는가?</td><td>□</td></tr>
+<tr><td>주요 결과표가 포함되었는가?</td><td>□</td></tr>
+<tr><td>그래프 이미지 경로가 올바른가?</td><td>□</td></tr>
+<tr><td>해석 문장이 데이터에 근거하는가?</td><td>□</td></tr>
+<tr><td>원인 단정 표현을 피했는가?</td><td>□</td></tr>
+<tr><td>한계점이 포함되었는가?</td><td>□</td></tr>
+<tr><td>다음 단계가 구체적인가?</td><td>□</td></tr>
+<tr><td>개인정보 노출 위험이 없는가?</td><td>□</td></tr>
+<tr><td>보고서 생성 로그를 저장했는가?</td><td>□</td></tr></tbody>
+</table>
+<h2 id="h2-10">9. 연습 문제</h2>
+<h3 id="h3-28">기본 연습 문제</h3>
+<ol>
+<li><code>reports/</code> 폴더에 있는 분석 결과 CSV 파일 목록을 확인하세요.
+<ul>
+<li>제출 형식: 코드와 출력 결과</li>
+<li>포함 항목: <code>Path</code>, <code>exists()</code></li>
+</ul></li>
+<li><code>ch08_category_sales.csv</code>를 불러와 Markdown 표로 변환하세요.
+<ul>
+<li>제출 형식: 코드와 Markdown 출력 결과</li>
+<li>포함 항목: <code>pd.read_csv()</code>, <code>to_markdown()</code></li>
+</ul></li>
+<li>카테고리별 매출 그래프 이미지를 Markdown 문법으로 삽입하세요.
+<ul>
+<li>제출 형식: Markdown 이미지 문법</li>
+<li>포함 항목: <code>figures/ch08_category_sales.png</code></li>
+</ul></li>
+<li>분석 목적, 데이터 개요, 주요 결과를 포함한 간단한 Markdown 보고서를 자동 생성하세요.
+<ul>
+<li>제출 형식: Python 코드와 <code>.md</code> 파일</li>
+</ul></li>
+<li>보고서 검증 체크리스트를 CSV 파일로 저장하세요.
+<ul>
+<li>제출 형식: 코드와 저장 파일</li>
+<li>포함 항목: <code>ch12_report_validation_checklist.csv</code></li>
+</ul></li>
+</ol>
+<h3 id="h3-29">심화 과제</h3>
+<ol>
+<li>카테고리별 매출, 월별 매출, 고객별 구매 금액을 모두 포함한 자동 보고서를 작성하세요.
+<ul>
+<li>제출 형식: <code>reports/ch12_auto_report.md</code></li>
+</ul></li>
+<li>LLM을 활용해 보고서 요약 문장을 보완하고, 원인 단정 표현이 있는지 검토하세요.
+<ul>
+<li>제출 형식: 프롬프트, LLM 답변, 검토 결과</li>
+</ul></li>
+<li>자동 보고서 생성 로그를 작성하세요.
+<ul>
+<li>제출 형식: <code>reports/ch12_report_generation_log.csv</code></li>
+</ul></li>
+<li>보고서에 포함된 이미지 파일이 실제로 존재하는지 확인하는 코드를 작성하세요.
+<ul>
+<li>제출 형식: 코드와 검증 결과</li>
+</ul></li>
+<li>자동 생성 보고서를 HTML 또는 PDF로 변환하기 전 점검 항목을 정리하세요.
+<ul>
+<li>제출 형식: Markdown 체크리스트</li>
+</ul></li>
+</ol>
+<h2 id="h2-11">10. 정리</h2>
+<p>이번 장에서는 분석 결과를 바탕으로 Markdown 분석 보고서를 자동 작성하는 방법을 배웠습니다. 보고서 자동 작성은 반복적인 표 삽입, 그래프 삽입, 기본 문장 작성 작업을 줄이고, 분석자가 해석과 검토에 더 집중할 수 있게 도와줍니다.</p>
+<p>자동 보고서에는 분석 목적, 데이터 개요, 주요 분석 결과, 그래프, 해석, 인사이트, 한계점, 다음 단계가 포함되어야 합니다. pandas의 <code>to_markdown()</code>을 사용하면 DataFrame을 Markdown 표로 쉽게 변환할 수 있고, <code>Path.write_text()</code>를 사용하면 보고서를 파일로 저장할 수 있습니다.</p>
+<p>LLM은 보고서 문장을 자연스럽게 다듬는 데 도움을 줄 수 있습니다. 하지만 LLM이 작성한 문장은 반드시 검토해야 합니다. 특히 고객 선호, 프로모션 효과, 충성 고객 여부처럼 현재 데이터로 확인할 수 없는 내용을 단정하지 않도록 주의해야 합니다.</p>
+<p>자동화된 보고서도 최종 산출물이 되기 전에는 사람이 검증해야 합니다. 입력 파일이 최신인지, 그래프 이미지가 존재하는지, 표의 수치가 맞는지, 해석 문장이 데이터에 근거하는지 확인해야 합니다.</p>
+<p>다음 장에서는 Make를 활용해 반복적인 분석 업무를 자동화하고, 보고서 생성 및 발송 흐름을 외부 자동화 도구와 연결하는 방법을 배웁니다.</p>
+  </main></body></html>

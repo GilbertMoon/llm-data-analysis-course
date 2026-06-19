@@ -1,0 +1,1033 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>13장 Make 기반 반복 분석 업무 자동화</title>
+  <style>
+:root {
+  color: #1f2933;
+  background: #ffffff;
+  font-family: "Noto Sans KR", "Malgun Gothic", "Apple SD Gothic Neo", Arial, sans-serif;
+  line-height: 1.7;
+}
+
+@page {
+  size: A4;
+  margin: 18mm 16mm 20mm 16mm;
+}
+
+body {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 48px 28px 72px;
+  font-size: 16px;
+}
+
+.chapter {
+  page-break-before: always;
+}
+
+.chapter:first-of-type {
+  page-break-before: auto;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  line-height: 1.35;
+  color: #111827;
+}
+
+h1 {
+  margin: 0 0 32px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #d7dee8;
+  font-size: 2.1rem;
+}
+
+h2 {
+  margin-top: 40px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 1.45rem;
+}
+
+h3 {
+  margin-top: 28px;
+  font-size: 1.15rem;
+}
+
+h4 {
+  margin-top: 22px;
+  font-size: 1rem;
+}
+
+p {
+  margin: 12px 0;
+}
+
+ul,
+ol {
+  margin: 14px 0 18px 1.4rem;
+  padding-left: 1.1rem;
+}
+
+li {
+  margin: 6px 0;
+}
+
+table {
+  width: 100%;
+  margin: 24px 0;
+  border-collapse: collapse;
+  table-layout: fixed;
+  word-break: keep-all;
+  font-size: 0.95rem;
+}
+
+th,
+td {
+  padding: 10px 12px;
+  border: 1px solid #d7dee8;
+  vertical-align: top;
+  overflow-wrap: break-word;
+}
+
+th {
+  background: #f3f6fa;
+  font-weight: 700;
+}
+
+code {
+  padding: 0.15em 0.35em;
+  border: 1px solid #d7dee8;
+  border-radius: 4px;
+  background: #f6f8fa;
+  color: #0f172a;
+  font-family: "D2Coding", "Cascadia Code", "Consolas", monospace;
+  font-size: 0.92em;
+}
+
+pre {
+  margin: 22px 0;
+  padding: 18px 20px;
+  border: 1px solid #cbd5e1;
+  border-left: 5px solid #64748b;
+  border-radius: 8px;
+  background: #f8fafc;
+  color: #111827;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.6;
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+pre code {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font-size: 0.92rem;
+}
+
+blockquote {
+  margin: 20px 0;
+  padding: 12px 18px;
+  border-left: 4px solid #94a3b8;
+  background: #f8fafc;
+  color: #334155;
+}
+
+
+.figure {
+  margin: 28px 0;
+  text-align: center;
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+.figure img {
+  width: 100%;
+  max-width: 100%;
+  border: 1px solid #d7dee8;
+  border-radius: 10px;
+  background: #ffffff;
+}
+
+.figure figcaption {
+  margin-top: 8px;
+  color: #475569;
+  font-size: 0.92rem;
+  text-align: center;
+}
+
+img {
+  max-width: 100%;
+}
+
+.toc {
+  margin: 24px 0 34px;
+  padding: 18px 22px;
+  border: 1px solid #d7dee8;
+  border-radius: 8px;
+  background: #f8fafc;
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+.toc-title {
+  margin: 0 0 10px;
+  color: #111827;
+  font-weight: 700;
+}
+
+.toc ol {
+  margin: 0;
+  padding-left: 1.3rem;
+}
+
+.toc li {
+  margin: 4px 0;
+}
+
+.toc a {
+  color: #1d4ed8;
+  text-decoration: none;
+}
+
+.toc a:hover {
+  text-decoration: underline;
+}
+
+@media print {
+  body {
+    max-width: none;
+    padding: 0;
+    font-size: 11pt;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  table,
+  pre,
+  blockquote,
+  .figure {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  thead {
+    display: table-header-group;
+  }
+
+  tr {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  p,
+  li {
+    orphans: 2;
+    widows: 2;
+  }
+}
+
+@media (max-width: 640px) {
+  body {
+    padding: 28px 18px 56px;
+    font-size: 15px;
+  }
+
+  table {
+    font-size: 0.9rem;
+  }
+
+  th,
+  td {
+    padding: 8px 10px;
+  }
+}
+
+  </style>
+</head>
+<body>
+  <main class="chapter">
+<h1 id="chapter-title">13장 Make 기반 반복 분석 업무 자동화</h1>
+<nav class="toc" aria-label="목차">
+<p class="toc-title">목차</p>
+<ol>
+<li><a href="#h2-1">수업 시간 구성</a></li>
+<li><a href="#h2-2">1. 학습 목표</a></li>
+<li><a href="#h2-3">2. 이번 장에서 만들 결과물</a></li>
+<li><a href="#h2-4">3. 핵심 개념</a></li>
+<li><a href="#h2-5">4. 실습 시나리오</a></li>
+<li><a href="#h2-6">5. 실습 준비</a></li>
+<li><a href="#h2-7">6. Make Scenario 설계</a></li>
+<li><a href="#h2-8">7. 실습 코드</a></li>
+<li><a href="#h2-9">8. LLM 활용 프롬프트</a></li>
+<li><a href="#h2-10">9. 결과 해석</a></li>
+<li><a href="#h2-11">10. 실무 적용 포인트</a></li>
+<li><a href="#h2-12">11. 연습 문제</a></li>
+<li><a href="#h2-13">12. 정리</a></li>
+</ol>
+</nav>
+<p>이 장에서는 지금까지 작성한 데이터 분석 코드와 보고서를 반복 업무 자동화 흐름으로 연결하는 방법을 배웁니다. Chapter 12에서는 분석 결과를 Markdown 보고서로 자동 작성하는 방법을 다루었다면, 이번 장에서는 생성된 보고서와 그래프 파일을 Make를 활용해 자동으로 전달하고 기록하는 흐름을 구성합니다.</p>
+<p>데이터 분석 업무에서는 같은 작업을 반복하는 경우가 많습니다. 예를 들어 매주 월요일마다 데이터를 확인하고, 분석 스크립트를 실행하고, 보고서를 만들고, 담당자에게 이메일로 보내고, 처리 이력을 남기는 일이 반복될 수 있습니다. 이런 작업을 매번 사람이 수동으로 하면 시간이 오래 걸리고 누락 가능성도 커집니다.</p>
+<p>Make는 여러 앱과 서비스를 연결해 업무 흐름을 자동화할 수 있는 도구입니다. Python 분석 스크립트, Google Drive, Gmail, Slack, Google Sheets 같은 도구를 연결하면 분석 결과 파일이 생성되었을 때 자동으로 저장, 전달, 기록하는 흐름을 만들 수 있습니다.</p>
+<p>이번 장의 핵심은 <strong>분석 코드 자체를 모두 Make에서 처리하는 것이 아니라, Python 분석 결과를 Make로 연결해 반복 업무를 자동화하는 능력</strong>입니다.</p>
+<h2 id="h2-1">수업 시간 구성</h2>
+<table>
+<thead><tr><th>구성</th><th>권장 시간</th></tr></thead>
+<tbody><tr><td>반복 분석 업무 자동화 개념 이해</td><td>30분</td></tr>
+<tr><td>Make 기본 구조 이해</td><td>35분</td></tr>
+<tr><td>자동화 대상 업무 정의</td><td>35분</td></tr>
+<tr><td>Python 분석 산출물 준비</td><td>40분</td></tr>
+<tr><td>Google Drive 기반 파일 전달 흐름 구성</td><td>45분</td></tr>
+<tr><td>Gmail 보고서 발송 자동화</td><td>45분</td></tr>
+<tr><td>Google Sheets 처리 로그 기록</td><td>40분</td></tr>
+<tr><td>오류 처리와 검증 체크리스트 작성</td><td>40분</td></tr>
+<tr><td>연습 문제 및 심화 과제</td><td>60~90분</td></tr></tbody>
+</table>
+<p>기본 수업은 약 5시간을 기준으로 구성되어 있습니다. 시간이 제한된 경우 Make 실제 설정 실습 일부를 축소하고, 자동화 설계서와 검증 체크리스트 작성 중심으로 3시간 내외로 운영할 수 있습니다.</p>
+<h2 id="h2-2">1. 학습 목표</h2>
+<p>이 장을 마치면 학습자는 다음을 할 수 있습니다.</p>
+<ul>
+<li>반복 분석 업무에서 자동화가 필요한 이유를 설명할 수 있습니다.</li>
+<li>Make의 기본 구성 요소인 Scenario, Trigger, Module, Connection을 설명할 수 있습니다.</li>
+<li>Python 분석 코드와 Make 자동화의 역할을 구분할 수 있습니다.</li>
+<li>분석 결과 파일을 Google Drive 동기화 폴더에 저장하는 구조를 설계할 수 있습니다.</li>
+<li>Make에서 새 보고서 파일을 감지하는 흐름을 구성할 수 있습니다.</li>
+<li>Gmail을 통해 분석 보고서를 자동 발송하는 시나리오를 설계할 수 있습니다.</li>
+<li>Google Sheets에 자동화 실행 로그를 기록할 수 있습니다.</li>
+<li>자동화 실패 가능성과 검증 항목을 정리할 수 있습니다.</li>
+<li>LLM을 활용해 Make 자동화 시나리오 설계 초안을 만들 수 있습니다.</li>
+<li>자동화 결과를 보고서와 운영 문서로 정리할 수 있습니다.</li>
+</ul>
+<h2 id="h2-3">2. 이번 장에서 만들 결과물</h2>
+<p>이번 장에서는 Make를 활용한 반복 분석 업무 자동화 설계와 실행 흐름을 만듭니다.</p>
+<p>이번 장에서 만들 결과물은 다음과 같습니다.</p>
+<ul>
+<li>반복 분석 업무 자동화 시나리오 설계표</li>
+<li>Python 분석 산출물 폴더 구조</li>
+<li>Google Drive 업로드 대상 파일 목록</li>
+<li>Make Scenario 구성표</li>
+<li>Gmail 자동 발송 템플릿</li>
+<li>Google Sheets 실행 로그 구조</li>
+<li>자동화 검증 체크리스트</li>
+<li>오류 처리 기준표</li>
+<li><code>reports/ch13_make_automation_plan.md</code></li>
+<li><code>reports/ch13_make_execution_log_template.csv</code></li>
+<li><code>reports/ch13_make_validation_checklist.csv</code></li>
+</ul>
+<p>아래 그림은 Python 분석 결과가 Make 자동화 흐름으로 연결되는 전체 구조를 보여줍니다.</p>
+<figure class="figure">
+  <img src="../assets/images/ch13/ch13_make_automation_overview.png" alt="Make 기반 분석 업무 자동화 전체 흐름도">
+  <figcaption>그림 13-1. Make 기반 분석 업무 자동화 전체 흐름도</figcaption>
+</figure>
+<h2 id="h2-4">3. 핵심 개념</h2>
+<h3 id="h3-1">3.1 반복 분석 업무 자동화란 무엇인가</h3>
+<p>반복 분석 업무 자동화는 사람이 매번 수동으로 처리하던 분석 관련 작업을 정해진 조건에 따라 자동으로 실행되게 만드는 것입니다.</p>
+<p>예를 들어 다음과 같은 작업이 자동화 대상이 될 수 있습니다.</p>
+<table>
+<thead><tr><th>반복 업무</th><th>자동화 방식</th></tr></thead>
+<tbody><tr><td>매주 분석 보고서 파일 확인</td><td>정해진 시간에 폴더 확인</td></tr>
+<tr><td>보고서 파일 업로드</td><td>Google Drive 폴더에 자동 저장</td></tr>
+<tr><td>보고서 이메일 발송</td><td>Gmail 모듈로 자동 발송</td></tr>
+<tr><td>담당자 알림</td><td>Slack 또는 이메일 알림</td></tr>
+<tr><td>처리 이력 기록</td><td>Google Sheets에 로그 추가</td></tr>
+<tr><td>실패 여부 확인</td><td>오류 발생 시 관리자에게 알림</td></tr></tbody>
+</table>
+<p>중요한 점은 모든 분석을 Make에서 직접 수행하는 것이 아니라는 것입니다. Python은 데이터 분석과 보고서 생성을 담당하고, Make는 반복적인 전달·알림·기록 업무를 담당하는 구조가 실무적으로 더 안정적입니다.</p>
+<h3 id="h3-2">3.2 Make의 기본 구성 요소</h3>
+<p>Make에서는 자동화 흐름을 Scenario라고 부릅니다. 하나의 Scenario는 Trigger와 여러 Module로 구성됩니다.</p>
+<table>
+<thead><tr><th>구성 요소</th><th>설명</th><th>예시</th></tr></thead>
+<tbody><tr><td>Scenario</td><td>자동화 전체 흐름</td><td>주간 분석 보고서 발송</td></tr>
+<tr><td>Trigger</td><td>자동화 시작 조건</td><td>새 파일 생성, 정해진 시간</td></tr>
+<tr><td>Module</td><td>실행할 작업 단위</td><td>파일 검색, 이메일 발송</td></tr>
+<tr><td>Connection</td><td>외부 서비스 연결 정보</td><td>Google Drive, Gmail</td></tr>
+<tr><td>Filter</td><td>조건 분기</td><td>파일명이 <code>ch12_auto_report.md</code>일 때만 실행</td></tr>
+<tr><td>Router</td><td>여러 흐름으로 분기</td><td>이메일 발송과 로그 기록 동시 수행</td></tr>
+<tr><td>Error Handler</td><td>오류 처리</td><td>실패 시 관리자에게 알림</td></tr></tbody>
+</table>
+<p>이번 장에서는 가장 단순하고 실습하기 쉬운 구조로 진행합니다.</p>
+<pre><code class="language-text">Google Drive 새 보고서 감지
+→ Gmail로 보고서 발송
+→ Google Sheets에 실행 로그 기록</code></pre>
+<h3 id="h3-3">3.3 Python과 Make의 역할 구분</h3>
+<p>데이터 분석 자동화에서는 Python과 Make의 역할을 구분하는 것이 중요합니다.</p>
+<table>
+<thead><tr><th>영역</th><th>Python 역할</th><th>Make 역할</th></tr></thead>
+<tbody><tr><td>데이터 불러오기</td><td>CSV 읽기</td><td>보통 직접 수행하지 않음</td></tr>
+<tr><td>전처리</td><td>결측치, 중복, 타입 처리</td><td>보통 직접 수행하지 않음</td></tr>
+<tr><td>분석</td><td>pandas 집계</td><td>보통 직접 수행하지 않음</td></tr>
+<tr><td>시각화</td><td>그래프 PNG 저장</td><td>파일 전달</td></tr>
+<tr><td>보고서 생성</td><td>Markdown 보고서 작성</td><td>보고서 감지 및 발송</td></tr>
+<tr><td>알림</td><td>선택적으로 가능</td><td>Gmail, Slack 발송</td></tr>
+<tr><td>로그</td><td>CSV 저장 가능</td><td>Google Sheets 기록</td></tr>
+<tr><td>스케줄</td><td>Python scheduler 가능</td><td>Scenario 스케줄 가능</td></tr></tbody>
+</table>
+<p>초보자 실습에서는 Python이 <code>reports/</code> 폴더에 보고서와 그래프를 생성하고, Make가 해당 파일을 감지해 이메일과 로그를 처리하는 방식이 가장 이해하기 쉽습니다.</p>
+<p>아래 그림은 Python과 Make의 역할 분담을 보여줍니다.</p>
+<figure class="figure">
+  <img src="../assets/images/ch13/ch13_python_make_role_split.png" alt="Python과 Make의 역할 분담">
+  <figcaption>그림 13-2. Python과 Make의 역할 분담</figcaption>
+</figure>
+<h3 id="h3-4">3.4 자동화 트리거 설계</h3>
+<p>자동화는 언제 시작할지 정해야 합니다. 이것을 Trigger라고 합니다.</p>
+<p>반복 분석 업무에서 자주 사용하는 Trigger는 다음과 같습니다.</p>
+<table>
+<thead><tr><th>Trigger 방식</th><th>설명</th><th>적합한 상황</th></tr></thead>
+<tbody><tr><td>일정 기반</td><td>매일, 매주, 매월 실행</td><td>정기 보고서</td></tr>
+<tr><td>파일 감지</td><td>새 파일이 생기면 실행</td><td>보고서 생성 후 발송</td></tr>
+<tr><td>Webhook</td><td>외부 요청이 오면 실행</td><td>앱 또는 스크립트 연동</td></tr>
+<tr><td>수동 실행</td><td>사람이 버튼을 눌러 실행</td><td>테스트, 검수</td></tr>
+<tr><td>이메일 수신</td><td>특정 이메일이 오면 실행</td><td>외부 데이터 수신</td></tr></tbody>
+</table>
+<p>이번 장에서는 초보자가 가장 쉽게 실습할 수 있는 파일 감지 방식과 일정 기반 방식을 중심으로 다룹니다.</p>
+<h3 id="h3-5">3.5 Google Drive를 사용하는 이유</h3>
+<p>Make는 로컬 PC의 일반 폴더를 직접 감시하기 어렵습니다. 따라서 분석 결과를 Google Drive 동기화 폴더에 저장하면 Make가 Google Drive의 새 파일을 감지할 수 있습니다.</p>
+<p>예를 들어 Python 보고서 저장 경로를 다음처럼 설정할 수 있습니다.</p>
+<pre><code class="language-text">Google Drive/My Drive/llm-data-analysis-course/reports/</code></pre>
+<p>또는 Windows에서 Google Drive 동기화 폴더를 사용한다면 다음과 같은 구조가 될 수 있습니다.</p>
+<pre><code class="language-text">G:/My Drive/llm-data-analysis-course/reports/</code></pre>
+<p>실습에서는 사용자의 실제 Google Drive 경로에 맞게 조정해야 합니다.</p>
+<h3 id="h3-6">3.6 자동화 검증이 필요한 이유</h3>
+<p>자동화는 한 번 설정하면 편리하지만, 잘못 설정하면 같은 오류가 반복될 수 있습니다.</p>
+<p>자동화에서 자주 발생하는 문제는 다음과 같습니다.</p>
+<table>
+<thead><tr><th>문제</th><th>예시</th></tr></thead>
+<tbody><tr><td>파일 경로 오류</td><td>Make가 보고서 파일을 찾지 못함</td></tr>
+<tr><td>파일명 조건 오류</td><td>다른 파일을 잘못 발송</td></tr>
+<tr><td>권한 오류</td><td>Google Drive 또는 Gmail 연결 실패</td></tr>
+<tr><td>첨부 누락</td><td>이메일에 보고서가 첨부되지 않음</td></tr>
+<tr><td>중복 발송</td><td>같은 파일을 여러 번 전송</td></tr>
+<tr><td>로그 누락</td><td>실행 기록이 남지 않음</td></tr>
+<tr><td>수신자 오류</td><td>잘못된 이메일 주소로 발송</td></tr>
+<tr><td>오래된 파일 발송</td><td>최신 보고서가 아닌 이전 파일 사용</td></tr></tbody>
+</table>
+<p>따라서 자동화는 반드시 테스트 파일로 먼저 검증해야 합니다.</p>
+<h3 id="h3-7">3.7 자동화 설계 문서가 필요한 이유</h3>
+<p>자동화는 설정 화면만 보고 이해하기 어렵습니다. 따라서 자동화 시나리오를 문서로 정리해야 합니다.</p>
+<p>자동화 설계 문서에는 다음 내용이 포함되어야 합니다.</p>
+<table>
+<thead><tr><th>항목</th><th>설명</th></tr></thead>
+<tbody><tr><td>자동화 이름</td><td>주간 분석 보고서 발송</td></tr>
+<tr><td>목적</td><td>보고서 발송 반복 작업 감소</td></tr>
+<tr><td>Trigger</td><td>Google Drive 새 파일 감지</td></tr>
+<tr><td>입력 파일</td><td><code>ch12_auto_report.md</code></td></tr>
+<tr><td>처리 단계</td><td>파일 검색, 이메일 발송, 로그 기록</td></tr>
+<tr><td>출력 결과</td><td>Gmail 발송, Google Sheets 로그</td></tr>
+<tr><td>실패 처리</td><td>관리자 이메일 알림</td></tr>
+<tr><td>검증 기준</td><td>첨부 여부, 수신자, 로그 기록</td></tr></tbody>
+</table>
+<p>아래 그림은 Make Scenario 설계 구조를 보여줍니다.</p>
+<figure class="figure">
+  <img src="../assets/images/ch13/ch13_make_scenario_structure.png" alt="Make Scenario 설계 구조">
+  <figcaption>그림 13-3. Make Scenario 설계 구조</figcaption>
+</figure>
+<h2 id="h2-5">4. 실습 시나리오</h2>
+<p>이번 장의 실습 시나리오는 다음과 같습니다.</p>
+<blockquote>Python 분석 스크립트를 통해 <code>reports/ch12_auto_report.md</code> 보고서와 그래프 이미지가 생성되었습니다. 이 파일을 Google Drive에 저장한 뒤, Make가 새 보고서 파일을 감지하면 Gmail로 담당자에게 보고서를 보내고, Google Sheets에 실행 로그를 남기는 자동화 시나리오를 구성합니다.</blockquote>
+<p>이번 장의 자동화 흐름은 다음과 같습니다.</p>
+<ol>
+<li>Python 분석 코드 실행</li>
+<li><code>reports/ch12_auto_report.md</code> 생성</li>
+<li>보고서와 그래프 파일을 Google Drive 동기화 폴더에 저장</li>
+<li>Make에서 Google Drive 새 파일 감지</li>
+<li>파일명이 <code>ch12_auto_report.md</code>인지 확인</li>
+<li>Gmail로 담당자에게 보고서 발송</li>
+<li>Google Sheets에 실행 로그 추가</li>
+<li>오류 발생 시 관리자에게 알림</li>
+</ol>
+<p>아래 그림은 이번 장에서 구현할 보고서 자동 발송 흐름을 보여줍니다.</p>
+<figure class="figure">
+  <img src="../assets/images/ch13/ch13_report_delivery_scenario.png" alt="보고서 자동 발송 시나리오">
+  <figcaption>그림 13-4. 보고서 자동 발송 시나리오</figcaption>
+</figure>
+<h2 id="h2-6">5. 실습 준비</h2>
+<h3 id="h3-8">5.1 필요한 계정과 도구</h3>
+<p>이번 장 실습에는 다음 도구가 필요합니다.</p>
+<table>
+<thead><tr><th>도구</th><th>용도</th></tr></thead>
+<tbody><tr><td>Python</td><td>분석 코드 실행 및 보고서 생성</td></tr>
+<tr><td>Google Drive</td><td>분석 결과 파일 저장</td></tr>
+<tr><td>Gmail</td><td>보고서 자동 발송</td></tr>
+<tr><td>Google Sheets</td><td>실행 로그 기록</td></tr>
+<tr><td>Make</td><td>자동화 시나리오 구성</td></tr>
+<tr><td>VSCode 또는 Jupyter</td><td>분석 코드 실행</td></tr></tbody>
+</table>
+<p>실제 수업에서는 개인 계정을 사용하기보다 실습용 계정을 사용하는 것이 좋습니다.</p>
+<h3 id="h3-9">5.2 실습용 폴더 구조</h3>
+<p>Google Drive에 다음 폴더를 준비합니다.</p>
+<pre><code class="language-text">llm-data-analysis-course/
+├─ reports/
+│  ├─ ch12_auto_report.md
+│  └─ figures/
+│     ├─ ch08_category_sales.png
+│     ├─ ch08_monthly_sales.png
+│     └─ ch08_top_customers.png
+└─ automation_logs/</code></pre>
+<p>로컬 프로젝트에서는 다음 구조와 연결됩니다.</p>
+<pre><code class="language-text">llm-data-analysis-course/
+├─ reports/
+├─ notebooks/
+├─ data/
+└─ scripts/</code></pre>
+<p>Google Drive 동기화 폴더를 사용하는 경우, Python 보고서 출력 경로를 Drive 폴더로 바꿀 수 있습니다.</p>
+<h3 id="h3-10">5.3 보고서 파일 준비</h3>
+<p>Chapter 12 Notebook을 실행해 다음 파일을 생성합니다.</p>
+<pre><code class="language-text">reports/ch12_auto_report.md
+reports/figures/ch08_category_sales.png
+reports/figures/ch08_monthly_sales.png
+reports/figures/ch08_top_customers.png</code></pre>
+<p>파일이 생성되었는지 Python으로 확인합니다. 프로젝트 루트에서 실행하는 경우와 <code>notebooks</code> 폴더 안에서 실행하는 경우에는 상대 경로가 달라질 수 있으므로, 현재 위치를 기준으로 공통 기준 폴더를 자동 설정합니다.</p>
+<pre><code class="language-python">from pathlib import Path
+
+current_dir = Path.cwd()
+
+if current_dir.name == &quot;notebooks&quot;:
+    base_dir = current_dir.parent
+else:
+    base_dir = current_dir
+
+report_dir = base_dir / &quot;reports&quot;
+figure_dir = report_dir / &quot;figures&quot;
+
+files_to_check = [
+    report_dir / &quot;ch12_auto_report.md&quot;,
+    figure_dir / &quot;ch08_category_sales.png&quot;,
+    figure_dir / &quot;ch08_monthly_sales.png&quot;,
+    figure_dir / &quot;ch08_top_customers.png&quot;,
+]
+
+for file_path in files_to_check:
+    print(file_path, file_path.exists())</code></pre>
+<p>위 파일 중 하나라도 <code>False</code>가 출력되면 Chapter 12 실습을 먼저 실행해야 합니다. 특히 <code>ch12_auto_report.md</code>와 그래프 PNG 파일 3개가 모두 준비된 뒤 Make 자동화 설정을 진행합니다.</p>
+<h2 id="h2-7">6. Make Scenario 설계</h2>
+<h3 id="h3-11">6.1 Scenario 1: Google Drive 보고서 파일 감지</h3>
+<p>첫 번째 Module은 Google Drive에서 새 파일을 감지하는 역할입니다.</p>
+<p>설정 개념은 다음과 같습니다.</p>
+<table>
+<thead><tr><th>항목</th><th>설정 예시</th></tr></thead>
+<tbody><tr><td>App</td><td>Google Drive</td></tr>
+<tr><td>Trigger</td><td>Watch files in a folder</td></tr>
+<tr><td>Folder</td><td><code>llm-data-analysis-course/reports</code></td></tr>
+<tr><td>조건</td><td>새 파일이 생성될 때</td></tr>
+<tr><td>대상 파일</td><td><code>ch12_auto_report.md</code></td></tr></tbody>
+</table>
+<p>필터 조건은 다음처럼 설계합니다.</p>
+<pre><code class="language-text">파일명 equals ch12_auto_report.md</code></pre>
+<p>이 필터를 추가하면 다른 파일이 업로드되었을 때 자동 발송되는 문제를 줄일 수 있습니다.</p>
+<h3 id="h3-12">6.2 Scenario 2: Gmail 보고서 발송</h3>
+<p>두 번째 Module은 Gmail로 보고서를 발송하는 역할입니다.</p>
+<p>설정 개념은 다음과 같습니다.</p>
+<table>
+<thead><tr><th>항목</th><th>설정 예시</th></tr></thead>
+<tbody><tr><td>App</td><td>Gmail</td></tr>
+<tr><td>Action</td><td>Send an email</td></tr>
+<tr><td>To</td><td>담당자 이메일</td></tr>
+<tr><td>Subject</td><td><code>[자동발송] 온라인 쇼핑몰 분석 보고서</code></td></tr>
+<tr><td>Body</td><td>보고서 안내 문구</td></tr>
+<tr><td>Attachment</td><td>Google Drive에서 감지한 보고서 파일</td></tr></tbody>
+</table>
+<p>이메일 본문 예시는 다음과 같습니다.</p>
+<pre><code class="language-text">안녕하세요.
+
+온라인 쇼핑몰 데이터 분석 자동 보고서를 전달드립니다.
+
+첨부 파일:
+- ch12_auto_report.md
+
+확인 항목:
+- 카테고리별 매출
+- 월별 매출
+- 구매 금액 상위 고객
+- 인사이트 카드
+- 한계점 및 다음 단계
+
+본 메일은 Make 자동화 시나리오를 통해 발송되었습니다.
+감사합니다.</code></pre>
+<h3 id="h3-13">6.3 Scenario 3: Google Sheets 실행 로그 기록</h3>
+<p>세 번째 Module은 Google Sheets에 자동화 실행 이력을 남기는 역할입니다.</p>
+<p>Google Sheets에 다음 컬럼을 준비합니다.</p>
+<table>
+<thead><tr><th>컬럼명</th><th>설명</th></tr></thead>
+<tbody><tr><td>executed_at</td><td>실행 시각</td></tr>
+<tr><td>scenario_name</td><td>자동화 이름</td></tr>
+<tr><td>file_name</td><td>처리 파일명</td></tr>
+<tr><td>file_path</td><td>파일 경로</td></tr>
+<tr><td>email_to</td><td>수신자</td></tr>
+<tr><td>status</td><td>성공 또는 실패</td></tr>
+<tr><td>memo</td><td>비고</td></tr></tbody>
+</table>
+<p>Make에서는 Gmail 발송 후 Google Sheets의 Add a row 기능을 사용해 로그를 추가합니다.</p>
+<p>로그 예시는 다음과 같습니다.</p>
+<table>
+<thead><tr><th>executed_at</th><th>scenario_name</th><th>file_name</th><th>email_to</th><th>status</th><th>memo</th></tr></thead>
+<tbody><tr><td>2026-06-19 09:00</td><td>weekly_report_delivery</td><td>ch12_auto_report.md</td><td>[manager@example.com](mailto:manager@example.com)</td><td>success</td><td>자동 발송 완료</td></tr></tbody>
+</table>
+<h3 id="h3-14">6.4 Scenario 4: 오류 발생 시 알림</h3>
+<p>자동화 실패 시 별도 알림을 보내는 흐름도 설계할 수 있습니다.</p>
+<p>오류 발생 시 알림 예시는 다음과 같습니다.</p>
+<pre><code class="language-text">[자동화 오류] 분석 보고서 발송 실패
+
+오류가 발생했습니다.
+
+확인 필요 항목:
+- Google Drive 파일 존재 여부
+- Gmail 연결 상태
+- 수신자 이메일 주소
+- 첨부 파일 권한
+- Make Scenario 실행 로그</code></pre>
+<p>처음 실습에서는 오류 처리까지 복잡하게 만들기보다, 수동 테스트 후 로그를 확인하는 수준으로 진행해도 충분합니다.</p>
+<p>아래 그림은 자동화 성공과 실패 흐름을 함께 보여줍니다.</p>
+<figure class="figure">
+  <img src="../assets/images/ch13/ch13_success_error_flow.png" alt="Make 자동화 성공과 오류 처리 흐름">
+  <figcaption>그림 13-5. Make 자동화 성공과 오류 처리 흐름</figcaption>
+</figure>
+<h2 id="h2-8">7. 실습 코드</h2>
+<p>이번 장의 전체 실습은 다음 Notebook에서 진행합니다.</p>
+<pre><code class="language-text">notebooks/ch13_make_automation.ipynb</code></pre>
+<p>본문에는 Make와 연결하기 위한 파일 준비 및 자동화 설계 문서 생성 코드를 제공합니다.</p>
+<h3 id="h3-15">7.1 기본 패키지 불러오기</h3>
+<pre><code class="language-python">from pathlib import Path
+from datetime import datetime
+import pandas as pd</code></pre>
+<p>경로를 설정합니다. 프로젝트 루트에서 실행하는 경우와 <code>notebooks</code> 폴더 안에서 실행하는 경우에는 상대 경로가 달라질 수 있습니다. 아래 코드는 현재 실행 위치를 확인한 뒤 공통 기준 폴더를 자동으로 설정합니다.</p>
+<pre><code class="language-python">current_dir = Path.cwd()
+
+if current_dir.name == &quot;notebooks&quot;:
+    base_dir = current_dir.parent
+else:
+    base_dir = current_dir
+
+report_dir = base_dir / &quot;reports&quot;
+figure_dir = report_dir / &quot;figures&quot;
+
+report_dir.mkdir(parents=True, exist_ok=True)
+figure_dir.mkdir(parents=True, exist_ok=True)
+
+print(&quot;report_dir:&quot;, report_dir)
+print(&quot;figure_dir:&quot;, figure_dir)</code></pre>
+<p>이 코드는 프로젝트 루트에서 실행하든 <code>notebooks</code> 폴더에서 실행하든 같은 방식으로 동작합니다.</p>
+<p><code>to_markdown()</code>을 사용하려면 환경에 따라 <code>tabulate</code> 패키지가 필요할 수 있습니다. 오류가 발생하면 터미널 또는 노트북에서 <code>pip install tabulate</code>를 실행하세요.</p>
+<pre><code class="language-text">pip install tabulate</code></pre>
+<h3 id="h3-16">7.2 Make 자동화 대상 파일 확인</h3>
+<pre><code class="language-python">automation_files = [
+    report_dir / &quot;ch12_auto_report.md&quot;,
+    figure_dir / &quot;ch08_category_sales.png&quot;,
+    figure_dir / &quot;ch08_monthly_sales.png&quot;,
+    figure_dir / &quot;ch08_top_customers.png&quot;,
+]
+
+automation_file_check = pd.DataFrame({
+    &quot;file_name&quot;: [file.name for file in automation_files],
+    &quot;path&quot;: [str(file) for file in automation_files],
+    &quot;exists&quot;: [file.exists() for file in automation_files]
+})
+
+automation_file_check</code></pre>
+<p>저장합니다.</p>
+<pre><code class="language-python">automation_file_check.to_csv(
+    report_dir / &quot;ch13_automation_file_check.csv&quot;,
+    index=False
+)</code></pre>
+<h3 id="h3-17">7.3 자동화 시나리오 설계표 만들기</h3>
+<pre><code class="language-python">make_scenario_plan = pd.DataFrame({
+    &quot;step&quot;: [
+        1,
+        2,
+        3,
+        4,
+        5
+    ],
+    &quot;module&quot;: [
+        &quot;Google Drive&quot;,
+        &quot;Filter&quot;,
+        &quot;Gmail&quot;,
+        &quot;Google Sheets&quot;,
+        &quot;Error Notification&quot;
+    ],
+    &quot;action&quot;: [
+        &quot;Watch files in reports folder&quot;,
+        &quot;Check file name equals ch12_auto_report.md&quot;,
+        &quot;Send report email with attachment&quot;,
+        &quot;Add execution log row&quot;,
+        &quot;Send error alert email&quot;
+    ],
+    &quot;input&quot;: [
+        &quot;reports folder&quot;,
+        &quot;file name&quot;,
+        &quot;report file, recipient email&quot;,
+        &quot;execution result&quot;,
+        &quot;error message&quot;
+    ],
+    &quot;output&quot;: [
+        &quot;new file detected&quot;,
+        &quot;target report file only&quot;,
+        &quot;email sent&quot;,
+        &quot;log row added&quot;,
+        &quot;admin notified&quot;
+    ]
+})
+
+make_scenario_plan</code></pre>
+<p>저장합니다.</p>
+<pre><code class="language-python">make_scenario_plan.to_csv(
+    report_dir / &quot;ch13_make_scenario_plan.csv&quot;,
+    index=False
+)</code></pre>
+<h3 id="h3-18">7.4 실행 로그 템플릿 만들기</h3>
+<pre><code class="language-python">execution_log_template = pd.DataFrame({
+    &quot;executed_at&quot;: [],
+    &quot;scenario_name&quot;: [],
+    &quot;file_name&quot;: [],
+    &quot;file_path&quot;: [],
+    &quot;email_to&quot;: [],
+    &quot;status&quot;: [],
+    &quot;memo&quot;: []
+})
+
+execution_log_template</code></pre>
+<p>저장합니다.</p>
+<pre><code class="language-python">execution_log_template.to_csv(
+    report_dir / &quot;ch13_make_execution_log_template.csv&quot;,
+    index=False
+)</code></pre>
+<h3 id="h3-19">7.5 자동화 검증 체크리스트 만들기</h3>
+<pre><code class="language-python">make_validation_checklist = pd.DataFrame({
+    &quot;check_item&quot;: [
+        &quot;Google Drive 보고서 폴더가 존재하는가?&quot;,
+        &quot;ch12_auto_report.md 파일이 존재하는가?&quot;,
+        &quot;그래프 이미지 파일이 함께 존재하는가?&quot;,
+        &quot;Make Google Drive 연결이 정상인가?&quot;,
+        &quot;파일명 필터가 설정되어 있는가?&quot;,
+        &quot;Gmail 연결이 정상인가?&quot;,
+        &quot;수신자 이메일 주소가 올바른가?&quot;,
+        &quot;이메일 제목과 본문이 적절한가?&quot;,
+        &quot;보고서 파일이 첨부되는가?&quot;,
+        &quot;Google Sheets 로그 시트가 준비되어 있는가?&quot;,
+        &quot;발송 성공 후 로그가 기록되는가?&quot;,
+        &quot;실패 시 확인할 오류 로그가 있는가?&quot;,
+        &quot;같은 파일이 중복 발송되지 않는가?&quot;,
+        &quot;테스트 수신자에게 먼저 발송했는가?&quot;
+    ],
+    &quot;result&quot;: [&quot;□&quot;] * 14,
+    &quot;memo&quot;: [&quot;&quot;] * 14
+})
+
+make_validation_checklist</code></pre>
+<p>저장합니다.</p>
+<pre><code class="language-python">make_validation_checklist.to_csv(
+    report_dir / &quot;ch13_make_validation_checklist.csv&quot;,
+    index=False
+)</code></pre>
+<h3 id="h3-20">7.6 이메일 본문 템플릿 만들기</h3>
+<pre><code class="language-python">email_template = &quot;&quot;&quot;
+안녕하세요.
+
+온라인 쇼핑몰 데이터 분석 자동 보고서를 전달드립니다.
+
+첨부 파일:
+- ch12_auto_report.md
+
+주요 포함 내용:
+- 데이터 개요
+- 카테고리별 매출 분석
+- 월별 매출 분석
+- 구매 금액 상위 고객 분석
+- 인사이트 카드
+- 한계점 및 다음 단계
+
+확인 후 보완이 필요한 부분이 있으면 회신 부탁드립니다.
+
+본 메일은 Make 자동화 시나리오를 통해 발송되었습니다.
+
+감사합니다.
+&quot;&quot;&quot;
+
+print(email_template)</code></pre>
+<p>저장합니다.</p>
+<pre><code class="language-python">email_template_path = report_dir / &quot;ch13_email_template.txt&quot;
+email_template_path.write_text(email_template, encoding=&quot;utf-8&quot;)</code></pre>
+<h3 id="h3-21">7.7 자동화 설계 문서 작성하기</h3>
+<pre><code class="language-python">today = datetime.now().strftime(&quot;%Y-%m-%d&quot;)
+
+automation_plan_text = f&quot;&quot;&quot;
+# Chapter 13 Make 기반 반복 분석 업무 자동화 설계서
+
+작성일: {today}
+
+## 1. 자동화 목적
+
+Python으로 생성한 온라인 쇼핑몰 분석 보고서를 Google Drive에 저장하고, Make를 사용해 담당자에게 자동 발송하며, 실행 로그를 Google Sheets에 기록합니다.
+
+## 2. 자동화 대상 파일
+
+{automation_file_check.to_markdown(index=False)}
+
+## 3. Make Scenario 구성
+
+{make_scenario_plan.to_markdown(index=False)}
+
+## 4. 이메일 본문 템플릿
+
+~~~text
+{email_template}
+~~~
+
+## 5. 실행 로그 구조
+
+| 컬럼명 | 설명 |
+|---|---|
+| executed_at | 자동화 실행 시각 |
+| scenario_name | Make Scenario 이름 |
+| file_name | 처리한 파일명 |
+| file_path | Google Drive 파일 경로 |
+| email_to | 수신자 이메일 |
+| status | success 또는 failed |
+| memo | 기타 메모 |
+
+## 6. 검증 체크리스트
+
+{make_validation_checklist.to_markdown(index=False)}
+
+## 7. 오류 발생 시 확인 사항
+
+- Google Drive에 보고서 파일이 존재하는지 확인합니다.
+- Make의 Google Drive 연결이 정상인지 확인합니다.
+- Gmail 연결 권한이 만료되지 않았는지 확인합니다.
+- 수신자 이메일 주소가 올바른지 확인합니다.
+- 파일명 필터가 너무 좁거나 잘못 설정되지 않았는지 확인합니다.
+- 같은 파일이 중복 발송되지 않았는지 실행 로그를 확인합니다.
+
+## 8. 다음 단계
+
+- 테스트 수신자에게 먼저 발송합니다.
+- 이메일 첨부 파일이 정상인지 확인합니다.
+- Google Sheets 로그가 정상 기록되는지 확인합니다.
+- 이후 정기 실행 스케줄을 설정합니다.
+&quot;&quot;&quot;
+
+automation_plan_path = report_dir / &quot;ch13_make_automation_plan.md&quot;
+automation_plan_path.write_text(automation_plan_text, encoding=&quot;utf-8&quot;)
+
+automation_plan_path</code></pre>
+<h3 id="h3-22">7.8 자동화 테스트 결과 기록 예시</h3>
+<pre><code class="language-python">test_log = pd.DataFrame({
+    &quot;executed_at&quot;: [datetime.now().strftime(&quot;%Y-%m-%d %H:%M:%S&quot;)],
+    &quot;scenario_name&quot;: [&quot;weekly_report_delivery_test&quot;],
+    &quot;file_name&quot;: [&quot;ch12_auto_report.md&quot;],
+    &quot;file_path&quot;: [&quot;reports/ch12_auto_report.md&quot;],
+    &quot;email_to&quot;: [&quot;test@example.com&quot;],
+    &quot;status&quot;: [&quot;success&quot;],
+    &quot;memo&quot;: [&quot;테스트 발송 완료&quot;]
+})
+
+test_log</code></pre>
+<p>저장합니다.</p>
+<pre><code class="language-python">test_log.to_csv(
+    report_dir / &quot;ch13_make_test_log_example.csv&quot;,
+    index=False
+)</code></pre>
+<h2 id="h2-9">8. LLM 활용 프롬프트</h2>
+<p>LLM은 Make 자동화 시나리오 설계와 오류 점검에 도움을 줄 수 있습니다. 다만 실제 Make 설정 화면, 계정 권한, 연결 상태는 사람이 직접 확인해야 합니다.</p>
+<h3 id="h3-23">8.1 Make 자동화 시나리오 설계 요청</h3>
+<pre><code class="language-text">당신은 데이터 분석 업무 자동화 컨설턴트입니다.
+
+Python으로 생성한 분석 보고서를 Make를 사용해 자동 발송하려고 합니다.
+
+현재 산출물:
+- reports/ch12_auto_report.md
+- reports/figures/ch08_category_sales.png
+- reports/figures/ch08_monthly_sales.png
+- reports/figures/ch08_top_customers.png
+
+사용할 도구:
+- Google Drive
+- Gmail
+- Google Sheets
+- Make
+
+요청:
+1. Make Scenario 구성을 단계별로 설계해 주세요.
+2. Trigger, Module, Filter, Output을 표로 정리해 주세요.
+3. 중복 발송을 방지하기 위한 조건을 제안해 주세요.
+4. 실행 로그에 남길 항목을 제안해 주세요.
+5. 초보자가 이해할 수 있게 설명해 주세요.</code></pre>
+<h3 id="h3-24">8.2 자동화 오류 점검 요청</h3>
+<pre><code class="language-text">Make에서 Google Drive 새 파일 감지 후 Gmail로 보고서를 발송하는 시나리오를 만들었습니다.
+
+문제:
+- Scenario는 실행되었지만 이메일에 첨부 파일이 없습니다.
+
+현재 흐름:
+1. Google Drive Watch files
+2. Filter: file name equals ch12_auto_report.md
+3. Gmail Send an email
+4. Google Sheets Add a row
+
+요청:
+1. 첨부 파일이 누락될 수 있는 원인을 정리해 주세요.
+2. Google Drive 모듈에서 어떤 값을 Gmail 첨부로 넘겨야 하는지 설명해 주세요.
+3. 테스트할 항목을 체크리스트로 작성해 주세요.
+4. 초보자용으로 설명해 주세요.</code></pre>
+<h3 id="h3-25">8.3 이메일 본문 작성 요청</h3>
+<pre><code class="language-text">온라인 쇼핑몰 분석 보고서를 자동 발송하는 이메일 본문을 작성해 주세요.
+
+조건:
+- 보고서 파일명: ch12_auto_report.md
+- 주요 내용: 카테고리별 매출, 월별 매출, 구매 금액 상위 고객, 인사이트 카드
+- 자동 발송 메일임을 표시
+- 과장된 표현 없이 공손한 실무 문체
+- 수신자가 확인해야 할 항목을 목록으로 정리</code></pre>
+<h3 id="h3-26">8.4 자동화 검증 체크리스트 요청</h3>
+<pre><code class="language-text">Make 기반 분석 보고서 자동 발송 시나리오를 검증하려고 합니다.
+
+자동화 흐름:
+- Google Drive 새 보고서 감지
+- 파일명 필터 적용
+- Gmail 보고서 발송
+- Google Sheets 실행 로그 기록
+
+검증 체크리스트를 작성해 주세요.
+
+포함 항목:
+- 파일 존재 여부
+- 파일명 필터
+- Gmail 수신자
+- 첨부 파일
+- 로그 기록
+- 중복 발송 방지
+- 실패 시 확인 항목</code></pre>
+<h3 id="h3-27">8.5 자동화 설계서 검토 요청</h3>
+<pre><code class="language-text">다음 Make 자동화 설계서를 검토해 주세요.
+
+목적:
+Python 분석 보고서를 Google Drive에 저장하고 Make로 Gmail 발송 및 Google Sheets 로그 기록
+
+구성:
+1. Google Drive Watch files
+2. Filter: file name equals ch12_auto_report.md
+3. Gmail Send an email
+4. Google Sheets Add a row
+
+검토 기준:
+- 흐름이 실무적으로 적절한가?
+- 중복 발송 위험이 있는가?
+- 오류 발생 시 확인할 항목이 충분한가?
+- 로그 구조가 적절한가?
+- 보완할 모듈이나 조건이 있는가?</code></pre>
+<h2 id="h2-10">9. 결과 해석</h2>
+<p>이번 장의 결과는 완성된 분석 모델이 아니라 반복 분석 업무 자동화 흐름입니다.</p>
+<h3 id="h3-28">9.1 자동화 설계 결과 해석</h3>
+<pre><code class="language-text">Make Scenario 설계표는 보고서 파일 감지, 이메일 발송, 로그 기록의 흐름을 명확히 보여줍니다.
+이 설계표를 기준으로 실제 Make 화면에서 Module을 하나씩 구성할 수 있습니다.</code></pre>
+<p>자동화 설계표는 실제 구현 전 검토 문서 역할을 합니다.</p>
+<h3 id="h3-29">9.2 실행 로그의 의미</h3>
+<pre><code class="language-text">실행 로그는 자동화가 언제, 어떤 파일을, 누구에게, 어떤 상태로 처리했는지 기록하는 자료입니다.</code></pre>
+<p>실행 로그가 없으면 자동화가 성공했는지, 중복 발송이 있었는지, 실패 원인이 무엇인지 추적하기 어렵습니다.</p>
+<h3 id="h3-30">9.3 자동화 검증 결과 해석</h3>
+<pre><code class="language-text">자동화 검증 체크리스트는 보고서 발송 전에 파일, 필터, 수신자, 첨부, 로그 기록이 정상인지 확인하기 위한 도구입니다.</code></pre>
+<p>자동화는 한 번 설정하면 반복 실행되기 때문에 초기에 검증을 꼼꼼히 해야 합니다.</p>
+<h2 id="h2-11">10. 실무 적용 포인트</h2>
+<p>실무에서 Make 기반 분석 업무 자동화를 적용할 때는 다음 원칙을 지켜야 합니다.</p>
+<ol>
+<li>Python과 Make의 역할을 명확히 나눕니다.</li>
+<li>분석 결과 파일명과 폴더 구조를 고정합니다.</li>
+<li>자동화는 테스트 수신자로 먼저 검증합니다.</li>
+<li>파일명 필터를 설정해 잘못된 파일 발송을 방지합니다.</li>
+<li>같은 파일이 중복 발송되지 않도록 조건을 추가합니다.</li>
+<li>Gmail 발송 후 Google Sheets에 로그를 기록합니다.</li>
+<li>오류 발생 시 확인할 항목을 문서화합니다.</li>
+<li>계정 권한과 연결 만료 여부를 주기적으로 확인합니다.</li>
+<li>개인정보나 민감한 분석 결과가 포함된 경우 수신자를 제한합니다.</li>
+<li>자동화 결과를 사람이 정기적으로 검토합니다.</li>
+</ol>
+<h3 id="h3-31">Make 자동화 체크리스트</h3>
+<table>
+<thead><tr><th>점검 항목</th><th>확인</th></tr></thead>
+<tbody><tr><td>자동화 목적이 명확한가?</td><td>□</td></tr>
+<tr><td>Python과 Make의 역할을 구분했는가?</td><td>□</td></tr>
+<tr><td>보고서 파일명이 고정되어 있는가?</td><td>□</td></tr>
+<tr><td>Google Drive 폴더 구조가 정리되어 있는가?</td><td>□</td></tr>
+<tr><td>Trigger가 적절한가?</td><td>□</td></tr>
+<tr><td>파일명 Filter가 설정되어 있는가?</td><td>□</td></tr>
+<tr><td>Gmail 수신자가 올바른가?</td><td>□</td></tr>
+<tr><td>이메일 본문이 적절한가?</td><td>□</td></tr>
+<tr><td>첨부 파일이 정상적으로 전달되는가?</td><td>□</td></tr>
+<tr><td>Google Sheets 로그가 기록되는가?</td><td>□</td></tr>
+<tr><td>중복 발송 방지 기준이 있는가?</td><td>□</td></tr>
+<tr><td>오류 발생 시 알림 또는 확인 절차가 있는가?</td><td>□</td></tr>
+<tr><td>테스트 실행을 완료했는가?</td><td>□</td></tr></tbody>
+</table>
+<h2 id="h2-12">11. 연습 문제</h2>
+<h3 id="h3-32">기본 연습 문제</h3>
+<ol>
+<li>Chapter 12에서 생성한 보고서 파일이 존재하는지 확인하세요.
+<ul>
+<li>제출 형식: Python 코드와 출력 결과</li>
+<li>포함 항목: <code>Path.exists()</code></li>
+</ul></li>
+<li>Make 자동화 대상 파일 목록을 표로 작성하세요.
+<ul>
+<li>제출 형식: DataFrame 또는 CSV</li>
+<li>포함 항목: 파일명, 경로, 존재 여부</li>
+</ul></li>
+<li>Google Drive 새 파일 감지 → Gmail 발송 → Google Sheets 로그 기록 흐름을 설계하세요.
+<ul>
+<li>제출 형식: 단계별 표</li>
+<li>포함 항목: Module, Action, Input, Output</li>
+</ul></li>
+<li>Gmail 자동 발송 이메일 본문을 작성하세요.
+<ul>
+<li>제출 형식: 텍스트 파일</li>
+<li>조건: 자동 발송 메일임을 표시</li>
+</ul></li>
+<li>Make 자동화 검증 체크리스트를 작성하세요.
+<ul>
+<li>제출 형식: CSV 파일</li>
+<li>포함 항목: 파일, 필터, 이메일, 첨부, 로그, 중복 발송</li>
+</ul></li>
+</ol>
+<h3 id="h3-33">심화 과제</h3>
+<ol>
+<li>자동화 실패 시 관리자에게 알림을 보내는 Error Handling 흐름을 설계하세요.
+<ul>
+<li>제출 형식: 시나리오 설계표</li>
+</ul></li>
+<li>같은 보고서가 중복 발송되지 않도록 조건을 설계하세요.
+<ul>
+<li>제출 형식: 필터 조건 설명</li>
+<li>예시: 파일명 + 생성 시간 + 로그 중복 확인</li>
+</ul></li>
+<li>Google Sheets 실행 로그 구조를 설계하고 샘플 데이터를 입력하세요.
+<ul>
+<li>제출 형식: CSV 또는 Google Sheets 구조</li>
+</ul></li>
+<li>LLM에게 Make 자동화 설계를 요청하고, 답변의 문제점을 검토하세요.
+<ul>
+<li>제출 형식: 프롬프트, 답변 요약, 검토 결과</li>
+</ul></li>
+<li><code>reports/ch13_make_automation_plan.md</code> 파일을 작성하세요.
+<ul>
+<li>제출 형식: Markdown 파일</li>
+<li>포함 항목: 목적, 대상 파일, Scenario 구성, 이메일 본문, 로그 구조, 검증 체크리스트</li>
+</ul></li>
+</ol>
+<h2 id="h2-13">12. 정리</h2>
+<p>이번 장에서는 Make를 활용해 반복 분석 업무를 자동화하는 방법을 배웠습니다. Python은 데이터 분석, 전처리, 시각화, 보고서 생성을 담당하고, Make는 생성된 보고서를 감지해 이메일로 발송하고 실행 로그를 기록하는 역할을 담당합니다.</p>
+<p>실무에서 가장 중요한 것은 역할 분담입니다. 모든 일을 Make에서 처리하려고 하기보다, Python이 잘하는 분석 작업과 Make가 잘하는 앱 연결·알림·기록 작업을 나누면 더 안정적인 자동화 구조를 만들 수 있습니다.</p>
+<p>이번 장에서는 Google Drive에 저장된 <code>ch12_auto_report.md</code> 파일을 Make가 감지하고, Gmail로 담당자에게 발송한 뒤, Google Sheets에 실행 로그를 기록하는 흐름을 설계했습니다. 이 흐름은 주간 보고서, 월간 보고서, 반복 분석 결과 발송 업무에 확장할 수 있습니다.</p>
+<p>자동화는 편리하지만 검증이 필요합니다. 잘못된 파일이 발송되거나, 같은 파일이 중복 발송되거나, 첨부 파일이 누락될 수 있습니다. 따라서 파일명 필터, 테스트 수신자, 실행 로그, 오류 확인 절차를 반드시 포함해야 합니다.</p>
+<p>LLM은 Make Scenario 설계 초안, 이메일 본문 작성, 오류 점검 체크리스트 작성에 도움을 줄 수 있습니다. 하지만 실제 Make 연결 상태, 권한, 실행 결과는 사람이 직접 확인해야 합니다.</p>
+<p>다음 장에서는 Airflow를 활용해 데이터 분석 파이프라인을 더 체계적으로 스케줄링하고 관리하는 방법을 배웁니다.</p>
+  </main></body></html>
