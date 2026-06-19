@@ -6,12 +6,12 @@
 
 Make는 여러 앱과 서비스를 연결해 업무 흐름을 자동화할 수 있는 도구입니다. Python 분석 스크립트, Google Drive, Gmail, Slack, Google Sheets 같은 도구를 연결하면 분석 결과 파일이 생성되었을 때 자동으로 저장, 전달, 기록하는 흐름을 만들 수 있습니다.
 
-이번 장의 핵심은 <strong>분석 코드 자체를 모두 Make에서 처리하는 것이 아니라, Python 분석 결과를 Make로 연결해 반복 업무를 자동화하는 능력</strong>입니다.
+이번 장의 핵심은 **분석 코드 자체를 모두 Make에서 처리하는 것이 아니라, Python 분석 결과를 Make로 연결해 반복 업무를 자동화하는 능력**입니다.
 
 ## 수업 시간 구성
 
-| 구성                          |  권장 시간 |
-| --------------------------- | -----: |
+| 구성 | 권장 시간 |
+|---|---:|
 | 반복 분석 업무 자동화 개념 이해          |    30분 |
 | Make 기본 구조 이해               |    35분 |
 | 자동화 대상 업무 정의                |    35분 |
@@ -285,12 +285,19 @@ reports/figures/ch08_monthly_sales.png
 reports/figures/ch08_top_customers.png
 ```
 
-파일이 생성되었는지 Python으로 확인합니다.
+파일이 생성되었는지 Python으로 확인합니다. 프로젝트 루트에서 실행하는 경우와 `notebooks` 폴더 안에서 실행하는 경우에는 상대 경로가 달라질 수 있으므로, 현재 위치를 기준으로 공통 기준 폴더를 자동 설정합니다.
 
 ```python id="tw28nu"
 from pathlib import Path
 
-report_dir = Path("reports")
+current_dir = Path.cwd()
+
+if current_dir.name == "notebooks":
+    base_dir = current_dir.parent
+else:
+    base_dir = current_dir
+
+report_dir = base_dir / "reports"
 figure_dir = report_dir / "figures"
 
 files_to_check = [
@@ -302,13 +309,6 @@ files_to_check = [
 
 for file_path in files_to_check:
     print(file_path, file_path.exists())
-```
-
-Notebook을 `notebooks` 폴더에서 실행한다면 다음처럼 경로를 조정합니다.
-
-```python id="0x9enz"
-report_dir = Path("../reports")
-figure_dir = report_dir / "figures"
 ```
 
 ## 6. Make Scenario 설계
@@ -441,20 +441,32 @@ from datetime import datetime
 import pandas as pd
 ```
 
-경로를 설정합니다.
+경로를 설정합니다. 프로젝트 루트에서 실행하는 경우와 `notebooks` 폴더 안에서 실행하는 경우에는 상대 경로가 달라질 수 있습니다. 아래 코드는 현재 실행 위치를 확인한 뒤 공통 기준 폴더를 자동으로 설정합니다.
 
 ```python id="2452wl"
-report_dir = Path("reports")
+current_dir = Path.cwd()
+
+if current_dir.name == "notebooks":
+    base_dir = current_dir.parent
+else:
+    base_dir = current_dir
+
+report_dir = base_dir / "reports"
 figure_dir = report_dir / "figures"
+
 report_dir.mkdir(parents=True, exist_ok=True)
 figure_dir.mkdir(parents=True, exist_ok=True)
+
+print("report_dir:", report_dir)
+print("figure_dir:", figure_dir)
 ```
 
-Notebook을 `notebooks` 폴더 안에서 실행하는 경우에는 다음 경로를 사용합니다.
+이 코드는 프로젝트 루트에서 실행하든 `notebooks` 폴더에서 실행하든 같은 방식으로 동작합니다.
 
-```python id="h8mnxh"
-report_dir = Path("../reports")
-figure_dir = report_dir / "figures"
+`to_markdown()`을 사용하려면 환경에 따라 `tabulate` 패키지가 필요할 수 있습니다. 오류가 발생하면 터미널 또는 노트북에서 `pip install tabulate`를 실행하세요.
+
+```text
+pip install tabulate
 ```
 
 ### 7.2 Make 자동화 대상 파일 확인
@@ -637,7 +649,7 @@ email_template_path.write_text(email_template, encoding="utf-8")
 
 ### 7.7 자동화 설계 문서 작성하기
 
-````python id="vf2quf"
+```python id="vf2quf"
 today = datetime.now().strftime("%Y-%m-%d")
 
 automation_plan_text = f"""
@@ -659,21 +671,21 @@ Python으로 생성한 온라인 쇼핑몰 분석 보고서를 Google Drive에 �
 
 ## 4. 이메일 본문 템플릿
 
-```text
+~~~text
 {email_template}
-````
+~~~
 
 ## 5. 실행 로그 구조
 
-| 컬럼명           | 설명                 |
-| ------------- | ------------------ |
-| executed_at   | 자동화 실행 시각          |
-| scenario_name | Make Scenario 이름   |
-| file_name     | 처리한 파일명            |
-| file_path     | Google Drive 파일 경로 |
-| email_to      | 수신자 이메일            |
-| status        | success 또는 failed  |
-| memo          | 기타 메모              |
+| 컬럼명 | 설명 |
+|---|---|
+| executed_at | 자동화 실행 시각 |
+| scenario_name | Make Scenario 이름 |
+| file_name | 처리한 파일명 |
+| file_path | Google Drive 파일 경로 |
+| email_to | 수신자 이메일 |
+| status | success 또는 failed |
+| memo | 기타 메모 |
 
 ## 6. 검증 체크리스트
 
@@ -681,25 +693,26 @@ Python으로 생성한 온라인 쇼핑몰 분석 보고서를 Google Drive에 �
 
 ## 7. 오류 발생 시 확인 사항
 
-* Google Drive에 보고서 파일이 존재하는지 확인합니다.
-* Make의 Google Drive 연결이 정상인지 확인합니다.
-* Gmail 연결 권한이 만료되지 않았는지 확인합니다.
-* 수신자 이메일 주소가 올바른지 확인합니다.
-* 파일명 필터가 너무 좁거나 잘못 설정되지 않았는지 확인합니다.
-* 같은 파일이 중복 발송되지 않았는지 실행 로그를 확인합니다.
+- Google Drive에 보고서 파일이 존재하는지 확인합니다.
+- Make의 Google Drive 연결이 정상인지 확인합니다.
+- Gmail 연결 권한이 만료되지 않았는지 확인합니다.
+- 수신자 이메일 주소가 올바른지 확인합니다.
+- 파일명 필터가 너무 좁거나 잘못 설정되지 않았는지 확인합니다.
+- 같은 파일이 중복 발송되지 않았는지 실행 로그를 확인합니다.
 
 ## 8. 다음 단계
 
-* 테스트 수신자에게 먼저 발송합니다.
-* 이메일 첨부 파일이 정상인지 확인합니다.
-* Google Sheets 로그가 정상 기록되는지 확인합니다.
-* 이후 정기 실행 스케줄을 설정합니다.
-  """
+- 테스트 수신자에게 먼저 발송합니다.
+- 이메일 첨부 파일이 정상인지 확인합니다.
+- Google Sheets 로그가 정상 기록되는지 확인합니다.
+- 이후 정기 실행 스케줄을 설정합니다.
+"""
 
 automation_plan_path = report_dir / "ch13_make_automation_plan.md"
 automation_plan_path.write_text(automation_plan_text, encoding="utf-8")
 
-````
+automation_plan_path
+```
 
 ### 7.8 자동화 테스트 결과 기록 예시
 
@@ -715,7 +728,7 @@ test_log = pd.DataFrame({
 })
 
 test_log
-````
+```
 
 저장합니다.
 
@@ -882,21 +895,21 @@ Make Scenario 설계표는 보고서 파일 감지, 이메일 발송, 로그 기
 
 ### Make 자동화 체크리스트
 
-| 점검 항목                         | 확인 |
-| ----------------------------- | -- |
-| 자동화 목적이 명확한가?                 | □  |
-| Python과 Make의 역할을 구분했는가?      | □  |
-| 보고서 파일명이 고정되어 있는가?            | □  |
-| Google Drive 폴더 구조가 정리되어 있는가? | □  |
-| Trigger가 적절한가?                | □  |
-| 파일명 Filter가 설정되어 있는가?         | □  |
-| Gmail 수신자가 올바른가?              | □  |
-| 이메일 본문이 적절한가?                 | □  |
-| 첨부 파일이 정상적으로 전달되는가?           | □  |
-| Google Sheets 로그가 기록되는가?      | □  |
-| 중복 발송 방지 기준이 있는가?             | □  |
-| 오류 발생 시 알림 또는 확인 절차가 있는가?     | □  |
-| 테스트 실행을 완료했는가?                | □  |
+| 점검 항목 | 확인 |
+|---|---|
+| 자동화 목적이 명확한가? | □ |
+| Python과 Make의 역할을 구분했는가? | □ |
+| 보고서 파일명이 고정되어 있는가? | □ |
+| Google Drive 폴더 구조가 정리되어 있는가? | □ |
+| Trigger가 적절한가? | □ |
+| 파일명 Filter가 설정되어 있는가? | □ |
+| Gmail 수신자가 올바른가? | □ |
+| 이메일 본문이 적절한가? | □ |
+| 첨부 파일이 정상적으로 전달되는가? | □ |
+| Google Sheets 로그가 기록되는가? | □ |
+| 중복 발송 방지 기준이 있는가? | □ |
+| 오류 발생 시 알림 또는 확인 절차가 있는가? | □ |
+| 테스트 실행을 완료했는가? | □ |
 
 ## 11. 연습 문제
 

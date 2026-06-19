@@ -411,6 +411,8 @@ def build_all_chapters() -> None:
             "ch09_llm_prompt_analysis",
             "ch10_llm_code_generation",
             "ch11_insight_generation",
+            "ch12_report_generation",
+            "ch13_make_automation",
         }:
             body_html = add_heading_ids_and_toc(body_html)
         chapter_css = css_for_body(css_text, body_html)
