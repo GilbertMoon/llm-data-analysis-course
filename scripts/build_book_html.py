@@ -33,13 +33,15 @@ BLOCKQUOTE_RE = re.compile(r"^\s*>\s?(.*)$")
 
 
 def parse_inline(text: str) -> str:
-    """Convert inline Markdown code spans while escaping other text."""
-    parts = re.split(r"(`[^`]+`)", text)
+    """Convert inline Markdown code and strong spans while escaping other text."""
+    parts = re.split(r"(`[^`]+`|\*\*[^*]+\*\*)", text)
     html_parts: list[str] = []
 
     for part in parts:
         if part.startswith("`") and part.endswith("`") and len(part) >= 2:
             html_parts.append(f"<code>{escape(part[1:-1])}</code>")
+        elif part.startswith("**") and part.endswith("**") and len(part) >= 4:
+            html_parts.append(f"<strong>{escape(part[2:-2])}</strong>")
         else:
             html_parts.append(escape(part))
 
@@ -48,12 +50,14 @@ def parse_inline(text: str) -> str:
 
 def split_table_row(line: str) -> list[str]:
     """Split a simple Markdown table row into cells."""
+    escaped_pipe = "\uE000"
     stripped = line.strip()
     if stripped.startswith("|"):
         stripped = stripped[1:]
     if stripped.endswith("|"):
         stripped = stripped[:-1]
-    return [cell.strip() for cell in stripped.split("|")]
+    stripped = stripped.replace(r"\|", escaped_pipe)
+    return [cell.strip().replace(escaped_pipe, "|") for cell in stripped.split("|")]
 
 
 def table_to_html(lines: list[str]) -> str:
@@ -303,6 +307,16 @@ def build_page(title: str, body_html: str, css_text: str) -> str:
 """
 
 
+def css_for_body(css_text: str, body_html: str) -> str:
+    """Keep placeholder styles only for chapters that still use placeholders."""
+    if 'class="placeholder"' in body_html:
+        return css_text
+
+    css_text = re.sub(r"\n\.placeholder\s*\{[^}]*\}\n", "\n", css_text, flags=re.DOTALL)
+    css_text = re.sub(r"\n\s*\.placeholder,\n", "\n", css_text)
+    return css_text
+
+
 def extract_title(markdown_text: str, fallback: str) -> str:
     """Use the first H1 heading as the HTML document title."""
     match = re.search(r"^#\s+(.+)$", markdown_text, flags=re.MULTILINE)
@@ -316,11 +330,15 @@ def build_all_chapters() -> None:
     css_text = TEMPLATE_CSS.read_text(encoding="utf-8")
 
     for chapter_path in sorted(CHAPTERS_DIR.glob("*.md")):
+        if chapter_path.stem.endswith("_images"):
+            continue
+
         markdown_text = chapter_path.read_text(encoding="utf-8")
         title = extract_title(markdown_text, chapter_path.stem)
         body_html = markdown_to_html(markdown_text)
+        chapter_css = css_for_body(css_text, body_html)
         output_path = OUTPUT_DIR / f"{chapter_path.stem}.html"
-        output_path.write_text(build_page(title, body_html, css_text), encoding="utf-8")
+        output_path.write_text(build_page(title, body_html, chapter_css), encoding="utf-8")
         print(f"HTML 생성: {output_path}")
 
 
