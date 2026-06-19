@@ -225,35 +225,35 @@ from pathlib import Path
 import pandas as pd
 ```
 
-결과 저장 폴더를 준비합니다.
+실습 파일을 프로젝트 루트에서 실행하는 경우와 `notebooks` 폴더 안에서 실행하는 경우에는 상대 경로가 달라질 수 있습니다. 초보자는 두 경로 예시를 모두 실행하지 말고, 아래처럼 현재 실행 위치를 기준으로 `base_dir`를 자동으로 정한 뒤 사용하는 것이 안전합니다.
 
 ```python
-report_dir = Path("reports")
+current_dir = Path.cwd()
+
+if current_dir.name == "notebooks":
+    base_dir = current_dir.parent
+else:
+    base_dir = current_dir
+
+processed_dir = base_dir / "data" / "processed"
+report_dir = base_dir / "reports"
 report_dir.mkdir(exist_ok=True)
+
+print("processed_dir:", processed_dir)
+print("report_dir:", report_dir)
 ```
 
-Notebook을 `notebooks` 폴더 안에서 실행하는 경우에는 다음처럼 조정합니다.
+이 코드를 사용하면 노트북을 프로젝트 루트에서 실행하든 `notebooks` 폴더 안에서 실행하든 같은 방식으로 동작합니다.
 
-```python
-report_dir = Path("../reports")
-report_dir.mkdir(exist_ok=True)
+`to_markdown()`을 사용하려면 환경에 따라 `tabulate` 패키지가 필요할 수 있습니다. 오류가 발생하면 터미널 또는 노트북에서 다음 명령을 실행하세요.
+
+```text
+pip install tabulate
 ```
 
 ### 5.2 전처리 데이터 불러오기
 
-Chapter 5에서 저장한 전처리 데이터를 불러옵니다.
-
-```python
-processed_dir = Path("data/processed")
-```
-
-Notebook을 `notebooks` 폴더 안에서 실행하는 경우에는 다음 경로를 사용합니다.
-
-```python
-processed_dir = Path("../data/processed")
-```
-
-CSV 파일을 불러옵니다.
+앞에서 설정한 `processed_dir`를 사용해 Chapter 5에서 저장한 전처리 데이터를 불러옵니다.
 
 ```python
 customers = pd.read_csv(processed_dir / "customers_clean.csv")

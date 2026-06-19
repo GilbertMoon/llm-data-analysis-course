@@ -4,7 +4,7 @@
 
 LLM은 데이터 분석에서 매우 강력한 보조 도구가 될 수 있습니다. 코드 작성, 오류 해결, 분석 질문 정리, 결과 해석, 보고서 문장 작성 등 다양한 작업을 도와줄 수 있습니다. 하지만 LLM이 항상 정확한 답을 주는 것은 아닙니다. 실제 데이터 구조와 다른 컬럼명을 사용하거나, 데이터에 없는 내용을 추측하거나, 검증되지 않은 원인을 단정할 수 있습니다.
 
-따라서 이번 장의 핵심은 LLM에게 “분석을 맡기는 것”이 아니라, <strong>LLM을 분석 보조 도구로 활용하고 사람이 최종 검증하는 능력</strong>을 기르는 것입니다.
+따라서 이번 장의 핵심은 LLM에게 “분석을 맡기는 것”이 아니라, **LLM을 분석 보조 도구로 활용하고 사람이 최종 검증하는 능력**을 기르는 것입니다.
 
 ## 수업 시간 구성
 
@@ -243,21 +243,28 @@ from pathlib import Path
 import pandas as pd
 ```
 
-경로를 설정합니다.
+실습 파일을 프로젝트 루트에서 실행하는 경우와 `notebooks` 폴더 안에서 실행하는 경우에는 상대 경로가 달라질 수 있습니다. 초보자는 두 경로 예시를 모두 실행하지 말고, 아래처럼 현재 실행 위치를 기준으로 `base_dir`를 자동으로 정한 뒤 사용하는 것이 안전합니다.
 
 ```python
-processed_dir = Path("data/processed")
-report_dir = Path("reports")
+current_dir = Path.cwd()
+
+if current_dir.name == "notebooks":
+    base_dir = current_dir.parent
+else:
+    base_dir = current_dir
+
+processed_dir = base_dir / "data" / "processed"
+report_dir = base_dir / "reports"
+
 report_dir.mkdir(parents=True, exist_ok=True)
+
+print("processed_dir:", processed_dir)
+print("report_dir:", report_dir)
 ```
 
-Notebook을 `notebooks` 폴더 안에서 실행하는 경우에는 다음 경로를 사용합니다.
+이 코드를 사용하면 노트북을 프로젝트 루트에서 실행하든 `notebooks` 폴더 안에서 실행하든 같은 방식으로 동작합니다.
 
-```python
-processed_dir = Path("../data/processed")
-report_dir = Path("../reports")
-report_dir.mkdir(parents=True, exist_ok=True)
-```
+`to_markdown()`을 사용하려면 환경에 따라 `tabulate` 패키지가 필요할 수 있습니다. 오류가 발생하면 터미널 또는 노트북에서 `pip install tabulate`를 실행하세요.
 
 ### 5.2 전처리 데이터 불러오기
 
@@ -572,39 +579,38 @@ llm_usage_log.to_csv(report_dir / "ch09_llm_usage_log.csv", index=False)
 
 실습에서 사용한 주요 프롬프트를 Markdown 파일로 저장합니다.
 
-````python
+```python
 prompt_log = f"""
 # Chapter 9 LLM 프롬프트 로그
 
 ## 1. 카테고리별 매출 분석 코드 요청 프롬프트
 
-```text
+~~~text
 {prompt_category_sales}
-````
+~~~
 
 ## 2. 오류 해결 요청 프롬프트
 
-```text
+~~~text
 {sample_error_prompt}
-```
+~~~
 
 ## 3. 분석 결과 해석 요청 프롬프트
 
-```text
+~~~text
 {interpretation_prompt}
-```
+~~~
 
 ## 4. 사용 시 주의사항
 
-* 원본 고객명, 이메일, 주문 상세 전체 데이터를 LLM에 입력하지 않았습니다.
-* 컬럼명과 집계 결과 중심으로 질문했습니다.
-* LLM 답변은 실제 코드 실행과 결과 비교를 통해 검증해야 합니다.
-  """
+- 원본 고객명, 이메일, 주문 상세 전체 데이터를 LLM에 입력하지 않았습니다.
+- 컬럼명과 집계 결과 중심으로 질문했습니다.
+- LLM 답변은 실제 코드 실행과 결과 비교를 통해 검증해야 합니다.
+"""
 
 prompt_log_path = report_dir / "ch09_llm_prompt_log.md"
 prompt_log_path.write_text(prompt_log, encoding="utf-8")
-
-````
+```
 
 ### 5.11 LLM 검증 요약 보고서 작성하기
 
@@ -643,7 +649,7 @@ LLM은 코드 초안 작성과 해석 문장 작성에 유용하지만, 최종 �
 
 review_summary_path = report_dir / "ch09_llm_review_summary.md"
 review_summary_path.write_text(review_summary, encoding="utf-8")
-````
+```
 
 아래 그림은 LLM 활용 결과를 프로젝트 산출물로 정리하는 흐름을 보여줍니다.
 
@@ -845,19 +851,19 @@ LLM은 자연스러운 해석 문장을 잘 작성하지만, 원인을 단정하
 ### LLM 분석 보조 체크리스트
 
 | 점검 항목                          | 확인 |
-| ------------------------------ | -- |
-| 원본 개인정보나 거래 상세를 입력하지 않았는가?     | □  |
-| 데이터 구조 요약만 입력했는가?              | □  |
-| 분석 목적을 명확히 작성했는가?              | □  |
-| 원하는 출력 형식을 지정했는가?              | □  |
-| 실제 데이터에 없는 컬럼명을 만들지 말라고 요청했는가? | □  |
-| LLM이 만든 코드가 실제로 실행되는가?         | □  |
-| 컬럼명과 데이터 타입이 실제 데이터와 일치하는가?    | □  |
-| 병합 기준이 올바른가?                   | □  |
-| 날짜 변환과 결측치 확인 코드가 포함되었는가?      | □  |
-| 해석 문장에서 원인을 단정하지 않았는가?         | □  |
-| 데이터에 없는 내용을 추측하지 않았는가?         | □  |
-| LLM 답변을 수정한 내용을 기록했는가?         | □  |
+|---|---|
+| 원본 개인정보나 거래 상세를 입력하지 않았는가? | □ |
+| 데이터 구조 요약만 입력했는가? | □ |
+| 분석 목적을 명확히 작성했는가? | □ |
+| 원하는 출력 형식을 지정했는가? | □ |
+| 실제 데이터에 없는 컬럼명을 만들지 말라고 요청했는가? | □ |
+| LLM이 만든 코드가 실제로 실행되는가? | □ |
+| 컬럼명과 데이터 타입이 실제 데이터와 일치하는가? | □ |
+| 병합 기준이 올바른가? | □ |
+| 날짜 변환과 결측치 확인 코드가 포함되었는가? | □ |
+| 해석 문장에서 원인을 단정하지 않았는가? | □ |
+| 데이터에 없는 내용을 추측하지 않았는가? | □ |
+| LLM 답변을 수정한 내용을 기록했는가? | □ |
 
 ## 9. 연습 문제
 

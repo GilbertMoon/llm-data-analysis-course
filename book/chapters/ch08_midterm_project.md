@@ -6,7 +6,7 @@
 
 이번 프로젝트에서는 온라인 쇼핑몰 운영 데이터를 사용해 고객, 상품, 주문, 매출 관점의 기본 현황을 분석합니다. 학습자는 Notebook 코드, 분석 결과 CSV, 시각화 이미지, Markdown 보고서를 함께 제출합니다.
 
-이번 장의 핵심은 <strong>분석 전 과정을 하나의 재현 가능한 프로젝트로 완성하는 능력</strong>입니다.
+이번 장의 핵심은 **분석 전 과정을 하나의 재현 가능한 프로젝트로 완성하는 능력**입니다.
 
 ## 수업 시간 구성
 
@@ -187,7 +187,7 @@
 이번 프로젝트의 핵심 분석 질문은 다음과 같습니다.
 
 | 번호 | 분석 질문                   | 주요 지표                                           | 결과 형태       |
-| -: | ----------------------- | ----------------------------------------------- | ----------- |
+|---:|---|---|---|
 |  1 | 카테고리별 매출은 어떻게 다른가?      | `total_sales`, `sales_ratio`                    | 표, 막대그래프    |
 |  2 | 월별 매출과 주문 수는 어떻게 변하는가?  | `total_sales`, `order_count`                    | 표, 선 그래프    |
 |  3 | 구매 금액 상위 고객은 누구인가?      | `total_sales`, `order_count`, `avg_order_value` | 표, 가로 막대그래프 |
@@ -219,19 +219,30 @@ import pandas as pd
 import matplotlib.pyplot as plt
 ```
 
-한글 폰트를 설정합니다.
+한글 폰트와 실행 경로를 설정합니다. 프로젝트 루트에서 실행하는 경우와 `notebooks` 폴더 안에서 실행하는 경우에는 상대 경로가 달라질 수 있습니다. 초보자는 두 경로 예시를 모두 실행하지 말고, 아래처럼 현재 실행 위치를 기준으로 `base_dir`를 자동으로 정한 뒤 사용하는 것이 안전합니다.
 
 ```python
 plt.rcParams["font.family"] = "Malgun Gothic"
 plt.rcParams["axes.unicode_minus"] = False
 ```
 
-작업 경로를 설정합니다.
+현재 실행 위치를 기준으로 프로젝트 기준 폴더를 찾습니다.
 
 ```python
-raw_dir = Path("data/raw")
-processed_dir = Path("data/processed")
-report_dir = Path("reports")
+current_dir = Path.cwd()
+
+if current_dir.name == "notebooks":
+    base_dir = current_dir.parent
+else:
+    base_dir = current_dir
+```
+
+작업 경로를 자동으로 설정합니다.
+
+```python
+raw_dir = base_dir / "data" / "raw"
+processed_dir = base_dir / "data" / "processed"
+report_dir = base_dir / "reports"
 figure_dir = report_dir / "figures"
 
 processed_dir.mkdir(parents=True, exist_ok=True)
@@ -239,18 +250,11 @@ report_dir.mkdir(parents=True, exist_ok=True)
 figure_dir.mkdir(parents=True, exist_ok=True)
 ```
 
-Notebook을 `notebooks` 폴더 안에서 실행하는 경우에는 다음 경로를 사용합니다.
+설정된 경로는 `print(raw_dir)`, `print(processed_dir)`, `print(report_dir)`, `print(figure_dir)`처럼 필요할 때 각각 확인할 수 있습니다.
 
-```python
-raw_dir = Path("../data/raw")
-processed_dir = Path("../data/processed")
-report_dir = Path("../reports")
-figure_dir = report_dir / "figures"
+이 코드를 사용하면 노트북을 프로젝트 루트에서 실행하든 `notebooks` 폴더에서 실행하든 같은 방식으로 동작합니다.
 
-processed_dir.mkdir(parents=True, exist_ok=True)
-report_dir.mkdir(parents=True, exist_ok=True)
-figure_dir.mkdir(parents=True, exist_ok=True)
-```
+`to_markdown()`을 사용하려면 환경에 따라 `tabulate` 패키지가 필요할 수 있습니다. 오류가 발생하면 터미널 또는 노트북에서 `pip install tabulate`를 실행하세요.
 
 ### 5.2 원본 데이터 불러오기
 
@@ -921,7 +925,7 @@ LLM은 프로젝트 수행 과정에서 코드 검토, 분석 질문 보완, 보
 중간 실습 프로젝트는 다음 기준으로 평가할 수 있습니다.
 
 | 평가 항목           |  배점 | 평가 기준                         |
-| --------------- | --: | ----------------------------- |
+|---|---:|---|
 | 데이터 불러오기와 구조 파악 | 15점 | 4개 CSV 파일을 정확히 불러오고 구조를 점검했는가 |
 | 전처리             | 20점 | 결측치, 중복, 타입 변환, 이상값 확인을 수행했는가 |
 | 분석 질문 설계        | 15점 | 데이터로 답할 수 있는 구체적 질문을 만들었는가    |
@@ -932,7 +936,7 @@ LLM은 프로젝트 수행 과정에서 코드 검토, 분석 질문 보완, 보
 ## 9. 제출 체크리스트
 
 | 제출 항목                                          | 확인 |
-| ---------------------------------------------- | -- |
+|---|---|
 | `notebooks/ch08_midterm_project.ipynb`를 작성했는가? | □  |
 | 원본 데이터 4개를 불러왔는가?                              | □  |
 | 데이터 구조 요약표를 만들었는가?                             | □  |

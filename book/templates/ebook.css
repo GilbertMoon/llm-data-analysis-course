@@ -113,6 +113,7 @@ pre {
   color: #111827;
   overflow-x: auto;
   white-space: pre-wrap;
+  overflow-wrap: anywhere;
   word-break: break-word;
   line-height: 1.6;
   page-break-inside: avoid;
@@ -174,6 +175,40 @@ img {
   max-width: 100%;
 }
 
+.toc {
+  margin: 24px 0 34px;
+  padding: 18px 22px;
+  border: 1px solid #d7dee8;
+  border-radius: 8px;
+  background: #f8fafc;
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+.toc-title {
+  margin: 0 0 10px;
+  color: #111827;
+  font-weight: 700;
+}
+
+.toc ol {
+  margin: 0;
+  padding-left: 1.3rem;
+}
+
+.toc li {
+  margin: 4px 0;
+}
+
+.toc a {
+  color: #1d4ed8;
+  text-decoration: none;
+}
+
+.toc a:hover {
+  text-decoration: underline;
+}
+
 @media print {
   body {
     max-width: none;
@@ -192,5 +227,36 @@ img {
   .figure {
     page-break-inside: avoid;
     break-inside: avoid;
+  }
+
+  thead {
+    display: table-header-group;
+  }
+
+  tr {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  p,
+  li {
+    orphans: 2;
+    widows: 2;
+  }
+}
+
+@media (max-width: 640px) {
+  body {
+    padding: 28px 18px 56px;
+    font-size: 15px;
+  }
+
+  table {
+    font-size: 0.9rem;
+  }
+
+  th,
+  td {
+    padding: 8px 10px;
   }
 }

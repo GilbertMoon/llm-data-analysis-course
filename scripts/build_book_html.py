@@ -12,7 +12,7 @@ placeholder div blocks.
 
 from __future__ import annotations
 
-from html import escape
+from html import escape, unescape
 from pathlib import Path
 import re
 import shutil
@@ -286,6 +286,70 @@ def markdown_to_html(markdown_text: str) -> str:
     )
 
 
+def normalize_markdown_text(markdown_text: str) -> str:
+    """Normalize manuscript text before conversion."""
+    markdown_text = markdown_text.lstrip("\ufeff")
+    markdown_text = re.sub(
+        r"^```([A-Za-z0-9_-]+)[^\S\r\n]+.*$",
+        r"```\1",
+        markdown_text,
+        flags=re.MULTILINE,
+    )
+    return re.sub(r"^(\s*)\*\s+", r"\1- ", markdown_text, flags=re.MULTILINE)
+
+
+def plain_text_from_html(html_text: str) -> str:
+    """Return readable text from a small heading HTML fragment."""
+    text = re.sub(r"<[^>]+>", "", html_text)
+    return unescape(text).strip()
+
+
+def add_heading_ids_and_toc(body_html: str) -> str:
+    """Add stable heading ids and a compact table of contents after H1."""
+    heading_counts: dict[str, int] = {}
+    toc_items: list[tuple[str, str]] = []
+
+    def heading_repl(match: re.Match[str]) -> str:
+        level = match.group(1)
+        attrs = match.group(2) or ""
+        inner = match.group(3)
+
+        if " id=" in attrs:
+            id_match = re.search(r'id="([^"]+)"', attrs)
+            heading_id = id_match.group(1) if id_match else ""
+        elif level == "1":
+            heading_id = "chapter-title"
+            attrs = f'{attrs} id="{heading_id}"'
+        else:
+            heading_counts[level] = heading_counts.get(level, 0) + 1
+            heading_id = f"h{level}-{heading_counts[level]}"
+            attrs = f'{attrs} id="{heading_id}"'
+
+        if level == "2":
+            toc_items.append((heading_id, plain_text_from_html(inner)))
+
+        return f"<h{level}{attrs}>{inner}</h{level}>"
+
+    body_with_ids = re.sub(r"<h([1-3])([^>]*)>(.*?)</h\1>", heading_repl, body_html)
+
+    if not toc_items:
+        return body_with_ids
+
+    toc_html = [
+        '<nav class="toc" aria-label="목차">',
+        '<p class="toc-title">목차</p>',
+        "<ol>",
+    ]
+    toc_html.extend(
+        f'<li><a href="#{heading_id}">{escape(text)}</a></li>'
+        for heading_id, text in toc_items
+    )
+    toc_html.extend(["</ol>", "</nav>"])
+    toc_block = "\n".join(toc_html)
+
+    return re.sub(r"(</h1>)", r"\1\n" + toc_block, body_with_ids, count=1)
+
+
 def build_page(title: str, body_html: str, css_text: str) -> str:
     """Build one complete HTML document for a chapter."""
     return f"""<!doctype html>
@@ -301,9 +365,7 @@ def build_page(title: str, body_html: str, css_text: str) -> str:
 <body>
   <main class="chapter">
 {body_html}
-  </main>
-</body>
-</html>
+  </main></body></html>
 """
 
 
@@ -333,9 +395,17 @@ def build_all_chapters() -> None:
         if chapter_path.stem.endswith("_images"):
             continue
 
-        markdown_text = chapter_path.read_text(encoding="utf-8")
+        markdown_text = normalize_markdown_text(chapter_path.read_text(encoding="utf-8"))
         title = extract_title(markdown_text, chapter_path.stem)
         body_html = markdown_to_html(markdown_text)
+        if chapter_path.stem in {
+            "ch06_eda_questions",
+            "ch07_visualization",
+            "ch08_midterm_project",
+            "ch09_llm_prompt_analysis",
+            "ch10_llm_code_generation",
+        }:
+            body_html = add_heading_ids_and_toc(body_html)
         chapter_css = css_for_body(css_text, body_html)
         output_path = OUTPUT_DIR / f"{chapter_path.stem}.html"
         output_path.write_text(build_page(title, body_html, chapter_css), encoding="utf-8")
