@@ -108,7 +108,13 @@ def parse_ordered_list(lines: list[str], start_index: int) -> tuple[str, int]:
 
         if not stripped:
             next_line = lines[i + 1] if i + 1 < len(lines) else ""
-            if ORDERED_LIST_RE.match(next_line):
+            next_ordered = ORDERED_LIST_RE.match(next_line)
+            next_unordered = UNORDERED_LIST_RE.match(next_line)
+            if next_ordered or (
+                current_text is not None
+                and next_unordered
+                and bool(next_unordered.group(1))
+            ):
                 i += 1
                 continue
             break
@@ -404,6 +410,7 @@ def build_all_chapters() -> None:
             "ch08_midterm_project",
             "ch09_llm_prompt_analysis",
             "ch10_llm_code_generation",
+            "ch11_insight_generation",
         }:
             body_html = add_heading_ids_and_toc(body_html)
         chapter_css = css_for_body(css_text, body_html)
