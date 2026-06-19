@@ -29,6 +29,7 @@ OUTPUT_ASSETS_DIR = ROOT_DIR / "book" / "output" / "assets"
 TABLE_SEPARATOR_RE = re.compile(r"^\s*\|?\s*:?-{3,}:?\s*(\|\s*:?-{3,}:?\s*)+\|?\s*$")
 ORDERED_LIST_RE = re.compile(r"^(\s*)\d+\.\s+(.+)$")
 UNORDERED_LIST_RE = re.compile(r"^(\s*)-\s+(.+)$")
+BLOCKQUOTE_RE = re.compile(r"^\s*>\s?(.*)$")
 
 
 def parse_inline(text: str) -> str:
@@ -151,6 +152,22 @@ def parse_unordered_list(lines: list[str], start_index: int) -> tuple[str, int]:
     return unordered_list_to_html(items), i
 
 
+def parse_blockquote(lines: list[str], start_index: int) -> tuple[str, int]:
+    """Convert consecutive Markdown blockquote lines to HTML."""
+    quote_lines: list[str] = []
+    i = start_index
+
+    while i < len(lines):
+        match = BLOCKQUOTE_RE.match(lines[i])
+        if not match:
+            break
+        quote_lines.append(match.group(1).strip())
+        i += 1
+
+    quote_text = " ".join(part for part in quote_lines if part)
+    return f"<blockquote>{parse_inline(quote_text)}</blockquote>", i
+
+
 def simple_markdown_to_html(markdown_text: str) -> str:
     """Convert the course manuscript's core Markdown syntax to HTML."""
     lines = markdown_text.splitlines()
@@ -201,6 +218,11 @@ def simple_markdown_to_html(markdown_text: str) -> str:
                     break
                 i += 1
             html_blocks.append("\n".join(raw_lines))
+            continue
+
+        if BLOCKQUOTE_RE.match(line):
+            html, i = parse_blockquote(lines, i)
+            html_blocks.append(html)
             continue
 
         if i + 1 < len(lines) and "|" in line and TABLE_SEPARATOR_RE.match(lines[i + 1]):

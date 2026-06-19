@@ -10,7 +10,7 @@
 | --- | ---: |
 | 실습 환경 개요 이해 | 30분 |
 | Python, Jupyter, VS Code 역할 이해 | 30분 |
-| GitHub 저장소 내려받기와 폴더 구조 확인 | 30분 |
+| GitHub 원본 자료 확인과 개인 저장소 준비 | 30분 |
 | 가상환경 생성과 패키지 설치 | 50분 |
 | 샘플 데이터 생성과 Notebook 실행 | 50분 |
 | LLM을 활용한 오류 해결 실습 | 30분 |
@@ -24,7 +24,8 @@
 
 - Python이 데이터 분석에서 어떤 역할을 하는지 설명할 수 있습니다.
 - Jupyter Notebook과 VS Code의 차이를 구분할 수 있습니다.
-- GitHub 저장소를 내려받고 프로젝트 폴더 구조를 확인할 수 있습니다.
+- 강사 GitHub 저장소와 본인 개인 실습 저장소의 역할을 구분할 수 있습니다.
+- 본인 GitHub 계정에 개인 실습 저장소를 만들고 프로젝트 폴더 구조를 확인할 수 있습니다.
 - `.venv` 가상환경을 생성하고 활성화할 수 있습니다.
 - `requirements.txt`를 사용해 필요한 패키지를 설치할 수 있습니다.
 - 샘플 데이터를 생성하고 `data/raw` 폴더의 CSV 파일을 확인할 수 있습니다.
@@ -39,17 +40,26 @@
 이번 장에서 만들 결과물은 다음과 같습니다.
 
 - 로컬 PC에 준비된 Python 실행 환경
-- VS Code에서 열린 `llm-data-analysis-course` 프로젝트 폴더
+- 강사 GitHub 저장소에서 내려받은 실습 원본 자료
+- 본인 GitHub 계정에 생성한 개인 실습 저장소
+- 개인 저장소와 연결된 로컬 프로젝트 폴더
+- VS Code에서 열린 `my-llm-data-analysis-course` 개인 저장소 폴더
 - 프로젝트 내부의 `.venv` 가상환경
 - `requirements.txt`로 설치한 데이터 분석 패키지
 - `data/raw` 폴더에 생성된 샘플 CSV 파일
 - Jupyter Notebook 실행 환경
 - CSV 파일을 정상적으로 불러오는 환경 점검 코드
+- 실습 결과를 commit/push할 수 있는 GitHub 작업 흐름
 - LLM에게 오류 해결을 요청할 때 사용할 프롬프트 예시
 
-<div class="placeholder">
-  그림 삽입 예정: 실습 환경 전체 구성도
-</div>
+이번 장에서 준비하는 실습 환경은 Python, Jupyter Notebook, VS Code, GitHub, 샘플 데이터, LLM 도구가 함께 연결된 구조입니다. 아래 그림은 각 도구가 어떤 역할을 하는지 한눈에 보여줍니다.
+
+<figure class="figure">
+  <img src="../assets/images/ch02/ch02_environment_overview.png" alt="실습 환경 전체 구성도">
+  <figcaption>그림 2-1. 실습 환경 전체 구성도</figcaption>
+</figure>
+
+핵심은 Jupyter Notebook에서 실습을 진행하고, VS Code에서 프로젝트 파일과 스크립트를 관리하며, GitHub를 통해 저장소와 결과물을 관리하는 것입니다.
 
 ## 3. 핵심 개념
 
@@ -88,9 +98,14 @@ Jupyter Notebook에서는 다음을 한 파일 안에 정리할 수 있습니다
 
 이번 교재의 주차별 실습 파일은 `notebooks/` 폴더에 있습니다. Chapter 2에서는 Jupyter Notebook이 정상적으로 실행되는지 확인하고, 샘플 CSV 파일을 불러오는 것까지 연습합니다.
 
-<div class="placeholder">
-  그림 삽입 예정: Jupyter Notebook 실행 화면 예시
-</div>
+Jupyter Notebook은 코드와 실행 결과, 그리고 해석 문장을 한 화면에서 함께 관리할 수 있습니다. 데이터 분석 입문자는 코드를 실행하는 것에서 끝내지 말고, 출력 결과가 무엇을 의미하는지 함께 기록하는 습관을 들이는 것이 중요합니다.
+
+<figure class="figure">
+  <img src="../assets/images/ch02/ch02_jupyter_notebook_example.png" alt="Jupyter Notebook 실행 화면 예시">
+  <figcaption>그림 2-2. Jupyter Notebook 실행 화면 예시</figcaption>
+</figure>
+
+앞으로의 실습에서는 Notebook 안에 코드, 결과, 해석, LLM 프롬프트 기록을 함께 남기는 방식으로 진행합니다.
 
 ### 3.3 VS Code의 역할
 
@@ -107,23 +122,50 @@ VS Code에서는 다음 작업을 할 수 있습니다.
 
 이번 교재에서는 Jupyter Notebook과 VS Code를 함께 사용합니다. Notebook에서는 실습을 실행하고, VS Code에서는 프로젝트 전체 구조를 확인하며 파일을 관리합니다.
 
-<div class="placeholder">
-  그림 삽입 예정: VS Code 프로젝트 폴더 구조 화면
-</div>
+VS Code는 프로젝트 전체 폴더 구조를 확인하고, 실습 데이터, Notebook, 원고, 스크립트, 보고서 파일을 체계적으로 관리하기 위해 사용합니다.
 
-### 3.4 주요 도구 역할 비교
+<figure class="figure">
+  <img src="../assets/images/ch02/ch02_vscode_project_structure.png" alt="VS Code 프로젝트 폴더 구조 화면">
+  <figcaption>그림 2-3. VS Code 프로젝트 폴더 구조 화면</figcaption>
+</figure>
+
+특히 `data`, `notebooks`, `scripts`, `book`, `reports` 폴더의 역할을 이해하면 이후 실습과 프로젝트 제출을 더 안정적으로 진행할 수 있습니다.
+
+### 3.4 강사 저장소와 개인 저장소의 차이
+
+수업에서 제공하는 강사 GitHub 저장소는 실습 원본 자료를 제공하는 저장소입니다. 강사 저장소에는 샘플 데이터 생성 코드, 기본 Notebook, 교재 원고, 공통 스크립트가 포함될 수 있습니다.
+
+하지만 학습자는 강사 저장소를 직접 수정하거나 push하지 않습니다. 실습 과정에서 작성하는 코드, 수정한 Notebook, 분석 결과, 보고서는 본인 GitHub 계정의 개인 실습 저장소에 저장합니다.
+
+이렇게 저장소를 분리하면 다음 장점이 있습니다.
+
+- 강사 원본 자료가 실수로 변경되지 않습니다.
+- 학습자별 실습 이력과 과제 결과가 분리됩니다.
+- 본인 GitHub에 commit 기록이 남아 포트폴리오로 사용할 수 있습니다.
+- 과제 제출 시 개인 저장소 URL을 제출할 수 있습니다.
+- 같은 원본 자료를 사용하되 학습자별로 독립적인 실습이 가능합니다.
+
+| 구분 | 강사 GitHub 저장소 | 학습자 개인 GitHub 저장소 |
+|---|---|---|
+| 역할 | 실습 원본 자료 제공 | 본인 실습 코드와 결과 저장 |
+| 수정 권한 | 보통 읽기 전용 | 본인이 자유롭게 수정 |
+| 포함 내용 | 기본 코드, 샘플 데이터 생성 스크립트, 교재 자료 | 수정한 Notebook, 과제, 보고서, 실험 코드 |
+| 제출 용도 | 직접 제출 대상 아님 | 과제 제출 및 포트폴리오용 |
+| 관리 주체 | 강사 | 학습자 |
+
+### 3.5 주요 도구 역할 비교
 
 | 도구 | 역할 | 이번 교재에서 사용하는 위치 |
 | --- | --- | --- |
 | Python | 데이터 분석 코드를 실행하는 언어 | 전체 실습 |
 | Jupyter Notebook | 코드, 결과, 해석을 함께 기록하는 실습 환경 | 주차별 실습 |
 | VS Code | 프로젝트 폴더와 코드 파일을 관리하는 편집기 | 전체 프로젝트 관리 |
-| GitHub | 실습 저장소와 제출 결과를 관리하는 플랫폼 | 저장소 내려받기와 제출 |
+| GitHub | 강사 원본 자료를 확인하고, 본인 실습 저장소를 관리하는 플랫폼 | 원본 자료 확인, 개인 저장소 생성, 과제 제출 |
 | `.venv` | 프로젝트별 Python 가상환경 | 패키지 충돌 방지 |
 | `requirements.txt` | 필요한 패키지 목록 | 실습 환경 재현 |
 | `.env` | API Key 같은 환경변수 저장 | LLM API 실습 |
 
-### 3.5 Jupyter Notebook과 VS Code 비교
+### 3.6 Jupyter Notebook과 VS Code 비교
 
 | 구분 | Jupyter Notebook | VS Code |
 | --- | --- | --- |
@@ -135,7 +177,7 @@ VS Code에서는 다음 작업을 할 수 있습니다.
 
 두 도구는 경쟁 관계가 아닙니다. 실습 과정에서는 Jupyter Notebook을 많이 사용하고, 프로젝트 구조 관리와 스크립트 작성에는 VS Code를 사용합니다.
 
-### 3.6 가상환경이 필요한 이유
+### 3.7 가상환경이 필요한 이유
 
 가상환경은 프로젝트마다 독립적인 Python 실행 환경을 만드는 기능입니다. 같은 PC 안에서도 프로젝트마다 필요한 패키지 버전이 다를 수 있습니다. 모든 패키지를 PC 전체에 설치하면 프로젝트 간 충돌이 생길 수 있습니다.
 
@@ -155,7 +197,7 @@ llm-data-analysis-course/
 
 `.venv` 폴더는 개인 PC에서만 필요한 실행 환경입니다. GitHub에 올리지 않습니다. 이미 `.gitignore`에 포함되어 있어야 합니다.
 
-### 3.7 주요 패키지 역할
+### 3.8 주요 패키지 역할
 
 | 패키지 | 역할 |
 | --- | --- |
@@ -173,7 +215,7 @@ llm-data-analysis-course/
 
 처음부터 모든 패키지의 사용법을 외울 필요는 없습니다. 이번 장에서는 설치와 실행 확인에 집중합니다.
 
-### 3.8 `.env` 파일과 API Key 보안
+### 3.9 `.env` 파일과 API Key 보안
 
 LLM API를 사용할 때는 API Key가 필요할 수 있습니다. API Key는 비밀번호와 비슷하게 다루어야 합니다. 코드에 직접 쓰거나 GitHub에 올리면 안 됩니다.
 
@@ -196,24 +238,33 @@ GEMINI_MODEL_NAME=gemini-2.0-flash-lite
 
 이번 장의 실습 시나리오는 다음과 같습니다.
 
-> 데이터 분석 수업을 시작하기 위해 GitHub에서 실습 저장소를 내려받고, VS Code에서 프로젝트를 연 뒤, `.venv` 가상환경을 만들고 필요한 패키지를 설치합니다. 샘플 데이터를 생성한 뒤 Jupyter Notebook에서 CSV 파일을 불러와 실습 환경이 정상인지 확인합니다.
+> 데이터 분석 수업을 시작하기 위해 먼저 강사가 제공한 GitHub 저장소에서 실습 원본 자료를 확인합니다. 이후 본인 GitHub 계정에 개인 실습 저장소를 만들고, 그 저장소를 로컬 PC에 내려받아 VS Code에서 엽니다. 개인 저장소 안에서 `.venv` 가상환경을 만들고 필요한 패키지를 설치한 뒤, 샘플 데이터를 생성하고 Jupyter Notebook에서 CSV 파일을 불러와 실습 환경이 정상인지 확인합니다.
 
 전체 흐름은 다음과 같습니다.
 
 1. Python 설치 상태 확인
-2. GitHub 저장소 내려받기
-3. VS Code에서 프로젝트 폴더 열기
-4. `.venv` 가상환경 생성
-5. 가상환경 활성화
-6. `requirements.txt` 패키지 설치
-7. 샘플 데이터 생성
-8. Jupyter Notebook 실행
-9. CSV 파일 불러오기 확인
-10. 오류가 발생하면 LLM을 활용해 원인 정리
+2. 강사 GitHub 저장소에서 실습 원본 자료 확인
+3. `Use this template` 또는 `Download ZIP` 방식 선택
+4. 본인 GitHub 계정에 개인 실습 저장소 생성
+5. 개인 저장소를 로컬 PC에 내려받기
+6. VS Code에서 개인 프로젝트 폴더 열기
+7. `.venv` 가상환경 생성
+8. 가상환경 활성화
+9. `requirements.txt` 패키지 설치
+10. 샘플 데이터 생성
+11. Jupyter Notebook 실행
+12. CSV 파일 불러오기 확인
+13. 실습 결과를 본인 저장소에 commit/push
+14. 오류가 발생하면 LLM을 활용해 원인 정리
 
-<div class="placeholder">
-  그림 삽입 예정: Python/Jupyter/VS Code/GitHub 실습 환경 구성도
-</div>
+실습 환경은 하나의 도구만으로 구성되지 않습니다. 강사 저장소에서 원본 자료를 확인하고, 본인 개인 저장소를 만든 뒤, VS Code에서 프로젝트를 열고, Python 가상환경에서 패키지를 실행하며, Jupyter Notebook에서 실습 결과를 확인하는 흐름으로 진행합니다.
+
+<figure class="figure">
+  <img src="../assets/images/ch02/ch02_python_jupyter_vscode_github.png" alt="Python/Jupyter/VS Code/GitHub 실습 환경 구성도">
+  <figcaption>그림 2-4. Python/Jupyter/VS Code/GitHub 실습 환경 구성도</figcaption>
+</figure>
+
+이 흐름을 이해하면 설치 오류나 파일 경로 오류가 발생했을 때 어느 단계에서 문제가 생겼는지 더 쉽게 찾을 수 있습니다. 또한 과제 제출 시 강사 저장소가 아니라 본인 개인 저장소 URL을 제출해야 한다는 점도 분명해집니다.
 
 ## 5. 실습 코드
 
@@ -245,6 +296,23 @@ jupyter notebook
 
 PowerShell에서 실행 정책 오류가 발생할 수 있습니다. 이때는 오류 메시지를 그대로 LLM에 넣기 전에 사용자명, 개인 경로, 토큰이 포함되어 있지 않은지 먼저 확인합니다.
 
+#### PowerShell 실행 정책 오류가 발생하는 경우
+
+Windows PowerShell에서 가상환경을 활성화할 때 다음과 같은 실행 정책 오류가 발생할 수 있습니다.
+
+```text
+running scripts is disabled on this system
+```
+
+이 경우 현재 PowerShell 세션에서만 임시로 실행 정책을 완화한 뒤 다시 가상환경을 활성화할 수 있습니다.
+
+```powershell
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+.\.venv\Scripts\Activate.ps1
+```
+
+`-Scope Process` 옵션은 현재 PowerShell 창에만 적용됩니다. 시스템 전체 설정을 바꾸는 것이 아니므로 수업 실습에서는 비교적 안전하게 사용할 수 있습니다. 그래도 명령어의 의미를 이해한 뒤 실행해야 합니다.
+
 ### 5.2 macOS/Linux 기준 실습 명령어
 
 macOS 또는 Linux에서는 가상환경 활성화 명령어가 다릅니다.
@@ -259,29 +327,63 @@ jupyter notebook
 
 Python 명령어가 `python`이 아니라 `python3`일 수 있습니다. 터미널에서 `python3 --version`으로 확인합니다.
 
-### 5.3 GitHub 저장소 내려받기
+### 5.3 GitHub 저장소 준비하기
 
-Git이 설치되어 있다면 다음 명령으로 저장소를 내려받을 수 있습니다.
+수업에서 제공하는 강사 GitHub 저장소는 실습 원본 자료를 내려받기 위한 저장소입니다. 학습자는 강사 저장소를 직접 수정하는 것이 아니라, 본인 GitHub 계정에 별도의 개인 저장소를 만들어 실습을 진행합니다.
+
+권장 방식은 두 가지입니다.
+
+#### 방법 1: Template Repository 사용
+
+강사 저장소가 Template Repository로 제공되는 경우 가장 권장하는 방식입니다.
+
+1. 강사 GitHub 저장소에 접속합니다.
+2. `Use this template` 버튼을 클릭합니다.
+3. `Create a new repository`를 선택합니다.
+4. 본인 GitHub 계정에 개인 실습 저장소를 생성합니다.
+5. 저장소 이름은 예를 들어 `my-llm-data-analysis-course`처럼 정합니다.
+6. 생성된 본인 저장소 주소를 복사합니다.
+7. 로컬 PC에서 본인 저장소를 clone합니다.
+
+예시:
 
 ```bash
-git clone https://github.com/GilbertMoon/llm-data-analysis-course.git
-cd llm-data-analysis-course
+git clone https://github.com/본인아이디/my-llm-data-analysis-course.git
+cd my-llm-data-analysis-course
 ```
 
-Git 명령이 익숙하지 않다면 GitHub 페이지에서 ZIP 파일로 내려받아도 됩니다. 다만 과제 제출과 버전 관리를 위해서는 이후 Git 사용법을 익히는 것이 좋습니다.
+위 주소에서 `본인아이디`는 자신의 GitHub 계정 이름으로 바꾸어 입력합니다.
+
+이 방식의 장점은 강사 원본 자료의 폴더 구조를 유지하면서도, 학습자가 본인 저장소에서 자유롭게 수정하고 commit/push할 수 있다는 점입니다.
+
+#### 방법 2: Download ZIP 사용
+
+GitHub 사용이 익숙하지 않은 초보자는 ZIP 파일로 실습 원본 자료를 내려받아 시작할 수 있습니다.
+
+1. 강사 GitHub 저장소에 접속합니다.
+2. `Code` 버튼을 클릭합니다.
+3. `Download ZIP`을 선택합니다.
+4. 압축을 해제합니다.
+5. 본인 GitHub 계정에서 새 저장소를 생성합니다.
+6. 압축 해제한 파일을 개인 저장소 폴더로 옮깁니다.
+7. VS Code에서 해당 폴더를 열고 실습을 진행합니다.
+
+ZIP 방식은 간단하지만 Git commit/push 흐름을 별도로 설정해야 합니다. 가능하면 Template Repository 방식을 권장합니다.
+
+중요한 점은 학생이 실제로 작업하는 저장소가 강사 저장소가 아니라 본인 개인 저장소라는 것입니다. 과제 제출 시에도 강사 저장소 URL이 아니라 본인 개인 저장소 URL을 제출합니다.
 
 ### 5.4 VS Code에서 프로젝트 열기
 
-프로젝트 폴더에서 다음 명령을 실행하면 VS Code가 열립니다.
+개인 저장소를 로컬 PC에 내려받은 뒤, 해당 폴더에서 다음 명령을 실행하면 VS Code가 열립니다.
 
 ```bash
 code .
 ```
 
-명령이 실행되지 않는 경우에는 VS Code 메뉴에서 직접 폴더를 열어도 됩니다.
+명령이 실행되지 않는 경우에는 VS Code 메뉴에서 직접 본인 개인 저장소 폴더를 열어도 됩니다.
 
 ```text
-File → Open Folder → llm-data-analysis-course 선택
+File → Open Folder → my-llm-data-analysis-course 선택
 ```
 
 ### 5.5 샘플 데이터 생성 확인
@@ -368,7 +470,7 @@ print(Path("../data/raw/customers.csv").exists())
 Jupyter Notebook에서 CSV 파일을 불러오려고 하는데 FileNotFoundError가 발생했습니다.
 
 현재 상황:
-- 프로젝트 폴더 이름: llm-data-analysis-course
+- 프로젝트 폴더 이름: my-llm-data-analysis-course
 - 데이터 파일 위치: data/raw/customers.csv
 - Notebook 위치: notebooks/ch02_environment_setup.ipynb
 - 사용한 코드:
@@ -400,7 +502,9 @@ LLM 기반 데이터 분석 수업을 시작하기 전에 확인해야 할 실�
 - Python 설치
 - VS Code 설치
 - Jupyter Notebook 실행
-- GitHub 저장소 다운로드
+- 강사 GitHub 저장소 원본 자료 확인
+- 본인 개인 GitHub 저장소 생성
+- 개인 저장소 로컬 PC 내려받기
 - 가상환경 생성
 - requirements.txt 설치
 - 샘플 데이터 생성
@@ -431,6 +535,23 @@ LLM 기반 데이터 분석 수업을 시작하기 전에 확인해야 할 실�
 ```
 
 LLM은 오류 해결을 도와줄 수 있지만, 명령어를 실행하기 전에는 항상 의미를 확인해야 합니다. 특히 파일 삭제, 환경 초기화, 권한 변경과 관련된 명령어는 신중하게 다룹니다.
+
+### 6.6 GitHub 개인 저장소 준비 방법 질문
+
+```text
+당신은 데이터 분석 수업의 GitHub 실습 조교입니다.
+
+강사 GitHub 저장소에서 실습 원본 자료를 확인하고,
+제 개인 GitHub 계정에 별도의 실습 저장소를 만들어 작업하려고 합니다.
+
+초보자가 따라할 수 있도록 다음 두 가지 방법을 비교해 주세요.
+
+1. Use this template 방식
+2. Download ZIP 후 개인 저장소 생성 방식
+
+각 방식의 절차, 장점, 주의사항을 표로 정리해 주세요.
+그리고 과제 제출 시 왜 강사 저장소 URL이 아니라 본인 저장소 URL을 제출해야 하는지도 설명해 주세요.
+```
 
 ## 7. 결과 해석
 
@@ -507,6 +628,9 @@ print(customers.shape)
 
 | 점검 항목 | 확인 |
 | --- | --- |
+| 강사 저장소와 본인 개인 저장소의 차이를 이해했는가? | □ |
+| 본인 개인 GitHub 저장소를 생성했는가? | □ |
+| 개인 저장소를 로컬 PC에 내려받았는가? | □ |
 | 프로젝트 폴더를 VS Code에서 열었는가? | □ |
 | `.venv` 가상환경을 생성했는가? | □ |
 | 가상환경을 활성화했는가? | □ |
@@ -516,6 +640,7 @@ print(customers.shape)
 | pandas로 CSV 파일을 불러올 수 있는가? | □ |
 | `.env` 파일이 GitHub에 올라가지 않도록 설정했는가? | □ |
 | API Key를 코드나 프롬프트에 직접 노출하지 않았는가? | □ |
+| 실습 결과를 본인 저장소에 commit/push할 수 있는가? | □ |
 | 오류 발생 시 작업 폴더와 가상환경을 먼저 확인했는가? | □ |
 
 ## 9. 연습 문제
@@ -526,19 +651,29 @@ print(customers.shape)
    - 제출 형식: 실행 명령어와 출력 결과 캡처 또는 텍스트
    - 예: `python --version`
 
-2. 프로젝트 폴더에서 `.venv` 가상환경을 생성하고 활성화하세요.
+2. 강사 GitHub 저장소에서 실습 원본 자료를 확인하고, 본인 GitHub 계정에 개인 실습 저장소를 생성하세요.
+   - 제출 형식: 본인 GitHub 저장소 URL
+   - 포함 항목: 저장소 이름, 생성 방식(`Use this template` 또는 `Download ZIP`)
+   - 주의: 강사 저장소 URL이 아니라 본인 저장소 URL을 제출해야 합니다.
+
+3. 개인 저장소를 로컬 PC에 내려받고 VS Code에서 여세요.
+   - 제출 형식: 사용한 명령어 또는 VS Code 화면 캡처
+   - 포함 항목: 개인 저장소 clone 명령어 또는 폴더 열기 과정
+   - 예: `git clone https://github.com/본인아이디/my-llm-data-analysis-course.git`
+
+4. 개인 저장소 폴더 안에서 `.venv` 가상환경을 생성하고 활성화하세요.
    - 제출 형식: 사용한 명령어 정리
    - 포함 항목: 가상환경 생성 명령어, 활성화 명령어
 
-3. `requirements.txt`를 사용해 패키지를 설치하세요.
+5. `requirements.txt`를 사용해 패키지를 설치하세요.
    - 제출 형식: 실행 명령어와 설치 완료 화면 캡처 또는 요약
    - 오류가 발생했다면 오류 메시지와 해결 과정을 함께 정리
 
-4. `scripts/generate_sample_data.py`를 실행해 샘플 데이터를 생성하세요.
+6. `scripts/generate_sample_data.py`를 실행해 샘플 데이터를 생성하세요.
    - 제출 형식: 생성된 CSV 파일 목록
    - 포함 항목: `customers.csv`, `products.csv`, `orders.csv`, `order_items.csv`
 
-5. Jupyter Notebook에서 `customers.csv`를 불러오고 `head()` 결과를 확인하세요.
+7. Jupyter Notebook에서 `customers.csv`를 불러오고 `head()` 결과를 확인하세요.
    - 제출 형식: Notebook 실행 결과 캡처 또는 코드와 출력 결과
    - 포함 코드: `pd.read_csv()`, `head()`
 
@@ -556,11 +691,17 @@ print(customers.shape)
    - 제출 형식: `text` 코드 블록
    - 조건: 개인정보와 API Key를 포함하지 않도록 작성
 
+4. 본인 GitHub 저장소의 commit 이력을 확인하고, 이번 장에서 수행한 작업을 README에 정리하세요.
+   - 제출 형식: GitHub 저장소 URL과 README 요약
+   - 포함 항목: 환경 설정 절차, 실행한 명령어, 발생한 오류와 해결 방법
+
 ## 10. 정리
 
 이번 장에서는 LLM 기반 데이터 분석 실습을 위한 기본 환경을 준비했습니다. 데이터 분석을 잘하려면 pandas 코드만 아는 것보다, 프로젝트 폴더 구조와 실행 환경을 안정적으로 관리하는 능력이 필요합니다.
 
-Python은 분석 코드를 실행하는 언어이고, Jupyter Notebook은 코드와 결과를 함께 정리하는 실습 환경입니다. VS Code는 프로젝트 전체를 관리하고 여러 파일을 편집하는 도구입니다. GitHub는 실습 저장소를 내려받고 결과물을 제출하는 데 사용합니다.
+Python은 분석 코드를 실행하는 언어이고, Jupyter Notebook은 코드와 결과를 함께 정리하는 실습 환경입니다. VS Code는 프로젝트 전체를 관리하고 여러 파일을 편집하는 도구입니다. GitHub는 강사 원본 자료를 확인하고, 본인 개인 저장소에 실습 결과물을 관리하고 제출하는 데 사용합니다.
+
+수업에서 제공하는 강사 GitHub 저장소는 실습 원본 자료를 제공하는 공간입니다. 학습자는 강사 저장소를 직접 수정하지 않고, 본인 GitHub 계정에 개인 실습 저장소를 만들어 실습을 진행합니다. 이렇게 하면 실습 이력과 과제 결과를 개인별로 관리할 수 있고, 이후 포트폴리오로도 사용할 수 있습니다.
 
 가상환경은 프로젝트별로 독립적인 Python 실행 환경을 만들기 위한 도구입니다. `requirements.txt`를 사용하면 필요한 패키지를 한 번에 설치하고 다른 사람도 같은 환경을 재현할 수 있습니다.
 
