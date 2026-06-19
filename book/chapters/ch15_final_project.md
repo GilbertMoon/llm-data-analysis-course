@@ -22,7 +22,7 @@
 | 자동화 설계 또는 파이프라인 설계 |   50분 |
 | 최종 검증 및 제출물 정리     |   60분 |
 
-기본 수업은 약 5시간을 기준으로 구성되어 있습니다. 개인별 프로젝트 수행, 발표, 피드백까지 포함하면 1~2주 프로젝트로 확장할 수 있습니다.
+기본 수업은 약 8~9시간을 기준으로 구성되어 있습니다. 개인별 프로젝트 수행, 발표, 피드백까지 포함하면 1~2주 프로젝트로 확장할 수 있습니다. 5시간 내외로 운영해야 한다면 데이터 구조 점검, 핵심 분석, 최종 보고서 작성 중심으로 범위를 줄입니다.
 
 ## 1. 학습 목표
 
@@ -197,6 +197,8 @@ plt.rcParams["font.family"] = "Malgun Gothic"
 plt.rcParams["axes.unicode_minus"] = False
 ```
 
+macOS에서는 `AppleGothic`, Linux 또는 Colab에서는 `NanumGothic`을 사용할 수 있습니다. 본인 환경에서 한글이 깨지면 운영체제에 맞는 폰트로 변경합니다.
+
 경로를 설정합니다.
 
 ```python
@@ -210,7 +212,7 @@ report_dir.mkdir(parents=True, exist_ok=True)
 figure_dir.mkdir(parents=True, exist_ok=True)
 ```
 
-Notebook을 `notebooks` 폴더 안에서 실행하는 경우에는 다음 경로를 사용합니다.
+프로젝트 루트에서 Notebook을 실행하면 위 경로를 사용합니다. Notebook을 `notebooks` 폴더 안에서 실행하는 경우에는 다음 경로를 사용합니다. 실행 전 `Path.cwd()`로 현재 작업 폴더를 확인하고, 두 경로 버전 중 하나만 선택해 사용합니다.
 
 ```python
 raw_dir = Path("../data/raw")
@@ -221,6 +223,12 @@ figure_dir = report_dir / "figures"
 processed_dir.mkdir(parents=True, exist_ok=True)
 report_dir.mkdir(parents=True, exist_ok=True)
 figure_dir.mkdir(parents=True, exist_ok=True)
+```
+
+`to_markdown()`을 사용하려면 `tabulate` 패키지가 필요합니다. `requirements.txt`를 설치했다면 함께 설치되지만, 오류가 발생하면 다음 명령을 실행합니다.
+
+```text
+pip install tabulate
 ```
 
 ### 5.3 원본 데이터 불러오기
@@ -559,6 +567,8 @@ customer_sales["customer_label"] = "Customer " + customer_sales["customer_id"].a
 
 customer_sales.head(10)
 ```
+
+고객별 구매 금액은 원칙적으로 `customer_id` 단위로 먼저 집계하는 것이 안전합니다. `city` 같은 고객 속성은 고객 정보 테이블에서 가져온 참고 정보이므로, 실제 업무 데이터에서 한 고객의 지역 정보가 여러 번 바뀔 수 있다면 `customer_id`로 집계한 뒤 최신 고객 속성을 따로 병합합니다.
 
 저장합니다.
 
@@ -1051,6 +1061,7 @@ automation_plan_path.write_text(automation_plan, encoding="utf-8")
 submission_checklist = pd.DataFrame({
     "check_item": [
         "notebooks/ch15_final_project.ipynb를 작성했는가?",
+        "Notebook을 Restart & Run All로 처음부터 끝까지 실행했는가?",
         "원본 데이터 4개를 불러왔는가?",
         "데이터 구조 요약표를 저장했는가?",
         "전처리 결과 CSV를 저장했는가?",
@@ -1063,12 +1074,14 @@ submission_checklist = pd.DataFrame({
         "인사이트 카드를 작성했는가?",
         "LLM 활용 및 검증 기록을 작성했는가?",
         "최종 보고서 Markdown 파일을 작성했는가?",
+        "reports/ 폴더에 결과 CSV와 Markdown 보고서가 생성되었는가?",
+        "reports/figures/ 폴더에 그래프 이미지가 저장되었는가?",
         "자동화 설계서를 작성했는가?",
         "데이터에 없는 원인을 단정하지 않았는가?",
         "개인정보 노출 위험을 확인했는가?"
     ],
-    "result": ["□"] * 16,
-    "memo": [""] * 16
+    "result": ["□"] * 19,
+    "memo": [""] * 19
 })
 
 submission_checklist.to_csv(
@@ -1078,6 +1091,8 @@ submission_checklist.to_csv(
 
 submission_checklist
 ```
+
+Windows Excel에서 최종 CSV를 바로 열어 확인할 계획이라면 `to_csv(..., encoding="utf-8-sig")` 옵션을 사용할 수 있습니다. 제출 전에는 Notebook 전체 실행 결과와 `reports/`, `reports/figures/` 폴더의 산출물을 함께 확인합니다.
 
 ## 14. LLM 활용 프롬프트
 

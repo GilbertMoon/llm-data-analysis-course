@@ -22,7 +22,7 @@
 | 최종 보고서 파일 저장        |    30분 |
 | 연습 문제 및 심화 과제       | 60~90분 |
 
-기본 수업은 약 3시간을 기준으로 구성되어 있습니다. LLM 보고서 초안 작성, HTML/PDF 변환, 반복 보고서 자동화까지 확장하면 최대 5시간 분량으로 운영할 수 있습니다.
+기본 수업은 약 5시간을 기준으로 구성되어 있습니다. LLM 보고서 초안 작성, HTML/PDF 변환, 반복 보고서 자동화까지 확장하면 6시간 이상으로 운영할 수 있습니다.
 
 ## 1. 학습 목표
 
@@ -237,7 +237,7 @@ LLM이 작성한 문장은 자연스럽지만, 데이터에 없는 원인을 단
 이번 장의 전체 실습은 다음 Notebook에서 진행합니다.
 
 ```text id="6a0mou"
-notebooks/ch12_analysis_report_automation.ipynb
+notebooks/ch12_report_generation.ipynb
 ```
 
 본문에는 핵심 코드만 제공합니다.
@@ -310,7 +310,9 @@ file_check = pd.DataFrame({
 file_check
 ```
 
-파일이 없는 항목이 있다면 이전 장의 Notebook을 먼저 실행해야 합니다.
+파일이 없는 항목이 있다면 이전 장의 Notebook을 먼저 실행해야 합니다. `ch08_*.csv` 파일과 그래프가 없으면 Chapter 8 Notebook을 먼저 실행하고, `ch11_insight_cards.csv`와 `ch11_interpretation_table.csv`가 없으면 Chapter 11 Notebook을 먼저 실행합니다.
+
+그래프 이미지 파일이 없으면 Markdown 보고서는 생성되더라도 최종 보고서에서 이미지가 보이지 않을 수 있습니다. 보고서 생성 전 `category_sales_figure`, `monthly_sales_figure`, `top_customers_figure`의 `exists` 값이 모두 `True`인지 확인합니다.
 
 ### 5.3 분석 결과 CSV 불러오기
 

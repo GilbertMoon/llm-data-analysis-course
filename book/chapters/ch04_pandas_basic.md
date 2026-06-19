@@ -19,7 +19,7 @@
 | LLM을 활용한 pandas 코드 검토 |    30분 |
 | 연습 문제 및 심화 과제         | 60~90분 |
 
-기본 수업은 약 3시간을 기준으로 구성되어 있습니다. 추가 실습과 심화 과제까지 포함하면 최대 5시간 분량으로 확장할 수 있습니다.
+핵심 실습은 약 4시간을 기준으로 구성되어 있습니다. 추가 실습과 심화 과제까지 포함하면 최대 5시간 분량으로 확장할 수 있습니다.
 
 
 ## 1. 학습 목표
@@ -294,7 +294,7 @@ order_items.merge(products, on="product_id", how="left")
 이번 장의 전체 실습은 다음 Notebook에서 진행합니다.
 
 ```text
-notebooks/ch04_pandas_basic_analysis.ipynb
+notebooks/ch04_pandas_basic.ipynb
 ```
 
 본문에는 핵심 코드만 제공합니다.
@@ -689,6 +689,8 @@ print("병합 전 order_items:", order_items.shape)
 print("병합 후 order_sales:", order_sales.shape)
 ```
 
+`how="left"`는 왼쪽 데이터인 `order_items`의 행을 기준으로 유지하면서 `orders`의 주문 정보를 붙이는 방식입니다. `inner`는 양쪽에 모두 있는 키만 남기고, `outer`는 양쪽의 모든 키를 남기며, `right`는 오른쪽 데이터를 기준으로 유지합니다. 이번 실습에서는 주문 상세 행을 잃지 않는 것이 중요하므로 `left`를 사용합니다.
+
 주문 정보가 연결되지 않은 행이 있는지 확인합니다.
 
 ```python
@@ -716,6 +718,8 @@ order_sales["order_date"].isna().sum()
 order_sales["order_month"] = order_sales["order_date"].dt.to_period("M").astype(str)
 order_sales[["order_date", "order_month"]].head()
 ```
+
+`.dt`는 날짜형 컬럼에서 연도, 월, 일 같은 날짜 속성을 꺼낼 때 사용하는 접근자입니다. `to_period("M")`은 날짜를 월 단위 기간으로 바꾸고, `astype(str)`은 이후 저장과 표시가 쉽도록 문자열로 변환합니다.
 
 
 ### 5.17 월별 매출 집계하기
@@ -750,6 +754,8 @@ monthly_summary = (
 monthly_summary
 ```
 
+`agg(새컬럼명=(원본컬럼명, 집계함수))` 형식은 집계 결과 컬럼명을 직접 정하는 방법입니다. 여기서 `order_count=("order_id", "nunique")`는 주문 상세 행 수가 아니라 고유한 주문 건수를 계산하겠다는 뜻입니다. `count()`를 사용하면 한 주문에 여러 상품이 포함된 경우 주문 상세 행 수가 계산될 수 있습니다.
+
 
 ### 5.18 고객별 구매 금액 집계하기
 
@@ -783,6 +789,8 @@ customer_sales = (
 customer_sales.head(10)
 ```
 
+고객 단위 집계를 더 엄밀하게 하려면 먼저 `customer_id`만 기준으로 매출과 주문 수를 집계한 뒤, `city`나 `name` 같은 고객 속성을 나중에 병합하는 방식도 사용할 수 있습니다. 이번 샘플 데이터에서는 고객별 도시와 이름이 하나로 유지된다는 전제에서 함께 묶어 집계합니다.
+
 이 결과는 우수 고객 분석의 기초 자료로 사용할 수 있습니다. 다만 이번 장에서는 고객 세분화까지 진행하지 않고, 기본 집계 결과를 확인하는 수준에서 마무리합니다.
 
 
@@ -796,6 +804,8 @@ product_sales.to_csv(report_dir / "ch04_product_sales.csv", index=False)
 monthly_summary.to_csv(report_dir / "ch04_monthly_sales.csv", index=False)
 customer_sales.to_csv(report_dir / "ch04_customer_sales.csv", index=False)
 ```
+
+Windows Excel에서 한글이 포함된 CSV를 바로 열 계획이라면 `to_csv(..., encoding="utf-8-sig")` 옵션을 사용할 수 있습니다. Python이나 Jupyter에서 다시 읽는 용도라면 기본 UTF-8 저장만으로도 충분합니다.
 
 저장된 파일 목록을 확인합니다.
 

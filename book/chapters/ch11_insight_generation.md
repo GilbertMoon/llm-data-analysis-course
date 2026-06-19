@@ -22,7 +22,7 @@
 | LLM 해석 문장 검토     |    40분 |
 | 연습 문제 및 심화 과제    | 60~90분 |
 
-기본 수업은 약 3시간을 기준으로 구성되어 있습니다. 인사이트 카드 작성, 발표용 문장 작성, LLM 해석 검증까지 포함하면 최대 5시간 분량으로 확장할 수 있습니다.
+기본 수업은 약 5시간 30분을 기준으로 구성되어 있습니다. 인사이트 카드 작성, 발표용 문장 작성, LLM 해석 검증과 연습 문제까지 포함하면 6~7시간 분량으로 확장할 수 있습니다.
 
 ## 1. 학습 목표
 
@@ -234,7 +234,7 @@ LLM이나 초보 분석자가 자주 하는 실수는 결과를 과장하거나 
 이번 장의 전체 실습은 다음 Notebook에서 진행합니다.
 
 ```text
-notebooks/ch11_insight_interpretation.ipynb
+notebooks/ch11_insight_generation.ipynb
 ```
 
 본문에는 핵심 코드만 제공합니다.
@@ -280,7 +280,7 @@ monthly_sales = pd.read_csv(report_dir / "ch08_monthly_sales.csv")
 customer_sales = pd.read_csv(report_dir / "ch08_customer_sales.csv")
 ```
 
-파일이 없는 경우에는 Chapter 8의 중간 프로젝트 Notebook을 먼저 실행해야 합니다.
+파일이 없는 경우에는 Chapter 8의 중간 프로젝트 Notebook을 먼저 실행해야 합니다. 이 장의 예시는 Chapter 8에서 저장한 `ch08_category_sales.csv`, `ch08_monthly_sales.csv`, `ch08_customer_sales.csv`를 기준으로 진행합니다.
 
 ```python
 print(category_sales.head())

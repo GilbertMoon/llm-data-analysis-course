@@ -20,7 +20,7 @@
 | Make 보고서 발송 연계 구조 이해 | 30분 |
 | 연습 문제 및 심화 과제 | 60~90분 |
 
-기본 수업은 약 3시간을 기준으로 구성되어 있습니다. 실제 Airflow 설치, DAG 실행, 오류 재현, 재시도 확인, Make 연계까지 포함하면 5시간 이상으로 확장할 수 있습니다.
+기본 설명과 설계 수업은 약 3시간 내외로 운영할 수 있습니다. 실제 Airflow 설치, DAG 실행, 로그 확인, 오류 재현, 재시도 확인, Make 연계까지 포함하면 약 5시간 이상의 확장 실습으로 운영하는 것이 적절합니다.
 
 ## 1. 학습 목표
 
@@ -253,6 +253,10 @@ Airflow DAG를 설계할 때는 다음 원칙을 지키는 것이 좋습니다.
 
 ## 7. 실습 코드
 
+이번 장은 Notebook 중심 실습이 아니라 Airflow DAG와 독립 Python 스크립트 중심 실습입니다. `notebooks/ch14_airflow_pipeline.ipynb`는 개념 확인과 코드 조각 테스트용으로 사용할 수 있지만, 실제 DAG 실행은 Airflow 환경에서 진행합니다.
+
+아래 코드의 `Path(__file__).resolve().parents[1]`는 `.py` 스크립트 파일로 실행하는 상황을 전제로 합니다. Notebook 셀에서 그대로 실행하면 `__file__`이 정의되어 있지 않아 오류가 날 수 있습니다.
+
 ### 7.1 전처리 스크립트
 
 아래 코드는 원본 CSV를 읽고 정제 데이터를 `data/processed/` 폴더에 저장하는 예시입니다.
@@ -273,12 +277,15 @@ customers = pd.read_csv(RAW_DIR / "customers.csv")
 
 orders["order_date"] = pd.to_datetime(orders["order_date"], errors="coerce")
 orders = orders.dropna(subset=["order_id", "customer_id", "order_date"])
-order_items = order_items.dropna(subset=["order_id", "product_id", "quantity", "price"])
+order_items = order_items.dropna(subset=["order_id", "product_id", "quantity", "unit_price"])
 
-orders.to_csv(PROCESSED_DIR / "orders_clean.csv", index=False)
-order_items.to_csv(PROCESSED_DIR / "order_items_clean.csv", index=False)
-products.to_csv(PROCESSED_DIR / "products_clean.csv", index=False)
-customers.to_csv(PROCESSED_DIR / "customers_clean.csv", index=False)
+if "line_total" not in order_items.columns:
+    order_items["line_total"] = order_items["quantity"] * order_items["unit_price"]
+
+orders.to_csv(PROCESSED_DIR / "orders_clean.csv", index=False, encoding="utf-8-sig")
+order_items.to_csv(PROCESSED_DIR / "order_items_clean.csv", index=False, encoding="utf-8-sig")
+products.to_csv(PROCESSED_DIR / "products_clean.csv", index=False, encoding="utf-8-sig")
+customers.to_csv(PROCESSED_DIR / "customers_clean.csv", index=False, encoding="utf-8-sig")
 
 print("전처리 완료:", PROCESSED_DIR)
 ```
@@ -299,7 +306,10 @@ REPORT_DIR.mkdir(parents=True, exist_ok=True)
 orders = pd.read_csv(PROCESSED_DIR / "orders_clean.csv", parse_dates=["order_date"])
 order_items = pd.read_csv(PROCESSED_DIR / "order_items_clean.csv")
 
-order_items["sales"] = order_items["quantity"] * order_items["price"]
+if "line_total" in order_items.columns:
+    order_items["sales"] = order_items["line_total"]
+else:
+    order_items["sales"] = order_items["quantity"] * order_items["unit_price"]
 
 merged = order_items.merge(
     orders[["order_id", "order_date"]],
@@ -314,7 +324,7 @@ daily_sales = (
     .sort_values("order_day")
 )
 
-daily_sales.to_csv(REPORT_DIR / "ch14_daily_sales.csv", index=False)
+daily_sales.to_csv(REPORT_DIR / "ch14_daily_sales.csv", index=False, encoding="utf-8-sig")
 print("분석 완료:", REPORT_DIR / "ch14_daily_sales.csv")
 ```
 
