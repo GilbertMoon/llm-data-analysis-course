@@ -1,0 +1,11 @@
+pandas
+numpy
+matplotlib
+seaborn
+jupyter
+notebook
+openpyxl
+python-dotenv
+google-generativeai
+python-docx
+faker

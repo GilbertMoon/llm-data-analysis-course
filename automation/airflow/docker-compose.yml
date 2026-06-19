@@ -1,0 +1,15 @@
+# Airflow 학습용 최소 예시입니다.
+# 실제 수업에서는 Docker와 Airflow 개념을 설명하기 위한 참고 파일로 사용합니다.
+# 운영 환경에서는 공식 Airflow docker-compose 예시와 보안 설정을 반드시 확인하세요.
+
+services:
+  airflow-standalone:
+    image: apache/airflow:2.9.3
+    container_name: llm-course-airflow
+    command: standalone
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./dags:/opt/airflow/dags
+    environment:
+      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
