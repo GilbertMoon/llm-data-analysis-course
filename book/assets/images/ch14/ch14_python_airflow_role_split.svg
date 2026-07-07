@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="650" viewBox="0 0 1600 650" role="img" aria-labelledby="title desc">
+  <title id="title">Python 분석 스크립트와 Airflow DAG의 역할 분담</title>
+  <desc id="desc">Python 스크립트는 분석 로직을 담당하고 Airflow DAG는 실행 순서와 상태 관리를 담당하는 구조</desc>
+  <defs>
+    <linearGradient id="head" x1="0" x2="1"><stop offset="0%" stop-color="#0f766e"/><stop offset="100%" stop-color="#7c3aed"/></linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#0f172a" flood-opacity="0.12"/></filter>
+    <style>
+      .bg{fill:#f8fafc}.h{fill:url(#head)} text{font-family:'Pretendard','Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif}.title{font-size:38px;font-weight:800;fill:#fff}.sub{font-size:18px;font-weight:600;fill:#dcfce7}
+      .panel{fill:#fff;stroke:#cbd5e1;stroke-width:2;filter:url(#shadow)}.py{stroke:#86efac}.af{stroke:#c4b5fd}.main{font-size:30px;font-weight:900;fill:#0f172a}.item{font-size:21px;font-weight:650;fill:#334155}.mid{fill:#fff7ed;stroke:#fdba74;stroke-width:2;filter:url(#shadow)}.midText{font-size:24px;font-weight:900;fill:#9a3412}.file{font-family:'D2Coding','Consolas',monospace;font-size:18px;font-weight:700;fill:#475569}.note{fill:#ecfdf5;stroke:#86efac;stroke-width:2}.noteText{font-size:20px;font-weight:800;fill:#166534}
+    </style>
+  </defs>
+  <rect class="bg" width="1600" height="650" rx="32"/>
+  <rect class="h" x="50" y="36" width="1500" height="92" rx="26"/>
+  <text class="title" x="86" y="92">Python 분석 스크립트와 Airflow DAG의 역할 분담</text>
+  <text class="sub" x="86" y="118">분석 로직은 Python 스크립트에 두고, Airflow는 실행 흐름을 관리합니다</text>
+
+  <g transform="translate(100 175)">
+    <rect class="panel py" width="540" height="360" rx="28"/>
+    <text class="main" x="38" y="58">Python 스크립트</text>
+    <text class="file" x="38" y="96">scripts/*.py</text>
+    <text class="item" x="38" y="145">• 입력 파일 확인</text>
+    <text class="item" x="38" y="185">• 전처리</text>
+    <text class="item" x="38" y="225">• 분석</text>
+    <text class="item" x="38" y="265">• 시각화</text>
+    <text class="item" x="38" y="305">• 보고서 생성</text>
+    <text class="item" x="38" y="345">• 결과 검증</text>
+  </g>
+
+  <g transform="translate(1060 175)">
+    <rect class="panel af" width="440" height="360" rx="28"/>
+    <text class="main" x="38" y="58">Airflow DAG</text>
+    <text class="file" x="38" y="96">dags/ch14_*.py</text>
+    <text class="item" x="38" y="145">• Task 순서 관리</text>
+    <text class="item" x="38" y="185">• 스케줄 실행</text>
+    <text class="item" x="38" y="225">• 실패 감지</text>
+    <text class="item" x="38" y="265">• 재시도</text>
+    <text class="item" x="38" y="305">• 로그 확인</text>
+    <text class="item" x="38" y="345">• 상태 모니터링</text>
+  </g>
+
+  <g transform="translate(690 285)">
+    <rect class="mid" width="320" height="120" rx="28"/>
+    <text class="midText" x="160" y="48" text-anchor="middle">역할 분리</text>
+    <text class="file" x="160" y="84" text-anchor="middle">scripts → DAG Task</text>
+  </g>
+
+  <rect class="note" x="330" y="585" width="940" height="38" rx="14"/>
+  <text class="noteText" x="800" y="611" text-anchor="middle">분석 코드를 독립 스크립트로 나누면 Airflow 연결과 오류 추적이 쉬워집니다</text>
+</svg>
