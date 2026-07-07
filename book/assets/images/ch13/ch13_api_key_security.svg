@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720">
+  <defs><style>.bg{fill:#f8fafc}.title{font:700 34px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#0f172a}.sub{font:500 18px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#334155}.box{fill:#fff;stroke:#cbd5e1;stroke-width:2;rx:18;ry:18}.safe{fill:#dcfce7;stroke:#86efac;stroke-width:2;rx:18;ry:18}.warn{fill:#fee2e2;stroke:#fca5a5;stroke-width:2;rx:18;ry:18}.head{font:700 24px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#0f172a}.txt{font:500 17px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#334155}.mono{font:600 16px Consolas,'Courier New',monospace;fill:#1e293b}.arrow{stroke:#64748b;stroke-width:3;fill:none;marker-end:url(#a)}.footer{font:500 18px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#1e40af}</style><marker id="a" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><polygon points="0 0,10 4,0 8" fill="#64748b"/></marker></defs>
+  <rect class="bg" width="1200" height="720"/>
+  <text x="600" y="58" text-anchor="middle" class="title">API Key 안전 관리</text>
+  <text x="600" y="90" text-anchor="middle" class="sub">인증 정보는 코드에 직접 쓰지 않고 환경 파일에서 읽어 온다.</text>
+  <rect x="90" y="185" width="300" height="260" class="warn"/>
+  <text x="240" y="240" text-anchor="middle" class="head">피해야 할 방식</text>
+  <text x="240" y="295" text-anchor="middle" class="txt">코드 안에 직접 입력</text>
+  <text x="240" y="330" text-anchor="middle" class="txt">화면에 값 출력</text>
+  <text x="240" y="365" text-anchor="middle" class="txt">GitHub에 업로드</text>
+  <rect x="450" y="185" width="300" height="260" class="safe"/>
+  <text x="600" y="240" text-anchor="middle" class="head">권장 방식</text>
+  <text x="600" y="295" text-anchor="middle" class="mono">.env</text>
+  <text x="600" y="330" text-anchor="middle" class="txt">환경변수로 읽기</text>
+  <text x="600" y="365" text-anchor="middle" class="txt">로드 여부만 확인</text>
+  <rect x="810" y="185" width="300" height="260" class="box"/>
+  <text x="960" y="240" text-anchor="middle" class="head">점검</text>
+  <text x="960" y="295" text-anchor="middle" class="mono">.gitignore</text>
+  <text x="960" y="330" text-anchor="middle" class="txt">민감 파일 제외</text>
+  <text x="960" y="365" text-anchor="middle" class="txt">공유 전 재확인</text>
+  <path class="arrow" d="M390 315H445"/><path class="arrow" d="M750 315H805"/>
+  <text x="600" y="640" text-anchor="middle" class="footer">API Key 값 자체가 아니라 로드 여부만 확인합니다.</text>
+</svg>
