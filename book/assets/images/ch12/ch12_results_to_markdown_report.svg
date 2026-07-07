@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="650" viewBox="0 0 1600 650" role="img" aria-labelledby="title desc">
+  <title id="title">분석 결과를 Markdown 보고서로 조립하는 흐름</title>
+  <desc id="desc">CSV 결과표와 그래프 이미지가 Python 처리 과정을 통해 Markdown 보고서로 자동 삽입되는 흐름</desc>
+  <defs>
+    <linearGradient id="head" x1="0" x2="1"><stop offset="0%" stop-color="#0f766e"/><stop offset="100%" stop-color="#2563eb"/></linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#0f172a" flood-opacity="0.12"/></filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#2563eb"/></marker>
+    <style>
+      .bg{fill:#f8fafc}.h{fill:url(#head)} text{font-family:'Pretendard','Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif}.title{font-size:38px;font-weight:800;fill:#fff}.sub{font-size:18px;font-weight:600;fill:#ccfbf1}
+      .card{fill:#fff;stroke:#cbd5e1;stroke-width:2;filter:url(#shadow)}.headBox{fill:#eff6ff;stroke:#bfdbfe}.main{font-size:27px;font-weight:900;fill:#0f172a}.item{font-size:18px;font-weight:650;fill:#334155}.mono{font-family:'D2Coding','Consolas',monospace;font-size:17px;font-weight:650;fill:#475569}.arr{fill:none;stroke:#2563eb;stroke-width:5;marker-end:url(#arrow)}.note{fill:#ecfdf5;stroke:#86efac;stroke-width:2}.noteText{font-size:20px;font-weight:800;fill:#166534}
+    </style>
+  </defs>
+  <rect class="bg" width="1600" height="650" rx="32"/>
+  <rect class="h" x="50" y="36" width="1500" height="92" rx="26"/>
+  <text class="title" x="86" y="92">분석 결과를 Markdown 보고서로 조립하기</text>
+  <text class="sub" x="86" y="118">pandas 표와 그래프 이미지는 Markdown 템플릿에 자동으로 삽입할 수 있습니다</text>
+
+  <g transform="translate(90 180)">
+    <rect class="card" width="390" height="315" rx="24"/>
+    <rect class="headBox" width="390" height="68" rx="24"/>
+    <text class="main" x="28" y="44">Input</text>
+    <text class="mono" x="28" y="110">ch08_category_sales.csv</text>
+    <text class="mono" x="28" y="148">ch08_monthly_sales.csv</text>
+    <text class="mono" x="28" y="186">ch08_customer_sales.csv</text>
+    <text class="mono" x="28" y="224">ch08_category_sales.png</text>
+    <text class="mono" x="28" y="262">ch08_monthly_sales.png</text>
+  </g>
+  <path class="arr" d="M500 337H585"/>
+  <g transform="translate(605 180)">
+    <rect class="card" width="390" height="315" rx="24"/>
+    <rect class="headBox" width="390" height="68" rx="24"/>
+    <text class="main" x="28" y="44">Python 처리</text>
+    <text class="mono" x="28" y="110">pd.read_csv()</text>
+    <text class="mono" x="28" y="148">to_markdown()</text>
+    <text class="mono" x="28" y="186">이미지 경로 삽입</text>
+    <text class="mono" x="28" y="224">write_text()</text>
+    <text class="item" x="28" y="272">표와 그래프를 템플릿에 결합</text>
+  </g>
+  <path class="arr" d="M1015 337H1100"/>
+  <g transform="translate(1120 180)">
+    <rect class="card" width="390" height="315" rx="24"/>
+    <rect class="headBox" width="390" height="68" rx="24"/>
+    <text class="main" x="28" y="44">Markdown Report</text>
+    <text class="mono" x="28" y="110"># 자동 분석 보고서</text>
+    <text class="mono" x="28" y="148">| category | sales |</text>
+    <text class="mono" x="28" y="186">![그래프](figures/...)</text>
+    <text class="mono" x="28" y="224">## 인사이트</text>
+    <text class="mono" x="28" y="262">ch12_auto_report.md</text>
+  </g>
+
+  <rect class="note" x="365" y="555" width="870" height="42" rx="14"/>
+  <text class="noteText" x="800" y="583" text-anchor="middle">자동 조립 후에도 표, 그래프 경로, 해석 문장은 반드시 확인합니다</text>
+</svg>
