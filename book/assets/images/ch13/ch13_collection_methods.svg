@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720">
+  <defs><style>.bg{fill:#f8fafc}.title{font:700 34px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#0f172a}.sub{font:500 18px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#334155}.card{fill:#fff;stroke:#cbd5e1;stroke-width:2;rx:18;ry:18}.head{font:700 25px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#0f172a}.txt{font:500 18px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#334155}.note{font:500 16px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#475569}.footer{font:500 18px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#1e40af}.c1{fill:#dbeafe}.c2{fill:#dcfce7}.c3{fill:#fef3c7}</style></defs>
+  <rect class="bg" width="1200" height="720"/>
+  <text x="600" y="58" text-anchor="middle" class="title">외부 데이터 수집 방법 비교</text>
+  <text x="600" y="90" text-anchor="middle" class="sub">파일 다운로드, API 호출, 크롤링은 목적과 주의점이 다르다.</text>
+  <rect x="80" y="165" width="300" height="360" class="card c1"/>
+  <text x="230" y="220" text-anchor="middle" class="head">파일 다운로드</text>
+  <text x="230" y="275" text-anchor="middle" class="txt">CSV · Excel · JSON</text>
+  <text x="230" y="315" text-anchor="middle" class="note">공공데이터 파일</text>
+  <text x="230" y="345" text-anchor="middle" class="note">통계 자료</text>
+  <text x="230" y="405" text-anchor="middle" class="txt">가장 단순하고 안정적</text>
+  <rect x="450" y="165" width="300" height="360" class="card c2"/>
+  <text x="600" y="220" text-anchor="middle" class="head">API 호출</text>
+  <text x="600" y="275" text-anchor="middle" class="txt">요청 URL · 파라미터</text>
+  <text x="600" y="315" text-anchor="middle" class="note">공공 API</text>
+  <text x="600" y="345" text-anchor="middle" class="note">검색 API</text>
+  <text x="600" y="405" text-anchor="middle" class="txt">반복 수집에 적합</text>
+  <rect x="820" y="165" width="300" height="360" class="card c3"/>
+  <text x="970" y="220" text-anchor="middle" class="head">크롤링</text>
+  <text x="970" y="275" text-anchor="middle" class="txt">HTML 구조 확인</text>
+  <text x="970" y="315" text-anchor="middle" class="note">공개 페이지</text>
+  <text x="970" y="345" text-anchor="middle" class="note">제목 · 링크 · 표</text>
+  <text x="970" y="405" text-anchor="middle" class="txt">정책 확인 필수</text>
+  <text x="600" y="640" text-anchor="middle" class="footer">공식 API나 다운로드 파일이 있으면 그것을 우선 사용합니다.</text>
+</svg>
