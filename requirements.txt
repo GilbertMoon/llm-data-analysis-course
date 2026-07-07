@@ -2,6 +2,7 @@ pandas
 numpy
 matplotlib
 seaborn
+scikit-learn
 jupyter
 notebook
 openpyxl
@@ -11,3 +12,5 @@ python-docx
 faker
 tabulate
 markdown
+requests
+beautifulsoup4
