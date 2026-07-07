@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720">
+  <defs>
+    <style>
+      .bg{fill:#f8fafc}.title{font:700 34px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#0f172a}.sub{font:500 18px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#334155}.card{fill:#ffffff;stroke:#cbd5e1;stroke-width:2;rx:18;ry:18}.memo{fill:#f5f3ff;stroke:#c4b5fd;stroke-width:2;rx:18;ry:18}.report{fill:#ecfeff;stroke:#67e8f9;stroke-width:2;rx:18;ry:18}.head{font:700 24px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#0f172a}.txt{font:500 17px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#334155}.line{stroke:#64748b;stroke-width:3}.footer{font:500 18px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#1e40af}
+    </style>
+  </defs>
+  <rect class="bg" width="1200" height="720"/>
+  <text x="600" y="58" text-anchor="middle" class="title">EDA 결과를 보고서로 연결하는 흐름</text>
+  <text x="600" y="90" text-anchor="middle" class="sub">표를 정리하고, 관찰과 추가 질문을 기록해 요약 보고서로 연결한다.</text>
+  <rect x="90" y="190" width="250" height="260" class="card"/>
+  <text x="215" y="240" text-anchor="middle" class="head">결과표</text>
+  <text x="215" y="290" text-anchor="middle" class="txt">카테고리 매출</text>
+  <text x="215" y="320" text-anchor="middle" class="txt">월별 매출</text>
+  <text x="215" y="350" text-anchor="middle" class="txt">고객별 구매 금액</text>
+  <rect x="475" y="170" width="250" height="300" class="memo"/>
+  <text x="600" y="220" text-anchor="middle" class="head">해석 메모</text>
+  <text x="600" y="275" text-anchor="middle" class="txt">관찰</text>
+  <text x="600" y="310" text-anchor="middle" class="txt">가설</text>
+  <text x="600" y="345" text-anchor="middle" class="txt">추가 질문</text>
+  <text x="600" y="380" text-anchor="middle" class="txt">주의사항</text>
+  <rect x="860" y="190" width="250" height="260" class="report"/>
+  <text x="985" y="240" text-anchor="middle" class="head">요약 보고서</text>
+  <text x="985" y="290" text-anchor="middle" class="txt">분석 목적</text>
+  <text x="985" y="320" text-anchor="middle" class="txt">주요 결과</text>
+  <text x="985" y="350" text-anchor="middle" class="txt">추가 질문</text>
+  <text x="985" y="380" text-anchor="middle" class="txt">해석 시 주의사항</text>
+  <line x1="340" y1="320" x2="475" y2="320" class="line"/>
+  <line x1="725" y1="320" x2="860" y2="320" class="line"/>
+  <text x="600" y="630" text-anchor="middle" class="footer">EDA 결과는 최종 결론이 아니라 다음 분석을 위한 관찰과 질문입니다.</text>
+</svg>
