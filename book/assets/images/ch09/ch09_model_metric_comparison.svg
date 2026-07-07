@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720">
+  <defs><style>.bg{fill:#f8fafc}.title{font:700 34px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#0f172a}.sub{font:500 18px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#334155}.card{fill:#fff;stroke:#cbd5e1;stroke-width:2;rx:18;ry:18}.metric{fill:#dbeafe;stroke:#93c5fd;stroke-width:2;rx:18;ry:18}.head{font:700 24px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#0f172a}.txt{font:500 17px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#334155}.footer{font:500 18px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#1e40af}</style></defs>
+  <rect class="bg" width="1200" height="720"/>
+  <text x="600" y="58" text-anchor="middle" class="title">회귀 모델과 평가 지표 비교</text>
+  <text x="600" y="90" text-anchor="middle" class="sub">성능 숫자는 모델의 장단점과 해석 가능성을 함께 보며 판단한다.</text>
+  <rect x="90" y="150" width="300" height="170" class="card"/>
+  <text x="240" y="205" text-anchor="middle" class="head">Linear Regression</text>
+  <text x="240" y="248" text-anchor="middle" class="txt">단순하고 빠름</text>
+  <text x="240" y="278" text-anchor="middle" class="txt">해석이 쉬움</text>
+  <rect x="810" y="150" width="300" height="170" class="card"/>
+  <text x="960" y="205" text-anchor="middle" class="head">Random Forest</text>
+  <text x="960" y="248" text-anchor="middle" class="txt">복잡한 패턴 반영</text>
+  <text x="960" y="278" text-anchor="middle" class="txt">과적합 확인 필요</text>
+  <rect x="260" y="400" width="200" height="130" class="metric"/>
+  <text x="360" y="450" text-anchor="middle" class="head">MAE</text>
+  <text x="360" y="485" text-anchor="middle" class="txt">평균 절대 오차</text>
+  <rect x="500" y="400" width="200" height="130" class="metric"/>
+  <text x="600" y="450" text-anchor="middle" class="head">RMSE</text>
+  <text x="600" y="485" text-anchor="middle" class="txt">큰 오차에 민감</text>
+  <rect x="740" y="400" width="200" height="130" class="metric"/>
+  <text x="840" y="450" text-anchor="middle" class="head">R²</text>
+  <text x="840" y="485" text-anchor="middle" class="txt">변동 설명력</text>
+  <text x="600" y="640" text-anchor="middle" class="footer">좋은 모델은 낮은 오차뿐 아니라 문제 목적과 해석 가능성까지 함께 고려해야 합니다.</text>
+</svg>
