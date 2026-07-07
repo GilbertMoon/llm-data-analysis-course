@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720">
+  <defs><style>.bg{fill:#f8fafc}.title{font:700 34px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#0f172a}.sub{font:500 18px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#334155}.box{fill:#fff;stroke:#cbd5e1;stroke-width:2;rx:18;ry:18}.head{font:700 24px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#0f172a}.txt{font:500 17px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#334155}.mono{font:600 16px Consolas,'Courier New',monospace;fill:#1e293b}.arrow{stroke:#64748b;stroke-width:3;fill:none;marker-end:url(#a)}.footer{font:500 18px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#1e40af}.q{fill:#f5f3ff;stroke:#c4b5fd;stroke-width:2;rx:18;ry:18}.m{fill:#eff6ff;stroke:#93c5fd;stroke-width:2;rx:18;ry:18}.c{fill:#ecfeff;stroke:#67e8f9;stroke-width:2;rx:18;ry:18}</style><marker id="a" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><polygon points="0 0,10 4,0 8" fill="#64748b"/></marker></defs>
+  <rect class="bg" width="1200" height="720"/>
+  <text x="600" y="58" text-anchor="middle" class="title">분석 질문을 지표와 코드로 바꾸는 흐름</text>
+  <text x="600" y="90" text-anchor="middle" class="sub">모호한 질문을 데이터로 검증 가능한 형태로 구체화한다.</text>
+  <rect x="80" y="190" width="260" height="220" class="q"/>
+  <text x="210" y="240" text-anchor="middle" class="head">출발 질문</text>
+  <text x="210" y="290" text-anchor="middle" class="txt">어떤 상품이</text>
+  <text x="210" y="320" text-anchor="middle" class="txt">잘 팔리는가?</text>
+  <rect x="470" y="170" width="260" height="260" class="m"/>
+  <text x="600" y="220" text-anchor="middle" class="head">질문 구체화</text>
+  <text x="600" y="270" text-anchor="middle" class="txt">카테고리별 총매출은</text>
+  <text x="600" y="300" text-anchor="middle" class="txt">얼마인가?</text>
+  <text x="600" y="345" text-anchor="middle" class="txt">필요한 데이터</text>
+  <text x="600" y="372" text-anchor="middle" class="mono">order_items + products</text>
+  <rect x="860" y="170" width="260" height="260" class="c"/>
+  <text x="990" y="220" text-anchor="middle" class="head">지표와 코드</text>
+  <text x="990" y="270" text-anchor="middle" class="mono">total_sales</text>
+  <text x="990" y="300" text-anchor="middle" class="mono">sales_ratio</text>
+  <text x="990" y="345" text-anchor="middle" class="mono">merge()</text>
+  <text x="990" y="372" text-anchor="middle" class="mono">groupby()</text>
+  <text x="990" y="399" text-anchor="middle" class="mono">sum()</text>
+  <path class="arrow" d="M340 300H460"/><path class="arrow" d="M730 300H850"/>
+  <text x="600" y="630" text-anchor="middle" class="footer">좋은 분석 질문은 데이터와 지표로 검증할 수 있어야 합니다.</text>
+</svg>
