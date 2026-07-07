@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="700" viewBox="0 0 1600 700" role="img" aria-labelledby="title desc">
+  <title id="title">LLM 생성 코드 리뷰 체크리스트</title>
+  <desc id="desc">LLM이 생성한 pandas 코드를 검토할 때 확인해야 할 항목을 체크리스트로 정리</desc>
+  <defs>
+    <linearGradient id="head" x1="0" x2="1"><stop offset="0%" stop-color="#2563eb"/><stop offset="100%" stop-color="#0f766e"/></linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#0f172a" flood-opacity="0.12"/></filter>
+    <style>
+      .bg{fill:#f8fafc}.h{fill:url(#head)} text{font-family:'Pretendard','Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif}.title{font-size:38px;font-weight:800;fill:#fff}.sub{font-size:18px;font-weight:600;fill:#dbeafe}
+      .card{fill:#fff;stroke:#cbd5e1;stroke-width:2;filter:url(#shadow)}.row{fill:#f8fafc;stroke:#e2e8f0;stroke-width:1}.box{fill:#ecfdf5;stroke:#22c55e;stroke-width:2}.check{font-size:20px;font-weight:900;fill:#16a34a}.item{font-size:19px;font-weight:700;fill:#334155}.warn{fill:#fff7ed;stroke:#fdba74;stroke-width:2}.warnText{font-size:18px;font-weight:800;fill:#9a3412}.codeBox{fill:#0f172a;stroke:#334155;stroke-width:2;filter:url(#shadow)}.code{font-family:'D2Coding','Consolas',monospace;font-size:17px;font-weight:600;fill:#e2e8f0}.note{fill:#fff7ed;stroke:#fdba74;stroke-width:2}.noteText{font-size:20px;font-weight:800;fill:#9a3412}
+    </style>
+  </defs>
+  <rect class="bg" width="1600" height="700" rx="32"/>
+  <rect class="h" x="50" y="36" width="1500" height="92" rx="26"/>
+  <text class="title" x="86" y="92">LLM 생성 코드 리뷰 체크리스트</text>
+  <text class="sub" x="86" y="118">코드가 실행된다고 해서 분석 논리가 항상 맞는 것은 아닙니다</text>
+
+  <g transform="translate(90 165)">
+    <rect class="card" width="850" height="430" rx="26"/>
+    <text x="34" y="48" font-size="28" font-weight="900" fill="#0f172a">검토 항목</text>
+    <g transform="translate(34 76)"><rect class="row" width="780" height="36" rx="12"/><rect class="box" x="10" y="8" width="20" height="20" rx="4"/><text class="check" x="20" y="25" text-anchor="middle">✓</text><text class="item" x="48" y="24">실제 컬럼명인가?</text></g>
+    <g transform="translate(34 116)"><rect class="row" width="780" height="36" rx="12"/><rect class="box" x="10" y="8" width="20" height="20" rx="4"/><text class="check" x="20" y="25" text-anchor="middle">✓</text><text class="item" x="48" y="24">병합 기준이 맞는가?</text></g>
+    <g transform="translate(34 156)"><rect class="row" width="780" height="36" rx="12"/><rect class="box" x="10" y="8" width="20" height="20" rx="4"/><text class="check" x="20" y="25" text-anchor="middle">✓</text><text class="item" x="48" y="24">날짜 변환이 필요한가?</text></g>
+    <g transform="translate(34 196)"><rect class="row" width="780" height="36" rx="12"/><rect class="box" x="10" y="8" width="20" height="20" rx="4"/><text class="check" x="20" y="25" text-anchor="middle">✓</text><text class="item" x="48" y="24">결측치 확인을 했는가?</text></g>
+    <g transform="translate(34 236)"><rect class="row" width="780" height="36" rx="12"/><rect class="box" x="10" y="8" width="20" height="20" rx="4"/><text class="check" x="20" y="25" text-anchor="middle">✓</text><text class="item" x="48" y="24">병합 후 행 수가 맞는가?</text></g>
+    <g transform="translate(34 276)"><rect class="row" width="780" height="36" rx="12"/><rect class="box" x="10" y="8" width="20" height="20" rx="4"/><text class="check" x="20" y="25" text-anchor="middle">✓</text><text class="item" x="48" y="24">집계 총합이 원본과 맞는가?</text></g>
+    <g transform="translate(34 316)"><rect class="row" width="780" height="36" rx="12"/><rect class="box" x="10" y="8" width="20" height="20" rx="4"/><text class="check" x="20" y="25" text-anchor="middle">✓</text><text class="item" x="48" y="24">정렬 기준과 개인정보 노출을 확인했는가?</text></g>
+    <g transform="translate(34 356)"><rect class="row" width="780" height="36" rx="12"/><rect class="box" x="10" y="8" width="20" height="20" rx="4"/><text class="check" x="20" y="25" text-anchor="middle">✓</text><text class="item" x="48" y="24">코드가 실제로 실행되는가?</text></g>
+  </g>
+
+  <g transform="translate(1010 205)">
+    <rect class="codeBox" width="500" height="255" rx="24"/>
+    <text class="code" x="28" y="50"># 확인 예시</text>
+    <text class="code" x="28" y="88">print(df.columns)</text>
+    <text class="code" x="28" y="126">print(before_shape, after_shape)</text>
+    <text class="code" x="28" y="164">print(result.isna().sum())</text>
+    <text class="code" x="28" y="202">print(total_before, total_after)</text>
+  </g>
+  <rect class="warn" x="1030" y="500" width="450" height="56" rx="18"/>
+  <text class="warnText" x="1255" y="535" text-anchor="middle">실행 가능성과 논리적 타당성을 구분해야 합니다</text>
+
+  <rect class="note" x="360" y="635" width="880" height="38" rx="14"/>
+  <text class="noteText" x="800" y="661" text-anchor="middle">LLM 코드일수록 컬럼명, 병합 기준, 총합 검증을 먼저 확인합니다</text>
+</svg>
