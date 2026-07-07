@@ -1,0 +1,127 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="620" viewBox="0 0 1800 620" role="img" aria-labelledby="title desc">
+  <title id="title">온라인 쇼핑몰 데이터 관계도</title>
+  <desc id="desc">customers, orders, order_items, products 네 개 CSV 파일의 키 관계</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#2563eb"/>
+    </marker>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="7" stdDeviation="7" flood-color="#0f172a" flood-opacity="0.12"/>
+    </filter>
+    <linearGradient id="headerGrad" x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0%" stop-color="#0f766e"/>
+      <stop offset="100%" stop-color="#2563eb"/>
+    </linearGradient>
+    <style>
+      .bg { fill: #f8fafc; }
+      .title-main { font-family: 'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif; font-size: 40px; font-weight: 800; fill: #ffffff; }
+      .title-sub { font-family: 'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif; font-size: 18px; font-weight: 500; fill: #ccfbf1; }
+      .table { fill: #ffffff; stroke: #cbd5e1; stroke-width: 2; filter: url(#shadow); }
+      .table-head { fill: #eff6ff; stroke: #bfdbfe; stroke-width: 1; }
+      .table-name { font-family: 'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif; font-size: 28px; font-weight: 800; fill: #0f172a; }
+      .role { font-family: 'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif; font-size: 17px; font-weight: 700; fill: #2563eb; }
+      .field { font-family: 'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif; font-size: 20px; font-weight: 600; fill: #334155; }
+      .pk { fill: #fef3c7; stroke: #f59e0b; stroke-width: 1.5; }
+      .fk { fill: #dcfce7; stroke: #22c55e; stroke-width: 1.5; }
+      .tag { font-family: 'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif; font-size: 15px; font-weight: 800; }
+      .tag-pk { fill: #92400e; }
+      .tag-fk { fill: #166534; }
+      .rel { fill: none; stroke: #2563eb; stroke-width: 4; stroke-linecap: round; marker-end: url(#arrow); }
+      .rel-label { font-family: 'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif; font-size: 18px; font-weight: 800; fill: #1d4ed8; }
+      .note { fill: #ffffff; stroke: #e2e8f0; stroke-width: 2; }
+      .note-text { font-family: 'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif; font-size: 20px; font-weight: 700; fill: #475569; }
+    </style>
+  </defs>
+
+  <rect class="bg" width="1800" height="620" rx="34"/>
+  <rect x="54" y="40" width="1692" height="92" rx="28" fill="url(#headerGrad)" opacity="0.96"/>
+  <text class="title-main" x="90" y="96">온라인 쇼핑몰 데이터 관계도</text>
+  <text class="title-sub" x="90" y="123">고객, 주문, 주문 상세, 상품 데이터를 공통 키로 연결해 분석용 데이터셋을 만든다</text>
+
+  <!-- customers -->
+  <g transform="translate(105 190)">
+    <rect class="table" width="345" height="245" rx="24"/>
+    <rect class="table-head" x="0" y="0" width="345" height="70" rx="24"/>
+    <text class="table-name" x="28" y="44">customers.csv</text>
+    <text class="role" x="28" y="94">고객 정보</text>
+    <g transform="translate(28 120)">
+      <rect class="pk" width="58" height="28" rx="14"/><text class="tag tag-pk" x="29" y="20" text-anchor="middle">PK</text>
+      <text class="field" x="76" y="21">customer_id</text>
+    </g>
+    <text class="field" x="28" y="178">name, gender, age</text>
+    <text class="field" x="28" y="212">city, signup_date</text>
+  </g>
+
+  <!-- orders -->
+  <g transform="translate(590 190)">
+    <rect class="table" width="365" height="245" rx="24"/>
+    <rect class="table-head" x="0" y="0" width="365" height="70" rx="24"/>
+    <text class="table-name" x="28" y="44">orders.csv</text>
+    <text class="role" x="28" y="94">주문 정보</text>
+    <g transform="translate(28 120)">
+      <rect class="pk" width="58" height="28" rx="14"/><text class="tag tag-pk" x="29" y="20" text-anchor="middle">PK</text>
+      <text class="field" x="76" y="21">order_id</text>
+    </g>
+    <g transform="translate(28 156)">
+      <rect class="fk" width="58" height="28" rx="14"/><text class="tag tag-fk" x="29" y="20" text-anchor="middle">FK</text>
+      <text class="field" x="76" y="21">customer_id</text>
+    </g>
+    <text class="field" x="28" y="216">order_date, payment_method</text>
+  </g>
+
+  <!-- order_items -->
+  <g transform="translate(1100 190)">
+    <rect class="table" width="395" height="285" rx="24"/>
+    <rect class="table-head" x="0" y="0" width="395" height="70" rx="24"/>
+    <text class="table-name" x="28" y="44">order_items.csv</text>
+    <text class="role" x="28" y="94">주문 상세 정보</text>
+    <g transform="translate(28 120)">
+      <rect class="pk" width="58" height="28" rx="14"/><text class="tag tag-pk" x="29" y="20" text-anchor="middle">PK</text>
+      <text class="field" x="76" y="21">order_item_id</text>
+    </g>
+    <g transform="translate(28 156)">
+      <rect class="fk" width="58" height="28" rx="14"/><text class="tag tag-fk" x="29" y="20" text-anchor="middle">FK</text>
+      <text class="field" x="76" y="21">order_id</text>
+    </g>
+    <g transform="translate(28 192)">
+      <rect class="fk" width="58" height="28" rx="14"/><text class="tag tag-fk" x="29" y="20" text-anchor="middle">FK</text>
+      <text class="field" x="76" y="21">product_id</text>
+    </g>
+    <text class="field" x="28" y="252">quantity, unit_price</text>
+  </g>
+
+  <!-- products -->
+  <g transform="translate(105 470)">
+    <rect class="table" width="520" height="105" rx="24"/>
+    <rect class="table-head" x="0" y="0" width="220" height="105" rx="24"/>
+    <text class="table-name" x="28" y="43">products.csv</text>
+    <text class="role" x="28" y="75">상품 정보</text>
+    <g transform="translate(250 20)">
+      <rect class="pk" width="58" height="28" rx="14"/><text class="tag tag-pk" x="29" y="20" text-anchor="middle">PK</text>
+      <text class="field" x="76" y="21">product_id</text>
+    </g>
+    <text class="field" x="250" y="76">product_name, category, price</text>
+  </g>
+
+  <!-- relationship arrows -->
+  <path class="rel" d="M 450 312 C 510 312, 530 312, 590 312"/>
+  <text class="rel-label" x="488" y="292">customer_id</text>
+  <text class="rel-label" x="468" y="340">1 : N</text>
+
+  <path class="rel" d="M 955 312 C 1010 312, 1045 312, 1100 312"/>
+  <text class="rel-label" x="985" y="292">order_id</text>
+  <text class="rel-label" x="988" y="340">1 : N</text>
+
+  <path class="rel" d="M 625 522 C 780 522, 840 545, 920 515 C 1000 485, 1015 402, 1100 402"/>
+  <text class="rel-label" x="790" y="546">product_id</text>
+  <text class="rel-label" x="965" y="452">1 : N</text>
+
+  <g transform="translate(1530 220)">
+    <rect class="note" width="205" height="225" rx="24"/>
+    <text class="note-text" x="102" y="48" text-anchor="middle">분석 연결 예시</text>
+    <text class="note-text" x="102" y="88" text-anchor="middle">고객별 구매금액</text>
+    <text class="note-text" x="102" y="124" text-anchor="middle">customers</text>
+    <text class="note-text" x="102" y="154" text-anchor="middle">+ orders</text>
+    <text class="note-text" x="102" y="184" text-anchor="middle">+ order_items</text>
+  </g>
+</svg>
