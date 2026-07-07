@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720">
+  <defs><style>.bg{fill:#f8fafc}.title{font:700 34px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#0f172a}.sub{font:500 18px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#334155}.box{fill:#fff;stroke:#cbd5e1;stroke-width:2;rx:18;ry:18}.train{fill:#dbeafe;stroke:#93c5fd;stroke-width:2;rx:18;ry:18}.test{fill:#dcfce7;stroke:#86efac;stroke-width:2;rx:18;ry:18}.metric{fill:#fef3c7;stroke:#fcd34d;stroke-width:2;rx:18;ry:18}.head{font:700 23px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#0f172a}.txt{font:500 17px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#334155}.arrow{stroke:#64748b;stroke-width:3;fill:none;marker-end:url(#a)}.footer{font:500 18px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#1e40af}</style><marker id="a" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><polygon points="0 0,10 4,0 8" fill="#64748b"/></marker></defs>
+  <rect class="bg" width="1200" height="720"/>
+  <text x="600" y="58" text-anchor="middle" class="title">학습 데이터와 테스트 데이터</text>
+  <text x="600" y="90" text-anchor="middle" class="sub">모델은 학습 데이터로 배우고, 테스트 데이터로 성능을 확인한다.</text>
+  <rect x="90" y="260" width="220" height="150" class="box"/>
+  <text x="200" y="315" text-anchor="middle" class="head">전체 데이터</text>
+  <text x="200" y="355" text-anchor="middle" class="txt">X, y</text>
+  <rect x="430" y="180" width="240" height="150" class="train"/>
+  <text x="550" y="235" text-anchor="middle" class="head">학습 데이터</text>
+  <text x="550" y="275" text-anchor="middle" class="txt">패턴을 배우는 데이터</text>
+  <rect x="430" y="410" width="240" height="150" class="test"/>
+  <text x="550" y="465" text-anchor="middle" class="head">테스트 데이터</text>
+  <text x="550" y="505" text-anchor="middle" class="txt">처음 보는 데이터</text>
+  <rect x="810" y="180" width="260" height="150" class="box"/>
+  <text x="940" y="235" text-anchor="middle" class="head">모델 학습</text>
+  <text x="940" y="275" text-anchor="middle" class="txt">fit()</text>
+  <rect x="810" y="410" width="260" height="150" class="metric"/>
+  <text x="940" y="465" text-anchor="middle" class="head">성능 평가</text>
+  <text x="940" y="505" text-anchor="middle" class="txt">MAE · RMSE · R²</text>
+  <path class="arrow" d="M310 330C360 280 390 250 425 245"/>
+  <path class="arrow" d="M310 340C360 400 390 475 425 485"/>
+  <path class="arrow" d="M670 255H805"/>
+  <path class="arrow" d="M670 485H805"/>
+  <path class="arrow" d="M940 330V405"/>
+  <text x="600" y="640" text-anchor="middle" class="footer">테스트 데이터는 모델 학습에 사용하지 않아야 공정한 평가가 가능합니다.</text>
+</svg>
