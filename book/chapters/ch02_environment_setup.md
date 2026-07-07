@@ -45,7 +45,7 @@ VS Code에서는 다음 작업을 한 화면에서 처리할 수 있습니다.
 - LLM 또는 AI 코딩 도구를 활용한 코드 검토
 
 <figure class="figure">
-  <img src="../assets/images/ch02/ch02_environment_overview.png" alt="실습 환경 전체 구성도">
+  <img src="../assets/images/ch02/ch02_environment_overview.svg" alt="실습 환경 전체 구성도">
   <figcaption>그림 2-1. VS Code 중심 실습 환경 전체 구성도</figcaption>
 </figure>
 
@@ -68,7 +68,7 @@ Jupyter Notebook은 코드, 실행 결과, 설명 문장을 한 파일에 함께
 다만 이 책에서는 Notebook 자체를 중심 도구로 삼지 않습니다. Notebook은 VS Code 안에서 열어 실행합니다. 이렇게 하면 Notebook의 장점은 활용하면서도 프로젝트 폴더, Python 환경, GitHub 작업 흐름을 한곳에서 관리할 수 있습니다.
 
 <figure class="figure">
-  <img src="../assets/images/ch02/ch02_jupyter_notebook_example.png" alt="Jupyter Notebook 실행 화면 예시">
+  <img src="../assets/images/ch02/ch02_jupyter_notebook_example.svg" alt="Jupyter Notebook 실행 화면 예시">
   <figcaption>그림 2-2. VS Code에서 Notebook을 실행하는 화면 예시</figcaption>
 </figure>
 
@@ -79,7 +79,7 @@ Notebook을 사용할 때 중요한 점은 셀을 실행하는 것에서 멈추�
 분석 프로젝트는 폴더 구조가 정리되어 있을수록 다루기 쉽습니다. 데이터 파일은 `data` 폴더에, 실습 Notebook은 `notebooks` 폴더에, 반복 실행할 코드는 `scripts` 폴더에 두면 파일을 찾는 시간이 줄어듭니다.
 
 <figure class="figure">
-  <img src="../assets/images/ch02/ch02_vscode_project_structure.png" alt="VS Code 프로젝트 폴더 구조 화면">
+  <img src="../assets/images/ch02/ch02_vscode_project_structure.svg" alt="VS Code 프로젝트 폴더 구조 화면">
   <figcaption>그림 2-3. VS Code 프로젝트 폴더 구조 예시</figcaption>
 </figure>
 
@@ -342,8 +342,8 @@ customers = pd.read_csv("../data/raw/customers.csv")
 저장소에는 보통 `.env.example` 파일이 포함됩니다. 이 파일은 어떤 환경변수가 필요한지 보여 주는 예시입니다.
 
 ```text
-GEMINI_API_KEY=your_gemini_api_key_here
-GEMINI_MODEL_NAME=gemini-2.0-flash-lite
+GEMINI_API_KEY=YOUR_API_KEY
+GEMINI_MODEL_NAME=MODEL_NAME
 ```
 
 실제 키를 사용할 때는 `.env.example`을 복사해 `.env` 파일을 만들고, 그 안에 개인 키를 입력합니다.
