@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720">
+  <defs>
+    <style>
+      .bg{fill:#f8fafc}.title{font:700 34px Arial,'Noto Sans KR',sans-serif;fill:#0f172a}.sub{font:500 18px Arial,'Noto Sans KR',sans-serif;fill:#334155}.box{fill:#fff;stroke:#cbd5e1;stroke-width:2;rx:18;ry:18}.head{font:700 22px Arial,'Noto Sans KR',sans-serif;fill:#0f172a}.txt{font:500 17px Arial,'Noto Sans KR',sans-serif;fill:#334155}.arrow{stroke:#64748b;stroke-width:3;fill:none;marker-end:url(#a)}.accent{fill:#dbeafe;stroke:#93c5fd;stroke-width:2;rx:16;ry:16}
+    </style>
+    <marker id="a" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><polygon points="0 0,10 4,0 8" fill="#64748b"/></marker>
+  </defs>
+  <rect class="bg" width="1200" height="720"/>
+  <text x="600" y="58" text-anchor="middle" class="title">pandas 기본 분석 전체 흐름도</text>
+  <text x="600" y="90" text-anchor="middle" class="sub">데이터를 선택하고, 걸러내고, 계산하고, 요약해 질문에 답하는 과정</text>
+  <rect x="70" y="210" width="160" height="110" class="box"/><text x="150" y="252" text-anchor="middle" class="head">데이터 로드</text><text x="150" y="286" text-anchor="middle" class="txt">CSV 읽기</text>
+  <rect x="275" y="210" width="160" height="110" class="box"/><text x="355" y="252" text-anchor="middle" class="head">선택</text><text x="355" y="286" text-anchor="middle" class="txt">컬럼·행 추출</text>
+  <rect x="480" y="210" width="160" height="110" class="box"/><text x="560" y="252" text-anchor="middle" class="head">정렬</text><text x="560" y="286" text-anchor="middle" class="txt">중요 값 확인</text>
+  <rect x="685" y="210" width="160" height="110" class="box"/><text x="765" y="252" text-anchor="middle" class="head">파생 컬럼</text><text x="765" y="286" text-anchor="middle" class="txt">line_total</text>
+  <rect x="890" y="210" width="160" height="110" class="box"/><text x="970" y="252" text-anchor="middle" class="head">요약</text><text x="970" y="286" text-anchor="middle" class="txt">groupby</text>
+  <path class="arrow" d="M230 265H270"/><path class="arrow" d="M435 265H475"/><path class="arrow" d="M640 265H680"/><path class="arrow" d="M845 265H885"/>
+  <rect x="220" y="430" width="300" height="110" class="accent"/><text x="370" y="474" text-anchor="middle" class="head">merge</text><text x="370" y="508" text-anchor="middle" class="txt">여러 CSV 파일 연결</text>
+  <rect x="680" y="430" width="300" height="110" class="accent"/><text x="830" y="474" text-anchor="middle" class="head">결과 저장</text><text x="830" y="508" text-anchor="middle" class="txt">분석 요약 CSV 저장</text>
+  <path class="arrow" d="M970 320C970 385 870 405 830 425"/><path class="arrow" d="M520 485H675"/>
+</svg>
