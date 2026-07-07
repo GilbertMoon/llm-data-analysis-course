@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="660" viewBox="0 0 1600 660" role="img" aria-labelledby="title desc">
+  <title id="title">중간 실습 프로젝트 제출물 구성</title>
+  <desc id="desc">Notebook, CSV 결과, 그래프 이미지, 보고서, 검증 자료로 구성된 최종 제출 패키지</desc>
+  <defs>
+    <linearGradient id="head" x1="0" x2="1"><stop offset="0%" stop-color="#0f766e"/><stop offset="100%" stop-color="#7c3aed"/></linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#0f172a" flood-opacity="0.12"/></filter>
+    <style>
+      .bg{fill:#f8fafc}.h{fill:url(#head)} text{font-family:'Pretendard','Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif}.title{font-size:38px;font-weight:800;fill:#fff}.sub{font-size:18px;font-weight:600;fill:#dcfce7}
+      .center{fill:#fff;stroke:#a78bfa;stroke-width:3;filter:url(#shadow)}.card{fill:#fff;stroke:#cbd5e1;stroke-width:2;filter:url(#shadow)}.main{font-size:24px;font-weight:900;fill:#0f172a}.item{font-size:17px;font-weight:650;fill:#475569}.tag{font-size:16px;font-weight:900;fill:#2563eb}.tagBox{fill:#eff6ff;stroke:#93c5fd;stroke-width:1.5}.note{fill:#ecfdf5;stroke:#86efac;stroke-width:2}.noteText{font-size:20px;font-weight:800;fill:#166534}
+    </style>
+  </defs>
+  <rect class="bg" width="1600" height="660" rx="32"/>
+  <rect class="h" x="50" y="36" width="1500" height="92" rx="26"/>
+  <text class="title" x="86" y="92">중간 실습 프로젝트 제출물 구성</text>
+  <text class="sub" x="86" y="118">코드, 결과, 그래프, 보고서, 검증 기록을 함께 포함합니다</text>
+
+  <rect class="center" x="610" y="265" width="380" height="120" rx="30"/>
+  <text class="main" x="800" y="315" text-anchor="middle">최종 제출 패키지</text>
+  <text class="item" x="800" y="350" text-anchor="middle">재현 가능한 프로젝트 폴더</text>
+
+  <g transform="translate(120 170)"><rect class="card" width="360" height="150" rx="24"/><rect class="tagBox" x="28" y="24" width="92" height="28" rx="14"/><text class="tag" x="74" y="43" text-anchor="middle">제출물 1</text><text class="main" x="28" y="82">Notebook</text><text class="item" x="28" y="116">ch08_midterm_project.ipynb</text></g>
+  <g transform="translate(1120 170)"><rect class="card" width="360" height="150" rx="24"/><rect class="tagBox" x="28" y="24" width="92" height="28" rx="14"/><text class="tag" x="74" y="43" text-anchor="middle">제출물 2</text><text class="main" x="28" y="82">CSV 결과</text><text class="item" x="28" y="116">요약표, 매출표, 고객표</text></g>
+  <g transform="translate(120 395)"><rect class="card" width="360" height="150" rx="24"/><rect class="tagBox" x="28" y="24" width="92" height="28" rx="14"/><text class="tag" x="74" y="43" text-anchor="middle">제출물 3</text><text class="main" x="28" y="82">그래프 이미지</text><text class="item" x="28" y="116">카테고리, 월별, 고객 그래프</text></g>
+  <g transform="translate(620 425)"><rect class="card" width="360" height="135" rx="24"/><rect class="tagBox" x="28" y="24" width="92" height="28" rx="14"/><text class="tag" x="74" y="43" text-anchor="middle">제출물 4</text><text class="main" x="28" y="82">보고서</text><text class="item" x="28" y="112">ch08_midterm_report.md</text></g>
+  <g transform="translate(1120 395)"><rect class="card" width="360" height="150" rx="24"/><rect class="tagBox" x="28" y="24" width="92" height="28" rx="14"/><text class="tag" x="74" y="43" text-anchor="middle">제출물 5</text><text class="main" x="28" y="82">검증 자료</text><text class="item" x="28" y="116">LLM 활용 내역, 체크리스트</text></g>
+
+  <rect class="note" x="355" y="590" width="890" height="42" rx="14"/>
+  <text class="noteText" x="800" y="618" text-anchor="middle">프로젝트 제출물은 실행 코드와 해석 문서를 함께 갖추어야 합니다</text>
+</svg>
