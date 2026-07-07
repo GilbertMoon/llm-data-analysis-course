@@ -1,0 +1,125 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="620" viewBox="0 0 1800 620" role="img" aria-labelledby="title desc">
+  <title id="title">데이터 분석 전체 흐름도</title>
+  <desc id="desc">문제 정의에서 자동화와 파이프라인까지 이어지는 AI 데이터 분석 과정</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#2563eb"/>
+    </marker>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#0f172a" flood-opacity="0.12"/>
+    </filter>
+    <linearGradient id="headerGrad" x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0%" stop-color="#1d4ed8"/>
+      <stop offset="100%" stop-color="#7c3aed"/>
+    </linearGradient>
+    <style>
+      .bg { fill: #f8fafc; }
+      .title { font-family: 'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif; font-size: 42px; font-weight: 800; fill: #0f172a; }
+      .subtitle { font-family: 'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif; font-size: 22px; font-weight: 500; fill: #475569; }
+      .step { fill: #ffffff; stroke: #bfdbfe; stroke-width: 2; filter: url(#shadow); }
+      .step-title { font-family: 'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif; font-size: 25px; font-weight: 800; fill: #0f172a; }
+      .step-desc { font-family: 'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif; font-size: 17px; font-weight: 500; fill: #64748b; }
+      .badge { fill: #eff6ff; stroke: #93c5fd; stroke-width: 1.5; }
+      .badge-text { font-family: 'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif; font-size: 18px; font-weight: 800; fill: #2563eb; }
+      .arrow { fill: none; stroke: #2563eb; stroke-width: 4; stroke-linecap: round; marker-end: url(#arrow); }
+      .human { fill: #fef3c7; stroke: #f59e0b; stroke-width: 2; }
+      .human-text { font-family: 'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif; font-size: 22px; font-weight: 800; fill: #92400e; }
+      .human-sub { font-family: 'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif; font-size: 17px; font-weight: 600; fill: #b45309; }
+    </style>
+  </defs>
+
+  <rect class="bg" width="1800" height="620" rx="34"/>
+  <rect x="54" y="40" width="1692" height="92" rx="28" fill="url(#headerGrad)" opacity="0.95"/>
+  <text x="90" y="96" font-family="Pretendard, Noto Sans KR, sans-serif" font-size="40" font-weight="800" fill="#ffffff">AI와 함께하는 데이터 분석 전체 흐름</text>
+  <text x="90" y="123" font-family="Pretendard, Noto Sans KR, sans-serif" font-size="18" font-weight="500" fill="#dbeafe">질문을 분석 가능한 문제로 바꾸고, 데이터·모델·보고서·자동화까지 연결하는 과정</text>
+
+  <!-- Row 1 -->
+  <g transform="translate(80 180)">
+    <rect class="step" width="285" height="105" rx="22"/>
+    <circle class="badge" cx="38" cy="36" r="20"/><text class="badge-text" x="38" y="43" text-anchor="middle">1</text>
+    <text class="step-title" x="70" y="42">문제 정의</text>
+    <text class="step-desc" x="28" y="78">업무 질문을 분석 질문으로 변환</text>
+  </g>
+  <path class="arrow" d="M 380 232 C 410 232, 410 232, 440 232"/>
+  <g transform="translate(450 180)">
+    <rect class="step" width="285" height="105" rx="22"/>
+    <circle class="badge" cx="38" cy="36" r="20"/><text class="badge-text" x="38" y="43" text-anchor="middle">2</text>
+    <text class="step-title" x="70" y="42">데이터 수집</text>
+    <text class="step-desc" x="28" y="78">CSV, API, 크롤링 데이터 확보</text>
+  </g>
+  <path class="arrow" d="M 750 232 C 780 232, 780 232, 810 232"/>
+  <g transform="translate(820 180)">
+    <rect class="step" width="285" height="105" rx="22"/>
+    <circle class="badge" cx="38" cy="36" r="20"/><text class="badge-text" x="38" y="43" text-anchor="middle">3</text>
+    <text class="step-title" x="70" y="42">구조 이해</text>
+    <text class="step-desc" x="28" y="78">행·열·타입·키 컬럼 파악</text>
+  </g>
+  <path class="arrow" d="M 1120 232 C 1150 232, 1150 232, 1180 232"/>
+  <g transform="translate(1190 180)">
+    <rect class="step" width="285" height="105" rx="22"/>
+    <circle class="badge" cx="38" cy="36" r="20"/><text class="badge-text" x="38" y="43" text-anchor="middle">4</text>
+    <text class="step-title" x="70" y="42">전처리</text>
+    <text class="step-desc" x="28" y="78">결측치·중복·날짜·이상값 처리</text>
+  </g>
+
+  <path class="arrow" d="M 1475 265 C 1600 330, 1420 355, 1395 360"/>
+
+  <!-- Row 2 -->
+  <g transform="translate(1190 340)">
+    <rect class="step" width="285" height="105" rx="22"/>
+    <circle class="badge" cx="38" cy="36" r="20"/><text class="badge-text" x="38" y="43" text-anchor="middle">5</text>
+    <text class="step-title" x="70" y="42">EDA</text>
+    <text class="step-desc" x="28" y="78">집계·비교·패턴 탐색</text>
+  </g>
+  <path class="arrow" d="M 1180 392 C 1150 392, 1150 392, 1120 392"/>
+  <g transform="translate(820 340)">
+    <rect class="step" width="285" height="105" rx="22"/>
+    <circle class="badge" cx="38" cy="36" r="20"/><text class="badge-text" x="38" y="43" text-anchor="middle">6</text>
+    <text class="step-title" x="70" y="42">시각화</text>
+    <text class="step-desc" x="28" y="78">그래프로 결과 전달</text>
+  </g>
+  <path class="arrow" d="M 810 392 C 780 392, 780 392, 750 392"/>
+  <g transform="translate(450 340)">
+    <rect class="step" width="285" height="105" rx="22"/>
+    <circle class="badge" cx="38" cy="36" r="20"/><text class="badge-text" x="38" y="43" text-anchor="middle">7</text>
+    <text class="step-title" x="70" y="42">머신러닝</text>
+    <text class="step-desc" x="28" y="78">회귀·분류 모델로 예측 확장</text>
+  </g>
+  <path class="arrow" d="M 440 392 C 410 392, 410 392, 380 392"/>
+  <g transform="translate(80 340)">
+    <rect class="step" width="285" height="105" rx="22"/>
+    <circle class="badge" cx="38" cy="36" r="20"/><text class="badge-text" x="38" y="43" text-anchor="middle">8</text>
+    <text class="step-title" x="70" y="42">LLM 보조</text>
+    <text class="step-desc" x="28" y="78">코드 초안·해석 문장 검토</text>
+  </g>
+
+  <path class="arrow" d="M 220 445 C 220 505, 280 520, 380 520"/>
+  <g transform="translate(450 500)">
+    <rect class="step" width="285" height="80" rx="22"/>
+    <circle class="badge" cx="38" cy="30" r="19"/><text class="badge-text" x="38" y="37" text-anchor="middle">9</text>
+    <text class="step-title" x="70" y="36">보고서 작성</text>
+    <text class="step-desc" x="28" y="63">인사이트·한계·다음 단계 정리</text>
+  </g>
+  <path class="arrow" d="M 750 540 C 780 540, 780 540, 810 540"/>
+  <g transform="translate(820 500)">
+    <rect class="step" width="285" height="80" rx="22"/>
+    <circle class="badge" cx="38" cy="30" r="19"/><text class="badge-text" x="38" y="37" text-anchor="middle">10</text>
+    <text class="step-title" x="76" y="36">외부 데이터 확장</text>
+    <text class="step-desc" x="28" y="63">API·공개데이터와 연결</text>
+  </g>
+  <path class="arrow" d="M 1120 540 C 1150 540, 1150 540, 1180 540"/>
+  <g transform="translate(1190 500)">
+    <rect class="step" width="285" height="80" rx="22"/>
+    <circle class="badge" cx="38" cy="30" r="19"/><text class="badge-text" x="38" y="37" text-anchor="middle">11</text>
+    <text class="step-title" x="76" y="36">자동화·파이프라인</text>
+    <text class="step-desc" x="28" y="63">반복 분석을 재사용 가능한 흐름으로</text>
+  </g>
+
+  <g transform="translate(1515 365)">
+    <rect class="human" width="205" height="150" rx="24"/>
+    <text class="human-text" x="102" y="50" text-anchor="middle">사람의 책임</text>
+    <text class="human-sub" x="102" y="84" text-anchor="middle">질문 정의</text>
+    <text class="human-sub" x="102" y="112" text-anchor="middle">결과 검증</text>
+    <text class="human-sub" x="102" y="140" text-anchor="middle">의사결정</text>
+  </g>
+</svg>
