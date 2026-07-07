@@ -6,6 +6,11 @@
 
 이번 장에서는 공공데이터, 네이버 API, 기본 크롤링을 활용해 외부 데이터를 수집하는 흐름을 살펴봅니다. 핵심은 “어디서든 데이터를 긁어오는 기술”이 아니라, **분석 목적에 맞는 데이터를 안전하고 재현 가능한 방식으로 가져오는 습관**을 익히는 것입니다.
 
+<figure class="figure">
+  <img src="../assets/images/ch13/ch13_external_data_overview_flow.svg" alt="외부 데이터 수집 전체 흐름도">
+  <figcaption>그림 13-1. 외부 데이터 수집 전체 흐름도</figcaption>
+</figure>
+
 ## 이 장에서 생각해 볼 질문
 
 외부 데이터를 수집하기 전에 다음 질문을 먼저 생각해 봅니다.
@@ -44,6 +49,11 @@
 | API 호출 | 정해진 주소와 파라미터로 데이터를 요청 | 공공데이터 API, 네이버 검색 API |
 | 크롤링 | 웹페이지의 HTML에서 필요한 정보를 추출 | 공개 웹페이지의 표, 제목, 링크 |
 
+<figure class="figure">
+  <img src="../assets/images/ch13/ch13_collection_methods.svg" alt="외부 데이터 수집 방법 비교">
+  <figcaption>그림 13-2. 외부 데이터 수집 방법 비교</figcaption>
+</figure>
+
 가장 안정적인 방법은 공식 API나 파일 다운로드입니다. 크롤링은 API가 없고, 웹페이지에 공개된 정보를 제한적으로 확인해야 할 때만 사용합니다. 웹사이트의 이용약관, robots.txt, 저작권, 개인정보, 요청 빈도를 반드시 고려해야 합니다.
 
 외부 데이터 수집에서는 다음 원칙을 지키는 것이 좋습니다.
@@ -80,9 +90,7 @@ llm-data-analysis-course/
 
 `data/raw/`는 원래 분석에 사용하는 기본 데이터, `data/processed/`는 전처리된 데이터, `data/external/`은 외부에서 가져온 데이터를 저장하는 공간으로 구분합니다.
 
-이번 장의 코드는 `notebooks/ch13_external_data_collection.ipynb`로 구성하는 것이 좋습니다. 현재 저장소의 파일명은 기존 목차 기준으로 남아 있을 수 있으므로, 이후 새 목차에 맞춰 정리할 수 있습니다.
-
-먼저 필요한 패키지를 불러옵니다.
+이번 장의 코드는 `notebooks/ch13_external_data_collection.ipynb`에서 실행하는 흐름으로 구성할 수 있습니다. 먼저 필요한 패키지를 불러옵니다.
 
 ```python
 from pathlib import Path
@@ -158,18 +166,28 @@ API 문서 확인
 → CSV 저장
 ```
 
+<figure class="figure">
+  <img src="../assets/images/ch13/ch13_api_collection_flow.svg" alt="API 수집 흐름">
+  <figcaption>그림 13-3. API 수집 흐름</figcaption>
+</figure>
+
 공공 API마다 요청 주소와 파라미터가 다르므로, 실제 실습에서는 선택한 API 문서를 먼저 확인해야 합니다. 예를 들어 한국관광공사 OpenAPI를 활용한다면 관광지, 숙박, 음식점, 지역 코드, 위치 정보 등을 가져와 관광 앱 프로젝트와 연결할 수 있습니다.
 
 ## 5. API Key를 안전하게 관리하기
 
 API Key는 비밀번호와 비슷하게 다뤄야 합니다. 코드 안에 직접 적으면 GitHub에 올라갈 위험이 있습니다. 따라서 `.env` 파일을 사용해 관리하는 것이 좋습니다.
 
+<figure class="figure">
+  <img src="../assets/images/ch13/ch13_api_key_security.svg" alt="API Key 안전 관리">
+  <figcaption>그림 13-4. API Key 안전 관리</figcaption>
+</figure>
+
 `.env` 파일 예시는 다음과 같습니다.
 
 ```text
-PUBLIC_DATA_API_KEY=여기에_공공데이터_API_KEY_입력
-NAVER_CLIENT_ID=여기에_네이버_CLIENT_ID_입력
-NAVER_CLIENT_SECRET=여기에_네이버_CLIENT_SECRET_입력
+PUBLIC_DATA_API_KEY=YOUR_PUBLIC_DATA_API_KEY
+NAVER_CLIENT_ID=YOUR_NAVER_CLIENT_ID
+NAVER_CLIENT_SECRET=YOUR_NAVER_CLIENT_SECRET
 ```
 
 Python에서는 `python-dotenv`를 사용해 `.env` 파일을 읽을 수 있습니다.
@@ -327,6 +345,11 @@ links_df.to_csv(external_dir / "scraped_example_links.csv", index=False)
 ## 8. 외부 데이터를 기존 분석과 연결하기
 
 외부 데이터를 수집한 뒤에는 기존 데이터와 어떻게 연결할지 생각해야 합니다. 연결 기준이 없으면 외부 데이터는 참고 자료에 머물 수 있습니다.
+
+<figure class="figure">
+  <img src="../assets/images/ch13/ch13_external_data_integration.svg" alt="외부 데이터와 내부 데이터 연결">
+  <figcaption>그림 13-5. 외부 데이터와 내부 데이터 연결</figcaption>
+</figure>
 
 예를 들어 온라인 쇼핑몰 데이터와 외부 데이터를 연결하는 방식은 다음과 같습니다.
 
