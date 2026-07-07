@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1700" height="640" viewBox="0 0 1700 640" role="img" aria-labelledby="title desc">
+  <title id="title">중간 실습 프로젝트 전체 흐름도</title>
+  <desc id="desc">원본 데이터에서 최종 제출까지 이어지는 중간 실습 프로젝트의 전체 분석 흐름</desc>
+  <defs>
+    <linearGradient id="head" x1="0" x2="1"><stop offset="0%" stop-color="#2563eb"/><stop offset="100%" stop-color="#0f766e"/></linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#0f172a" flood-opacity="0.12"/></filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#2563eb"/></marker>
+    <style>
+      .bg{fill:#f8fafc}.h{fill:url(#head)} text{font-family:'Pretendard','Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif}.title{font-size:40px;font-weight:800;fill:#fff}.sub{font-size:19px;font-weight:600;fill:#dbeafe}
+      .node{fill:#fff;stroke:#bfdbfe;stroke-width:2;filter:url(#shadow)}.num{fill:#eff6ff;stroke:#93c5fd;stroke-width:1.5}.nt{font-size:16px;font-weight:900;fill:#2563eb}.main{font-size:21px;font-weight:800;fill:#0f172a}.desc{font-size:15px;font-weight:650;fill:#64748b}.arr{fill:none;stroke:#2563eb;stroke-width:4;marker-end:url(#arrow)}.note{fill:#ecfdf5;stroke:#86efac;stroke-width:2}.noteText{font-size:21px;font-weight:800;fill:#166534}
+    </style>
+  </defs>
+  <rect class="bg" width="1700" height="640" rx="34"/>
+  <rect class="h" x="55" y="38" width="1590" height="94" rx="28"/>
+  <text class="title" x="92" y="96">중간 실습 프로젝트 전체 흐름</text>
+  <text class="sub" x="92" y="123">데이터 분석 전 과정을 하나의 흐름으로 완성하는 실습입니다</text>
+
+  <g transform="translate(70 185)"><rect class="node" width="250" height="100" rx="22"/><circle class="num" cx="34" cy="34" r="17"/><text class="nt" x="34" y="40" text-anchor="middle">1</text><text class="main" x="62" y="42">원본 CSV 불러오기</text><text class="desc" x="24" y="74">customers, orders 등</text></g>
+  <path class="arr" d="M330 235H390"/>
+  <g transform="translate(405 185)"><rect class="node" width="250" height="100" rx="22"/><circle class="num" cx="34" cy="34" r="17"/><text class="nt" x="34" y="40" text-anchor="middle">2</text><text class="main" x="62" y="42">데이터 구조 점검</text><text class="desc" x="24" y="74">파일, 컬럼, 타입 확인</text></g>
+  <path class="arr" d="M665 235H725"/>
+  <g transform="translate(740 185)"><rect class="node" width="250" height="100" rx="22"/><circle class="num" cx="34" cy="34" r="17"/><text class="nt" x="34" y="40" text-anchor="middle">3</text><text class="main" x="62" y="42">데이터 전처리</text><text class="desc" x="24" y="74">결측치·중복·타입 정리</text></g>
+  <path class="arr" d="M1000 235H1060"/>
+  <g transform="translate(1075 185)"><rect class="node" width="250" height="100" rx="22"/><circle class="num" cx="34" cy="34" r="17"/><text class="nt" x="34" y="40" text-anchor="middle">4</text><text class="main" x="62" y="42">분석 질문 설계</text><text class="desc" x="24" y="74">현재 데이터로 답할 질문</text></g>
+  <path class="arr" d="M1335 235H1395"/>
+  <g transform="translate(1410 185)"><rect class="node" width="220" height="100" rx="22"/><circle class="num" cx="34" cy="34" r="17"/><text class="nt" x="34" y="40" text-anchor="middle">5</text><text class="main" x="62" y="42">pandas 집계</text><text class="desc" x="24" y="74">주요 지표 계산</text></g>
+
+  <path class="arr" d="M1520 285 C1520 345 1390 355 1340 355"/>
+  <g transform="translate(1255 390)"><rect class="node" width="250" height="100" rx="22"/><circle class="num" cx="34" cy="34" r="17"/><text class="nt" x="34" y="40" text-anchor="middle">6</text><text class="main" x="62" y="42">데이터 시각화</text><text class="desc" x="24" y="74">그래프로 결과 표현</text></g>
+  <path class="arr" d="M1245 440H1185"/>
+  <g transform="translate(920 390)"><rect class="node" width="250" height="100" rx="22"/><circle class="num" cx="34" cy="34" r="17"/><text class="nt" x="34" y="40" text-anchor="middle">7</text><text class="main" x="62" y="42">결과 해석</text><text class="desc" x="24" y="74">관찰·가설·한계 구분</text></g>
+  <path class="arr" d="M910 440H850"/>
+  <g transform="translate(585 390)"><rect class="node" width="250" height="100" rx="22"/><circle class="num" cx="34" cy="34" r="17"/><text class="nt" x="34" y="40" text-anchor="middle">8</text><text class="main" x="62" y="42">Markdown 보고서</text><text class="desc" x="24" y="74">분석 목적과 결과 정리</text></g>
+  <path class="arr" d="M575 440H515"/>
+  <g transform="translate(250 390)"><rect class="node" width="250" height="100" rx="22"/><circle class="num" cx="34" cy="34" r="17"/><text class="nt" x="34" y="40" text-anchor="middle">9</text><text class="main" x="62" y="42">최종 제출</text><text class="desc" x="24" y="74">코드·결과·보고서 패키지</text></g>
+
+  <rect class="note" x="380" y="545" width="940" height="46" rx="16"/>
+  <text class="noteText" x="850" y="576" text-anchor="middle">중간 프로젝트는 데이터 분석 전 과정을 하나의 흐름으로 완성하는 실습입니다</text>
+</svg>
