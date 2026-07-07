@@ -19,7 +19,7 @@ pandas 기본 기능은 단순한 문법처럼 보이지만, 실제로는 분석
 - LLM이 만들어 준 pandas 코드는 어떻게 검증해야 할까?
 
 <figure class="figure">
-  <img src="../assets/images/ch04/ch04_pandas_basic_flow.png" alt="pandas 기본 분석 전체 흐름도">
+  <img src="../assets/images/ch04/ch04_pandas_basic_flow.svg" alt="pandas 기본 분석 전체 흐름도">
   <figcaption>그림 4-1. pandas 기본 분석 전체 흐름도</figcaption>
 </figure>
 
@@ -46,7 +46,7 @@ pandas 기본 분석은 DataFrame에서 필요한 데이터를 선택하고, 조
 
 ### 컬럼 선택
 
-컬럼 선택은 DataFrame에서 필요한 열만 가져오는 작업입니다. 예를 들어 고객 분석에서 고객 이름까지 모두 필요하지 않을 수 있습니다. 연령, 성별, 지역만 보고 싶다면 해당 컬럼만 선택하면 됩니다.
+컬럼 선택은 DataFrame에서 필요한 열만 가져오는 작업입니다.
 
 ```python
 customers[["customer_id", "gender", "age", "city"]]
@@ -68,14 +68,7 @@ customers[["city", "age"]].head()
 
 ### 행 필터링
 
-행 필터링은 조건에 맞는 데이터만 추출하는 작업입니다. 예를 들어 다음과 같은 질문에 답할 때 사용합니다.
-
-- 30세 이상 고객은 몇 명인가?
-- 서울에 거주하는 고객은 누구인가?
-- 완료된 주문만 분석하려면 어떻게 해야 하는가?
-- 가격이 50,000원 이상인 상품은 무엇인가?
-
-pandas에서는 조건식을 사용해 행을 필터링합니다.
+행 필터링은 조건에 맞는 데이터만 추출하는 작업입니다.
 
 ```python
 customers[customers["age"] >= 30]
@@ -104,7 +97,7 @@ customers[customers["city"].isin(["Seoul", "Busan"])]
 아래 그림은 컬럼 선택, 행 필터링, 정렬이 어떻게 다른 작업인지 보여줍니다.
 
 <figure class="figure">
-  <img src="../assets/images/ch04/ch04_select_filter_sort.png" alt="컬럼 선택·필터링·정렬 개념도">
+  <img src="../assets/images/ch04/ch04_select_filter_sort.svg" alt="컬럼 선택·필터링·정렬 개념도">
   <figcaption>그림 4-2. 컬럼 선택·필터링·정렬 개념도</figcaption>
 </figure>
 
@@ -114,7 +107,7 @@ customers[customers["city"].isin(["Seoul", "Busan"])]
 
 ### 정렬
 
-정렬은 데이터를 특정 기준에 따라 오름차순 또는 내림차순으로 나열하는 작업입니다. 예를 들어 가격이 가장 높은 상품, 나이가 많은 고객, 가장 최근 주문 등을 찾을 때 사용합니다.
+정렬은 데이터를 특정 기준에 따라 오름차순 또는 내림차순으로 나열하는 작업입니다.
 
 ```python
 products.sort_values("price", ascending=False)
@@ -122,20 +115,10 @@ products.sort_values("price", ascending=False)
 
 `ascending=False`는 내림차순을 의미합니다. 가격, 매출, 주문 수처럼 큰 값을 먼저 보고 싶을 때 자주 사용합니다.
 
-가격이 낮은 상품부터 보고 싶다면 오름차순으로 정렬합니다.
-
-```python
-products.sort_values("price", ascending=True).head()
-```
-
-정렬 결과를 변수에 저장할 수도 있습니다.
-
 ```python
 top_price_products = products.sort_values("price", ascending=False)
 top_price_products.head()
 ```
-
-정렬은 결과 해석에서도 중요합니다. 매출이 큰 순서로 정렬하면 어떤 카테고리나 상품이 중요한지 빠르게 파악할 수 있습니다.
 
 ### 파생 컬럼 만들기
 
@@ -147,8 +130,6 @@ order_items["line_total"] = order_items["quantity"] * order_items["unit_price"]
 
 여기서 `line_total`은 새로 만든 파생 컬럼입니다. 이 컬럼은 이후 상품별 매출, 카테고리별 매출, 월별 매출, 고객별 구매 금액을 계산하는 기초가 됩니다.
 
-파생 컬럼은 실무 분석에서 매우 자주 사용됩니다.
-
 | 기존 컬럼 | 파생 컬럼 예시 | 의미 |
 | --- | --- | --- |
 | `quantity`, `unit_price` | `line_total` | 주문 상세 금액 |
@@ -158,7 +139,7 @@ order_items["line_total"] = order_items["quantity"] * order_items["unit_price"]
 | `order_status` | `is_completed` | 완료 주문 여부 |
 
 <figure class="figure">
-  <img src="../assets/images/ch04/ch04_derived_column_line_total.png" alt="파생 컬럼 line_total 생성 개념도">
+  <img src="../assets/images/ch04/ch04_derived_column_line_total.svg" alt="파생 컬럼 line_total 생성 개념도">
   <figcaption>그림 4-3. 파생 컬럼 line_total 생성 개념도</figcaption>
 </figure>
 
@@ -168,16 +149,6 @@ order_items["line_total"] = order_items["quantity"] * order_items["unit_price"]
 
 그룹별 집계는 데이터를 특정 기준으로 묶고 합계, 평균, 개수 등을 계산하는 작업입니다. 실무 데이터 분석에서 가장 자주 사용하는 pandas 기능 중 하나입니다.
 
-예를 들어 다음 질문에 답할 수 있습니다.
-
-- 상품 카테고리별 매출은 얼마인가?
-- 지역별 고객 수는 몇 명인가?
-- 주문 상태별 주문 수는 어떻게 되는가?
-- 고객별 주문 횟수는 몇 회인가?
-- 월별 매출은 어떻게 변하는가?
-
-pandas에서는 `groupby()`를 사용합니다.
-
 ```python
 products.groupby("category")["price"].mean()
 ```
@@ -185,7 +156,7 @@ products.groupby("category")["price"].mean()
 `groupby()`는 기준 컬럼으로 데이터를 나눈 뒤, 특정 컬럼에 대해 합계, 평균, 개수 등을 계산합니다.
 
 <figure class="figure">
-  <img src="../assets/images/ch04/ch04_groupby_aggregation.png" alt="groupby를 이용한 그룹별 집계 개념도">
+  <img src="../assets/images/ch04/ch04_groupby_aggregation.svg" alt="groupby를 이용한 그룹별 집계 개념도">
   <figcaption>그림 4-4. groupby를 이용한 그룹별 집계 개념도</figcaption>
 </figure>
 
@@ -227,7 +198,7 @@ order_items.merge(products, on="product_id", how="left")
 아래 그림은 주문 상세 데이터, 상품 데이터, 주문 데이터를 병합해 매출 분석으로 이어지는 흐름을 보여줍니다.
 
 <figure class="figure">
-  <img src="../assets/images/ch04/ch04_merge_sales_analysis_flow.png" alt="merge 기반 매출 분석 흐름도">
+  <img src="../assets/images/ch04/ch04_merge_sales_analysis_flow.svg" alt="merge 기반 매출 분석 흐름도">
   <figcaption>그림 4-5. merge 기반 매출 분석 흐름도</figcaption>
 </figure>
 
@@ -244,11 +215,16 @@ order_items.merge(products, on="product_id", how="left")
 ```python
 from pathlib import Path
 import pandas as pd
-```
 
-```python
 report_dir = Path("reports")
 report_dir.mkdir(exist_ok=True)
+
+data_dir = Path("data/raw")
+
+customers = pd.read_csv(data_dir / "customers.csv")
+products = pd.read_csv(data_dir / "products.csv")
+orders = pd.read_csv(data_dir / "orders.csv")
+order_items = pd.read_csv(data_dir / "order_items.csv")
 ```
 
 Notebook을 `notebooks` 폴더 안에서 실행하는 경우에는 경로를 다음처럼 조정할 수 있습니다.
@@ -256,45 +232,16 @@ Notebook을 `notebooks` 폴더 안에서 실행하는 경우에는 경로를 다
 ```python
 report_dir = Path("../reports")
 report_dir.mkdir(exist_ok=True)
-```
-
-데이터 폴더 경로를 설정합니다.
-
-```python
-data_dir = Path("data/raw")
-```
-
-파일을 찾지 못하면 다음 경로를 사용합니다.
-
-```python
 data_dir = Path("../data/raw")
 ```
 
-CSV 파일 4개를 불러옵니다.
+각 데이터의 크기와 컬럼명을 확인합니다.
 
 ```python
-customers = pd.read_csv(data_dir / "customers.csv")
-products = pd.read_csv(data_dir / "products.csv")
-orders = pd.read_csv(data_dir / "orders.csv")
-order_items = pd.read_csv(data_dir / "order_items.csv")
-```
-
-각 데이터의 크기를 확인합니다.
-
-```python
-print("customers:", customers.shape)
-print("products:", products.shape)
-print("orders:", orders.shape)
-print("order_items:", order_items.shape)
-```
-
-분석을 시작하기 전에 컬럼명을 다시 확인합니다.
-
-```python
-print("customers:", list(customers.columns))
-print("products:", list(products.columns))
-print("orders:", list(orders.columns))
-print("order_items:", list(order_items.columns))
+print("customers:", customers.shape, list(customers.columns))
+print("products:", products.shape, list(products.columns))
+print("orders:", orders.shape, list(orders.columns))
+print("order_items:", order_items.shape, list(order_items.columns))
 ```
 
 LLM이 작성한 코드를 사용할 때도 실제 컬럼명과 일치하는지 반드시 확인해야 합니다.
@@ -322,12 +269,6 @@ product_basic.head()
 ```python
 customers_over_30 = customers[customers["age"] >= 30]
 customers_over_30.head()
-```
-
-30세 이상 고객 수를 확인합니다.
-
-```python
-len(customers_over_30)
 ```
 
 서울에 거주하는 고객만 추출합니다.
@@ -384,12 +325,6 @@ completed_orders.head()
 products.sort_values("price", ascending=False).head()
 ```
 
-상품 가격이 낮은 순서대로 정렬합니다.
-
-```python
-products.sort_values("price", ascending=True).head()
-```
-
 고객 나이가 많은 순서대로 정렬합니다.
 
 ```python
@@ -426,14 +361,7 @@ pandas 기본 분석은 단순 필터링에서 끝나지 않습니다. 여러 �
 
 ### 상품 데이터와 주문 상세 데이터 병합하기
 
-카테고리별 매출을 계산하려면 `order_items`와 `products`를 연결해야 합니다. 먼저 두 데이터의 기준 컬럼을 확인합니다.
-
-```python
-print(order_items.columns)
-print(products.columns)
-```
-
-두 데이터 모두 `product_id`를 가지고 있어야 합니다.
+카테고리별 매출을 계산하려면 `order_items`와 `products`를 연결해야 합니다.
 
 ```python
 sales_items = order_items.merge(
@@ -458,11 +386,6 @@ print("병합 후 sales_items:", sales_items.shape)
 
 ```python
 sales_items["product_name"].isna().sum()
-```
-
-카테고리가 비어 있는 행이 있는지도 확인합니다.
-
-```python
 sales_items["category"].isna().sum()
 ```
 
@@ -477,25 +400,10 @@ category_sales = (
     sales_items
     .groupby("category", as_index=False)["line_total"]
     .sum()
-    .sort_values("line_total", ascending=False)
+    .rename(columns={"line_total": "total_sales"})
+    .sort_values("total_sales", ascending=False)
 )
 
-category_sales
-```
-
-컬럼명을 더 읽기 쉽게 바꿀 수 있습니다.
-
-```python
-category_sales = category_sales.rename(columns={
-    "line_total": "total_sales"
-})
-
-category_sales
-```
-
-카테고리별 매출 비중도 계산합니다.
-
-```python
 category_sales["sales_ratio"] = (
     category_sales["total_sales"] / category_sales["total_sales"].sum() * 100
 )
@@ -523,8 +431,6 @@ product_sales = (
 product_sales.head(10)
 ```
 
-이 결과를 통해 어떤 상품이 가장 많이 팔렸는지, 어떤 상품이 매출에 크게 기여했는지 확인할 수 있습니다.
-
 ### 월별 매출 집계하기
 
 월별 매출을 계산하려면 주문일 정보가 필요합니다. 주문일은 `orders`에 있고, 매출 금액은 `order_items`에 있습니다. 따라서 두 데이터를 `order_id` 기준으로 연결합니다.
@@ -536,58 +442,17 @@ order_sales = order_items.merge(
     how="left"
 )
 
-order_sales.head()
-```
-
-병합 결과를 확인합니다.
-
-```python
-print("병합 전 order_items:", order_items.shape)
-print("병합 후 order_sales:", order_sales.shape)
-```
-
-주문 정보가 연결되지 않은 행이 있는지 확인합니다.
-
-```python
 order_sales["order_date"].isna().sum()
 ```
 
-`order_date`를 날짜 타입으로 변환합니다.
+`order_date`를 날짜 타입으로 변환하고 주문 월 컬럼을 만듭니다.
 
 ```python
 order_sales["order_date"] = pd.to_datetime(order_sales["order_date"], errors="coerce")
-```
-
-날짜 변환 실패 건수를 확인합니다.
-
-```python
-order_sales["order_date"].isna().sum()
-```
-
-주문 월 컬럼을 만듭니다.
-
-```python
 order_sales["order_month"] = order_sales["order_date"].dt.to_period("M").astype(str)
-order_sales[["order_date", "order_month"]].head()
 ```
 
-`.dt`는 날짜형 컬럼에서 연도, 월, 일 같은 날짜 속성을 꺼낼 때 사용하는 접근자입니다. `to_period("M")`은 날짜를 월 단위 기간으로 바꾸고, `astype(str)`은 이후 저장과 표시가 쉽도록 문자열로 변환합니다.
-
-월별 매출을 계산합니다.
-
-```python
-monthly_sales = (
-    order_sales
-    .groupby("order_month", as_index=False)["line_total"]
-    .sum()
-    .rename(columns={"line_total": "total_sales"})
-    .sort_values("order_month")
-)
-
-monthly_sales
-```
-
-월별 주문 수를 함께 계산하고 싶다면 다음처럼 작성할 수 있습니다.
+월별 매출과 주문 수를 함께 계산합니다.
 
 ```python
 monthly_summary = (
@@ -607,7 +472,7 @@ monthly_summary
 
 ### 고객별 구매 금액 집계하기
 
-고객별 구매 금액을 계산하려면 `orders`, `order_items`, `customers`를 연결해야 합니다. 먼저 주문 상세와 주문 데이터를 연결한 `order_sales`를 사용합니다.
+고객별 구매 금액을 계산하려면 `orders`, `order_items`, `customers`를 연결해야 합니다.
 
 ```python
 customer_sales_base = order_sales.merge(
@@ -616,12 +481,6 @@ customer_sales_base = order_sales.merge(
     how="left"
 )
 
-customer_sales_base.head()
-```
-
-고객별 구매 금액과 주문 횟수를 계산합니다.
-
-```python
 customer_sales = (
     customer_sales_base
     .groupby(["customer_id", "name", "city"], as_index=False)
@@ -635,7 +494,7 @@ customer_sales = (
 customer_sales.head(10)
 ```
 
-고객 단위 집계를 더 엄밀하게 하려면 먼저 `customer_id`만 기준으로 매출과 주문 수를 집계한 뒤, `city`나 `name` 같은 고객 속성을 나중에 병합하는 방식도 사용할 수 있습니다. 이번 샘플 데이터에서는 고객별 도시와 이름이 하나로 유지된다는 전제에서 함께 묶어 집계합니다.
+고객 단위 집계를 더 엄밀하게 하려면 먼저 `customer_id`만 기준으로 매출과 주문 수를 집계한 뒤, `city`나 `name` 같은 고객 속성을 나중에 병합하는 방식도 사용할 수 있습니다.
 
 ### 분석 결과 저장하기
 
@@ -649,12 +508,6 @@ customer_sales.to_csv(report_dir / "ch04_customer_sales.csv", index=False)
 ```
 
 Windows Excel에서 한글이 포함된 CSV를 바로 열 계획이라면 `to_csv(..., encoding="utf-8-sig")` 옵션을 사용할 수 있습니다. Python이나 Jupyter에서 다시 읽는 용도라면 기본 UTF-8 저장만으로도 충분합니다.
-
-저장된 파일 목록을 확인합니다.
-
-```python
-list(report_dir.glob("ch04_*.csv"))
-```
 
 ## 8. 반복되는 분석을 함수로 정리하기
 
@@ -822,68 +675,20 @@ LLM은 결과 해석 문장을 다듬는 데 유용하지만, 데이터에 없�
 
 ## 10. 결과를 읽는 방법
 
-이번 장의 결과는 최종 인사이트라기보다 pandas 기본 분석을 통해 만든 기초 요약 결과입니다. 기초 요약표를 읽을 때는 “무엇이 높고 낮은가”와 “왜 그런가”를 구분해야 합니다.
+이번 장의 결과는 최종 인사이트라기보다 pandas 기본 분석을 통해 만든 기초 요약표입니다. 기초 요약표를 읽을 때는 다음 질문을 함께 확인합니다.
 
-예를 들어 30세 이상 고객을 필터링했다면 결과는 다음처럼 해석할 수 있습니다.
-
-```text
-전체 고객 중 30세 이상 고객만 추출한 결과입니다.
-이 결과는 연령대별 고객 분석이나 특정 고객군 분석의 기초 자료로 사용할 수 있습니다.
-```
-
-하지만 여기서 바로 “30세 이상 고객이 더 중요한 고객이다”라고 결론 내리면 안 됩니다. 구매 금액, 주문 횟수, 가입 기간 등을 함께 확인해야 합니다.
-
-가격이 높은 상품을 정렬하면 고가 상품 목록을 확인할 수 있습니다.
-
-```text
-상품 가격이 높은 순서로 정렬한 결과입니다.
-이 결과는 고가 상품군을 확인하는 데 유용하지만, 실제 매출 기여도를 판단하려면 판매 수량과 주문 데이터를 함께 분석해야 합니다.
-```
-
-가격이 높다고 해서 반드시 매출이 높은 것은 아닙니다. 판매 수량이 적으면 매출 기여도는 낮을 수 있습니다.
-
-카테고리별 매출 결과는 어떤 상품군이 매출에 많이 기여했는지 보여줍니다.
-
-```text
-전자기기 카테고리의 매출 비중이 가장 높게 나타났습니다.
-다만 이 결과가 판매 수량 때문인지, 상품 단가가 높기 때문인지는 추가 분석이 필요합니다.
-```
-
-월별 매출은 시간에 따른 매출 흐름을 확인하는 데 사용합니다. 특정 월의 매출 증가 또는 감소를 확인할 수 있지만, 그 원인을 설명하려면 프로모션, 신규 상품 출시, 계절성, 주문 수 변화 등을 추가로 확인해야 합니다. 그래프를 통한 추세 분석은 이후 시각화 장에서 다룹니다.
-
-고객별 구매 금액은 우수 고객 분석의 기초가 됩니다. 다만 일회성 고액 구매 고객과 반복 구매 고객은 구분해서 해석해야 합니다. 따라서 고객별 구매 금액만 보는 것보다 주문 횟수와 함께 보는 것이 좋습니다.
-
-## 11. 기본 분석에서 다음 단계로
-
-pandas 기본 분석은 거의 모든 분석 프로젝트의 출발점입니다. 데이터가 크거나 복잡해도 기본 흐름은 크게 다르지 않습니다.
-
-분석을 마칠 때는 다음 항목을 점검해 봅니다.
-
-| 점검 항목 | 확인 |
+| 결과 | 확인할 질문 |
 | --- | --- |
-| 실제 컬럼명을 확인했는가? | □ |
-| 필요한 컬럼만 선택했는가? | □ |
-| 필터링 조건을 괄호로 명확히 작성했는가? | □ |
-| 문자열 값의 실제 표기를 확인했는가? | □ |
-| 정렬 기준과 오름차순/내림차순을 확인했는가? | □ |
-| 파생 컬럼 계산식이 맞는가? | □ |
-| `groupby()` 기준 컬럼이 적절한가? | □ |
-| 집계 함수가 분석 목적에 맞는가? | □ |
-| `merge()` 기준 컬럼이 양쪽 데이터에 모두 있는가? | □ |
-| `merge()` 후 행 수와 결측치를 확인했는가? | □ |
-| 날짜 컬럼을 안전하게 변환했는가? | □ |
-| LLM이 만든 코드가 실제 데이터 구조와 일치하는가? | □ |
-| 분석 결과를 과장해서 해석하지 않았는가? | □ |
-| 결과 파일을 적절한 폴더에 저장했는가? | □ |
+| 카테고리별 매출 | 매출이 큰 카테고리는 무엇인가? 판매 수량과 단가를 함께 봐야 하는가? |
+| 상품별 매출 | 특정 상품에 매출이 집중되는가? |
+| 월별 매출 | 매출 추이가 증가하는가, 감소하는가? |
+| 고객별 구매 금액 | 일부 고객에게 매출이 집중되는가? 개인정보 표현은 안전한가? |
+| 병합 결과 | 병합 후 행 수와 누락값이 예상과 맞는가? |
 
-직접 더 연습해 보고 싶다면 다음을 해볼 수 있습니다.
+중요한 것은 숫자를 계산하는 것에서 멈추지 않는 것입니다. 왜 이런 결과가 나왔는지 가설을 세울 수 있지만, 데이터에 없는 원인을 단정해서는 안 됩니다.
 
-- 고객 데이터에서 `customer_id`, `gender`, `age`, `city` 컬럼만 선택합니다.
-- 30세 이상 고객만 필터링합니다.
-- 상품 데이터를 가격이 높은 순서로 정렬합니다.
-- 주문 상세 데이터에 `line_total` 컬럼을 생성합니다.
-- 상품 데이터와 주문 상세 데이터를 병합한 뒤 카테고리별 매출을 계산합니다.
-- 월별 매출 요약표를 작성하고 CSV로 저장합니다.
-- LLM에게 카테고리별 매출 분석 코드를 작성하게 한 뒤, 실제 데이터 구조와 맞지 않는 부분을 검토합니다.
+## 11. 다음 장으로 이어지는 흐름
 
-이번 장에서는 필요한 데이터를 선택하고, 조건에 맞게 필터링하고, 정렬하고, 그룹별로 집계하는 방법을 살펴보았습니다. 다음 장에서는 이 기본 분석을 더 안정적으로 만들기 위해 결측치, 중복값, 데이터 타입, 날짜, 문자열 표기 문제를 체계적으로 정리하는 데이터 전처리 과정을 다룹니다.
+이번 장에서는 pandas로 데이터를 선택하고, 필터링하고, 정렬하고, 파생 컬럼을 만들고, 그룹별 집계를 수행했습니다. 또한 여러 CSV 파일을 `merge()`로 연결해 카테고리별 매출, 월별 매출, 고객별 구매 금액을 계산했습니다.
+
+다음 장에서는 이런 분석을 더 믿을 수 있게 만들기 위해 데이터 전처리를 다룹니다. 결측치, 중복, 타입 오류, 날짜 형식, 이상값 후보를 정리해야 분석 결과가 더 안정적으로 해석될 수 있습니다.
