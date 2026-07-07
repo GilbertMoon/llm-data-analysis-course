@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="620" viewBox="0 0 1600 620" role="img" aria-labelledby="title desc">
+  <title id="title">matplotlib 기본 그래프 구조</title>
+  <desc id="desc">matplotlib 그래프의 제목, x축, y축, 데이터 영역, 눈금, 레이블 구성 요소</desc>
+  <defs>
+    <linearGradient id="head" x1="0" x2="1"><stop offset="0%" stop-color="#334155"/><stop offset="100%" stop-color="#2563eb"/></linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#0f172a" flood-opacity="0.12"/></filter>
+    <style>
+      .bg{fill:#f8fafc}.h{fill:url(#head)} text{font-family:'Pretendard','Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif}
+      .title{font-size:38px;font-weight:800;fill:#fff}.sub{font-size:18px;font-weight:600;fill:#e2e8f0}
+      .plot{fill:#fff;stroke:#cbd5e1;stroke-width:2;filter:url(#shadow)}.grid{stroke:#e2e8f0;stroke-width:1}.axis{stroke:#0f172a;stroke-width:3}.bar{fill:#bfdbfe;stroke:#60a5fa;stroke-width:2}
+      .label{font-size:20px;font-weight:800;fill:#1d4ed8}.small{font-size:16px;font-weight:650;fill:#475569}.tick{font-size:15px;font-weight:600;fill:#64748b}.call{fill:#eff6ff;stroke:#93c5fd;stroke-width:1.5}
+      .code{font-family:'D2Coding','Consolas',monospace;font-size:18px;font-weight:650;fill:#334155}.codeBox{fill:#fff;stroke:#cbd5e1;stroke-width:2;filter:url(#shadow)}
+    </style>
+  </defs>
+  <rect class="bg" width="1600" height="620" rx="32"/>
+  <rect class="h" x="50" y="36" width="1500" height="92" rx="26"/>
+  <text class="title" x="86" y="92">matplotlib 기본 그래프 구조</text>
+  <text class="sub" x="86" y="118">그래프는 데이터 영역, 제목, 축 이름, 눈금, 레이블로 구성됩니다</text>
+
+  <g transform="translate(145 165)">
+    <rect class="plot" width="780" height="360" rx="24"/>
+    <text class="label" x="390" y="50" text-anchor="middle">카테고리별 매출</text>
+    <line class="grid" x1="95" y1="105" x2="710" y2="105"/><line class="grid" x1="95" y1="165" x2="710" y2="165"/><line class="grid" x1="95" y1="225" x2="710" y2="225"/><line class="grid" x1="95" y1="285" x2="710" y2="285"/>
+    <line class="axis" x1="95" y1="305" x2="710" y2="305"/><line class="axis" x1="95" y1="85" x2="95" y2="305"/>
+    <rect class="bar" x="145" y="160" width="70" height="145" rx="8"/><rect class="bar" x="270" y="120" width="70" height="185" rx="8"/><rect class="bar" x="395" y="205" width="70" height="100" rx="8"/><rect class="bar" x="520" y="245" width="70" height="60" rx="8"/>
+    <text class="tick" x="180" y="330" text-anchor="middle">전자기기</text><text class="tick" x="305" y="330" text-anchor="middle">생활용품</text><text class="tick" x="430" y="330" text-anchor="middle">패션</text><text class="tick" x="555" y="330" text-anchor="middle">식품</text>
+    <text class="label" x="402" y="354" text-anchor="middle">x축: 카테고리</text>
+    <text class="label" x="38" y="210" transform="rotate(-90 38 210)" text-anchor="middle">y축: 총매출</text>
+  </g>
+
+  <g transform="translate(1005 170)">
+    <rect class="codeBox" width="450" height="335" rx="24"/>
+    <text class="label" x="28" y="48">코드 구성 요소</text>
+    <text class="code" x="28" y="92">plt.figure(figsize=(10, 5))</text>
+    <text class="code" x="28" y="132">plt.bar(x_data, y_data)</text>
+    <text class="code" x="28" y="172">plt.title("그래프 제목")</text>
+    <text class="code" x="28" y="212">plt.xlabel("x축 이름")</text>
+    <text class="code" x="28" y="252">plt.ylabel("y축 이름")</text>
+    <text class="code" x="28" y="292">plt.tight_layout()</text>
+  </g>
+
+  <rect class="call" x="260" y="540" width="1080" height="42" rx="14"/>
+  <text class="small" x="800" y="567" text-anchor="middle">한글이 깨질 때는 Malgun Gothic, AppleGothic, NanumGothic 등 환경별 한글 폰트를 설정합니다</text>
+</svg>
