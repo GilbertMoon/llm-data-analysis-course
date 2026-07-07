@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720">
+  <defs>
+    <style>
+      .bg{fill:#f8fafc}.title{font:700 34px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#0f172a}.sub{font:500 18px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#334155}.hub{fill:#dbeafe;stroke:#93c5fd;stroke-width:3;rx:26;ry:26}.card{fill:#ffffff;stroke:#cbd5e1;stroke-width:2;rx:18;ry:18}.head{font:700 24px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#0f172a}.txt{font:500 16px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#334155}.line{stroke:#64748b;stroke-width:3}.footer{font:500 18px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#1e40af}
+    </style>
+  </defs>
+  <rect class="bg" width="1200" height="720"/>
+  <text x="600" y="58" text-anchor="middle" class="title">EDA 질문 맵</text>
+  <text x="600" y="90" text-anchor="middle" class="sub">온라인 쇼핑몰 데이터를 여러 관점으로 나누어 본다.</text>
+  <rect x="460" y="290" width="280" height="110" class="hub"/>
+  <text x="600" y="335" text-anchor="middle" class="head">온라인 쇼핑몰 EDA</text>
+  <text x="600" y="365" text-anchor="middle" class="txt">질문 정리</text>
+  <rect x="100" y="160" width="250" height="130" class="card"/>
+  <text x="225" y="205" text-anchor="middle" class="head">고객</text>
+  <text x="225" y="240" text-anchor="middle" class="txt">도시 · 연령 · 구매</text>
+  <rect x="850" y="160" width="250" height="130" class="card"/>
+  <text x="975" y="205" text-anchor="middle" class="head">상품</text>
+  <text x="975" y="240" text-anchor="middle" class="txt">카테고리 · 가격 · 수량</text>
+  <rect x="100" y="450" width="250" height="130" class="card"/>
+  <text x="225" y="495" text-anchor="middle" class="head">주문</text>
+  <text x="225" y="530" text-anchor="middle" class="txt">상태 · 결제 · 월별 주문</text>
+  <rect x="850" y="450" width="250" height="130" class="card"/>
+  <text x="975" y="495" text-anchor="middle" class="head">매출</text>
+  <text x="975" y="530" text-anchor="middle" class="txt">카테고리 · 월별 · 평균 주문 금액</text>
+  <line x1="460" y1="335" x2="350" y2="225" class="line"/>
+  <line x1="740" y1="335" x2="850" y2="225" class="line"/>
+  <line x1="460" y1="355" x2="350" y2="515" class="line"/>
+  <line x1="740" y1="355" x2="850" y2="515" class="line"/>
+  <text x="600" y="650" text-anchor="middle" class="footer">EDA 질문은 고객, 상품, 주문, 매출 관점으로 정리할 수 있습니다.</text>
+</svg>
