@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="560" viewBox="0 0 1600 560" role="img" aria-labelledby="title desc">
+  <title id="title">시각화 결과를 보고서와 발표 자료로 연결하는 흐름</title>
+  <desc id="desc">그래프 파일을 저장하고 해석 포인트를 정리해 보고서와 발표 자료로 연결하는 흐름</desc>
+  <defs>
+    <linearGradient id="head" x1="0" x2="1"><stop offset="0%" stop-color="#2563eb"/><stop offset="100%" stop-color="#0f766e"/></linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#0f172a" flood-opacity="0.12"/></filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#2563eb"/></marker>
+    <style>
+      .bg{fill:#f8fafc}.h{fill:url(#head)} text{font-family:'Pretendard','Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif}
+      .title{font-size:38px;font-weight:800;fill:#fff}.sub{font-size:18px;font-weight:600;fill:#dbeafe}.card{fill:#fff;stroke:#cbd5e1;stroke-width:2;filter:url(#shadow)}
+      .tag{fill:#eff6ff;stroke:#93c5fd;stroke-width:1.5}.tagText{font-size:16px;font-weight:900;fill:#2563eb}.main{font-size:25px;font-weight:800;fill:#0f172a}.item{font-size:18px;font-weight:650;fill:#334155}.arr{fill:none;stroke:#2563eb;stroke-width:4;marker-end:url(#arrow)}
+      .out{fill:#ecfdf5;stroke:#86efac;stroke-width:2}.outText{font-size:22px;font-weight:800;fill:#166534}
+    </style>
+  </defs>
+  <rect class="bg" width="1600" height="560" rx="32"/>
+  <rect class="h" x="50" y="36" width="1500" height="92" rx="26"/>
+  <text class="title" x="86" y="92">시각화 결과를 보고서로 연결하기</text>
+  <text class="sub" x="86" y="118">그래프는 파일로 저장하고, 목적·해석·주의사항을 함께 정리해야 합니다</text>
+
+  <g transform="translate(85 190)">
+    <rect class="card" width="285" height="190" rx="24"/>
+    <rect class="tag" x="28" y="24" width="92" height="28" rx="14"/><text class="tagText" x="74" y="43" text-anchor="middle">1단계</text>
+    <text class="main" x="28" y="84">그래프 생성</text>
+    <text class="item" x="28" y="124">• 막대그래프</text>
+    <text class="item" x="28" y="154">• 선 그래프</text>
+    <text class="item" x="28" y="184">• 히스토그램·산점도</text>
+  </g>
+  <path class="arr" d="M380 285H455"/>
+  <g transform="translate(470 190)">
+    <rect class="card" width="285" height="190" rx="24"/>
+    <rect class="tag" x="28" y="24" width="92" height="28" rx="14"/><text class="tagText" x="74" y="43" text-anchor="middle">2단계</text>
+    <text class="main" x="28" y="84">이미지 저장</text>
+    <text class="item" x="28" y="124">• 파일명 규칙 정리</text>
+    <text class="item" x="28" y="154">• 보고서용 해상도</text>
+    <text class="item" x="28" y="184">• figures 폴더 관리</text>
+  </g>
+  <path class="arr" d="M765 285H840"/>
+  <g transform="translate(855 190)">
+    <rect class="card" width="285" height="190" rx="24"/>
+    <rect class="tag" x="28" y="24" width="92" height="28" rx="14"/><text class="tagText" x="74" y="43" text-anchor="middle">3단계</text>
+    <text class="main" x="28" y="84">해석 포인트</text>
+    <text class="item" x="28" y="124">• 관찰 결과</text>
+    <text class="item" x="28" y="154">• 추가 확인 질문</text>
+    <text class="item" x="28" y="184">• 해석 시 주의사항</text>
+  </g>
+  <path class="arr" d="M1150 285H1225"/>
+  <g transform="translate(1240 190)">
+    <rect class="card" width="285" height="190" rx="24"/>
+    <rect class="tag" x="28" y="24" width="92" height="28" rx="14"/><text class="tagText" x="74" y="43" text-anchor="middle">4단계</text>
+    <text class="main" x="28" y="84">보고서 작성</text>
+    <text class="item" x="28" y="124">• 시각화 목적</text>
+    <text class="item" x="28" y="154">• 그래프별 설명</text>
+    <text class="item" x="28" y="184">• 다음 분석 방향</text>
+  </g>
+
+  <rect class="out" x="420" y="440" width="760" height="48" rx="18"/>
+  <text class="outText" x="800" y="472" text-anchor="middle">최종 산출물: 그래프 파일 + 시각화 요약 보고서 + 발표 자료</text>
+</svg>
