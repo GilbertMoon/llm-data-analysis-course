@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720">
+  <defs><style>.bg{fill:#f8fafc}.title{font:700 34px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#0f172a}.sub{font:500 18px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#334155}.box{fill:#fff;stroke:#cbd5e1;stroke-width:2;rx:18;ry:18}.accent{fill:#dbeafe;stroke:#93c5fd;stroke-width:2;rx:18;ry:18}.head{font:700 21px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#0f172a}.txt{font:500 15px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#334155}.arrow{stroke:#64748b;stroke-width:3;fill:none;marker-end:url(#a)}.footer{font:500 18px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#1e40af}</style><marker id="a" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><polygon points="0 0,10 4,0 8" fill="#64748b"/></marker></defs>
+  <rect class="bg" width="1200" height="720"/>
+  <text x="600" y="58" text-anchor="middle" class="title">API 수집 흐름</text>
+  <text x="600" y="90" text-anchor="middle" class="sub">요청을 보내고 응답을 확인한 뒤 분석 가능한 표로 저장한다.</text>
+  <rect x="70" y="235" width="140" height="100" class="box"/><text x="140" y="275" text-anchor="middle" class="head">문서 확인</text><text x="140" y="303" text-anchor="middle" class="txt">주소 · 파라미터</text>
+  <rect x="250" y="235" width="140" height="100" class="box"/><text x="320" y="275" text-anchor="middle" class="head">요청 구성</text><text x="320" y="303" text-anchor="middle" class="txt">headers · params</text>
+  <rect x="430" y="235" width="140" height="100" class="box"/><text x="500" y="275" text-anchor="middle" class="head">API 호출</text><text x="500" y="303" text-anchor="middle" class="txt">requests.get</text>
+  <rect x="610" y="235" width="140" height="100" class="box"/><text x="680" y="275" text-anchor="middle" class="head">응답 확인</text><text x="680" y="303" text-anchor="middle" class="txt">상태 코드</text>
+  <rect x="790" y="235" width="140" height="100" class="box"/><text x="860" y="275" text-anchor="middle" class="head">표 변환</text><text x="860" y="303" text-anchor="middle" class="txt">DataFrame</text>
+  <rect x="970" y="235" width="160" height="100" class="accent"/><text x="1050" y="275" text-anchor="middle" class="head">CSV 저장</text><text x="1050" y="303" text-anchor="middle" class="txt">data/external</text>
+  <path class="arrow" d="M210 285H245"/><path class="arrow" d="M390 285H425"/><path class="arrow" d="M570 285H605"/><path class="arrow" d="M750 285H785"/><path class="arrow" d="M930 285H965"/>
+  <rect x="380" y="435" width="440" height="100" class="accent"/>
+  <text x="600" y="475" text-anchor="middle" class="head">확인할 것</text>
+  <text x="600" y="505" text-anchor="middle" class="txt">공식 문서, 요청 제한, 응답 구조, 저장 파일</text>
+  <text x="600" y="640" text-anchor="middle" class="footer">API 결과는 수집 시점과 요청 조건의 영향을 받습니다.</text>
+</svg>
