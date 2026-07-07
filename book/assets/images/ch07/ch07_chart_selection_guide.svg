@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="620" viewBox="0 0 1600 620" role="img" aria-labelledby="title desc">
+  <title id="title">분석 질문별 그래프 선택 가이드</title>
+  <desc id="desc">비교, 추세, 분포, 관계, 상위 항목, 비율에 적합한 그래프 선택 가이드</desc>
+  <defs>
+    <linearGradient id="head" x1="0" x2="1"><stop offset="0%" stop-color="#0f766e"/><stop offset="100%" stop-color="#2563eb"/></linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#0f172a" flood-opacity="0.12"/></filter>
+    <style>
+      .bg{fill:#f8fafc}.h{fill:url(#head)} text{font-family:'Pretendard','Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif}
+      .title{font-size:38px;font-weight:800;fill:#fff}.sub{font-size:18px;font-weight:600;fill:#ccfbf1}
+      .card{fill:#fff;stroke:#cbd5e1;stroke-width:2;filter:url(#shadow)}.tag{fill:#eff6ff;stroke:#93c5fd;stroke-width:1.5}.tagText{font-size:16px;font-weight:900;fill:#2563eb}
+      .main{font-size:25px;font-weight:800;fill:#0f172a}.chart{font-size:20px;font-weight:800;fill:#0f766e}.q{font-size:17px;font-weight:650;fill:#475569}.foot{fill:#fff7ed;stroke:#fdba74;stroke-width:2}.ft{font-size:20px;font-weight:800;fill:#9a3412}
+    </style>
+  </defs>
+  <rect class="bg" width="1600" height="620" rx="32"/>
+  <rect class="h" x="50" y="36" width="1500" height="92" rx="26"/>
+  <text class="title" x="86" y="92">분석 질문별 그래프 선택 가이드</text>
+  <text class="sub" x="86" y="118">질문의 성격을 먼저 정하면 적합한 그래프를 고르기 쉽습니다</text>
+
+  <g transform="translate(90 170)"><rect class="card" width="440" height="145" rx="24"/><rect class="tag" x="26" y="24" width="82" height="28" rx="14"/><text class="tagText" x="67" y="43" text-anchor="middle">비교</text><text class="main" x="26" y="82">범주별 크기 비교</text><text class="chart" x="26" y="112">추천: 막대그래프</text><text class="q" x="26" y="138">예: 카테고리별 매출은 어떻게 다른가?</text></g>
+  <g transform="translate(580 170)"><rect class="card" width="440" height="145" rx="24"/><rect class="tag" x="26" y="24" width="82" height="28" rx="14"/><text class="tagText" x="67" y="43" text-anchor="middle">추세</text><text class="main" x="26" y="82">시간 흐름 확인</text><text class="chart" x="26" y="112">추천: 선 그래프</text><text class="q" x="26" y="138">예: 월별 매출은 어떻게 변하는가?</text></g>
+  <g transform="translate(1070 170)"><rect class="card" width="440" height="145" rx="24"/><rect class="tag" x="26" y="24" width="82" height="28" rx="14"/><text class="tagText" x="67" y="43" text-anchor="middle">분포</text><text class="main" x="26" y="82">값의 몰림과 범위 확인</text><text class="chart" x="26" y="112">추천: 히스토그램</text><text class="q" x="26" y="138">예: 상품 가격은 어느 구간에 몰려 있는가?</text></g>
+
+  <g transform="translate(90 355)"><rect class="card" width="440" height="145" rx="24"/><rect class="tag" x="26" y="24" width="82" height="28" rx="14"/><text class="tagText" x="67" y="43" text-anchor="middle">관계</text><text class="main" x="26" y="82">두 숫자형 변수 탐색</text><text class="chart" x="26" y="112">추천: 산점도</text><text class="q" x="26" y="138">예: 가격과 판매 수량은 관계가 있는가?</text></g>
+  <g transform="translate(580 355)"><rect class="card" width="440" height="145" rx="24"/><rect class="tag" x="26" y="24" width="96" height="28" rx="14"/><text class="tagText" x="74" y="43" text-anchor="middle">상위 항목</text><text class="main" x="26" y="82">순위와 크기 비교</text><text class="chart" x="26" y="112">추천: 가로 막대그래프</text><text class="q" x="26" y="138">예: 구매 금액 상위 고객은 누구인가?</text></g>
+  <g transform="translate(1070 355)"><rect class="card" width="440" height="145" rx="24"/><rect class="tag" x="26" y="24" width="82" height="28" rx="14"/><text class="tagText" x="67" y="43" text-anchor="middle">비율</text><text class="main" x="26" y="82">전체 중 구성 비중</text><text class="chart" x="26" y="112">추천: 막대그래프 또는 파이 차트</text><text class="q" x="26" y="138">예: 주문 상태별 비중은 어떻게 되는가?</text></g>
+
+  <rect class="foot" x="375" y="535" width="850" height="42" rx="14"/>
+  <text class="ft" x="800" y="563" text-anchor="middle">주의: 파이 차트는 항목이 많거나 차이가 작으면 비교가 어렵습니다</text>
+</svg>
