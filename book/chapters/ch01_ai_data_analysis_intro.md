@@ -105,8 +105,8 @@ AI와 LLM을 활용하는 분석에서도 이 기본 흐름은 크게 달라지�
 
 아래 그림은 이 책에서 다룰 전체 데이터 분석 흐름을 요약한 것입니다.
 
-<figure class="figure">
-  <img src="../assets/images/ch01/ch01_data_analysis_flow.svg" alt="데이터 분석 전체 흐름도">
+<figure class='figure'>
+  <img src='../assets/images/ch01/ch01_data_analysis_flow.svg' alt='데이터 분석 전체 흐름도'>
   <figcaption>그림 1-1. 데이터 분석 전체 흐름도</figcaption>
 </figure>
 
@@ -226,8 +226,8 @@ products.product_id    ── order_items.product_id
 
 파일을 연결한다는 것은 두 표에서 같은 의미를 가진 기준 컬럼을 사용해 하나의 분석용 표로 합친다는 뜻입니다. 예를 들어 고객별 구매금액을 분석하려면 `customers.csv`, `orders.csv`, `order_items.csv`를 연결해야 합니다. 상품 카테고리별 매출을 분석하려면 `products.csv`와 `order_items.csv`를 연결해야 합니다.
 
-<figure class="figure">
-  <img src="../assets/images/ch01/ch01_shopping_data_relationship.svg" alt="온라인 쇼핑몰 데이터 관계도">
+<figure class='figure'>
+  <img src='../assets/images/ch01/ch01_shopping_data_relationship.svg' alt='온라인 쇼핑몰 데이터 관계도'>
   <figcaption>그림 1-2. 온라인 쇼핑몰 데이터 관계도</figcaption>
 </figure>
 
@@ -348,13 +348,21 @@ my-llm-data-analysis-course/
 
 ## 10. 실습을 시작하는 기본 흐름
 
-프로젝트 폴더가 준비되었다면 VS Code에서 열고 가상환경을 만듭니다. GitHub를 사용한다면 개인 저장소로 관리할 수 있고, 로컬 폴더만 사용해도 기본 실습은 진행할 수 있습니다.
+이 절에서는 실제로 `notebooks/ch01_ai_data_analysis_intro.ipynb` 파일을 열고 첫 번째 셀을 직접 실행해 봅니다. 초보자에게는 프로젝트 폴더, 가상환경, Notebook 커널, 상대 경로가 서로 비슷하게 느껴져 많이 헷갈릴 수 있습니다. 아래 순서를 그대로 따라가면 첫 실행을 비교적 안정적으로 끝낼 수 있습니다.
 
-VS Code가 설치되어 있다면 프로젝트 폴더를 바로 열 수 있습니다.
+### 10-1. 프로젝트 폴더를 VS Code에서 연다
+
+프로젝트 폴더가 준비되었다면 먼저 VS Code에서 해당 폴더를 엽니다. GitHub를 사용한다면 개인 저장소로 관리할 수 있고, 로컬 폴더만 사용해도 기본 실습은 진행할 수 있습니다.
+
+VS Code가 설치되어 있다면 프로젝트 폴더에서 다음 명령으로 바로 열 수 있습니다.
 
 ```bash
 code .
 ```
+
+중요한 점은 VS Code에서 열려 있는 폴더가 `llm-data-analysis-course` 프로젝트 루트여야 한다는 것입니다. 왼쪽 Explorer에 `book`, `data`, `notebooks`, `scripts` 같은 폴더가 함께 보이면 정상입니다.
+
+### 10-2. 가상환경을 만들고 패키지를 설치한다
 
 Windows PowerShell 기준으로 가상환경을 만들고 활성화합니다.
 
@@ -381,6 +389,10 @@ python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
+터미널 왼쪽에 `(.venv)`가 보이면 현재 터미널 세션은 프로젝트 가상환경을 사용하고 있다는 뜻입니다. 다만 이것만으로 Notebook까지 자동 설정되는 것은 아닙니다. Notebook은 나중에 커널을 별도로 선택해야 합니다.
+
+### 10-3. 샘플 데이터를 먼저 생성한다
+
 설치가 끝났다면 샘플 데이터를 생성합니다.
 
 ```bash
@@ -396,28 +408,132 @@ orders.csv
 order_items.csv
 ```
 
-이제 Notebook을 열어 데이터를 확인할 수 있습니다. VS Code에서 `notebooks/` 폴더를 열고 장별 Notebook을 실행합니다. Notebook을 실행할 때는 오른쪽 위 커널이 방금 만든 `.venv` 환경으로 선택되어 있는지 확인합니다.
+이 단계가 빠지면 나중에 Notebook에서 `FileNotFoundError`가 발생할 수 있습니다. 즉, Notebook 오류처럼 보여도 실제 원인은 아직 CSV 파일이 만들어지지 않았기 때문일 수 있습니다.
 
-처음 확인할 수 있는 간단한 코드는 다음과 같습니다.
+### 10-4. 1장 Notebook 파일을 연다
+
+이제 VS Code 왼쪽 Explorer에서 `notebooks/` 폴더를 열고 `ch01_ai_data_analysis_intro.ipynb` 파일을 클릭합니다. Notebook 상단 탭에 파일 이름이 보이고, 본문에 Markdown 셀과 Code 셀이 함께 보이면 정상입니다.
+
+<figure class='figure'>
+  <img src='../assets/images/ch01/ch01_open_notebook_flow.svg' alt='VS Code에서 1장 Notebook을 열고 실행하는 흐름'>
+  <figcaption>그림 1-3. VS Code에서 1장 Notebook을 열고 실행하는 흐름</figcaption>
+</figure>
+
+Notebook은 일반 `.py` 파일과 다르게 셀 단위로 실행합니다. 따라서 “파일을 열었다”와 “코드가 실행된다”는 서로 다른 단계입니다. 파일을 연 다음, 실행할 Python 환경(커널)을 골라야 실제 실행이 됩니다.
+
+### 10-5. 처음 실행에서 가장 헷갈리는 부분: 커널을 선택한다
+
+첫 번째 셀을 실행하려고 하거나, 오른쪽 위 `Select Kernel` 영역을 누르면 커널 선택 창이 나타납니다. 여기서는 보통 다음 순서로 선택합니다.
+
+1. `Python Environments...` 선택
+2. 목록에서 `.venv (Python 3.11.x)` 또는 `.venv\Scripts\python.exe` 선택
+
+반대로 지금 단계에서는 아래 항목을 선택하지 않는 것이 좋습니다.
+
+- `base (Anaconda)`
+- `Python Global Env`
+- `Existing Jupyter Server...`
+
+이 항목들은 다른 프로젝트용 환경이거나 외부 서버 연결용일 수 있어 패키지 불일치, 경로 혼동, `ModuleNotFoundError`를 일으킬 수 있습니다.
+
+<figure class='figure'>
+  <img src='../assets/images/ch01/ch01_kernel_selection_guide.svg' alt='Notebook 커널 선택 시 .venv 환경을 고르는 예시'>
+  <figcaption>그림 1-4. Notebook 커널 선택 시 `.venv` 환경을 고르는 예시</figcaption>
+</figure>
+
+초보자가 특히 헷갈리는 포인트는 다음과 같습니다.
+
+- 터미널에 `(.venv)`가 보인다고 해서 Notebook도 자동으로 `.venv`를 쓰는 것은 아닙니다.
+- Notebook 오른쪽 위 커널도 반드시 `.venv`로 맞춰야 합니다.
+- 커널 선택 창이 처음에 뜨는 것은 정상 동작입니다.
+
+만약 `.venv`가 목록에 보이지 않는다면 VS Code 창을 한 번 새로고침하거나, 터미널에서 아래 명령을 실행한 뒤 다시 시도할 수 있습니다.
+
+```powershell
+python -m ipykernel install --user --name llm-data-analysis-course --display-name 'llm-data-analysis-course'
+```
+
+### 10-6. 첫 번째 셀을 직접 실행해 본다
+
+`notebooks/ch01_ai_data_analysis_intro.ipynb`의 첫 번째 코드 셀은 아래와 같습니다.
 
 ```python
 from pathlib import Path
+
 import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
 
-print(Path.cwd())
-
-customers = pd.read_csv("data/raw/customers.csv")
-customers.head()
+DATA_DIR = Path('../data/raw')
+sns.set_theme(style='whitegrid')
 ```
 
-만약 Notebook이 `notebooks` 폴더 기준으로 실행되어 파일을 찾지 못한다면 경로를 다음처럼 바꿔야 할 수 있습니다.
+이 셀은 패키지를 import하고, 데이터 폴더 위치를 `DATA_DIR`에 저장하고, seaborn 기본 스타일을 설정하는 역할을 합니다. 셀 왼쪽의 실행 버튼(▶)을 누르거나 `Shift + Enter`를 누르면 실행됩니다.
+
+이 셀은 표나 그래프를 출력하지 않기 때문에, 실행 후 아무 결과가 화면에 바로 보이지 않아도 이상한 것이 아닙니다. 다음 중 하나가 보이면 정상 실행으로 판단할 수 있습니다.
+
+- 셀 왼쪽에 초록 체크 표시가 보임
+- 실행 시간(예: `30.8s`)이 표시됨
+- 오류 메시지 없이 다음 셀로 이동함
+
+처음 실행할 때는 아래 메시지가 잠깐 보일 수 있습니다.
+
+```text
+Matplotlib is building the font cache; this may take a moment.
+```
+
+이 메시지는 오류가 아니라 matplotlib가 폰트 정보를 처음 캐시로 만드는 정상 동작입니다. 보통 첫 실행 때만 나타나고, 다음부터는 훨씬 빠르게 실행됩니다.
+
+### 10-7. 데이터가 실제로 읽히는지 한 번 더 확인한다
+
+첫 셀까지 성공했다면, 아래 코드를 새 셀에 넣거나 예시 셀의 주석을 해제해서 직접 실행해 볼 수 있습니다.
 
 ```python
-customers = pd.read_csv("../data/raw/customers.csv")
+customers = pd.read_csv(DATA_DIR / 'customers.csv')
 customers.head()
 ```
 
-경로 오류가 발생했을 때는 파일이 없는지부터 의심하기보다, 현재 코드가 어느 폴더 기준으로 실행되고 있는지 먼저 확인하는 것이 좋습니다.
+이 코드는 `customers.csv`를 읽고 처음 5행을 보여 줍니다. 여기서 표가 정상적으로 보이면 Notebook, 커널, 패키지, 경로가 모두 기본적으로 맞게 연결된 것입니다.
+
+만약 `ModuleNotFoundError`가 발생하면, 대개 현재 선택한 Notebook 커널에 패키지가 설치되지 않은 경우입니다. 이때는 `.venv` 커널이 맞는지 다시 확인합니다.
+
+만약 `FileNotFoundError`가 발생하면, 다음 두 가지를 우선 확인합니다.
+
+1. `python scripts/generate_sample_data.py`를 이미 실행했는가?
+2. Notebook이 `../data/raw` 경로를 기준으로 데이터를 찾고 있는가?
+
+### 10-8. 왜 `../data/raw` 경로를 쓰는가?
+
+초보자가 가장 많이 혼동하는 부분 중 하나가 상대 경로입니다. `ch01_ai_data_analysis_intro.ipynb` 파일은 `notebooks/` 폴더 안에 있고, CSV 파일은 `data/raw/` 폴더 안에 있습니다. 따라서 Notebook 기준으로는 한 단계 위로 올라간 뒤(`..`) 다시 `data/raw`로 들어가야 합니다.
+
+<figure class='figure'>
+  <img src='../assets/images/ch01/ch01_notebook_relative_path.svg' alt='Notebook에서 ../data/raw 경로를 사용하는 이유'>
+  <figcaption>그림 1-5. Notebook에서 `../data/raw` 경로를 사용하는 이유</figcaption>
+</figure>
+
+즉, 아래 코드는 “현재 Notebook 위치에서 한 단계 위로 올라간 뒤 `data/raw` 폴더를 찾는다”는 의미입니다.
+
+```python
+DATA_DIR = Path('../data/raw')
+```
+
+반대로 프로젝트 루트에서 직접 실행하는 일반 Python 스크립트에서는 `data/raw`라고 쓸 수도 있습니다. 중요한 것은 “현재 코드가 어느 폴더를 기준으로 실행되는가”를 항상 함께 생각하는 습관입니다.
+
+### 10-9. 초보자를 위한 빠른 체크리스트
+
+Notebook이 잘 실행되지 않을 때는 아래 순서로 확인해 보세요.
+
+| 확인 항목 | 정상 상태 | 이상이 있을 때 조치 |
+| --- | --- | --- |
+| 프로젝트 폴더 | Explorer에 `data`, `notebooks`, `scripts`가 함께 보임 | 잘못된 폴더를 열었다면 프로젝트 루트를 다시 연다 |
+| 터미널 가상환경 | 프롬프트에 `(.venv)` 표시 | 가상환경 활성화 명령을 다시 실행 |
+| Notebook 커널 | 오른쪽 위 커널이 `.venv` | `Python Environments...`에서 `.venv` 다시 선택 |
+| 샘플 데이터 | `data/raw/` 안에 CSV 4개 존재 | `python scripts/generate_sample_data.py` 다시 실행 |
+| 첫 셀 실행 | 초록 체크 또는 실행 시간 표시 | 패키지 설치 여부와 커널 일치 여부 확인 |
+| 경로 설정 | `DATA_DIR = Path('../data/raw')` | Notebook 기준 경로인지 다시 확인 |
+
+정리하면, 1장 실습의 핵심은 “프로젝트 루트를 열고 → `.venv`를 만들고 → 샘플 데이터를 생성하고 → `notebooks/ch01_ai_data_analysis_intro.ipynb`를 열고 → Notebook 커널도 `.venv`로 맞춘 뒤 → 첫 번째 셀을 실행해 본다” 입니다. 이 흐름만 익혀도 이후 장의 Notebook 실습을 훨씬 편하게 따라갈 수 있습니다.
 
 ## 11. LLM과 함께 실습할 때의 좋은 질문 예시
 
@@ -429,7 +545,7 @@ customers.head()
 VS Code에서 Jupyter Notebook을 실행하고 있습니다.
 프로젝트 폴더 이름은 my-llm-data-analysis-course입니다.
 데이터 파일은 data/raw/customers.csv에 있습니다.
-현재 실행한 코드는 pd.read_csv("data/raw/customers.csv")입니다.
+현재 실행한 코드는 pd.read_csv('data/raw/customers.csv')입니다.
 FileNotFoundError가 발생했습니다.
 현재 작업 폴더를 확인하고 상대 경로를 고치는 방법을 설명해 주세요.
 ```
