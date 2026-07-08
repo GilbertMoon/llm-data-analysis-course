@@ -106,7 +106,7 @@ AI와 LLM을 활용하는 분석에서도 이 기본 흐름은 크게 달라지�
 아래 그림은 이 책에서 다룰 전체 데이터 분석 흐름을 요약한 것입니다.
 
 <figure class="figure">
-  <img src="../assets/images/ch01/ch01_data_analysis_flow.png" alt="데이터 분석 전체 흐름도">
+  <img src="../assets/images/ch01/ch01_data_analysis_flow.svg" alt="데이터 분석 전체 흐름도">
   <figcaption>그림 1-1. 데이터 분석 전체 흐름도</figcaption>
 </figure>
 
