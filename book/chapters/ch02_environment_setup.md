@@ -18,7 +18,7 @@
 - GitHub를 통해 작업 이력과 결과물을 남길 수 있습니다.
 - LLM이나 AI 코딩 도구에 오류를 질문할 때 현재 상황을 정확히 설명할 수 있습니다.
 
-분석 환경은 단순한 설치 과정이 아니라, 앞으로 15주 동안 반복해서 사용할 작업 공간을 만드는 일입니다. 2주차부터는 CSV 데이터 구조를 살펴보고, 3~6주차에는 pandas, 전처리, EDA, 시각화를 다룹니다. 7~10주차에는 머신러닝 기초와 회귀·분류 실습으로 확장하고, 11주차 이후에는 LLM을 활용해 분석 질문을 정리하고 코드 초안을 만들고 결과를 검증하는 흐름으로 이어집니다.
+분석 환경은 단순한 설치 과정이 아니라, 앞으로 15주 동안 반복해서 사용할 작업 공간을 만드는 일입니다.
 
 | 구간 | 주요 흐름 | 이 장에서 준비하는 것 |
 | --- | --- | --- |
@@ -132,7 +132,7 @@ python3 --version
 
 ### 가상환경이 필요한 이유
 
-Python 패키지는 프로젝트마다 필요한 버전이 다를 수 있습니다. 어떤 프로젝트에서는 최신 pandas가 필요하고, 다른 프로젝트에서는 특정 버전의 scikit-learn이 필요할 수 있습니다. 모든 패키지를 PC 전체 환경에 설치하면 프로젝트 간 충돌이 발생하기 쉽습니다.
+Python 패키지는 프로젝트마다 필요한 버전이 다를 수 있습니다. 모든 패키지를 PC 전체 환경에 설치하면 프로젝트 간 충돌이 발생하기 쉽습니다.
 
 가상환경은 프로젝트별로 분리된 Python 실행 공간입니다. 이 책에서는 프로젝트 폴더 안에 `.venv`라는 이름의 가상환경을 만들어 사용합니다.
 
@@ -175,9 +175,7 @@ Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 .\.venv\Scripts\Activate.ps1
 ```
 
-`-Scope Process` 옵션은 현재 PowerShell 창에만 적용됩니다. 시스템 전체 설정을 바꾸는 방식이 아니므로 실습 상황에서는 비교적 안전하게 사용할 수 있습니다. 그래도 명령어를 실행하기 전에는 의미를 이해하고 사용하는 것이 좋습니다.
-
-## 5. 패키지 설치는 requirements.txt로 관리한다
+## 5. 패키지 설치와 requirements.txt
 
 데이터 분석에는 기본 Python만으로는 부족한 경우가 많습니다. 표 형태 데이터를 다루려면 pandas가 필요하고, 수치 계산에는 numpy가 자주 쓰입니다. 그래프를 그릴 때는 matplotlib이나 seaborn을 사용하고, 머신러닝 실습에는 scikit-learn이 필요합니다.
 
@@ -202,6 +200,7 @@ pip install -r requirements.txt
 | python-dotenv | `.env` 파일에서 환경변수 읽기 |
 | faker | 가상 샘플 데이터 생성 |
 | python-docx | Word 보고서 생성 |
+| ipykernel | VS Code Notebook 커널 연결 |
 
 설치가 끝난 뒤에는 VS Code에서 Python 인터프리터가 프로젝트의 `.venv`를 사용하고 있는지 확인해야 합니다. VS Code 오른쪽 아래 또는 명령 팔레트에서 Python 인터프리터를 선택할 수 있습니다.
 
@@ -300,38 +299,95 @@ from pathlib import Path
 print(Path.cwd())
 ```
 
-## 8. Notebook은 가볍게 열어 확인한다
+## 8. Notebook 첫 실행과 커널 선택
 
-Notebook을 사용할 때는 별도로 `jupyter notebook` 명령을 실행해 웹 브라우저를 열 수도 있지만, 이 책에서는 VS Code 안에서 Notebook 파일을 여는 방식을 기본으로 합니다.
+Notebook을 사용할 때는 별도로 `jupyter notebook` 명령을 실행해 웹 브라우저를 열 수도 있지만, 이 책에서는 VS Code 안에서 Notebook 파일을 여는 방식을 기본으로 합니다. 특히 처음 실행할 때는 **파일 열기, 커널 선택, 첫 셀 실행**이 서로 다른 단계라는 점을 이해해야 합니다.
 
-1. VS Code에서 `notebooks` 폴더를 엽니다.
-2. `ch02_environment_setup.ipynb` 파일을 엽니다.
-3. 오른쪽 위 커널 선택 메뉴에서 프로젝트의 `.venv` 환경을 선택합니다.
-4. 아래 코드를 실행해 CSV 파일이 정상적으로 읽히는지 확인합니다.
+환경 점검용으로는 `notebooks/ch01_ai_data_analysis_intro.ipynb` 또는 `notebooks/ch02_environment_setup.ipynb`를 열 수 있습니다. 이 장에서는 2장 실습 파일인 `ch02_environment_setup.ipynb` 기준으로 설명합니다.
 
-```python
-import pandas as pd
+<figure class="figure">
+  <img src="../assets/images/ch02/ch02_notebook_first_run_flow.svg" alt="VS Code에서 Notebook을 열고 실행하는 흐름">
+  <figcaption>그림 2-4. VS Code에서 Notebook을 열고 실행하는 흐름</figcaption>
+</figure>
 
-customers = pd.read_csv("data/raw/customers.csv")
-display(customers.head())
-print(customers.shape)
+### 8-1. Notebook 파일 열기
+
+1. VS Code 왼쪽 Explorer에서 `notebooks` 폴더를 엽니다.
+2. `ch02_environment_setup.ipynb` 파일을 클릭합니다.
+3. Notebook 화면에 Markdown 셀과 Code 셀이 함께 보이면 정상입니다.
+
+Notebook은 일반 `.py` 파일과 다르게 셀 단위로 실행합니다. 따라서 파일을 열었다고 해서 코드가 자동으로 실행되는 것은 아닙니다.
+
+### 8-2. 커널 선택하기
+
+첫 번째 셀을 실행하려고 하거나 오른쪽 위 `Select Kernel`을 누르면 커널 선택 창이 나타납니다. 여기서는 다음 순서로 선택합니다.
+
+1. `Python Environments...` 선택
+2. 목록에서 `.venv (Python 3.11.x)` 또는 `.venv\Scripts\python.exe` 선택
+
+`Existing Jupyter Server...`, `base (Anaconda)`, `Python Global Env`는 지금 실습에서는 선택하지 않는 것이 좋습니다. 다른 환경을 선택하면 패키지를 설치했는데도 `ModuleNotFoundError`가 나거나, Notebook이 다른 Python을 바라보는 문제가 생길 수 있습니다.
+
+초보자가 특히 헷갈리는 부분은 다음입니다.
+
+- 터미널에 `(.venv)`가 보여도 Notebook 커널은 별도로 선택해야 합니다.
+- `pip install -r requirements.txt`를 실행한 환경과 Notebook 커널이 같아야 합니다.
+- 처음 실행할 때 커널 선택 창이 뜨는 것은 정상 동작입니다.
+
+만약 `.venv`가 목록에 보이지 않는다면 VS Code 창을 한 번 새로고침하거나, 터미널에서 아래 명령을 실행한 뒤 다시 시도할 수 있습니다.
+
+```powershell
+python -m ipykernel install --user --name llm-data-analysis-course --display-name "llm-data-analysis-course"
 ```
 
-위 코드가 정상적으로 실행되면 CSV 파일을 pandas DataFrame으로 불러올 수 있는 상태입니다. 만약 `FileNotFoundError`가 발생한다면 파일이 없는 것이 아니라, 현재 Notebook의 실행 위치가 예상과 다를 가능성이 큽니다.
+### 8-3. 첫 번째 셀 실행하기
 
-경로 오류를 확인할 때는 먼저 현재 작업 폴더를 확인합니다.
+첫 코드 셀은 보통 패키지를 불러오고 기본 경로를 설정합니다.
 
 ```python
 from pathlib import Path
 
-Path.cwd()
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+DATA_DIR = Path('../data/raw')
+sns.set_theme(style='whitegrid')
 ```
 
-프로젝트 루트가 아닌 `notebooks` 폴더 기준으로 실행되고 있다면 경로를 다음처럼 조정해야 할 수도 있습니다.
+셀 왼쪽의 실행 버튼(▶)을 누르거나 `Shift + Enter`를 누르면 실행됩니다. 이 셀은 표나 그래프를 출력하지 않기 때문에, 실행 후 아무 결과가 화면에 바로 보이지 않아도 이상한 것이 아닙니다.
+
+다음 중 하나가 보이면 정상 실행으로 판단할 수 있습니다.
+
+- 셀 왼쪽에 초록 체크 표시가 보임
+- 실행 시간 예시 `30.8s`가 표시됨
+- 오류 메시지 없이 다음 셀로 이동함
+
+처음 실행할 때는 아래 메시지가 잠깐 보일 수 있습니다.
+
+```text
+Matplotlib is building the font cache; this may take a moment.
+```
+
+이 메시지는 오류가 아니라 matplotlib가 폰트 정보를 처음 캐시로 만드는 정상 동작입니다. 보통 첫 실행 때만 나타나고, 다음부터는 훨씬 빠르게 실행됩니다.
+
+### 8-4. 데이터가 실제로 읽히는지 확인하기
+
+첫 셀까지 성공했다면, 아래 코드를 새 셀에 넣거나 예시 셀의 주석을 해제해서 실행해 봅니다.
 
 ```python
-customers = pd.read_csv("../data/raw/customers.csv")
+customers = pd.read_csv(DATA_DIR / 'customers.csv')
+customers.head()
 ```
+
+표가 정상적으로 보이면 Notebook, 커널, 패키지, 경로가 기본적으로 맞게 연결된 것입니다.
+
+만약 `ModuleNotFoundError`가 발생하면, 대개 현재 선택한 Notebook 커널에 패키지가 설치되지 않은 경우입니다. 이때는 `.venv` 커널이 맞는지 다시 확인합니다.
+
+만약 `FileNotFoundError`가 발생하면, 다음 두 가지를 우선 확인합니다.
+
+1. `python scripts/generate_sample_data.py`를 이미 실행했는가?
+2. Notebook이 `../data/raw` 경로를 기준으로 데이터를 찾고 있는가?
 
 상대 경로 오류는 데이터 분석 입문자가 가장 자주 만나는 문제 중 하나입니다. 오류가 발생했을 때는 파일이 실제로 어디에 있는지, 코드가 어느 위치에서 실행되고 있는지부터 확인하면 대부분 해결의 실마리를 찾을 수 있습니다.
 
@@ -409,7 +465,7 @@ VS Code에서 Notebook 파일을 실행하는 중 FileNotFoundError가 발생했
 - 프로젝트 폴더 이름: my-llm-data-analysis-course
 - 데이터 파일 위치: data/raw/customers.csv
 - Notebook 위치: notebooks/ch02_environment_setup.ipynb
-- 사용한 코드: pd.read_csv("data/raw/customers.csv")
+- 사용한 코드: pd.read_csv('data/raw/customers.csv')
 
 요청:
 - 현재 작업 폴더를 확인하는 방법을 알려 주세요.
@@ -455,6 +511,7 @@ GitHub에 올리면 안 되는 파일이 포함되지 않았는지 확인하는 
 | 가상환경 활성화 | 터미널 앞에 `(.venv)` 표시 |
 | 패키지 설치 | `pip install -r requirements.txt` 완료 |
 | VS Code Python 인터프리터 | 프로젝트 `.venv` 선택 |
+| VS Code Notebook 커널 | Notebook 오른쪽 위 커널이 `.venv` |
 | 샘플 데이터 생성 | `data/raw`에 CSV 파일 존재 |
 | CSV 로드 확인 | `pd.read_csv()` 실행 성공 |
 | `.env` 보안 | `.env`가 `.gitignore`에 포함됨 |
@@ -466,6 +523,7 @@ GitHub에 올리면 안 되는 파일이 포함되지 않았는지 확인하는 
 - 가상환경이 활성화되지 않는 문제인가?
 - 패키지가 설치되지 않은 문제인가?
 - VS Code가 다른 Python 인터프리터를 보고 있는 문제인가?
+- Notebook 커널이 `.venv`가 아닌 문제인가?
 - 데이터 파일 경로가 잘못된 문제인가?
 - GitHub 인증이나 권한 문제인가?
 
