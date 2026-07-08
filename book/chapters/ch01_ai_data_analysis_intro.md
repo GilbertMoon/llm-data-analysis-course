@@ -227,7 +227,7 @@ products.product_id    ── order_items.product_id
 파일을 연결한다는 것은 두 표에서 같은 의미를 가진 기준 컬럼을 사용해 하나의 분석용 표로 합친다는 뜻입니다. 예를 들어 고객별 구매금액을 분석하려면 `customers.csv`, `orders.csv`, `order_items.csv`를 연결해야 합니다. 상품 카테고리별 매출을 분석하려면 `products.csv`와 `order_items.csv`를 연결해야 합니다.
 
 <figure class="figure">
-  <img src="../assets/images/ch01/ch01_shopping_data_relationship.png" alt="온라인 쇼핑몰 데이터 관계도">
+  <img src="../assets/images/ch01/ch01_shopping_data_relationship.svg" alt="온라인 쇼핑몰 데이터 관계도">
   <figcaption>그림 1-2. 온라인 쇼핑몰 데이터 관계도</figcaption>
 </figure>
 
