@@ -13,7 +13,6 @@
       .card { fill: #ffffff; stroke: #cbd5e1; stroke-width: 2; rx: 18; ry: 18; }
       .centerCard { fill: #2563eb; stroke: #1d4ed8; stroke-width: 3; rx: 26; ry: 26; }
       .arrow { stroke: #64748b; stroke-width: 3; fill: none; marker-end: url(#arrowhead); }
-      .mini { fill: #e2e8f0; rx: 8; ry: 8; }
     </style>
     <marker id="arrowhead" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
       <polygon points="0 0, 10 4, 0 8" fill="#64748b" />
@@ -58,12 +57,4 @@
   <path d="M 470 395 C 390 430, 340 450, 290 470" class="arrow" />
   <path d="M 600 400 L 600 495" class="arrow" />
   <path d="M 730 395 C 810 430, 860 450, 910 470" class="arrow" />
-
-  <rect x="128" y="145" width="52" height="12" class="mini" />
-  <rect x="128" y="164" width="90" height="12" class="mini" />
-  <rect x="848" y="145" width="52" height="12" class="mini" />
-  <rect x="848" y="164" width="90" height="12" class="mini" />
-  <rect x="108" y="488" width="72" height="12" class="mini" />
-  <rect x="478" y="528" width="72" height="12" class="mini" />
-  <rect x="848" y="488" width="72" height="12" class="mini" />
 </svg>
