@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="820" viewBox="0 0 1500 820" role="img" aria-labelledby="title desc">
+  <title id="title">Notebook에서 상대 경로를 이해하는 방법</title>
+  <desc id="desc">notebooks 폴더 안의 ch01_ai_data_analysis_intro.ipynb 파일이 data/raw 폴더의 CSV 파일을 읽기 위해 ../data/raw 경로를 사용하는 이유를 보여주는 그림</desc>
+  <defs>
+    <linearGradient id="header" x1="0" x2="1"><stop offset="0%" stop-color="#2563eb"/><stop offset="100%" stop-color="#7c3aed"/></linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#0f172a" flood-opacity="0.12"/></filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#2563eb"/></marker>
+    <style>
+      text { font-family:'Pretendard','Noto Sans KR','Malgun Gothic',sans-serif; }
+      .bg { fill:#f8fafc; }
+      .title { font-size:38px; font-weight:900; fill:#ffffff; }
+      .subtitle { font-size:18px; font-weight:600; fill:#e9d5ff; }
+      .panel { fill:#ffffff; stroke:#cbd5e1; stroke-width:2; rx:22; filter:url(#shadow); }
+      .main { font-size:28px; font-weight:900; fill:#0f172a; }
+      .text { font-size:18px; font-weight:600; fill:#334155; }
+      .folder { fill:#eff6ff; stroke:#60a5fa; stroke-width:2; rx:14; }
+      .file { fill:#ffffff; stroke:#93c5fd; stroke-width:2; rx:12; }
+      .data { fill:#ecfdf5; stroke:#86efac; stroke-width:2; rx:12; }
+      .mono { font-family:'Consolas','D2Coding',monospace; font-size:18px; font-weight:700; fill:#0f172a; }
+      .arrowLine { fill:none; stroke:#2563eb; stroke-width:4; marker-end:url(#arrow); }
+      .note { fill:#fff7ed; stroke:#fdba74; stroke-width:2; rx:16; }
+      .noteText { font-size:18px; font-weight:800; fill:#9a3412; }
+      .small { font-size:16px; font-weight:700; fill:#475569; }
+    </style>
+  </defs>
+  <rect class="bg" width="1500" height="820" rx="28"/>
+  <rect x="50" y="40" width="1400" height="100" fill="url(#header)" rx="26"/>
+  <text x="90" y="98" class="title">Notebook에서 상대 경로를 이해하는 방법</text>
+  <text x="90" y="128" class="subtitle">현재 Notebook 파일이 어디 있는지 기준으로 경로를 생각하면 ../data/raw가 왜 필요한지 쉽게 이해할 수 있습니다.</text>
+
+  <rect x="70" y="190" width="1360" height="560" class="panel"/>
+  <text x="110" y="240" class="main">프로젝트 폴더 구조와 경로 이동</text>
+
+  <rect x="120" y="290" width="360" height="360" class="folder"/>
+  <text x="150" y="330" class="text">llm-data-analysis-course/</text>
+  <text x="175" y="375" class="text">├─ notebooks/</text>
+  <text x="205" y="410" class="mono">ch01_ai_data_analysis_intro.ipynb</text>
+  <text x="175" y="455" class="text">├─ data/</text>
+  <text x="205" y="490" class="text">└─ raw/</text>
+  <text x="235" y="525" class="mono">customers.csv</text>
+  <text x="235" y="555" class="mono">products.csv</text>
+  <text x="235" y="585" class="mono">orders.csv</text>
+  <text x="235" y="615" class="mono">order_items.csv</text>
+
+  <rect x="560" y="305" width="360" height="150" class="file"/>
+  <text x="590" y="345" class="main" font-size="24">현재 위치</text>
+  <text x="590" y="385" class="mono">notebooks/ch01_ai_data_analysis_intro.ipynb</text>
+  <text x="590" y="420" class="small">Notebook 안의 코드가 경로를 해석할 때 기준이 되는 위치</text>
+
+  <rect x="1000" y="305" width="320" height="150" class="data"/>
+  <text x="1030" y="345" class="main" font-size="24">읽고 싶은 데이터</text>
+  <text x="1030" y="385" class="mono">data/raw/customers.csv</text>
+  <text x="1030" y="420" class="small">프로젝트 루트 아래 data/raw 폴더</text>
+
+  <path d="M 920 380 C 950 380, 970 380, 995 380" class="arrowLine"/>
+  <path d="M 740 470 C 740 545, 945 545, 1080 455" class="arrowLine"/>
+
+  <rect x="560" y="520" width="760" height="150" class="note"/>
+  <text x="590" y="560" class="noteText">왜 ../data/raw 인가?</text>
+  <text x="590" y="600" class="text">1) Notebook은 notebooks 폴더 안에 있습니다.</text>
+  <text x="590" y="630" class="text">2) 먼저 <tspan font-weight="900">..</tspan> 로 한 단계 위(프로젝트 루트)로 올라갑니다.</text>
+  <text x="590" y="660" class="text">3) 그다음 <tspan font-weight="900">data/raw</tspan> 로 내려가면 CSV 파일에 도달합니다.</text>
+
+  <rect x="120" y="695" width="1280" height="48" class="note"/>
+  <text x="760" y="727" text-anchor="middle" class="noteText">따라서 Notebook에서는 DATA_DIR = Path('../data/raw') 라고 작성하는 것이 자연스럽습니다.</text>
+</svg>
