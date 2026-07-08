@@ -22,7 +22,7 @@ CSV 파일을 pandas로 불러오는 일 자체는 어렵지 않습니다. 하�
 이 질문들에 답할 수 있으면 본격적인 분석에 들어갈 준비가 된 것입니다.
 
 <figure class="figure">
-  <img src="../assets/images/ch03/ch03_csv_to_dataframe_flow.png" alt="CSV 파일을 pandas DataFrame으로 불러오는 흐름">
+  <img src="../assets/images/ch03/ch03_csv_to_dataframe_flow.svg" alt="CSV 파일을 pandas DataFrame으로 불러오는 흐름">
   <figcaption>그림 3-1. CSV 파일을 pandas DataFrame으로 불러오는 흐름</figcaption>
 </figure>
 
@@ -63,7 +63,7 @@ pandas는 CSV 파일을 읽어 `DataFrame`이라는 표 형태의 데이터로 �
 예를 들어 고객 데이터에서 한 행은 고객 한 명을 의미할 수 있습니다. `customer_id`, `gender`, `age`, `city` 같은 열은 고객의 속성을 의미합니다.
 
 <figure class="figure">
-  <img src="../assets/images/ch03/ch03_dataframe_structure.png" alt="pandas DataFrame 구조 예시">
+  <img src="../assets/images/ch03/ch03_dataframe_structure.svg" alt="pandas DataFrame 구조 예시">
   <figcaption>그림 3-2. pandas DataFrame 구조 예시</figcaption>
 </figure>
 
@@ -85,7 +85,7 @@ DataFrame을 이해하면 이후 pandas 문법도 훨씬 쉽게 받아들일 수
 온라인 쇼핑몰 데이터에서는 여러 파일의 관계를 이해하는 것이 중요합니다. 고객 정보만으로는 매출을 알 수 없고, 상품 정보만으로는 누가 무엇을 샀는지 알 수 없습니다. 주문과 주문 상세 데이터를 연결해야 실제 구매 흐름을 볼 수 있습니다.
 
 <figure class="figure">
-  <img src="../assets/images/ch03/ch03_data_check_flow.png" alt="데이터 구조 점검 흐름도">
+  <img src="../assets/images/ch03/ch03_data_check_flow.svg" alt="데이터 구조 점검 흐름도">
   <figcaption>그림 3-3. 데이터 구조 점검 흐름도</figcaption>
 </figure>
 
@@ -517,7 +517,7 @@ print("가장 최근 주문일:", orders["order_date"].max())
 | `products.product_id` ↔ `order_items.product_id` | 주문 상세와 상품 정보를 연결합니다. |
 
 <figure class="figure">
-  <img src="../assets/images/ch03/ch03_csv_key_relationships.png" alt="4개 CSV 파일 간 키 관계도">
+  <img src="../assets/images/ch03/ch03_csv_key_relationships.svg" alt="4개 CSV 파일 간 키 관계도">
   <figcaption>그림 3-4. 4개 CSV 파일 간 키 관계도</figcaption>
 </figure>
 
@@ -582,7 +582,7 @@ for name, df in datasets.items():
 Jupyter Notebook에서는 코드, 실행 결과, 해석 메모를 함께 남기면 이후 분석 과정을 다시 확인하기 쉽습니다.
 
 <figure class="figure">
-  <img src="../assets/images/ch03/ch03_jupyter_data_overview_result.png" alt="Jupyter Notebook 데이터 구조 점검 결과 화면 예시">
+  <img src="../assets/images/ch03/ch03_jupyter_data_overview_result.svg" alt="Jupyter Notebook 데이터 구조 점검 결과 화면 예시">
   <figcaption>그림 3-5. Jupyter Notebook 데이터 구조 점검 결과 화면 예시</figcaption>
 </figure>
 
