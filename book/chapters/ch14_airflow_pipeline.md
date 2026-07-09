@@ -51,9 +51,9 @@ Airflow는 단순한 Python 라이브러리가 아니라 웹 UI, 스케줄러, D
 
 따라서 이 장에서는 Airflow를 로컬 Python 가상환경에 직접 설치하지 않고, **Docker Compose 기반으로 실행**합니다. Docker Compose를 사용하면 Airflow 실행 환경을 컨테이너로 묶어 Windows, macOS, Linux 간 차이를 줄일 수 있습니다.
 
-단, Docker 설치 자체도 별도의 학습 부담이 있습니다. 그래서 이 강의안에는 Docker Desktop 설치 과정을 길게 포함하지 않습니다. Docker 설치와 기본 확인은 아래 별도 블로그 글을 참고합니다.
+단, Docker 설치 자체도 별도의 학습 부담이 있습니다. 그래서 이 강의안에는 Docker Desktop 설치 과정을 길게 포함하지 않습니다. Docker 설치와 기본 확인은 별도 블로그 글을 참고합니다.
 
-- Docker 설치 가이드: https://blog.naver.com/dev-dog/224341211248
+**도커 설치 가이드 블로그 주소:** https://blog.naver.com/dev-dog/224341211248
 
 이 장에서는 Docker가 이미 설치되어 있고 아래 명령이 정상 동작한다고 가정합니다.
 
@@ -67,14 +67,30 @@ docker run hello-world
 
 | 구분 | 이 장에서 다루는가? | 설명 |
 | --- | --- | --- |
-| Docker Desktop 설치 | 아니오 | 별도 블로그 글 참고 |
-| Docker 기본 명령 확인 | 간단히 확인 | `docker --version`, `docker compose version`, `hello-world` |
+| Docker Desktop 설치 | 아니오 | 위 블로그 글 참고 |
+| Docker 기본 명령 확인 | 예 | `docker --version`, `docker compose version`, `hello-world` |
 | Python 분석 파이프라인 | 예 | Airflow 실행 전 코드 자체를 검증 |
 | Docker Compose Airflow 실행 | 예 | 14장의 기본 실습 경로 |
 | Airflow DAG 실행과 로그 확인 | 예 | Task 의존성과 실패 지점 확인 |
 | 운영용 Airflow 배포 | 아니오 | 수업 범위 밖 |
 
-## 4. 이번 장에서 완성할 Docker 기반 Airflow 실습
+## 4. 도커 설치 확인
+
+도커 설치는 위 블로그 글을 보고 진행합니다. 설치가 끝났다면 프로젝트 폴더가 아니어도 괜찮으니 터미널 또는 PowerShell에서 다음 명령을 실행합니다.
+
+```bash
+docker --version
+docker compose version
+docker run hello-world
+```
+
+세 명령이 모두 정상 동작하면 Docker 기반 Airflow 실습을 진행할 수 있습니다.
+
+`docker run hello-world`가 성공하면 Docker Client가 Docker Daemon과 통신하고, Docker Hub에서 이미지를 받아 컨테이너를 실행할 수 있다는 뜻입니다. 이 단계가 실패하면 Airflow 실습으로 넘어가지 말고 Docker Desktop 실행 여부, WSL2 backend, 네트워크, 가상화 설정을 먼저 확인해야 합니다.
+
+Windows 사용자는 보통 Docker Desktop이 WSL2 backend를 사용합니다. 수업에서는 Docker 설치와 WSL2 backend 설정 자체를 자세히 다루지 않고, 위 블로그 가이드를 참고해 Docker 명령이 정상 동작하는 상태까지 준비했다고 가정합니다.
+
+## 5. 이번 장에서 완성할 Docker 기반 Airflow 실습
 
 이번 실습에서는 온라인 쇼핑몰 데이터 분석을 다음 순서로 자동화합니다.
 
@@ -105,7 +121,7 @@ check_input_files
   <figcaption>그림 14-2. 분석 파이프라인의 Task 의존성 흐름</figcaption>
 </figure>
 
-## 5. 실습 프로젝트 구조
+## 6. 실습 프로젝트 구조
 
 이번 장의 주요 파일 구조는 다음과 같습니다.
 
@@ -152,7 +168,7 @@ order_items.csv
 python scripts/generate_sample_data.py
 ```
 
-## 6. Airflow에 연결하기 전 Python 파이프라인 먼저 검증하기
+## 7. Airflow에 연결하기 전 Python 파이프라인 먼저 검증하기
 
 Airflow에서 실패가 나면 원인이 두 가지일 수 있습니다.
 
@@ -184,7 +200,7 @@ reports/ch14_airflow_validation_log.csv
 
 이 단계에서 오류가 나면 Docker나 Airflow 문제가 아니라 데이터 파일, 경로, Python 코드 문제일 가능성이 큽니다. 먼저 이 오류를 해결한 뒤 Airflow로 넘어갑니다.
 
-## 7. Docker Compose Airflow 환경 파일 준비
+## 8. Docker Compose Airflow 환경 파일 준비
 
 Airflow Docker 실습 폴더로 이동합니다.
 
@@ -217,7 +233,7 @@ _AIRFLOW_WWW_USER_PASSWORD=airflow
 
 Windows Docker Desktop에서는 대체로 `AIRFLOW_UID=50000`을 그대로 사용해도 됩니다. macOS/Linux에서 파일 권한 문제가 생기면 `AIRFLOW_UID` 값을 현재 사용자 ID로 조정할 수 있습니다.
 
-## 8. Airflow Docker 이미지와 의존성
+## 9. Airflow Docker 이미지와 의존성
 
 이번 장의 Airflow 컨테이너는 `automation/airflow/Dockerfile`에서 생성합니다.
 
@@ -246,7 +262,7 @@ beautifulsoup4
 docker compose build --no-cache
 ```
 
-## 9. Airflow 메타데이터 DB 초기화
+## 10. Airflow 메타데이터 DB 초기화
 
 최초 1회 또는 완전 초기화 후에는 Airflow 메타데이터 DB를 초기화해야 합니다.
 
@@ -265,7 +281,7 @@ PW: airflow
 
 초기화가 실패하면 Docker Desktop 실행 여부, 8080 포트 충돌, 메모리 부족, 이미지 빌드 실패, `.env` 파일 존재 여부를 확인합니다.
 
-## 10. Airflow 실행
+## 11. Airflow 실행
 
 초기화가 끝나면 다음 명령으로 Airflow를 실행합니다.
 
@@ -292,7 +308,7 @@ PW: airflow
 docker compose ps
 ```
 
-## 11. DAG 확인과 실행
+## 12. DAG 확인과 실행
 
 Airflow UI에서 `ch14_local_analysis_pipeline` DAG를 찾습니다.
 
@@ -309,7 +325,7 @@ automation/airflow/dags/ch14_local_analysis_pipeline.py
 
 이 DAG는 컨테이너 내부에서 프로젝트 루트를 `/opt/airflow/project`로 보고 실행합니다. Docker Compose에서 프로젝트 전체 폴더를 컨테이너의 `/opt/airflow/project`로 연결했기 때문입니다.
 
-## 12. 산출물 검증
+## 13. 산출물 검증
 
 DAG가 정상 실행되면 프로젝트 루트의 `reports/` 폴더에 결과가 생성됩니다.
 
@@ -335,7 +351,7 @@ Get-Content reports\ch14_airflow_validation_log.csv
 
 모든 행의 `status`가 `ok`이면 주요 산출물 생성이 정상입니다.
 
-## 13. 실패 상황을 일부러 만들어 보기
+## 14. 실패 상황을 일부러 만들어 보기
 
 자동화 실습에서 중요한 것은 성공보다 실패를 읽는 능력입니다. 입력 파일 하나를 잠시 다른 이름으로 바꿔 봅니다.
 
@@ -367,7 +383,7 @@ Windows PowerShell:
 ren data\raw\customers_backup.csv customers.csv
 ```
 
-## 14. Airflow 종료와 초기화
+## 15. Airflow 종료와 초기화
 
 실습이 끝나면 `automation/airflow` 폴더에서 다음 명령으로 컨테이너를 종료합니다.
 
@@ -383,7 +399,9 @@ docker compose down --volumes --remove-orphans
 
 이 명령은 Airflow 메타데이터 DB도 삭제합니다. DAG 실행 기록과 계정 정보도 초기화되므로 주의해야 합니다.
 
-## 15. 8080 포트 충돌 처리
+## 16. 자주 발생하는 문제
+
+### 16.1 8080 포트 충돌
 
 이미 다른 프로그램이 8080 포트를 사용하고 있으면 Airflow UI가 열리지 않을 수 있습니다. 이 경우 `automation/airflow/docker-compose.yml`에서 포트 매핑을 바꿉니다.
 
@@ -404,7 +422,39 @@ docker compose up
 http://localhost:8081
 ```
 
-## 16. Make와 n8n은 전달과 연결에 강하다
+### 16.2 Docker 메모리 부족
+
+Airflow는 여러 컨테이너를 실행하므로 Docker Desktop에 충분한 메모리가 필요합니다. Docker Desktop 설정에서 메모리를 4GB 이상, 가능하면 8GB 정도로 설정하는 것을 권장합니다.
+
+### 16.3 ModuleNotFoundError
+
+DAG 실행 중 `ModuleNotFoundError`가 발생하면 다음을 확인합니다.
+
+- `automation/airflow/Dockerfile`에서 `requirements.txt`를 설치하는지 확인
+- `automation/airflow/requirements.txt`에 필요한 패키지가 있는지 확인
+- 이미지가 예전 상태라면 `docker compose build --no-cache` 후 다시 실행
+
+```bash
+docker compose build --no-cache
+docker compose up airflow-init
+docker compose up
+```
+
+### 16.4 입력 파일 없음
+
+`check_input_files` 단계에서 실패하면 프로젝트 루트에서 샘플 데이터를 생성합니다.
+
+```bash
+python scripts/generate_sample_data.py
+```
+
+또는 Docker 컨테이너 내부에서 실행하려면 다음처럼 실행할 수 있습니다.
+
+```bash
+docker compose run --rm airflow-api-server python /opt/airflow/project/scripts/generate_sample_data.py
+```
+
+## 17. Make와 n8n은 전달과 연결에 강하다
 
 Airflow가 코드 기반 분석 파이프라인을 담당한다면, Make와 n8n은 결과물을 외부 서비스와 연결하는 데 유용합니다.
 
@@ -417,7 +467,7 @@ Airflow가 코드 기반 분석 파이프라인을 담당한다면, Make와 n8n�
 
 Make나 n8n에서 모든 분석을 처리하려고 하면 복잡해질 수 있습니다. 반대로 Airflow에서 외부 앱 연계까지 모두 처리하려고 해도 운영이 무거워질 수 있습니다. 분석 처리와 외부 전달을 나누면 구조가 단순해집니다.
 
-## 17. LLM에게 파이프라인 설계를 요청하는 프롬프트
+## 18. LLM에게 파이프라인 설계를 요청하는 프롬프트
 
 LLM은 자동화 파이프라인 설계 초안을 만드는 데 도움을 줄 수 있습니다. 단, 파일 경로, 실행 환경, 실제 컬럼명, API 인증, 발송 권한은 사람이 확인해야 합니다.
 
@@ -453,7 +503,7 @@ LLM은 자동화 파이프라인 설계 초안을 만드는 데 도움을 줄 �
 6. 지나치게 복잡한 설치 절차보다 운영 흐름 중심으로 설명해 주세요.
 ```
 
-## 18. 자동화 결과를 해석하는 방법
+## 19. 자동화 결과를 해석하는 방법
 
 파이프라인이 성공했다고 해서 분석 결과가 항상 타당한 것은 아닙니다. 자동화 결과를 볼 때는 다음 세 가지를 나누어 확인합니다.
 
@@ -465,9 +515,9 @@ LLM은 자동화 파이프라인 설계 초안을 만드는 데 도움을 줄 �
 
 Airflow UI에서 모든 Task가 초록색이어도 보고서의 해석이 잘못되었거나 CSV 값이 비어 있으면 분석 품질은 낮습니다.
 
-## 19. 실습 과제
+## 20. 실습 과제
 
-1. 별도 블로그 글을 참고해 Docker Desktop을 설치하고 `docker run hello-world`가 정상 실행되는지 확인하세요.
+1. 도커 설치 가이드 블로그 주소(https://blog.naver.com/dev-dog/224341211248)를 참고해 Docker Desktop을 설치하고 `docker run hello-world`가 정상 실행되는지 확인하세요.
 2. 프로젝트 루트에서 `python scripts/generate_sample_data.py`와 `python scripts/run_ch14_pipeline.py`를 실행해 Python 파이프라인을 먼저 검증하세요.
 3. `automation/airflow` 폴더에서 `.env.example`을 `.env`로 복사하세요.
 4. `docker compose up airflow-init`으로 Airflow DB를 초기화하세요.
@@ -477,13 +527,13 @@ Airflow UI에서 모든 Task가 초록색이어도 보고서의 해석이 잘못
 8. 입력 파일 하나를 임시로 바꿔 실패 상황을 만들고 Airflow 로그를 확인하세요.
 9. Make 또는 n8n으로 보고서 파일을 Slack이나 Gmail로 전달한다면 어떤 단계가 필요한지 표로 정리하세요.
 
-## 20. 정리
+## 21. 정리
 
 이번 장에서는 다음 내용을 실습했습니다.
 
 - 반복 분석 업무를 Task로 나누는 방법
 - Make, n8n, Airflow의 역할 구분
-- Docker 설치는 별도 가이드로 분리하고, 강의안은 Docker Compose 실행에 집중하는 방식
+- Docker 설치는 블로그 가이드로 분리하고, 메인 강의안에는 블로그 주소와 설치 확인 절차를 명시하는 방식
 - Airflow 실행 전 Python 스크립트로 분석 코드 사전 검증
 - Docker Compose 기반 Airflow 실행 구조
 - `automation/airflow/docker-compose.yml`, `Dockerfile`, `requirements.txt`, `.env.example` 구성
