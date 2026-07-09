@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1280" height="720" viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Apache Airflow Login Screen Guide</title>
+  <desc id="desc">Airflow login screen guide for course practice, including username, password, and password lookup commands.</desc>
+  <defs>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="14" flood-color="#0f172a" flood-opacity="0.18"/>
+    </filter>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#f8fafc"/>
+      <stop offset="100%" stop-color="#eef4ff"/>
+    </linearGradient>
+    <style>
+      .font { font-family: "Pretendard", "Noto Sans KR", "Segoe UI", Arial, sans-serif; }
+      .mono { font-family: "Cascadia Mono", "Consolas", monospace; }
+      .title { font-size: 34px; font-weight: 700; }
+      .body { font-size: 22px; }
+      .small { font-size: 18px; }
+      .caption { font-size: 16px; }
+    </style>
+  </defs>
+  <rect width="1280" height="720" fill="url(#bg)"/>
+  <rect x="0" y="0" width="1280" height="58" fill="#ffffff"/>
+  <rect x="24" y="13" width="980" height="33" rx="17" fill="#f1f5f9" stroke="#dbe3ef"/>
+  <text x="52" y="36" class="font small" fill="#0f172a">localhost:8080/auth/login?next=%2F</text>
+
+  <text x="72" y="112" class="font title" fill="#0f172a">Airflow 로그인 화면이 나타났을 때</text>
+  <text x="72" y="148" class="font body" fill="#334155">14장 실습 환경에서는 기본 계정으로 먼저 로그인합니다.</text>
+
+  <g filter="url(#shadow)">
+    <rect x="430" y="170" width="500" height="430" rx="12" fill="#ffffff" stroke="#e5e7eb"/>
+  </g>
+  <g transform="translate(466 205)">
+    <path d="M0,0 L39,18 L20,37 Z" fill="#017CEE"/>
+    <path d="M39,18 L58,0 L37,37 Z" fill="#00AD46"/>
+    <path d="M20,37 L39,18 L58,58 Z" fill="#F2B705"/>
+    <path d="M20,37 L0,58 L39,58 Z" fill="#E43921"/>
+    <circle cx="29" cy="29" r="8" fill="#ffffff"/>
+  </g>
+  <text x="540" y="240" class="font title" fill="#1f2937">Sign into Airflow</text>
+  <text x="466" y="292" class="font small" fill="#334155">Enter your username and password below:</text>
+  <text x="466" y="334" class="font small" font-weight="700" fill="#111827">Username</text>
+  <rect x="466" y="346" width="410" height="46" rx="6" fill="#ffffff" stroke="#0f172a" stroke-width="2"/>
+  <text x="482" y="376" class="mono body" fill="#2563eb">airflow</text>
+  <text x="466" y="426" class="font small" font-weight="700" fill="#111827">Password</text>
+  <rect x="466" y="438" width="410" height="46" rx="6" fill="#ffffff" stroke="#0f172a" stroke-width="2"/>
+  <text x="482" y="469" class="mono body" fill="#2563eb">airflow</text>
+  <rect x="466" y="504" width="410" height="48" rx="6" fill="#64748b"/>
+  <text x="647" y="535" text-anchor="middle" class="font body" font-weight="700" fill="#ffffff">Sign in</text>
+  <rect x="466" y="574" width="410" height="72" rx="8" fill="#dbeafe"/>
+  <text x="492" y="607" class="font small" fill="#1d4ed8" font-weight="700">다른 화면이면?</text>
+  <text x="492" y="635" class="font caption" fill="#1e40af">로그 또는 비밀번호 파일에서 생성 비밀번호를 확인합니다.</text>
+
+  <path d="M180,258 C270,250 350,252 430,361" fill="none" stroke="#2563eb" stroke-width="3" stroke-dasharray="8 8"/>
+  <rect x="70" y="205" width="300" height="105" rx="16" fill="#ffffff" stroke="#bfdbfe" stroke-width="2"/>
+  <text x="94" y="239" class="font body" font-weight="700" fill="#1d4ed8">1. 수업용 기본 계정</text>
+  <text x="94" y="270" class="mono small" fill="#0f172a">ID: airflow</text>
+  <text x="94" y="296" class="mono small" fill="#0f172a">PW: airflow</text>
+
+  <path d="M1080,300 C1010,318 957,382 878,459" fill="none" stroke="#2563eb" stroke-width="3" stroke-dasharray="8 8"/>
+  <rect x="965" y="205" width="270" height="150" rx="16" fill="#ffffff" stroke="#bfdbfe" stroke-width="2"/>
+  <text x="990" y="239" class="font body" font-weight="700" fill="#1d4ed8">2. 안 될 경우</text>
+  <text x="990" y="270" class="font small" fill="#334155">docker ps로 컨테이너 확인</text>
+  <text x="990" y="296" class="font small" fill="#334155">docker logs로 password 검색</text>
+  <text x="990" y="322" class="font small" fill="#334155">8080 포트 충돌도 확인</text>
+
+  <g filter="url(#shadow)">
+    <rect x="80" y="500" width="310" height="140" rx="14" fill="#111827"/>
+  </g>
+  <text x="104" y="535" class="mono small" fill="#a7f3d0">docker ps</text>
+  <text x="104" y="566" class="mono small" fill="#a7f3d0">docker logs &lt;컨테이너명&gt;</text>
+  <text x="104" y="597" class="mono small" fill="#a7f3d0">docker logs &lt;컨테이너명&gt;</text>
+  <text x="104" y="624" class="mono small" fill="#a7f3d0">| findstr /i password</text>
+  <text x="72" y="690" class="font caption" fill="#64748b">강의 포인트: 이 레포지토리의 docker-compose.yml은 기본 계정을 airflow / airflow로 생성합니다.</text>
+</svg>
