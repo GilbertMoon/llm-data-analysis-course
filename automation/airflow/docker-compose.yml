@@ -1,15 +1,134 @@
-# Airflow 학습용 최소 예시입니다.
-# 실제 수업에서는 Docker와 Airflow 개념을 설명하기 위한 참고 파일로 사용합니다.
-# 운영 환경에서는 공식 Airflow docker-compose 예시와 보안 설정을 반드시 확인하세요.
+# Chapter 14 Docker Compose 기반 Airflow 실습 환경
+#
+# Docker 설치 방법은 강의안에서 안내한 별도 블로그 글을 참고합니다.
+# 이 파일은 Docker Desktop과 Docker Compose가 이미 설치되어 있다고 가정합니다.
+#
+# 실행 위치:
+#   cd automation/airflow
+#
+# 최초 1회 초기화:
+#   docker compose up airflow-init
+#
+# Airflow 실행:
+#   docker compose up
+#
+# Airflow UI:
+#   http://localhost:8080
+#   ID: airflow
+#   PW: airflow
+#
+# 종료:
+#   docker compose down
+#
+# 완전 초기화:
+#   docker compose down --volumes --remove-orphans
+
+x-airflow-common: &airflow-common
+  build: .
+  image: llm-data-analysis-course-airflow:3.3.0
+  environment: &airflow-common-env
+    AIRFLOW__CORE__EXECUTOR: LocalExecutor
+    AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+    AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "true"
+    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
+    AIRFLOW__SCHEDULER__ENABLE_HEALTH_CHECK: "true"
+    PROJECT_ROOT: /opt/airflow/project
+    PYTHONPATH: /opt/airflow/project
+    _AIRFLOW_WWW_USER_USERNAME: ${_AIRFLOW_WWW_USER_USERNAME:-airflow}
+    _AIRFLOW_WWW_USER_PASSWORD: ${_AIRFLOW_WWW_USER_PASSWORD:-airflow}
+  volumes:
+    - ${AIRFLOW_PROJECT_DIR:-../..}:/opt/airflow/project
+    - ./dags:/opt/airflow/dags
+    - ./logs:/opt/airflow/logs
+    - ./plugins:/opt/airflow/plugins
+    - ./config:/opt/airflow/config
+  user: "${AIRFLOW_UID:-50000}:0"
+  working_dir: /opt/airflow/project
+  depends_on:
+    postgres:
+      condition: service_healthy
 
 services:
-  airflow-standalone:
-    image: apache/airflow:2.9.3
-    container_name: llm-course-airflow
-    command: standalone
+  postgres:
+    image: postgres:16
+    container_name: llm-course-airflow-postgres
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+    volumes:
+      - postgres-db-volume:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "airflow"]
+      interval: 10s
+      retries: 5
+      start_period: 5s
+    restart: unless-stopped
+
+  airflow-init:
+    <<: *airflow-common
+    container_name: llm-course-airflow-init
+    entrypoint: /bin/bash
+    command:
+      - -c
+      - |
+        mkdir -p /opt/airflow/dags /opt/airflow/logs /opt/airflow/plugins /opt/airflow/config
+        airflow db migrate
+        airflow users create \
+          --username "$${_AIRFLOW_WWW_USER_USERNAME}" \
+          --password "$${_AIRFLOW_WWW_USER_PASSWORD}" \
+          --firstname Airflow \
+          --lastname Admin \
+          --role Admin \
+          --email airflow@example.com || true
+        echo "Airflow initialization completed."
+    restart: "no"
+
+  airflow-api-server:
+    <<: *airflow-common
+    container_name: llm-course-airflow-api-server
+    command: api-server
     ports:
       - "8080:8080"
-    volumes:
-      - ./dags:/opt/airflow/dags
-    environment:
-      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      airflow-init:
+        condition: service_completed_successfully
+    restart: unless-stopped
+
+  airflow-scheduler:
+    <<: *airflow-common
+    container_name: llm-course-airflow-scheduler
+    command: scheduler
+    depends_on:
+      postgres:
+        condition: service_healthy
+      airflow-init:
+        condition: service_completed_successfully
+    restart: unless-stopped
+
+  airflow-dag-processor:
+    <<: *airflow-common
+    container_name: llm-course-airflow-dag-processor
+    command: dag-processor
+    depends_on:
+      postgres:
+        condition: service_healthy
+      airflow-init:
+        condition: service_completed_successfully
+    restart: unless-stopped
+
+  airflow-triggerer:
+    <<: *airflow-common
+    container_name: llm-course-airflow-triggerer
+    command: triggerer
+    depends_on:
+      postgres:
+        condition: service_healthy
+      airflow-init:
+        condition: service_completed_successfully
+    restart: unless-stopped
+
+volumes:
+  postgres-db-volume:
