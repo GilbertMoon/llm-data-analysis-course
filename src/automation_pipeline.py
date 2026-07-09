@@ -1,12 +1,14 @@
 """Chapter 14 반복 분석 자동화 파이프라인 공통 함수 모음.
 
 온라인 쇼핑몰 분석 흐름을 입력 확인, 전처리, 분석, 시각화, 보고서 생성, 산출물 검증 단계로
-나누어 실행할 수 있도록 구성했습니다. Airflow DAG와 일반 Python 스크립트에서 함께 사용합니다.
+나누어 실행할 수 있도록 구성했습니다. Docker Compose 기반 Airflow DAG와 일반 Python 스크립트에서
+함께 사용합니다.
 """
 
 from __future__ import annotations
 
 import csv
+import os
 from pathlib import Path
 
 import matplotlib.pyplot as plt
@@ -30,6 +32,15 @@ CH14_REPORT_FILES = [
 CH14_FIGURE_FILES = ["ch14_daily_sales.png"]
 
 
+def get_base_dir_from_env(default: str | Path = ".") -> Path:
+    """PROJECT_ROOT 환경변수가 있으면 우선 사용하고, 없으면 default 경로를 반환합니다.
+
+    Docker Compose 기반 Airflow에서는 PROJECT_ROOT=/opt/airflow/project 로 설정됩니다.
+    로컬 Python 실행에서는 프로젝트 루트 경로를 직접 넘기거나 현재 디렉터리를 사용합니다.
+    """
+    return Path(os.getenv("PROJECT_ROOT", str(default))).resolve()
+
+
 def project_root_from_file(file_path: str | Path) -> Path:
     """scripts 폴더의 파일 경로를 기준으로 프로젝트 루트를 반환합니다."""
     return Path(file_path).resolve().parents[1]
@@ -37,17 +48,17 @@ def project_root_from_file(file_path: str | Path) -> Path:
 
 def get_project_paths(base_dir: str | Path = ".") -> dict[str, Path]:
     """프로젝트 주요 폴더 경로를 반환하고 필요한 폴더를 생성합니다."""
-    base_path = Path(base_dir).resolve()
+    base_path = get_base_dir_from_env(base_dir) if str(base_dir) == "." else Path(base_dir).resolve()
     paths = {
         "base_dir": base_path,
         "raw_dir": base_path / "data" / "raw",
         "processed_dir": base_path / "data" / "processed",
         "report_dir": base_path / "reports",
         "figure_dir": base_path / "reports" / "figures",
-        "airflow_dir": base_path / ".airflow",
-        "dag_dir": base_path / ".airflow" / "dags",
+        "docker_airflow_dir": base_path / "automation" / "airflow",
+        "docker_dag_dir": base_path / "automation" / "airflow" / "dags",
     }
-    for key in ["raw_dir", "processed_dir", "report_dir", "figure_dir", "dag_dir"]:
+    for key in ["raw_dir", "processed_dir", "report_dir", "figure_dir", "docker_dag_dir"]:
         paths[key].mkdir(parents=True, exist_ok=True)
     return paths
 
@@ -293,7 +304,11 @@ def generate_report(base_dir: str | Path = ".") -> Path:
 - `reports/ch14_airflow_report.md`
 - `reports/ch14_airflow_validation_log.csv`
 
-## 6. 해석 시 주의할 점
+## 6. Docker/Airflow 실행 환경
+
+이 보고서는 로컬 Python 실행 또는 Docker Compose 기반 Airflow DAG 실행으로 재생성할 수 있습니다. Docker 설치 방법은 별도 블로그 글을 참고하고, 이 저장소에서는 `automation/airflow/docker-compose.yml` 기준으로 Airflow를 실행합니다.
+
+## 7. 해석 시 주의할 점
 
 이 보고서는 자동으로 생성된 요약입니다. 매출 변화의 원인을 단정하려면 외부 데이터, 프로모션 정보, 계절성, 재고 상황 등 추가 데이터와 사람의 검토가 필요합니다.
 
@@ -373,38 +388,44 @@ def create_pipeline_task_summary() -> pd.DataFrame:
 
 
 def create_airflow_setup_guide() -> pd.DataFrame:
-    """로컬 Airflow 실습 순서를 요약합니다."""
+    """Docker Compose 기반 Airflow 실습 순서를 요약합니다."""
     return pd.DataFrame(
         {
             "step": [
-                "가상환경 생성",
-                "Airflow 설치",
-                "AIRFLOW_HOME 설정",
-                "DAG 파일 배치",
-                "스크립트 단독 실행",
-                "Airflow standalone 실행",
+                "Docker 설치",
+                "Docker 동작 확인",
+                "Python 파이프라인 사전 검증",
+                "Airflow 환경 파일 준비",
+                "Airflow 이미지 빌드 및 DB 초기화",
+                "Airflow 실행",
+                "Airflow UI 접속",
                 "DAG 실행",
                 "산출물 검증",
+                "종료 또는 초기화",
             ],
             "command_or_action": [
-                "python3 -m venv .venv-airflow && source .venv-airflow/bin/activate",
-                "공식 문서 기준 constraints URL로 apache-airflow 설치",
-                "export AIRFLOW_HOME=$(pwd)/.airflow",
-                ".airflow/dags/ch14_local_analysis_pipeline.py 확인",
-                "python scripts/run_ch14_pipeline.py",
-                "airflow standalone",
-                "Airflow UI 또는 airflow dags trigger 사용",
+                "별도 블로그 글 참고: https://blog.naver.com/dev-dog/224341211248",
+                "docker --version && docker compose version && docker run hello-world",
+                "python scripts/generate_sample_data.py && python scripts/run_ch14_pipeline.py",
+                "cd automation/airflow && cp .env.example .env",
+                "docker compose up airflow-init",
+                "docker compose up",
+                "http://localhost:8080 / airflow / airflow",
+                "Airflow UI에서 ch14_local_analysis_pipeline 수동 실행",
                 "reports/ch14_airflow_validation_log.csv 확인",
+                "docker compose down 또는 docker compose down --volumes --remove-orphans",
             ],
             "note": [
-                "기존 실습 가상환경과 분리 권장",
-                "Python 버전과 Airflow 버전 호환성 확인",
-                "WSL2, macOS, Linux 기준 권장",
-                "DAG가 프로젝트 루트와 scripts 경로를 찾는지 확인",
-                "Airflow 문제와 Python 코드 문제를 분리하기 위함",
-                "웹 UI는 보통 http://localhost:8080",
-                "실패 Task 로그 확인",
+                "강의안에는 Docker 설치 과정을 길게 포함하지 않음",
+                "설치 성공 여부를 최소 명령으로 확인",
+                "Airflow 문제가 아니라 분석 코드 문제가 없는지 먼저 확인",
+                "Windows는 copy .env.example .env 사용 가능",
+                "최초 1회 또는 초기화 후 실행",
+                "터미널을 열어 둔 상태로 UI 접속",
+                "초기 계정은 수업용 기본값",
+                "실패 Task 로그를 확인",
                 "모든 status가 ok인지 확인",
+                "완전 초기화는 볼륨까지 삭제하므로 주의",
             ],
         }
     )
