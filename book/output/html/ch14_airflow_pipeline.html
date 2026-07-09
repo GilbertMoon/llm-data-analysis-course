@@ -3,796 +3,113 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>14장 Airflow 기반 데이터 분석 파이프라인</title>
+  <title>14장 Docker Compose 기반 Airflow 파이프라인</title>
   <style>
-:root {
-  color: #1f2933;
-  background: #ffffff;
-  font-family: "Noto Sans KR", "Malgun Gothic", "Apple SD Gothic Neo", Arial, sans-serif;
-  line-height: 1.7;
-}
-
-@page {
-  size: A4;
-  margin: 18mm 16mm 20mm 16mm;
-}
-
-body {
-  max-width: 880px;
-  margin: 0 auto;
-  padding: 48px 28px 72px;
-  font-size: 16px;
-}
-
-.chapter {
-  page-break-before: always;
-}
-
-.chapter:first-of-type {
-  page-break-before: auto;
-}
-
-h1,
-h2,
-h3,
-h4 {
-  line-height: 1.35;
-  color: #111827;
-}
-
-h1 {
-  margin: 0 0 32px;
-  padding-bottom: 16px;
-  border-bottom: 2px solid #d7dee8;
-  font-size: 2.1rem;
-}
-
-h2 {
-  margin-top: 40px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid #e5e7eb;
-  font-size: 1.45rem;
-}
-
-h3 {
-  margin-top: 28px;
-  font-size: 1.15rem;
-}
-
-h4 {
-  margin-top: 22px;
-  font-size: 1rem;
-}
-
-p {
-  margin: 12px 0;
-}
-
-ul,
-ol {
-  margin: 14px 0 18px 1.4rem;
-  padding-left: 1.1rem;
-}
-
-li {
-  margin: 6px 0;
-}
-
-table {
-  width: 100%;
-  margin: 24px 0;
-  border-collapse: collapse;
-  table-layout: fixed;
-  word-break: keep-all;
-  font-size: 0.95rem;
-}
-
-th,
-td {
-  padding: 10px 12px;
-  border: 1px solid #d7dee8;
-  vertical-align: top;
-  overflow-wrap: break-word;
-}
-
-th {
-  background: #f3f6fa;
-  font-weight: 700;
-}
-
-code {
-  padding: 0.15em 0.35em;
-  border: 1px solid #d7dee8;
-  border-radius: 4px;
-  background: #f6f8fa;
-  color: #0f172a;
-  font-family: "D2Coding", "Cascadia Code", "Consolas", monospace;
-  font-size: 0.92em;
-}
-
-pre {
-  margin: 22px 0;
-  padding: 18px 20px;
-  border: 1px solid #cbd5e1;
-  border-left: 5px solid #64748b;
-  border-radius: 8px;
-  background: #f8fafc;
-  color: #111827;
-  overflow-x: auto;
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
-  word-break: break-word;
-  line-height: 1.6;
-  page-break-inside: avoid;
-  break-inside: avoid;
-}
-
-pre code {
-  padding: 0;
-  border: 0;
-  background: transparent;
-  color: inherit;
-  font-size: 0.92rem;
-}
-
-blockquote {
-  margin: 20px 0;
-  padding: 12px 18px;
-  border-left: 4px solid #94a3b8;
-  background: #f8fafc;
-  color: #334155;
-}
-
-
-.figure {
-  margin: 28px 0;
-  text-align: center;
-  page-break-inside: avoid;
-  break-inside: avoid;
-}
-
-.figure img {
-  width: 100%;
-  max-width: 100%;
-  border: 1px solid #d7dee8;
-  border-radius: 10px;
-  background: #ffffff;
-}
-
-.figure figcaption {
-  margin-top: 8px;
-  color: #475569;
-  font-size: 0.92rem;
-  text-align: center;
-}
-
-img {
-  max-width: 100%;
-}
-
-.toc {
-  margin: 24px 0 34px;
-  padding: 18px 22px;
-  border: 1px solid #d7dee8;
-  border-radius: 8px;
-  background: #f8fafc;
-  page-break-inside: avoid;
-  break-inside: avoid;
-}
-
-.toc-title {
-  margin: 0 0 10px;
-  color: #111827;
-  font-weight: 700;
-}
-
-.toc ol {
-  margin: 0;
-  padding-left: 1.3rem;
-}
-
-.toc li {
-  margin: 4px 0;
-}
-
-.toc a {
-  color: #1d4ed8;
-  text-decoration: none;
-}
-
-.toc a:hover {
-  text-decoration: underline;
-}
-
-@media print {
-  body {
-    max-width: none;
-    padding: 0;
-    font-size: 11pt;
-  }
-
-  h1,
-  h2,
-  h3,
-  h4,
-  table,
-  pre,
-  blockquote,
-  .figure {
-    page-break-inside: avoid;
-    break-inside: avoid;
-  }
-
-  thead {
-    display: table-header-group;
-  }
-
-  tr {
-    page-break-inside: avoid;
-    break-inside: avoid;
-  }
-
-  p,
-  li {
-    orphans: 2;
-    widows: 2;
-  }
-}
-
-@media (max-width: 640px) {
-  body {
-    padding: 28px 18px 56px;
-    font-size: 15px;
-  }
-
-  table {
-    font-size: 0.9rem;
-  }
-
-  th,
-  td {
-    padding: 8px 10px;
-  }
-}
-
+    body { max-width: 920px; margin: 0 auto; padding: 48px 28px 72px; font-family: "Noto Sans KR", "Malgun Gothic", Arial, sans-serif; line-height: 1.75; color: #1f2933; }
+    h1, h2, h3 { color: #111827; line-height: 1.35; }
+    h1 { border-bottom: 2px solid #d7dee8; padding-bottom: 16px; }
+    h2 { margin-top: 40px; border-bottom: 1px solid #e5e7eb; padding-bottom: 8px; }
+    pre { background: #0f172a; color: #e5e7eb; padding: 16px; border-radius: 10px; overflow-x: auto; }
+    code { font-family: Consolas, Menlo, monospace; }
+    table { border-collapse: collapse; width: 100%; margin: 16px 0 24px; }
+    th, td { border: 1px solid #d1d5db; padding: 10px 12px; vertical-align: top; }
+    th { background: #f3f4f6; }
+    .note { background: #eef6ff; border-left: 4px solid #2563eb; padding: 12px 16px; }
   </style>
 </head>
 <body>
-  <main class="chapter">
-<h1>14장 Airflow 기반 데이터 분석 파이프라인</h1>
-<p>이 장에서는 데이터 분석 코드를 한 번 실행하는 수준을 넘어, 여러 분석 단계를 정해진 순서대로 자동 실행하는 방법을 배웁니다. Chapter 13에서 Make를 활용해 보고서 발송과 처리 로그를 자동화했다면, 이번 장에서는 Apache Airflow를 활용해 데이터 확인, 전처리, 분석, 시각화, 보고서 생성, 결과 파일 검증을 하나의 파이프라인으로 묶어 실행합니다.</p>
-<p>데이터 분석 실무에서는 분석 코드 자체보다 실행 순서, 실패 재시도, 로그 확인, 결과 파일 검증이 더 중요해지는 경우가 많습니다. Airflow는 이런 반복 실행 구조를 DAG와 Task로 정의하고, 각 Task의 상태를 확인하면서 안정적으로 운영할 수 있게 도와줍니다.</p>
-<p>이번 장의 핵심은 <strong>분석 로직은 Python 스크립트에 두고, 실행 순서와 운영 관리는 Airflow DAG에서 담당하도록 역할을 나누는 능력</strong>입니다.</p>
-<h2>수업 시간 구성</h2>
-<table>
-<thead><tr><th>구성</th><th>권장 시간</th></tr></thead>
-<tbody><tr><td>Airflow 기반 파이프라인 개념 이해</td><td>30분</td></tr>
-<tr><td>DAG, Task, Operator, Dependency 구조 이해</td><td>40분</td></tr>
-<tr><td>Python 분석 스크립트와 Airflow DAG 역할 분담</td><td>35분</td></tr>
-<tr><td>실습 폴더 구조와 입력 데이터 준비</td><td>30분</td></tr>
-<tr><td>Airflow DAG 설계</td><td>45분</td></tr>
-<tr><td>Task 의존성, Schedule, 실패 재시도 설정</td><td>45분</td></tr>
-<tr><td>로그 확인과 결과 파일 검증</td><td>40분</td></tr>
-<tr><td>Make 보고서 발송 연계 구조 이해</td><td>30분</td></tr>
-<tr><td>연습 문제 및 심화 과제</td><td>60~90분</td></tr></tbody>
-</table>
-<p>기본 설명과 설계 수업은 약 3시간 내외로 운영할 수 있습니다. 실제 Airflow 설치, DAG 실행, 로그 확인, 오류 재현, 재시도 확인, Make 연계까지 포함하면 약 5시간 이상의 확장 실습으로 운영하는 것이 적절합니다.</p>
-<h2>1. 학습 목표</h2>
-<p>이 장을 마치면 학습자는 다음을 할 수 있습니다.</p>
+<main class="chapter">
+<h1>14장. 반복되는 분석 흐름을 자동화하기</h1>
+<p>이 장에서는 온라인 쇼핑몰 분석 흐름을 <strong>입력 확인 → 전처리 → 분석 → 시각화 → 보고서 생성 → 산출물 검증</strong> 단계로 나누고, Python 스크립트와 Docker Compose 기반 Airflow DAG로 실행 순서를 관리합니다.</p>
+
+<h2>1. Docker 설치는 별도 가이드 참고</h2>
+<p>Docker 설치 과정은 이 강의안에 길게 포함하지 않습니다. Docker Desktop 설치와 기본 확인은 아래 블로그 글을 참고합니다.</p>
 <ul>
-<li>Airflow 기반 데이터 분석 파이프라인의 필요성을 설명할 수 있습니다.</li>
-<li>DAG, Task, Operator, Dependency, Schedule의 의미를 구분할 수 있습니다.</li>
-<li>Python 분석 스크립트와 Airflow DAG의 역할을 분리해 설계할 수 있습니다.</li>
-<li>여러 분석 작업을 Task 단위로 나누고 의존성을 설정할 수 있습니다.</li>
-<li>실패 재시도와 로그 확인이 필요한 이유를 설명할 수 있습니다.</li>
-<li>결과 파일 검증 Task를 추가해 파이프라인의 안정성을 높일 수 있습니다.</li>
-<li>필요 시 Make와 연결해 보고서 발송 자동화로 확장할 수 있습니다.</li>
-<li>LLM을 활용해 DAG 설계 초안과 검증 체크리스트를 작성할 수 있습니다.</li>
+  <li>Docker 설치 가이드: https://blog.naver.com/dev-dog/224341211248</li>
 </ul>
-<h2>2. 이번 장에서 만들 결과물</h2>
-<p>이번 장에서는 온라인 쇼핑몰 분석 흐름을 Airflow DAG로 자동 실행하는 구조를 만듭니다.</p>
-<p>이번 장에서 만들 결과물은 다음과 같습니다.</p>
-<ul>
-<li><code>scripts/ch14_preprocessing.py</code></li>
-<li><code>scripts/ch14_analysis.py</code></li>
-<li><code>scripts/ch14_visualization.py</code></li>
-<li><code>scripts/ch14_report.py</code></li>
-<li><code>dags/ch14_analysis_pipeline_dag.py</code></li>
-<li><code>reports/ch14_airflow_report.md</code></li>
-<li><code>reports/figures/ch14_daily_sales.png</code></li>
-<li><code>reports/ch14_airflow_validation_log.csv</code></li>
-<li>Airflow DAG 실행 로그 확인 결과</li>
-<li>필요 시 Make 보고서 발송 연계 설계표</li>
-</ul>
-<p>아래 그림은 Airflow가 데이터 분석 작업의 순서와 실행 상태를 관리하는 전체 흐름을 보여줍니다.</p>
-<figure class="figure">
-  <img src="../assets/images/ch14/ch14_airflow_pipeline_overview.png" alt="Airflow 기반 데이터 분석 파이프라인 전체 흐름도">
-  <figcaption>그림 14-1. Airflow 기반 데이터 분석 파이프라인 전체 흐름도</figcaption>
-</figure>
-<h2>3. 핵심 개념</h2>
-<h3>3.1 Airflow 기반 데이터 분석 파이프라인이란 무엇인가</h3>
-<p>Airflow 기반 데이터 분석 파이프라인은 여러 분석 단계를 하나의 실행 흐름으로 정의하고, 정해진 순서와 조건에 따라 자동으로 실행하는 구조입니다.</p>
-<p>예를 들어 다음 작업을 매일 아침 같은 순서로 실행해야 한다고 가정해 보겠습니다.</p>
-<ul>
-<li>원본 CSV 파일이 존재하는지 확인합니다.</li>
-<li>데이터 전처리 스크립트를 실행합니다.</li>
-<li>pandas 분석 스크립트를 실행합니다.</li>
-<li>그래프 이미지를 생성합니다.</li>
-<li>Markdown 보고서를 생성합니다.</li>
-<li>결과 파일이 정상 생성되었는지 검증합니다.</li>
-<li>실패한 경우 로그를 확인하고 필요한 Task만 재실행합니다.</li>
-</ul>
-<p>이 흐름을 수동으로 실행하면 순서를 실수하거나 중간 오류를 놓칠 수 있습니다. Airflow는 각 단계를 Task로 나누고, 어떤 Task가 먼저 실행되어야 하는지 Dependency로 표현합니다.</p>
-<h3>3.2 DAG, Task, Operator, Dependency, Schedule</h3>
-<p>Airflow를 이해하려면 다섯 가지 개념을 먼저 구분해야 합니다.</p>
+<p>설치 후 아래 명령이 정상 동작해야 합니다.</p>
+<pre><code>docker --version
+docker compose version
+docker run hello-world</code></pre>
+
+<h2>2. 자동화 흐름</h2>
 <table>
-<thead><tr><th>개념</th><th>의미</th><th>예시</th></tr></thead>
-<tbody><tr><td>DAG</td><td>전체 작업 흐름</td><td>쇼핑몰 분석 파이프라인</td></tr>
-<tr><td>Task</td><td>DAG 안의 개별 실행 단위</td><td>전처리 실행, 보고서 생성</td></tr>
-<tr><td>Operator</td><td>Task를 실행하는 방식</td><td>BashOperator, PythonOperator</td></tr>
-<tr><td>Dependency</td><td>Task 사이의 실행 순서</td><td>전처리 후 분석 실행</td></tr>
-<tr><td>Schedule</td><td>DAG 실행 주기</td><td>매일 09시, 수동 실행</td></tr></tbody>
+<thead><tr><th>단계</th><th>하는 일</th><th>입력</th><th>출력</th></tr></thead>
+<tbody>
+<tr><td>입력 확인</td><td>원본 데이터 확인</td><td>data/raw/*.csv</td><td>확인 결과</td></tr>
+<tr><td>전처리</td><td>결측치, 타입, 중복 처리</td><td>원본 CSV</td><td>data/processed/*_clean.csv</td></tr>
+<tr><td>분석</td><td>주요 지표 계산</td><td>전처리 데이터</td><td>reports/*.csv</td></tr>
+<tr><td>시각화</td><td>그래프 생성</td><td>분석 결과 CSV</td><td>reports/figures/*.png</td></tr>
+<tr><td>보고서</td><td>Markdown 보고서 작성</td><td>표, 그래프</td><td>reports/*.md</td></tr>
+<tr><td>검증</td><td>결과 파일 존재 여부 확인</td><td>산출물 목록</td><td>검증 로그</td></tr>
+</tbody>
 </table>
-<p>DAG는 전체 흐름이고, Task는 그 흐름 안에서 실행되는 개별 작업입니다. Operator는 Task가 실제로 어떤 방식으로 실행될지를 정합니다. Dependency는 작업 순서를 표현하고, Schedule은 언제 실행할지를 정의합니다.</p>
-<figure class="figure">
-  <img src="../assets/images/ch14/ch14_airflow_dag_structure.png" alt="Airflow DAG와 Task 구조">
-  <figcaption>그림 14-2. Airflow DAG와 Task 구조</figcaption>
-</figure>
-<h3>3.3 Python 분석 스크립트와 Airflow DAG의 역할 분담</h3>
-<p>Airflow를 처음 사용할 때 자주 하는 실수는 모든 분석 코드를 DAG 파일 안에 직접 넣는 것입니다. 이렇게 작성하면 DAG가 길어지고, 분석 코드 테스트도 어려워집니다.</p>
-<p>실무에서는 다음처럼 역할을 나누는 방식이 더 안정적입니다.</p>
-<table>
-<thead><tr><th>영역</th><th>Python 분석 스크립트 역할</th><th>Airflow DAG 역할</th></tr></thead>
-<tbody><tr><td>입력 확인</td><td>파일 존재 여부를 함수로 확인 가능</td><td>확인 Task 실행</td></tr>
-<tr><td>전처리</td><td>결측치, 중복, 타입 처리</td><td>전처리 스크립트 실행 순서 관리</td></tr>
-<tr><td>분석</td><td>pandas 집계와 지표 계산</td><td>분석 스크립트 실행 상태 관리</td></tr>
-<tr><td>시각화</td><td>그래프 PNG 저장</td><td>시각화 Task 실행</td></tr>
-<tr><td>보고서</td><td>Markdown 보고서 생성</td><td>보고서 생성 후 검증 Task 연결</td></tr>
-<tr><td>오류 처리</td><td>예외 발생 시 종료 코드 반환</td><td>실패 감지, 재시도, 로그 제공</td></tr>
-<tr><td>스케줄</td><td>직접 담당하지 않음</td><td>정기 실행 또는 수동 실행</td></tr></tbody>
-</table>
-<p>분석 로직은 <code>scripts/</code> 폴더에 두고, DAG 파일은 <code>dags/</code> 폴더에서 실행 순서와 운영 설정만 관리하는 방식이 좋습니다.</p>
-<figure class="figure">
-  <img src="../assets/images/ch14/ch14_python_airflow_role_split.png" alt="Python 분석 스크립트와 Airflow DAG의 역할 분담">
-  <figcaption>그림 14-3. Python 분석 스크립트와 Airflow DAG의 역할 분담</figcaption>
-</figure>
-<h3>3.4 Task 의존성과 실패 재시도</h3>
-<p>Task 의존성은 어떤 작업이 먼저 끝나야 다음 작업이 실행되는지를 의미합니다.</p>
-<p>이번 장에서는 다음 흐름을 사용합니다.</p>
-<pre><code class="language-text">check_input_files
+
+<h2>3. 이번 장의 DAG 구조</h2>
+<pre><code>check_input_files
 → run_preprocessing
 → run_analysis
 → generate_visualizations
 → generate_report
 → validate_outputs</code></pre>
-<p>이 순서를 지키면 전처리가 실패했는데 분석이 실행되거나, 보고서가 생성되지 않았는데 발송 단계로 넘어가는 문제를 줄일 수 있습니다.</p>
-<p>Airflow에서는 실패한 Task에 대해 재시도 횟수와 재시도 간격을 설정할 수 있습니다. 예를 들어 일시적인 파일 접근 오류나 외부 저장소 동기화 지연이 있는 경우 재시도 설정이 도움이 됩니다.</p>
-<figure class="figure">
-  <img src="../assets/images/ch14/ch14_airflow_task_dependency.png" alt="Airflow Task 의존성과 재시도 흐름">
-  <figcaption>그림 14-4. Airflow Task 의존성과 재시도 흐름</figcaption>
-</figure>
-<h3>3.5 로그 확인과 결과 파일 검증</h3>
-<p>Airflow의 장점은 각 Task의 실행 상태와 로그를 개별적으로 확인할 수 있다는 점입니다. 분석 결과가 이상할 때 전체 파이프라인을 다시 실행하기보다, 실패한 Task의 로그를 먼저 확인하고 필요한 부분만 수정하는 것이 좋습니다.</p>
-<p>결과 파일 검증 Task는 다음 항목을 확인합니다.</p>
+
+<h2>4. 실습 파일 구조</h2>
+<pre><code>automation/airflow/
+├─ Dockerfile
+├─ docker-compose.yml
+├─ requirements.txt
+├─ .env.example
+└─ dags/
+   └─ ch14_local_analysis_pipeline.py</code></pre>
+<p>Airflow 컨테이너 내부에서는 프로젝트 루트를 <code>/opt/airflow/project</code>로 사용합니다.</p>
+
+<h2>5. Python 파이프라인 사전 검증</h2>
+<p>Airflow 실행 전에 Python 분석 코드 자체가 정상인지 먼저 확인합니다.</p>
+<pre><code>python scripts/generate_sample_data.py
+python scripts/run_ch14_pipeline.py</code></pre>
+
+<h2>6. Docker Compose로 Airflow 실행</h2>
+<p><code>automation/airflow</code> 폴더에서 실행합니다.</p>
+<pre><code>cd automation/airflow</code></pre>
+<p>환경변수 예시 파일을 복사합니다.</p>
+<pre><code># macOS / Linux / WSL2
+cp .env.example .env
+
+# Windows PowerShell
+copy .env.example .env</code></pre>
+<p>최초 1회 초기화합니다.</p>
+<pre><code>docker compose up airflow-init</code></pre>
+<p>Airflow를 실행합니다.</p>
+<pre><code>docker compose up</code></pre>
+
+<h2>7. Airflow UI 접속</h2>
+<pre><code>http://localhost:8080
+ID: airflow
+PW: airflow</code></pre>
+<p>UI에서 <code>ch14_local_analysis_pipeline</code> DAG를 찾고 수동 실행합니다.</p>
+
+<h2>8. 산출물 검증</h2>
+<pre><code>reports/ch14_daily_sales.csv
+reports/ch14_category_sales.csv
+reports/figures/ch14_daily_sales.png
+reports/ch14_airflow_report.md
+reports/ch14_airflow_validation_log.csv</code></pre>
+<p>검증 로그의 모든 <code>status</code>가 <code>ok</code>이면 주요 산출물이 정상 생성된 것입니다.</p>
+
+<h2>9. 종료와 초기화</h2>
+<pre><code>docker compose down
+
+docker compose down --volumes --remove-orphans</code></pre>
+<p class="note">볼륨까지 삭제하면 Airflow 메타데이터 DB와 DAG 실행 기록이 초기화됩니다.</p>
+
+<h2>10. 정리</h2>
 <ul>
-<li>보고서 파일이 생성되었는지 확인합니다.</li>
-<li>그래프 이미지가 생성되었는지 확인합니다.</li>
-<li>검증 로그 CSV가 생성되었는지 확인합니다.</li>
-<li>파일 크기가 0이 아닌지 확인합니다.</li>
-<li>필수 산출물이 빠졌다면 예외를 발생시켜 DAG를 실패 처리합니다.</li>
+<li>Docker 설치는 별도 블로그 글로 분리합니다.</li>
+<li>14장 강의안은 Docker Compose 기반 Airflow 실행과 DAG 실습에 집중합니다.</li>
+<li>Airflow 실행 전 Python 파이프라인을 먼저 검증합니다.</li>
+<li>Airflow UI에서 DAG 실행 순서, 실패 로그, 산출물 검증을 확인합니다.</li>
+<li>Make/n8n은 보고서 전달 자동화 단계로 확장할 수 있습니다.</li>
 </ul>
-<figure class="figure">
-  <img src="../assets/images/ch14/ch14_pipeline_monitoring_retry_flow.png" alt="Airflow 파이프라인 모니터링과 재시도 흐름">
-  <figcaption>그림 14-5. Airflow 파이프라인 모니터링과 재시도 흐름</figcaption>
-</figure>
-<h2>4. 실습 시나리오</h2>
-<p>이번 실습에서는 온라인 쇼핑몰 주문 데이터를 기준으로 하루 단위 매출 리포트를 자동 생성한다고 가정합니다.</p>
-<p>실습 흐름은 다음과 같습니다.</p>
-<ol>
-<li><code>data/raw/</code> 폴더에 원본 CSV 파일이 있는지 확인합니다.</li>
-<li><code>scripts/ch14_preprocessing.py</code>로 정제 데이터를 생성합니다.</li>
-<li><code>scripts/ch14_analysis.py</code>로 매출 지표를 계산합니다.</li>
-<li><code>scripts/ch14_visualization.py</code>로 그래프 이미지를 생성합니다.</li>
-<li><code>scripts/ch14_report.py</code>로 Markdown 보고서를 생성합니다.</li>
-<li>Airflow의 <code>validate_outputs</code> Task에서 결과 파일을 검증합니다.</li>
-<li>필요 시 Make가 보고서 파일을 감지해 Gmail로 발송합니다.</li>
-</ol>
-<p>실무에서는 Airflow가 분석 파이프라인을 담당하고, Make는 보고서 발송, 알림, 외부 앱 연계를 담당하도록 나누면 운영이 단순해집니다. 필요 시 Make로 보고서 발송 단계를 연결해 최종 산출물을 담당자에게 전달할 수 있습니다.</p>
-<h2>5. 실습 준비</h2>
-<h3>5.1 권장 폴더 구조</h3>
-<p>실습 폴더는 다음 구조를 권장합니다.</p>
-<pre><code class="language-text">llm-data-analysis-course/
-  dags/
-    ch14_analysis_pipeline_dag.py
-  data/
-    raw/
-      orders.csv
-      order_items.csv
-      products.csv
-      customers.csv
-    processed/
-  reports/
-    figures/
-  scripts/
-    ch14_preprocessing.py
-    ch14_analysis.py
-    ch14_visualization.py
-    ch14_report.py</code></pre>
-<h3>5.2 필요한 Python 패키지</h3>
-<p>로컬 실습 환경 또는 Airflow 컨테이너 안에서 다음 패키지를 사용할 수 있어야 합니다.</p>
-<pre><code class="language-bash">pip install pandas matplotlib apache-airflow</code></pre>
-<p>수업 환경에서는 Airflow 설치가 부담스러울 수 있으므로 Docker 기반 Airflow 환경을 사용하거나, 강사가 준비한 실습 환경에서 DAG 파일만 수정하는 방식으로 진행해도 좋습니다.</p>
-<h3>5.3 입력 데이터 확인 기준</h3>
-<p>이번 실습에서 필요한 입력 파일은 다음과 같습니다.</p>
-<table>
-<thead><tr><th>파일</th><th>설명</th><th>필수 여부</th></tr></thead>
-<tbody><tr><td><code>orders.csv</code></td><td>주문 기본 정보</td><td>필수</td></tr>
-<tr><td><code>order_items.csv</code></td><td>주문 상세 품목</td><td>필수</td></tr>
-<tr><td><code>products.csv</code></td><td>상품 정보</td><td>필수</td></tr>
-<tr><td><code>customers.csv</code></td><td>고객 정보</td><td>필수</td></tr></tbody>
-</table>
-<p>입력 파일이 없으면 전처리 이후 단계가 실행되어도 의미가 없으므로, 첫 Task에서 반드시 파일 존재 여부를 확인합니다.</p>
-<h2>6. Airflow DAG 설계</h2>
-<h3>6.1 DAG 설계 원칙</h3>
-<p>Airflow DAG를 설계할 때는 다음 원칙을 지키는 것이 좋습니다.</p>
-<ul>
-<li>DAG 파일은 실행 흐름을 정의하는 데 집중합니다.</li>
-<li>데이터 분석 코드는 별도 Python 스크립트로 분리합니다.</li>
-<li>Task 이름은 실행 목적이 드러나도록 작성합니다.</li>
-<li>Task 의존성은 한 줄로 읽히게 구성합니다.</li>
-<li>실패 재시도 횟수와 간격을 명시합니다.</li>
-<li>마지막 단계에 결과 파일 검증 Task를 둡니다.</li>
-</ul>
-<h3>6.2 이번 장의 Task 구성</h3>
-<table>
-<thead><tr><th>Task ID</th><th>Operator</th><th>역할</th></tr></thead>
-<tbody><tr><td><code>check_input_files</code></td><td>PythonOperator</td><td>원본 CSV 파일 존재 여부 확인</td></tr>
-<tr><td><code>run_preprocessing</code></td><td>BashOperator</td><td>전처리 스크립트 실행</td></tr>
-<tr><td><code>run_analysis</code></td><td>BashOperator</td><td>분석 스크립트 실행</td></tr>
-<tr><td><code>generate_visualizations</code></td><td>BashOperator</td><td>시각화 스크립트 실행</td></tr>
-<tr><td><code>generate_report</code></td><td>BashOperator</td><td>보고서 생성 스크립트 실행</td></tr>
-<tr><td><code>validate_outputs</code></td><td>PythonOperator</td><td>결과 파일 존재 여부와 크기 검증</td></tr></tbody>
-</table>
-<p>이번 장에서는 BashOperator와 PythonOperator를 함께 사용합니다. BashOperator는 독립 Python 스크립트를 실행할 때 사용하고, PythonOperator는 DAG 파일 안의 간단한 검증 함수를 실행할 때 사용합니다.</p>
-<h2>7. 실습 코드</h2>
-<p>이번 장은 Notebook 중심 실습이 아니라 Airflow DAG와 독립 Python 스크립트 중심 실습입니다. <code>notebooks/ch14_airflow_pipeline.ipynb</code>는 개념 확인과 코드 조각 테스트용으로 사용할 수 있지만, 실제 DAG 실행은 Airflow 환경에서 진행합니다.</p>
-<p>아래 코드의 <code>Path(__file__).resolve().parents[1]</code>는 <code>.py</code> 스크립트 파일로 실행하는 상황을 전제로 합니다. Notebook 셀에서 그대로 실행하면 <code>__file__</code>이 정의되어 있지 않아 오류가 날 수 있습니다.</p>
-<h3>7.1 전처리 스크립트</h3>
-<p>아래 코드는 원본 CSV를 읽고 정제 데이터를 <code>data/processed/</code> 폴더에 저장하는 예시입니다.</p>
-<pre><code class="language-python">from pathlib import Path
-import pandas as pd
-
-BASE_DIR = Path(__file__).resolve().parents[1]
-RAW_DIR = BASE_DIR / &quot;data&quot; / &quot;raw&quot;
-PROCESSED_DIR = BASE_DIR / &quot;data&quot; / &quot;processed&quot;
-PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
-
-orders = pd.read_csv(RAW_DIR / &quot;orders.csv&quot;)
-order_items = pd.read_csv(RAW_DIR / &quot;order_items.csv&quot;)
-products = pd.read_csv(RAW_DIR / &quot;products.csv&quot;)
-customers = pd.read_csv(RAW_DIR / &quot;customers.csv&quot;)
-
-orders[&quot;order_date&quot;] = pd.to_datetime(orders[&quot;order_date&quot;], errors=&quot;coerce&quot;)
-orders = orders.dropna(subset=[&quot;order_id&quot;, &quot;customer_id&quot;, &quot;order_date&quot;])
-order_items = order_items.dropna(subset=[&quot;order_id&quot;, &quot;product_id&quot;, &quot;quantity&quot;, &quot;unit_price&quot;])
-
-if &quot;line_total&quot; not in order_items.columns:
-    order_items[&quot;line_total&quot;] = order_items[&quot;quantity&quot;] * order_items[&quot;unit_price&quot;]
-
-orders.to_csv(PROCESSED_DIR / &quot;orders_clean.csv&quot;, index=False, encoding=&quot;utf-8-sig&quot;)
-order_items.to_csv(PROCESSED_DIR / &quot;order_items_clean.csv&quot;, index=False, encoding=&quot;utf-8-sig&quot;)
-products.to_csv(PROCESSED_DIR / &quot;products_clean.csv&quot;, index=False, encoding=&quot;utf-8-sig&quot;)
-customers.to_csv(PROCESSED_DIR / &quot;customers_clean.csv&quot;, index=False, encoding=&quot;utf-8-sig&quot;)
-
-print(&quot;전처리 완료:&quot;, PROCESSED_DIR)</code></pre>
-<h3>7.2 분석 스크립트</h3>
-<p>아래 코드는 주문 상세 데이터를 기준으로 일자별 매출을 계산합니다.</p>
-<pre><code class="language-python">from pathlib import Path
-import pandas as pd
-
-BASE_DIR = Path(__file__).resolve().parents[1]
-PROCESSED_DIR = BASE_DIR / &quot;data&quot; / &quot;processed&quot;
-REPORT_DIR = BASE_DIR / &quot;reports&quot;
-REPORT_DIR.mkdir(parents=True, exist_ok=True)
-
-orders = pd.read_csv(PROCESSED_DIR / &quot;orders_clean.csv&quot;, parse_dates=[&quot;order_date&quot;])
-order_items = pd.read_csv(PROCESSED_DIR / &quot;order_items_clean.csv&quot;)
-
-if &quot;line_total&quot; in order_items.columns:
-    order_items[&quot;sales&quot;] = order_items[&quot;line_total&quot;]
-else:
-    order_items[&quot;sales&quot;] = order_items[&quot;quantity&quot;] * order_items[&quot;unit_price&quot;]
-
-merged = order_items.merge(
-    orders[[&quot;order_id&quot;, &quot;order_date&quot;]],
-    on=&quot;order_id&quot;,
-    how=&quot;left&quot;
-)
-
-daily_sales = (
-    merged.assign(order_day=merged[&quot;order_date&quot;].dt.date)
-    .groupby(&quot;order_day&quot;, as_index=False)[&quot;sales&quot;]
-    .sum()
-    .sort_values(&quot;order_day&quot;)
-)
-
-daily_sales.to_csv(REPORT_DIR / &quot;ch14_daily_sales.csv&quot;, index=False, encoding=&quot;utf-8-sig&quot;)
-print(&quot;분석 완료:&quot;, REPORT_DIR / &quot;ch14_daily_sales.csv&quot;)</code></pre>
-<h3>7.3 시각화 스크립트</h3>
-<p>아래 코드는 일자별 매출 그래프를 생성합니다.</p>
-<pre><code class="language-python">from pathlib import Path
-import pandas as pd
-import matplotlib.pyplot as plt
-
-BASE_DIR = Path(__file__).resolve().parents[1]
-REPORT_DIR = BASE_DIR / &quot;reports&quot;
-FIGURE_DIR = REPORT_DIR / &quot;figures&quot;
-FIGURE_DIR.mkdir(parents=True, exist_ok=True)
-
-daily_sales = pd.read_csv(REPORT_DIR / &quot;ch14_daily_sales.csv&quot;)
-daily_sales[&quot;order_day&quot;] = pd.to_datetime(daily_sales[&quot;order_day&quot;])
-
-plt.figure(figsize=(10, 4))
-plt.plot(daily_sales[&quot;order_day&quot;], daily_sales[&quot;sales&quot;], marker=&quot;o&quot;)
-plt.title(&quot;Daily Sales&quot;)
-plt.xlabel(&quot;Date&quot;)
-plt.ylabel(&quot;Sales&quot;)
-plt.grid(True, alpha=0.3)
-plt.tight_layout()
-plt.savefig(FIGURE_DIR / &quot;ch14_daily_sales.png&quot;, dpi=150)
-plt.close()
-
-print(&quot;시각화 완료:&quot;, FIGURE_DIR / &quot;ch14_daily_sales.png&quot;)</code></pre>
-<h3>7.4 보고서 생성 스크립트</h3>
-<p>아래 코드는 분석 결과를 Markdown 보고서로 저장합니다.</p>
-<pre><code class="language-python">from pathlib import Path
-import pandas as pd
-
-BASE_DIR = Path(__file__).resolve().parents[1]
-REPORT_DIR = BASE_DIR / &quot;reports&quot;
-FIGURE_DIR = REPORT_DIR / &quot;figures&quot;
-REPORT_DIR.mkdir(parents=True, exist_ok=True)
-
-daily_sales = pd.read_csv(REPORT_DIR / &quot;ch14_daily_sales.csv&quot;)
-total_sales = daily_sales[&quot;sales&quot;].sum()
-average_sales = daily_sales[&quot;sales&quot;].mean()
-max_row = daily_sales.loc[daily_sales[&quot;sales&quot;].idxmax()]
-
-report_text = f&quot;&quot;&quot;# Chapter 14 Airflow 분석 보고서
-
-## 핵심 지표
-
-- 총 매출: {total_sales:,.0f}
-- 일평균 매출: {average_sales:,.0f}
-- 최고 매출일: {max_row[&quot;order_day&quot;]}
-- 최고 매출액: {max_row[&quot;sales&quot;]:,.0f}
-
-## 그래프 파일
-
-- reports/figures/ch14_daily_sales.png
-
-## 운영 메모
-
-Airflow DAG에서 전처리, 분석, 시각화, 보고서 생성, 결과 검증 순서로 실행되었습니다.
-&quot;&quot;&quot;
-
-(REPORT_DIR / &quot;ch14_airflow_report.md&quot;).write_text(report_text, encoding=&quot;utf-8&quot;)
-print(&quot;보고서 생성 완료:&quot;, REPORT_DIR / &quot;ch14_airflow_report.md&quot;)</code></pre>
-<h3>7.5 Airflow DAG 코드</h3>
-<p>아래 DAG 코드는 이번 장의 핵심 실습 코드입니다. 학습자는 경로를 자신의 Airflow 실행 환경에 맞게 조정해야 합니다.</p>
-<pre><code class="language-python">from airflow import DAG
-from airflow.operators.bash import BashOperator
-from airflow.operators.python import PythonOperator
-from datetime import datetime, timedelta
-from pathlib import Path
-import csv
-
-BASE_DIR = Path(&quot;/opt/airflow&quot;)
-DATA_DIR = BASE_DIR / &quot;data&quot;
-RAW_DIR = DATA_DIR / &quot;raw&quot;
-REPORT_DIR = BASE_DIR / &quot;reports&quot;
-FIGURE_DIR = REPORT_DIR / &quot;figures&quot;
-
-REQUIRED_INPUT_FILES = [
-    RAW_DIR / &quot;orders.csv&quot;,
-    RAW_DIR / &quot;order_items.csv&quot;,
-    RAW_DIR / &quot;products.csv&quot;,
-    RAW_DIR / &quot;customers.csv&quot;,
-]
-
-REQUIRED_OUTPUT_FILES = [
-    REPORT_DIR / &quot;ch14_daily_sales.csv&quot;,
-    REPORT_DIR / &quot;ch14_airflow_report.md&quot;,
-    FIGURE_DIR / &quot;ch14_daily_sales.png&quot;,
-]
-
-default_args = {
-    &quot;owner&quot;: &quot;data-analysis-class&quot;,
-    &quot;depends_on_past&quot;: False,
-    &quot;retries&quot;: 2,
-    &quot;retry_delay&quot;: timedelta(minutes=5),
-}
-
-def _check_input_files():
-    missing_files = [str(path) for path in REQUIRED_INPUT_FILES if not path.exists()]
-    if missing_files:
-        raise FileNotFoundError(&quot;입력 파일이 없습니다: &quot; + &quot;, &quot;.join(missing_files))
-    print(&quot;입력 파일 확인 완료&quot;)
-
-def _validate_outputs():
-    validation_rows = []
-
-    for path in REQUIRED_OUTPUT_FILES:
-        exists = path.exists()
-        size = path.stat().st_size if exists else 0
-        validation_rows.append({
-            &quot;file&quot;: str(path),
-            &quot;exists&quot;: exists,
-            &quot;size&quot;: size,
-            &quot;status&quot;: &quot;ok&quot; if exists and size &gt; 0 else &quot;error&quot;,
-        })
-
-    REPORT_DIR.mkdir(parents=True, exist_ok=True)
-    log_path = REPORT_DIR / &quot;ch14_airflow_validation_log.csv&quot;
-
-    with log_path.open(&quot;w&quot;, newline=&quot;&quot;, encoding=&quot;utf-8&quot;) as f:
-        writer = csv.DictWriter(f, fieldnames=[&quot;file&quot;, &quot;exists&quot;, &quot;size&quot;, &quot;status&quot;])
-        writer.writeheader()
-        writer.writerows(validation_rows)
-
-    failed = [row[&quot;file&quot;] for row in validation_rows if row[&quot;status&quot;] != &quot;ok&quot;]
-    if failed:
-        raise RuntimeError(&quot;결과 파일 검증 실패: &quot; + &quot;, &quot;.join(failed))
-
-    print(&quot;결과 파일 검증 완료:&quot;, log_path)
-
-with DAG(
-    dag_id=&quot;ch14_airflow_analysis_pipeline&quot;,
-    description=&quot;Chapter 14 Airflow 기반 데이터 분석 파이프라인&quot;,
-    start_date=datetime(2026, 1, 1),
-    schedule=&quot;@daily&quot;,
-    catchup=False,
-    default_args=default_args,
-    tags=[&quot;chapter14&quot;, &quot;data-analysis&quot;, &quot;airflow&quot;],
-) as dag:
-
-    check_input_files = PythonOperator(
-        task_id=&quot;check_input_files&quot;,
-        python_callable=_check_input_files,
-    )
-
-    run_preprocessing = BashOperator(
-        task_id=&quot;run_preprocessing&quot;,
-        bash_command=&quot;python /opt/airflow/scripts/ch14_preprocessing.py&quot;,
-    )
-
-    run_analysis = BashOperator(
-        task_id=&quot;run_analysis&quot;,
-        bash_command=&quot;python /opt/airflow/scripts/ch14_analysis.py&quot;,
-    )
-
-    generate_visualizations = BashOperator(
-        task_id=&quot;generate_visualizations&quot;,
-        bash_command=&quot;python /opt/airflow/scripts/ch14_visualization.py&quot;,
-    )
-
-    generate_report = BashOperator(
-        task_id=&quot;generate_report&quot;,
-        bash_command=&quot;python /opt/airflow/scripts/ch14_report.py&quot;,
-    )
-
-    validate_outputs = PythonOperator(
-        task_id=&quot;validate_outputs&quot;,
-        python_callable=_validate_outputs,
-    )
-
-    check_input_files &gt;&gt; run_preprocessing &gt;&gt; run_analysis &gt;&gt; generate_visualizations &gt;&gt; generate_report &gt;&gt; validate_outputs</code></pre>
-<p>위 코드에서 가장 중요한 부분은 마지막 Task 의존성입니다.</p>
-<pre><code class="language-python">check_input_files &gt;&gt; run_preprocessing &gt;&gt; run_analysis &gt;&gt; generate_visualizations &gt;&gt; generate_report &gt;&gt; validate_outputs</code></pre>
-<p>이 한 줄이 전체 데이터 분석 파이프라인의 실행 순서를 정의합니다.</p>
-<h2>8. LLM 활용 프롬프트</h2>
-<p>Airflow DAG를 처음 설계할 때는 LLM을 활용해 Task 분리와 검증 항목 초안을 만들 수 있습니다. 단, LLM이 생성한 DAG 코드는 반드시 사람이 실행 환경과 경로를 검증해야 합니다.</p>
-<h3>8.1 DAG 설계 초안 요청 프롬프트</h3>
-<pre><code class="language-text">온라인 쇼핑몰 주문 데이터를 매일 분석하는 Airflow DAG를 설계하려고 합니다.
-
-입력 파일:
-- orders.csv
-- order_items.csv
-- products.csv
-- customers.csv
-
-필요한 작업:
-- 입력 파일 확인
-- 데이터 전처리
-- 매출 분석
-- 시각화 생성
-- Markdown 보고서 생성
-- 결과 파일 검증
-
-요구사항:
-- DAG, Task, Operator, Dependency, Schedule 개념이 드러나게 설계해 주세요.
-- Python 분석 스크립트와 Airflow DAG의 역할을 분리해 주세요.
-- 실패 재시도와 로그 확인 관점을 포함해 주세요.
-- 마지막에는 Make로 보고서 발송을 연결할 수 있는 구조도 제안해 주세요.</code></pre>
-<h3>8.2 검증 체크리스트 요청 프롬프트</h3>
-<pre><code class="language-text">아래 Airflow 데이터 분석 파이프라인을 운영하기 전에 확인해야 할 검증 체크리스트를 만들어 주세요.
-
-Task 흐름:
-check_input_files → run_preprocessing → run_analysis → generate_visualizations → generate_report → validate_outputs
-
-체크리스트에는 다음 항목을 포함해 주세요.
-- 입력 파일 검증
-- 중간 산출물 검증
-- 최종 보고서 검증
-- 실패 재시도 기준
-- 로그 확인 방법
-- 결과 파일이 없을 때의 대응
-- 필요 시 Make 보고서 발송 전 확인 항목</code></pre>
-<p>LLM은 초안을 빠르게 만드는 데 도움이 되지만, Airflow 실행 경로, 파일 권한, Docker 볼륨 연결, 실제 데이터 컬럼명은 반드시 사람이 확인해야 합니다.</p>
-<h2>9. 결과 해석</h2>
-<p>Airflow DAG 실행 결과를 해석할 때는 단순히 성공 여부만 보지 말고 Task 단위로 확인해야 합니다.</p>
-<table>
-<thead><tr><th>확인 항목</th><th>확인 방법</th><th>해석 기준</th></tr></thead>
-<tbody><tr><td>DAG 실행 상태</td><td>Airflow UI의 DAG Runs</td><td>전체 실행 성공 또는 실패 확인</td></tr>
-<tr><td>Task 상태</td><td>Graph 또는 Grid 화면</td><td>어느 단계에서 실패했는지 확인</td></tr>
-<tr><td>로그</td><td>실패 Task의 Log 메뉴</td><td>파일 경로, 컬럼명, 권한 오류 확인</td></tr>
-<tr><td>결과 CSV</td><td><code>reports/ch14_daily_sales.csv</code></td><td>행 수와 주요 값 확인</td></tr>
-<tr><td>그래프 파일</td><td><code>reports/figures/</code></td><td>PNG 생성 여부 확인</td></tr>
-<tr><td>보고서 파일</td><td><code>reports/ch14_airflow_report.md</code></td><td>핵심 지표와 그래프 경로 확인</td></tr>
-<tr><td>검증 로그</td><td><code>ch14_airflow_validation_log.csv</code></td><td>필수 산출물 존재 여부 확인</td></tr></tbody>
-</table>
-<p>실패가 발생하면 먼저 로그를 확인하고, 원인을 수정한 뒤 실패한 Task부터 재실행합니다. 전체 DAG를 무조건 다시 실행하는 것보다 실패 지점부터 확인하는 습관이 중요합니다.</p>
-<h2>10. 실무 적용 포인트</h2>
-<p>Airflow를 실무 분석 파이프라인에 적용할 때는 다음 사항을 고려해야 합니다.</p>
-<ul>
-<li>DAG는 너무 복잡하게 만들지 말고 업무 단위로 분리합니다.</li>
-<li>분석 스크립트는 Airflow 밖에서도 단독 실행 가능해야 합니다.</li>
-<li>입력 데이터, 중간 산출물, 최종 산출물 경로를 명확히 분리합니다.</li>
-<li>모든 Task는 실패 시 원인을 로그로 남기도록 작성합니다.</li>
-<li>재시도는 무조건 많이 설정하지 말고 오류 유형에 맞게 설정합니다.</li>
-<li>결과 파일 검증 없이 보고서 발송 단계로 넘어가지 않도록 합니다.</li>
-<li>보고서 발송, Slack 알림, Google Sheets 기록은 필요 시 Make와 연결합니다.</li>
-<li>운영 중인 DAG는 변경 이력을 남기고 테스트 환경에서 먼저 검증합니다.</li>
-</ul>
-<p>Airflow는 분석 작업을 자동 실행하는 도구이고, Make는 외부 서비스와 연결해 결과를 전달하는 도구로 이해하면 역할 분담이 명확해집니다.</p>
-<h2>11. 연습 문제</h2>
-<h3>11.1 기본 문제</h3>
-<ol>
-<li>DAG, Task, Operator, Dependency, Schedule의 의미를 한 문장씩 설명해 보세요.</li>
-<li><code>check_input_files</code> Task가 가장 먼저 실행되어야 하는 이유를 설명해 보세요.</li>
-<li>BashOperator와 PythonOperator의 차이를 정리해 보세요.</li>
-<li>결과 파일 검증 Task에서 확인해야 할 항목을 5개 이상 작성해 보세요.</li>
-<li>Airflow 로그를 확인해야 하는 상황을 3가지 작성해 보세요.</li>
-</ol>
-<h3>11.2 실습 문제</h3>
-<ol>
-<li><code>validate_outputs</code> Task에 검증 대상 파일을 하나 더 추가해 보세요.</li>
-<li>DAG의 <code>schedule</code>을 수동 실행 기준으로 바꾸어 보세요.</li>
-<li><code>retries</code> 값을 1, 2, 3으로 바꾸었을 때 운영상 차이를 설명해 보세요.</li>
-<li>전처리 스크립트에서 입력 컬럼이 없을 때 예외를 발생시키도록 수정해 보세요.</li>
-<li>Make로 보고서를 발송하기 전에 확인해야 할 조건을 표로 정리해 보세요.</li>
-</ol>
-<h3>11.3 심화 문제</h3>
-<p>다음 조건을 만족하는 Airflow 파이프라인 개선안을 작성해 보세요.</p>
-<ul>
-<li>원본 데이터가 없으면 이후 Task가 실행되지 않아야 합니다.</li>
-<li>분석 결과 CSV의 행 수가 0이면 보고서를 생성하지 않아야 합니다.</li>
-<li>보고서 생성 후 결과 파일 검증을 통과해야 합니다.</li>
-<li>검증 성공 후에만 Make 보고서 발송 시나리오가 실행되어야 합니다.</li>
-<li>실패한 Task의 로그를 보고 원인과 조치 내용을 운영 문서에 기록해야 합니다.</li>
-</ul>
-<h2>12. 정리</h2>
-<p>이번 장에서는 Airflow를 활용해 데이터 분석 작업을 하나의 파이프라인으로 구성하는 방법을 배웠습니다.</p>
-<p>핵심 내용을 정리하면 다음과 같습니다.</p>
-<ul>
-<li>Airflow 기반 데이터 분석 파이프라인은 여러 분석 작업을 정해진 순서로 자동 실행하는 구조입니다.</li>
-<li>DAG는 전체 흐름이고, Task는 개별 실행 단계입니다.</li>
-<li>Operator는 Task 실행 방식을 정의하고, Dependency는 실행 순서를 정의합니다.</li>
-<li>Schedule은 DAG가 언제 실행될지를 정합니다.</li>
-<li>Python 분석 스크립트와 Airflow DAG는 역할을 분리하는 것이 좋습니다.</li>
-<li>Task 의존성을 명확히 설정하면 실패한 단계 이후의 작업이 잘못 실행되는 것을 막을 수 있습니다.</li>
-<li>실패 재시도, 로그 확인, 결과 파일 검증은 실무 운영에서 매우 중요합니다.</li>
-<li>필요 시 Make와 연결하면 보고서 발송, 알림, 실행 로그 기록까지 자동화할 수 있습니다.</li>
-</ul>
-<p>Airflow는 분석 자동화의 실행 엔진이고, Make는 결과 전달과 외부 서비스 연계 도구입니다. 두 도구를 역할에 맞게 조합하면 반복 데이터 분석 업무를 더 안정적으로 운영할 수 있습니다.</p>
-  </main></body></html>
+</main>
+</body>
+</html>
