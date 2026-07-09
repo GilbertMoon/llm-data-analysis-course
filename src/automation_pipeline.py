@@ -27,8 +27,8 @@ CH14_REPORT_FILES = [
     "ch14_category_sales.csv",
     "ch14_pipeline_task_summary.csv",
     "ch14_airflow_report.md",
-    "ch14_airflow_validation_log.csv",
 ]
+CH14_VALIDATION_LOG_FILE = "ch14_airflow_validation_log.csv"
 CH14_FIGURE_FILES = ["ch14_daily_sales.png"]
 
 
@@ -70,7 +70,12 @@ def expected_input_files(base_dir: str | Path = ".") -> list[Path]:
 
 
 def expected_output_files(base_dir: str | Path = ".") -> list[Path]:
-    """14장 파이프라인에서 생성되어야 하는 주요 산출물 경로를 반환합니다."""
+    """14장 파이프라인에서 검증해야 하는 주요 산출물 경로를 반환합니다.
+
+    주의: 검증 로그 파일(`ch14_airflow_validation_log.csv`)은 이 함수에서 제외합니다.
+    검증 로그는 `validate_outputs()`가 검증 결과를 저장하면서 새로 생성하는 파일이기 때문입니다.
+    검증 대상에 자기 자신을 포함하면 첫 실행 시 아직 존재하지 않아 실패합니다.
+    """
     paths = get_project_paths(base_dir)
     processed_files = [paths["processed_dir"] / filename for filename in PROCESSED_FILENAMES]
     report_files = [paths["report_dir"] / filename for filename in CH14_REPORT_FILES]
@@ -321,7 +326,11 @@ def generate_report(base_dir: str | Path = ".") -> Path:
 
 
 def validate_outputs(base_dir: str | Path = ".") -> pd.DataFrame:
-    """14장 산출물 존재 여부와 파일 크기를 검증합니다."""
+    """14장 산출물 존재 여부와 파일 크기를 검증합니다.
+
+    검증 로그 파일은 이 함수가 마지막에 생성합니다. 따라서 검증 대상에는 포함하지 않고,
+    검증 결과를 저장한 뒤 반환값에만 참고 행으로 추가합니다.
+    """
     paths = get_project_paths(base_dir)
     rows = []
     for path in expected_output_files(base_dir):
@@ -337,14 +346,26 @@ def validate_outputs(base_dir: str | Path = ".") -> pd.DataFrame:
         )
 
     validation_log = pd.DataFrame(rows)
-    log_path = paths["report_dir"] / "ch14_airflow_validation_log.csv"
+    log_path = paths["report_dir"] / CH14_VALIDATION_LOG_FILE
     validation_log.to_csv(log_path, index=False, encoding="utf-8-sig")
 
     failed = validation_log[validation_log["status"] != "ok"]
     if not failed.empty:
         failed_files = ", ".join(failed["file"].tolist())
         raise RuntimeError("결과 파일 검증 실패: " + failed_files)
-    return validation_log
+
+    log_size = log_path.stat().st_size if log_path.exists() else 0
+    log_row = pd.DataFrame(
+        [
+            {
+                "file": str(log_path),
+                "exists": log_path.exists(),
+                "size": log_size,
+                "status": "ok" if log_path.exists() and log_size > 0 else "error",
+            }
+        ]
+    )
+    return pd.concat([validation_log, log_row], ignore_index=True)
 
 
 def create_pipeline_task_summary() -> pd.DataFrame:
