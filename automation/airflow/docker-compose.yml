@@ -34,6 +34,8 @@ x-airflow-common: &airflow-common
     AIRFLOW__SCHEDULER__ENABLE_HEALTH_CHECK: "true"
     PROJECT_ROOT: /opt/airflow/project
     PYTHONPATH: /opt/airflow/project
+    _AIRFLOW_DB_MIGRATE: "true"
+    _AIRFLOW_WWW_USER_CREATE: "true"
     _AIRFLOW_WWW_USER_USERNAME: ${_AIRFLOW_WWW_USER_USERNAME:-airflow}
     _AIRFLOW_WWW_USER_PASSWORD: ${_AIRFLOW_WWW_USER_PASSWORD:-airflow}
   volumes:
@@ -73,15 +75,7 @@ services:
       - -c
       - |
         mkdir -p /opt/airflow/dags /opt/airflow/logs /opt/airflow/plugins /opt/airflow/config
-        airflow db migrate
-        airflow users create \
-          --username "$${_AIRFLOW_WWW_USER_USERNAME}" \
-          --password "$${_AIRFLOW_WWW_USER_PASSWORD}" \
-          --firstname Airflow \
-          --lastname Admin \
-          --role Admin \
-          --email airflow@example.com || true
-        echo "Airflow initialization completed."
+        exec /entrypoint airflow version
     restart: "no"
 
   airflow-api-server:
