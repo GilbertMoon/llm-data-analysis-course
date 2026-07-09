@@ -32,6 +32,8 @@ x-airflow-common: &airflow-common
     AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "true"
     AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
     AIRFLOW__SCHEDULER__ENABLE_HEALTH_CHECK: "true"
+    AIRFLOW__CORE__EXECUTION_API_SERVER_URL: http://airflow-api-server:8080/execution/
+    AIRFLOW__API_AUTH__JWT_SECRET: llm-course-airflow-dev-jwt-secret
     PROJECT_ROOT: /opt/airflow/project
     PYTHONPATH: /opt/airflow/project
     _AIRFLOW_DB_MIGRATE: "true"
@@ -100,6 +102,8 @@ services:
         condition: service_healthy
       airflow-init:
         condition: service_completed_successfully
+      airflow-api-server:
+        condition: service_started
     restart: unless-stopped
 
   airflow-dag-processor:
@@ -111,6 +115,8 @@ services:
         condition: service_healthy
       airflow-init:
         condition: service_completed_successfully
+      airflow-api-server:
+        condition: service_started
     restart: unless-stopped
 
   airflow-triggerer:
@@ -122,6 +128,8 @@ services:
         condition: service_healthy
       airflow-init:
         condition: service_completed_successfully
+      airflow-api-server:
+        condition: service_started
     restart: unless-stopped
 
 volumes:
