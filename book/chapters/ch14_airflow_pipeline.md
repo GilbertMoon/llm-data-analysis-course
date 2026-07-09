@@ -376,6 +376,49 @@ docker logs llm-course-airflow-api-server | grep -i password
 
 `What's next: Try Docker Debug...` 문구는 Docker가 출력하는 안내 메시지입니다. Airflow 로그인 정보와 직접 관련이 없으므로 무시해도 됩니다.
 
+### 11.2 로그인 후 처음 열리는 화면에서 확인할 수 있는 것
+
+로그인에 성공하면 아래와 같은 **Airflow 홈 대시보드**가 열립니다.
+
+![Airflow 홈 대시보드](../../images/airflow_home_dashboard.svg)
+
+이 화면은 Airflow 전체 상태를 빠르게 확인하는 요약 화면입니다. 수업에서는 아래 항목을 먼저 보면 됩니다.
+
+1. **실패한 Dags / 실행 중인 Dags / 활성 Dags**
+   - 현재 실패한 DAG가 있는지
+   - 지금 실행 중인 DAG가 있는지
+   - 활성화된 DAG가 몇 개인지
+   를 빠르게 확인할 수 있습니다.
+
+2. **상태(Status)**
+   - `메타데이터베이스`
+   - `스케줄러`
+   - `트리거러`
+   - `Dag 프로세서`
+
+   이 항목이 초록색이면 Airflow 핵심 구성요소가 정상 동작 중이라는 뜻입니다.
+
+3. **풀 슬롯(Pool Slots)**
+   - 현재 실행 자원과 슬롯 상태를 보여 줍니다.
+   - 수업에서는 값 자체를 깊게 다루기보다, 전체가 정상으로 보이는지 정도만 확인하면 충분합니다.
+
+4. **기록(Records) 영역의 Dag 실행들**
+   - `대기 중`, `실행 중`, `성공`, `실패` 실행 수를 확인할 수 있습니다.
+   - 아직 DAG를 실행하지 않았다면 대부분 `0`으로 보일 수 있습니다.
+
+5. **에셋 이벤트들 / 태스크 인스턴스**
+   - 에셋 기반 이벤트나 태스크 관련 요약이 표시됩니다.
+   - 초보자는 이 영역보다 먼저 DAG 목록과 실행 결과 확인에 집중하면 됩니다.
+
+6. **왼쪽 메뉴**
+   - `Home`: 현재 홈 대시보드
+   - `Dags`: DAG 목록 화면
+   - `예셋`, `탐색`, `관리자`: 추가 관리 메뉴
+
+수업에서 실제로 가장 자주 클릭하는 메뉴는 **왼쪽의 `Dags`** 입니다. 홈 화면에서 전체 상태를 확인한 뒤, `Dags` 메뉴로 이동해 `ch14_local_analysis_pipeline` DAG를 찾고 실행합니다.
+
+즉, 로그인 후 첫 화면은 **“Airflow가 정상인지 확인하는 요약 화면”**, 실제 실습은 주로 **`Dags` 메뉴에서 진행**한다고 이해하면 됩니다.
+
 ## 12. DAG 확인과 실행
 
 Airflow UI에서 `ch14_local_analysis_pipeline` DAG를 찾습니다.
@@ -627,10 +670,11 @@ Airflow UI에서 모든 Task가 초록색이어도 보고서의 해석이 잘못
 5. `docker compose up`으로 Airflow를 실행하고 `http://localhost:8080`에 접속하세요.
 6. 로그인 화면에서 먼저 `airflow / airflow`를 입력하세요.
 7. 로그인이 안 되면 `docker exec -it llm-course-airflow-api-server cat /opt/airflow/simple_auth_manager_passwords.json.generated`로 생성 비밀번호를 확인하고 `admin / 생성된_비밀번호`로 로그인하세요.
-8. `ch14_local_analysis_pipeline` DAG를 수동 실행하고 Task 실행 순서를 확인하세요.
-9. `reports/ch14_airflow_validation_log.csv`에서 모든 `status`가 `ok`인지 확인하세요.
-10. 입력 파일 하나를 임시로 바꿔 실패 상황을 만들고 Airflow 로그를 확인하세요.
-11. Make 또는 n8n으로 보고서 파일을 Slack이나 Gmail로 전달한다면 어떤 단계가 필요한지 표로 정리하세요.
+8. 로그인 후 홈 대시보드에서 실패한 Dags, 실행 중인 Dags, 상태(Status) 영역이 무엇을 의미하는지 확인하세요.
+9. 왼쪽 `Dags` 메뉴로 이동해 `ch14_local_analysis_pipeline` DAG를 찾고 수동 실행하세요.
+10. `reports/ch14_airflow_validation_log.csv`에서 모든 `status`가 `ok`인지 확인하세요.
+11. 입력 파일 하나를 임시로 바꿔 실패 상황을 만들고 Airflow 로그를 확인하세요.
+12. Make 또는 n8n으로 보고서 파일을 Slack이나 Gmail로 전달한다면 어떤 단계가 필요한지 표로 정리하세요.
 
 ## 21. 정리
 
@@ -645,6 +689,7 @@ Airflow UI에서 모든 Task가 초록색이어도 보고서의 해석이 잘못
 - Airflow가 실행할 `scripts/ch14_*.py` 단계별 스크립트 구성
 - `automation/airflow/dags/ch14_local_analysis_pipeline.py` DAG 구성
 - Airflow UI 로그인 화면에서 `airflow / airflow`와 Simple Auth Manager 생성 비밀번호 확인 방법
+- 로그인 후 홈 대시보드에서 DAG 현황, 상태, 실행 기록을 읽는 방법
 - Airflow UI에서 DAG 실행, 실패 Task 로그 확인, 산출물 검증
 - 자동화 결과의 실행 성공, 산출물 성공, 분석 품질 구분
 
