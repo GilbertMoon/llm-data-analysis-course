@@ -272,16 +272,18 @@ docker compose build --no-cache
 docker compose up airflow-init
 ```
 
-정상적으로 완료되면 초기 계정이 만들어집니다.
+기본 Compose 설정에서는 초기 계정이 다음과 같이 만들어지도록 설정되어 있습니다.
 
 ```text
 ID: airflow
 PW: airflow
 ```
 
+다만 Airflow 3의 Simple Auth Manager 화면이 나타나고 `401 Unauthorized` 또는 `Invalid credentials`가 보이면, 실제 로그인 계정이 자동 생성 비밀번호 방식으로 만들어진 상태일 수 있습니다. 이 경우 아래 11.1 절의 방법으로 실제 비밀번호를 확인합니다.
+
 초기화가 실패하면 Docker Desktop 실행 여부, 8080 포트 충돌, 메모리 부족, 이미지 빌드 실패, `.env` 파일 존재 여부를 확인합니다.
 
-## 11. Airflow 실행
+## 11. Airflow 실행과 로그인
 
 초기화가 끝나면 다음 명령으로 Airflow를 실행합니다.
 
@@ -295,7 +297,11 @@ docker compose up
 http://localhost:8080
 ```
 
-로그인 정보는 다음과 같습니다.
+아래와 같은 로그인 화면이 나타나면 계정을 입력합니다.
+
+![Airflow 로그인 화면](../../images/airflow_login_screen.svg)
+
+먼저 수업용 기본 계정을 입력합니다.
 
 ```text
 ID: airflow
@@ -307,6 +313,68 @@ PW: airflow
 ```bash
 docker compose ps
 ```
+
+### 11.1 `airflow / airflow`로 로그인이 안 될 때
+
+로그인 화면에 다음 메시지가 보일 수 있습니다.
+
+```text
+401 Unauthorized
+Invalid credentials
+Simple auth manager enabled
+```
+
+이 경우 다음 명령으로 Simple Auth Manager가 생성한 비밀번호 파일을 확인합니다.
+
+```powershell
+docker exec -it llm-course-airflow-api-server cat /opt/airflow/simple_auth_manager_passwords.json.generated
+```
+
+실제 실행 예시는 다음과 같습니다. 단, 아래 예시의 비밀번호는 보안상 마스킹했습니다. 실제 수업 환경에서는 출력된 문자열을 그대로 복사해 사용합니다.
+
+```powershell
+(.venv) PS D:\DEV\llm-data-analysis-course> docker exec -it llm-course-airflow-api-server cat /opt/airflow/simple_auth_manager_passwords.json.generated
+{"admin": "생성된_비밀번호"}
+
+What's next:
+    Try Docker Debug for seamless, persistent debugging tools in any container or image → docker debug llm-course-airflow-api-server
+    Learn more at https://docs.docker.com/go/debug-cli/
+(.venv) PS D:\DEV\llm-data-analysis-course>
+```
+
+위 출력에서 JSON의 왼쪽 값이 사용자 이름이고, 오른쪽 값이 비밀번호입니다.
+
+```text
+Username: admin
+Password: 생성된_비밀번호
+```
+
+즉, 실제 출력이 다음과 비슷하다면:
+
+```json
+{"admin": "무작위_문자열"}
+```
+
+로그인 화면에는 다음처럼 입력합니다.
+
+```text
+Username: admin
+Password: 무작위_문자열
+```
+
+Windows에서 로그에서 password 문자열을 검색하려면 다음 명령도 사용할 수 있습니다.
+
+```powershell
+docker logs llm-course-airflow-api-server | findstr /i password
+```
+
+macOS, Linux, WSL2에서는 다음처럼 확인할 수 있습니다.
+
+```bash
+docker logs llm-course-airflow-api-server | grep -i password
+```
+
+`What's next: Try Docker Debug...` 문구는 Docker가 출력하는 안내 메시지입니다. Airflow 로그인 정보와 직접 관련이 없으므로 무시해도 됩니다.
 
 ## 12. DAG 확인과 실행
 
@@ -422,11 +490,46 @@ docker compose up
 http://localhost:8081
 ```
 
-### 16.2 Docker 메모리 부족
+### 16.2 로그인 화면은 뜨지만 로그인이 안 됨
+
+먼저 `airflow / airflow`를 입력합니다. 그래도 `401 Unauthorized` 또는 `Invalid credentials`가 나오면 Simple Auth Manager 비밀번호 파일을 확인합니다.
+
+```powershell
+docker exec -it llm-course-airflow-api-server cat /opt/airflow/simple_auth_manager_passwords.json.generated
+```
+
+출력 예시:
+
+```json
+{"admin": "생성된_비밀번호"}
+```
+
+이 경우 로그인 정보는 다음입니다.
+
+```text
+Username: admin
+Password: 생성된_비밀번호
+```
+
+컨테이너 로그에서 password 관련 메시지를 확인할 수도 있습니다.
+
+```powershell
+docker logs llm-course-airflow-api-server | findstr /i password
+```
+
+계정 정보를 완전히 초기화하려면 다음 명령을 사용할 수 있습니다. 단, DAG 실행 기록과 DB 볼륨도 함께 삭제됩니다.
+
+```bash
+docker compose down --volumes --remove-orphans
+docker compose up airflow-init
+docker compose up
+```
+
+### 16.3 Docker 메모리 부족
 
 Airflow는 여러 컨테이너를 실행하므로 Docker Desktop에 충분한 메모리가 필요합니다. Docker Desktop 설정에서 메모리를 4GB 이상, 가능하면 8GB 정도로 설정하는 것을 권장합니다.
 
-### 16.3 ModuleNotFoundError
+### 16.4 ModuleNotFoundError
 
 DAG 실행 중 `ModuleNotFoundError`가 발생하면 다음을 확인합니다.
 
@@ -440,7 +543,7 @@ docker compose up airflow-init
 docker compose up
 ```
 
-### 16.4 입력 파일 없음
+### 16.5 입력 파일 없음
 
 `check_input_files` 단계에서 실패하면 프로젝트 루트에서 샘플 데이터를 생성합니다.
 
@@ -522,10 +625,12 @@ Airflow UI에서 모든 Task가 초록색이어도 보고서의 해석이 잘못
 3. `automation/airflow` 폴더에서 `.env.example`을 `.env`로 복사하세요.
 4. `docker compose up airflow-init`으로 Airflow DB를 초기화하세요.
 5. `docker compose up`으로 Airflow를 실행하고 `http://localhost:8080`에 접속하세요.
-6. `ch14_local_analysis_pipeline` DAG를 수동 실행하고 Task 실행 순서를 확인하세요.
-7. `reports/ch14_airflow_validation_log.csv`에서 모든 `status`가 `ok`인지 확인하세요.
-8. 입력 파일 하나를 임시로 바꿔 실패 상황을 만들고 Airflow 로그를 확인하세요.
-9. Make 또는 n8n으로 보고서 파일을 Slack이나 Gmail로 전달한다면 어떤 단계가 필요한지 표로 정리하세요.
+6. 로그인 화면에서 먼저 `airflow / airflow`를 입력하세요.
+7. 로그인이 안 되면 `docker exec -it llm-course-airflow-api-server cat /opt/airflow/simple_auth_manager_passwords.json.generated`로 생성 비밀번호를 확인하고 `admin / 생성된_비밀번호`로 로그인하세요.
+8. `ch14_local_analysis_pipeline` DAG를 수동 실행하고 Task 실행 순서를 확인하세요.
+9. `reports/ch14_airflow_validation_log.csv`에서 모든 `status`가 `ok`인지 확인하세요.
+10. 입력 파일 하나를 임시로 바꿔 실패 상황을 만들고 Airflow 로그를 확인하세요.
+11. Make 또는 n8n으로 보고서 파일을 Slack이나 Gmail로 전달한다면 어떤 단계가 필요한지 표로 정리하세요.
 
 ## 21. 정리
 
@@ -539,6 +644,7 @@ Airflow UI에서 모든 Task가 초록색이어도 보고서의 해석이 잘못
 - `automation/airflow/docker-compose.yml`, `Dockerfile`, `requirements.txt`, `.env.example` 구성
 - Airflow가 실행할 `scripts/ch14_*.py` 단계별 스크립트 구성
 - `automation/airflow/dags/ch14_local_analysis_pipeline.py` DAG 구성
+- Airflow UI 로그인 화면에서 `airflow / airflow`와 Simple Auth Manager 생성 비밀번호 확인 방법
 - Airflow UI에서 DAG 실행, 실패 Task 로그 확인, 산출물 검증
 - 자동화 결과의 실행 성공, 산출물 성공, 분석 품질 구분
 
