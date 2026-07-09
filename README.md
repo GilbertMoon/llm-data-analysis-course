@@ -31,8 +31,8 @@
 | 11주차 | LLM을 활용한 분석 프롬프트 | 데이터 설명, 분석 질문 생성, 전처리/시각화/ML 코드 생성 프롬프트 |
 | 12주차 | LLM 코드 생성과 검증 | LLM이 생성한 pandas/ML 코드 검토, 오류 수정, 결과 검증, 보고서 초안 작성 |
 | 13주차 | 외부 데이터 수집 | 공공데이터, 네이버 API, 기본 크롤링 개념 및 활용 |
-| 14주차 | 분석 자동화와 파이프라인 | Make, n8n, Airflow 개념, Airflow DAG 기초 실습 |
-| 15주차 | 기말 프로젝트 | EDA + 시각화 + ML + LLM 활용 + 자동화 아이디어 발표 |
+| 14주차 | 분석 자동화와 파이프라인 | Docker Compose 기반 Airflow DAG 실습, Make/n8n 연계 아이디어 |
+| 15주차 | 기말 프로젝트 | EDA + 시각화 + ML + LLM 활용 + 외부 데이터 + 자동화 아이디어 발표 |
 
 ## 사용 기술 스택
 
@@ -48,7 +48,7 @@
 - Google Gemini API
 - 공공데이터 API, 네이버 API, 기본 크롤링 도구
 - Make, n8n
-- Apache Airflow, Docker 기반 개념 실습
+- Docker Desktop, Docker Compose, Apache Airflow
 - GitHub
 
 ## 설치 방법
@@ -89,6 +89,48 @@ jupyter notebook
 ```
 
 브라우저가 열리면 `notebooks/` 폴더의 주차별 노트북을 순서대로 실행합니다. 실제 수업 진행은 VS Code를 중심으로 하되, Jupyter Notebook은 코드 실행 결과와 해석을 함께 정리하는 분석 노트 형식으로 활용합니다.
+
+## 14장 Docker Compose 기반 Airflow 실습
+
+Docker 설치 과정은 별도 블로그 글을 참고합니다.
+
+- Docker 설치 가이드: https://blog.naver.com/dev-dog/224341211248
+
+설치 확인:
+
+```bash
+docker --version
+docker compose version
+docker run hello-world
+```
+
+Airflow 실행 전 Python 분석 코드 자체를 먼저 검증합니다.
+
+```bash
+python scripts/generate_sample_data.py
+python scripts/run_ch14_pipeline.py
+```
+
+Docker Compose 기반 Airflow 실행:
+
+```bash
+cd automation/airflow
+cp .env.example .env
+# Windows PowerShell: copy .env.example .env
+
+docker compose up airflow-init
+docker compose up
+```
+
+Airflow UI:
+
+```text
+http://localhost:8080
+ID: airflow
+PW: airflow
+```
+
+자세한 안내는 `docs/ch14_docker_airflow_guide.md`를 참고하세요.
 
 ## 중간/기말 프로젝트 안내
 
