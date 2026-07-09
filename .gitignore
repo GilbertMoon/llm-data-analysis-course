@@ -7,12 +7,15 @@ __pycache__/
 # Virtual environments
 .venv/
 venv/
+.venv-airflow/
 
 # Jupyter
 .ipynb_checkpoints/
 
 # Environment variables
 .env
+*.env
+!*.env.example
 
 # Data and generated outputs
 reports/outputs/*
@@ -21,6 +24,14 @@ reports/outputs/*
 data/processed/*
 !data/processed/
 !data/processed/.gitkeep
+
+# Airflow runtime
+.airflow/
+automation/airflow/.env
+automation/airflow/logs/
+automation/airflow/config/
+automation/airflow/plugins/
+automation/airflow/*.db
 
 # OS/editor files
 .DS_Store
