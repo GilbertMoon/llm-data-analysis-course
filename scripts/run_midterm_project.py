@@ -13,7 +13,10 @@
     data/processed/*_clean.csv
     reports/ch08_dataset_summary.csv
     reports/ch08_preprocessing_comparison.csv
+    reports/ch08_key_duplicate_checks.csv
     reports/ch08_relationship_checks.csv
+    reports/ch08_merge_checks.csv
+    reports/ch08_amount_scope_summary.csv
     reports/ch08_category_sales.csv
     reports/ch08_monthly_sales.csv
     reports/ch08_customer_sales.csv
@@ -53,10 +56,19 @@ def main() -> None:
     print("\n[전처리 전후 비교]")
     print(result["preprocessing_comparison"].to_string(index=False))
 
-    print("\n[카테고리별 매출 상위 5개]")
+    print("\n[키 중복 점검]")
+    print(result["key_duplicate_checks"].to_string(index=False))
+
+    print("\n[병합 검증]")
+    print(result["analysis_tables"]["merge_checks"].to_string(index=False))
+
+    print("\n[전체 주문 금액과 완료 주문 매출 구분]")
+    print(result["analysis_tables"]["amount_scope_summary"].to_string(index=False))
+
+    print("\n[카테고리별 완료 주문 매출 상위 5개]")
     print(result["analysis_tables"]["category_sales"].head().to_string(index=False))
 
-    print("\n[월별 매출]")
+    print("\n[월별 완료 주문 매출]")
     print(result["analysis_tables"]["monthly_sales"].to_string(index=False))
 
     print("\n[저장된 결과표]")
