@@ -92,7 +92,7 @@
 
   <!-- products -->
   <g transform="translate(105 470)">
-    <rect class="table" width="520" height="105" rx="24"/>
+    <rect class="table" width="560" height="105" rx="24"/>
     <rect class="table-head" x="0" y="0" width="220" height="105" rx="24"/>
     <text class="table-name" x="28" y="43">products.csv</text>
     <text class="role" x="28" y="75">상품 정보</text>
@@ -112,7 +112,7 @@
   <text class="rel-label" x="985" y="292">order_id</text>
   <text class="rel-label" x="988" y="340">1 : N</text>
 
-  <path class="rel" d="M 625 522 C 780 522, 840 545, 920 515 C 1000 485, 1015 402, 1100 402"/>
+  <path class="rel" d="M 665 522 C 800 522, 850 545, 920 515 C 1000 485, 1015 402, 1100 402"/>
   <text class="rel-label" x="790" y="546">product_id</text>
   <text class="rel-label" x="965" y="452">1 : N</text>
 
