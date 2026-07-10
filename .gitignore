@@ -24,6 +24,9 @@ reports/outputs/*
 data/processed/*
 !data/processed/
 !data/processed/.gitkeep
+data/external/*
+!data/external/
+!data/external/.gitkeep
 
 # Airflow runtime
 .airflow/
