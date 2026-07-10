@@ -529,7 +529,7 @@ plt.show()
 아래 그림은 최종 프로젝트에서 생성할 주요 시각화 결과를 보여줍니다.
 
 <figure class="figure">
-  <img src="../assets/images/ch15/ch15_analysis_dashboard.png" alt="기말 프로젝트 주요 분석 대시보드 예시">
+  <img src="../assets/images/ch15/ch15_analysis_dashboard.svg" alt="기말 프로젝트 주요 분석 대시보드 예시">
   <figcaption>그림 15-3. 최종 프로젝트 주요 분석 대시보드 예시</figcaption>
 </figure>
 
