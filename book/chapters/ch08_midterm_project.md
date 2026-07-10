@@ -268,14 +268,14 @@ key_duplicate_checks = build_key_duplicate_checks(
 
 ```python
 order_sales = processed_data["order_items"].merge(
-    processed_data["orders"](
+    processed_data["orders"][
         [
             "order_id",
             "customer_id",
             "order_date",
             "order_status",
         ]
-    ),
+    ],
     on="order_id",
     how="left",
     validate="many_to_one",
@@ -307,7 +307,7 @@ if "line_total" not in order_items_clean.columns:
 
 ```python
 order_sales = order_items_clean.merge(
-    processed_data["orders"](
+    processed_data["orders"][
         [
             "order_id",
             "customer_id",
@@ -315,7 +315,7 @@ order_sales = order_items_clean.merge(
             "order_month",
             "order_status",
         ]
-    ),
+    ],
     on="order_id",
     how="left",
     validate="many_to_one",
