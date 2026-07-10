@@ -64,19 +64,19 @@
   <rect x="610" y="126" width="520" height="560" class="panel" />
   <text x="650" y="168" class="name">이 구조를 쓰면 좋은 이유</text>
 
-  <rect x="646" y="204" width="430" height="74" class="folder" />
+  <rect x="646" y="204" width="460" height="74" class="folder" />
   <text x="670" y="234" class="name">1. 파일 위치가 명확해진다</text>
   <text x="670" y="260" class="text">데이터, 코드, 보고서가 섞이지 않아 경로 오류를 줄일 수 있다.</text>
 
-  <rect x="646" y="304" width="430" height="74" class="folder" />
+  <rect x="646" y="304" width="460" height="74" class="folder" />
   <text x="670" y="334" class="name">2. 재현이 쉬워진다</text>
   <text x="670" y="360" class="text">같은 구조로 프로젝트를 다시 실행하기 쉽다.</text>
 
-  <rect x="646" y="404" width="430" height="74" class="folder" />
+  <rect x="646" y="404" width="460" height="74" class="folder" />
   <text x="670" y="434" class="name">3. GitHub 관리가 쉬워진다</text>
   <text x="670" y="460" class="text">변경 이력과 결과물을 구분해서 정리할 수 있다.</text>
 
-  <rect x="646" y="504" width="430" height="112" class="folder" />
+  <rect x="646" y="504" width="460" height="112" class="folder" />
   <text x="670" y="534" class="name">4. 이후 장으로 자연스럽게 이어진다</text>
   <text x="670" y="560" class="text">CSV, Notebook, scripts, reports, 자동화 구조를 계속 활용한다.</text>
   <text x="670" y="586" class="text">처음 정리한 폴더 구조가 전체 분석 흐름의 뼈대가 된다.</text>
