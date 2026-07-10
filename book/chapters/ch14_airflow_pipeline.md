@@ -86,7 +86,7 @@ check_input_files
 | `validate_outputs` | 결과 파일 존재와 크기 검증 | 검증 로그 생성, 오류 없으면 성공 |
 
 <figure class="figure">
-  <img src="../assets/images/ch14/ch14_airflow_task_dependency.png" alt="분석 파이프라인의 Task 의존성 흐름">
+  <img src="../assets/images/ch14/ch14_airflow_task_dependency.svg" alt="분석 파이프라인의 Task 의존성 흐름">
   <figcaption>그림 14-2. 분석 파이프라인의 Task 의존성 흐름</figcaption>
 </figure>
 
