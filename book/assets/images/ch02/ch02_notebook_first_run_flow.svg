@@ -47,9 +47,10 @@
   <rect class="card" x="90" y="180" width="1420" height="250"/>
   <circle class="stepNo" cx="138" cy="228" r="28"/><text x="138" y="235" text-anchor="middle" class="stepNoText">1</text>
   <text x="182" y="236" class="stepTitle">Notebook 파일 열기</text>
-  <text x="132" y="286" class="body">Explorer에서 <tspan font-weight="900">notebooks</tspan> 폴더를 열고 <tspan font-weight="900">ch02_environment_setup.ipynb</tspan>를 클릭합니다.</text>
-  <text x="132" y="318" class="body">상단 탭에 Notebook 이름이 보이고, 본문에 Markdown 셀과 Code 셀이 함께 보이면 정상입니다.</text>
-  <text x="132" y="360" class="sub">실제 의미: “파일을 연 것”과 “코드를 실행하는 것”은 다릅니다. 우선 화면에서 Notebook을 여는 단계입니다.</text>
+  <text x="132" y="286" class="body">Explorer에서 <tspan font-weight="900">notebooks</tspan> 폴더를 열고</text>
+  <text x="132" y="318" class="body"><tspan font-weight="900">ch02_environment_setup.ipynb</tspan>를 클릭합니다.</text>
+  <text x="132" y="350" class="body">상단 탭에 Notebook 이름과 Markdown, Code 셀이 보이면 정상입니다.</text>
+  <text x="132" y="382" class="sub">실제 의미: 파일을 여는 것과 코드를 실행하는 것은 다른 단계입니다.</text>
 
   <rect class="vscode" x="850" y="208" width="590" height="172"/>
   <rect class="vscodeTop" x="850" y="208" width="590" height="26" rx="18"/>
@@ -71,9 +72,11 @@
   <rect class="card" x="90" y="435" width="1420" height="250"/>
   <circle class="stepNo" cx="138" cy="483" r="28"/><text x="138" y="490" text-anchor="middle" class="stepNoText">2</text>
   <text x="182" y="491" class="stepTitle">커널 선택하기</text>
-  <text x="132" y="541" class="body">첫 셀 실행 시 <tspan font-weight="900">Select Kernel</tspan> 창이 뜨면, 먼저 <tspan font-weight="900">Python Environments...</tspan>를 선택합니다.</text>
-  <text x="132" y="573" class="body">그 다음 목록에서 프로젝트의 <tspan font-weight="900">.venv (Python 3.11.x)</tspan>를 선택합니다.</text>
-  <text x="132" y="615" class="sub">중요: 터미널에 <tspan class="mono">(.venv)</tspan>가 보여도 Notebook 커널은 자동 선택되지 않습니다. 오른쪽 위 커널도 별도로 맞춰야 합니다.</text>
+  <text x="132" y="541" class="body">첫 셀 실행 시 <tspan font-weight="900">Select Kernel</tspan> 창이 뜨면</text>
+  <text x="132" y="573" class="body">먼저 <tspan font-weight="900">Python Environments...</tspan>를 선택합니다.</text>
+  <text x="132" y="605" class="body">그 다음 목록에서 프로젝트의 <tspan font-weight="900">.venv (Python 3.11.x)</tspan>를 선택합니다.</text>
+  <text x="132" y="637" class="sub">중요: 터미널에 <tspan class="mono">(.venv)</tspan>가 보여도 Notebook 커널은 자동 선택되지 않습니다.</text>
+  <text x="132" y="661" class="sub">오른쪽 위 커널도 별도로 맞춰야 합니다.</text>
 
   <rect class="panelLight" x="850" y="462" width="300" height="160"/>
   <text x="875" y="494" font-size="17" font-weight="800" fill="#0f172a">Select Kernel</text>
@@ -95,8 +98,10 @@
   <rect class="card" x="90" y="690" width="1420" height="250"/>
   <circle class="stepNo" cx="138" cy="738" r="28"/><text x="138" y="745" text-anchor="middle" class="stepNoText">3</text>
   <text x="182" y="746" class="stepTitle">첫 번째 셀 실행하기</text>
-  <text x="132" y="796" class="body">첫 코드 셀은 import와 기본 경로 설정입니다. 셀 왼쪽 실행 버튼(▶) 또는 <tspan class="mono">Shift+Enter</tspan>로 실행합니다.</text>
-  <text x="132" y="838" class="sub">이 셀은 표를 출력하지 않아도 정상입니다. 패키지 import와 <tspan class="mono">DATA_DIR = Path('../data/raw')</tspan> 설정이 핵심입니다.</text>
+  <text x="132" y="796" class="body">첫 코드 셀은 import와 기본 경로 설정입니다.</text>
+  <text x="132" y="828" class="body">셀 왼쪽 실행 버튼(▶) 또는 <tspan class="mono">Shift+Enter</tspan>로 실행합니다.</text>
+  <text x="132" y="860" class="sub">이 셀은 표를 출력하지 않아도 정상입니다.</text>
+  <text x="132" y="884" class="sub">패키지 import와 <tspan class="mono">DATA_DIR = Path('../data/raw')</tspan> 설정이 핵심입니다.</text>
 
   <rect x="830" y="720" width="620" height="170" rx="18" fill="#0f172a" stroke="#334155" stroke-width="2"/>
   <rect x="830" y="720" width="620" height="34" rx="18" fill="#111827"/>
@@ -111,8 +116,9 @@
   <rect class="card" x="90" y="945" width="1420" height="190"/>
   <circle class="stepNo" cx="138" cy="993" r="28"/><text x="138" y="1000" text-anchor="middle" class="stepNoText">4</text>
   <text x="182" y="1001" class="stepTitle">정상 실행 확인</text>
-  <text x="132" y="1051" class="body">초록 체크 표시, 실행 시간, 오류 없이 다음 셀로 이동한 상태를 확인합니다.</text>
-  <text x="132" y="1083" class="body">처음에는 <tspan class="mono">Matplotlib is building the font cache</tspan> 메시지가 잠깐 보일 수 있는데, 오류가 아니라 정상 동작입니다.</text>
+  <text x="132" y="1051" class="body">초록 체크 표시, 실행 시간, 오류 없이 이동한 상태를 확인합니다.</text>
+  <text x="132" y="1083" class="body">처음에는 <tspan class="mono">Matplotlib is building the font cache</tspan></text>
+  <text x="132" y="1115" class="body">메시지가 잠깐 보일 수 있으며, 오류가 아니라 정상 동작입니다.</text>
 
   <rect class="panelLight" x="915" y="982" width="470" height="100"/>
   <circle class="ok" cx="946" cy="1013" r="10"/>
