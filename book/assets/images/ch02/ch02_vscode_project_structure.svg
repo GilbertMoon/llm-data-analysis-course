@@ -78,6 +78,7 @@
 
   <rect x="646" y="504" width="460" height="112" class="folder" />
   <text x="670" y="534" class="name">4. 이후 장으로 자연스럽게 이어진다</text>
-  <text x="670" y="560" class="text">CSV, Notebook, scripts, reports, 자동화 구조를 계속 활용한다.</text>
-  <text x="670" y="586" class="text">처음 정리한 폴더 구조가 전체 분석 흐름의 뼈대가 된다.</text>
+  <text x="670" y="560" class="text">CSV, Notebook, scripts, reports,</text>
+  <text x="670" y="584" class="text">자동화 구조를 계속 활용한다.</text>
+  <text x="670" y="608" class="text">처음 정리한 폴더 구조가 전체 분석 흐름의 뼈대가 된다.</text>
 </svg>
