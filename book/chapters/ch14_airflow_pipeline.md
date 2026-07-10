@@ -9,7 +9,7 @@
 핵심은 특정 도구 하나를 외우는 것이 아닙니다. **반복되는 분석 작업을 단계로 나누고, 각 단계의 입력과 출력을 정리하며, 실패했을 때 어디에서 문제가 생겼는지 확인할 수 있는 구조를 만드는 것**입니다.
 
 <figure class="figure">
-  <img src="../assets/images/ch14/ch14_airflow_pipeline_overview.png" alt="분석 자동화와 파이프라인 전체 흐름도">
+  <img src="../assets/images/ch14/ch14_airflow_pipeline_overview.svg" alt="분석 자동화와 파이프라인 전체 흐름도">
   <figcaption>그림 14-1. 분석 자동화와 파이프라인 전체 흐름도</figcaption>
 </figure>
 
