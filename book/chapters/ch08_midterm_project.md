@@ -4,8 +4,6 @@
 
 온라인 쇼핑몰의 고객, 상품, 주문, 주문 상세 데이터를 사용해 기본 운영 현황을 분석합니다. 복잡한 머신러닝 모델을 만드는 것이 목표는 아닙니다. **질문 설정 → 데이터 점검 → 전처리 → 안전한 병합 → 완료 주문 기준 집계 → 시각화 → 해석 → 보고서 작성 → 검증**의 흐름을 완성하는 것이 핵심입니다.
 
-중간 프로젝트를 마치면 데이터 분석이 코드 조각을 실행하는 일이 아니라, 입력 데이터와 처리 기준, 산출물과 해석을 함께 관리하는 작업이라는 점을 이해할 수 있습니다.
-
 <figure class="figure">
   <img src="../assets/images/ch08/ch08_project_overview_flow.png" alt="중간 프로젝트 전체 흐름도">
   <figcaption>그림 8-1. 중간 프로젝트 전체 흐름도</figcaption>
@@ -13,7 +11,7 @@
 
 ## 1. 프로젝트 목표와 분석 기준
 
-온라인 쇼핑몰 운영자가 최근 주문 데이터를 바탕으로 기본 현황을 파악하려고 한다고 가정합니다. 이번 프로젝트에서는 다음 질문에 답합니다.
+이번 프로젝트에서는 다음 질문에 답합니다.
 
 | 분석 질문 | 주요 지표 | 결과 형태 |
 | --- | --- | --- |
@@ -73,28 +71,40 @@
 
 “전자기기 완료 주문 매출이 가장 높다”는 관찰입니다. “광고 효과 때문에 높다”는 광고 데이터가 있어야 검증할 수 있는 가설입니다. 관찰과 원인을 구분해 작성합니다.
 
-## 4. 프로젝트 작업 공간 준비하기
+## 4. 분석 질문과 지표 연결하기
 
-전체 실습은 `notebooks/ch08_midterm_project.ipynb`에서 진행할 수 있으며, 전체 파이프라인은 `python scripts/run_midterm_project.py`로 다시 실행할 수 있습니다.
+분석 질문은 계산 가능한 지표와 연결되어야 합니다. 질문이 모호하면 필요한 데이터와 분석 코드도 모호해집니다.
 
-현재 작업 폴더가 프로젝트 루트 또는 `notebooks` 폴더일 수 있으므로 상위 폴더를 확인해 프로젝트 루트를 찾습니다.
+<figure class="figure">
+  <img src="../assets/images/ch08/ch08_project_questions_map.png" alt="중간 프로젝트 분석 질문 맵">
+  <figcaption>그림 8-4. 중간 프로젝트 분석 질문 맵</figcaption>
+</figure>
+
+예를 들어 “매출이 높은 카테고리는 무엇인가?”라는 질문은 `category`, `quantity`, `line_total`이 필요합니다. “인기 있는 카테고리는 무엇인가?”라는 질문은 매출뿐 아니라 판매 수량, 구매 고객 수, 반복 구매 여부를 함께 정의해야 합니다.
+
+## 5. 프로젝트 작업 공간 준비하기
+
+전체 실습은 `notebooks/ch08_midterm_project.ipynb`에서 진행하며, 전체 파이프라인은 `python scripts/run_midterm_project.py`로 다시 실행할 수 있습니다.
+
+현재 작업 폴더가 프로젝트 루트 또는 `notebooks` 폴더일 수 있으므로 상위 폴더를 탐색합니다.
 
 ```python
 from pathlib import Path
 
-import pandas as pd
-import matplotlib.pyplot as plt
-
 
 def find_project_root(start_path):
     start_path = Path(start_path).resolve()
+
     for candidate in [start_path, *start_path.parents]:
         if (
             (candidate / "requirements.txt").exists()
             and (candidate / "scripts").exists()
         ):
             return candidate
-    raise FileNotFoundError("프로젝트 루트 폴더를 찾을 수 없습니다.")
+
+    raise FileNotFoundError(
+        "프로젝트 루트 폴더를 찾을 수 없습니다."
+    )
 
 
 PROJECT_ROOT = find_project_root(Path.cwd())
@@ -107,17 +117,19 @@ for path in [PROCESSED_DIR, REPORT_DIR, FIGURE_DIR]:
     path.mkdir(parents=True, exist_ok=True)
 ```
 
-`to_markdown()`은 `tabulate` 패키지를 사용합니다. 이 저장소의 `requirements.txt`에 포함되어 있으므로 별도 설치보다 먼저 전체 패키지 설치가 완료되었는지 확인합니다.
+필요한 패키지는 개별 설치보다 저장소 기준으로 한 번에 설치합니다.
 
 ```powershell
 python -m pip install -r requirements.txt
 ```
 
-## 5. 원본 데이터와 필수 컬럼 확인
+## 6. 원본 데이터와 필수 컬럼 확인하기
 
 필요한 파일이 모두 존재하는지 확인한 뒤 불러옵니다.
 
 ```python
+import pandas as pd
+
 required_files = [
     "customers.csv",
     "products.csv",
@@ -133,7 +145,8 @@ missing_files = [
 
 if missing_files:
     raise FileNotFoundError(
-        "필요한 파일이 없습니다: " + ", ".join(missing_files)
+        "필요한 파일이 없습니다: "
+        + ", ".join(missing_files)
         + ". 프로젝트 루트에서 "
         + "python scripts/generate_sample_data.py를 실행하세요."
     )
@@ -156,7 +169,12 @@ datasets = {
 
 required_columns = {
     "customers": ["customer_id", "age", "city"],
-    "products": ["product_id", "product_name", "category", "price"],
+    "products": [
+        "product_id",
+        "product_name",
+        "category",
+        "price",
+    ],
     "orders": [
         "order_id",
         "customer_id",
@@ -179,10 +197,12 @@ for name, columns in required_columns.items():
         if column not in datasets[name].columns
     ]
     if missing:
-        raise KeyError(f"{name}에 필요한 컬럼이 없습니다: {missing}")
+        raise KeyError(
+            f"{name}에 필요한 컬럼이 없습니다: {missing}"
+        )
 ```
 
-데이터 구조를 보고서용 표로 저장합니다.
+행·열 수, 결측치, 전체 행 중복을 보고서용 표로 저장합니다.
 
 ```python
 dataset_summary = pd.DataFrame([
@@ -195,234 +215,67 @@ dataset_summary = pd.DataFrame([
     }
     for name, df in datasets.items()
 ])
+```
 
-dataset_summary.to_csv(
-    REPORT_DIR / "ch08_dataset_summary.csv",
-    index=False,
-    encoding="utf-8-sig",
+## 7. 원본을 보존하며 전처리하기
+
+전처리는 원본 DataFrame을 직접 수정하지 않고 복사본을 사용합니다. 이 저장소에서는 `src.preprocessing`의 공통 함수를 이용할 수 있습니다.
+
+```python
+from src.preprocessing import (
+    compare_shapes,
+    preprocess_sales_data,
+    save_processed_data,
+    validate_relationships,
+)
+
+processed_data = preprocess_sales_data(datasets)
+save_processed_data(processed_data, PROCESSED_DIR)
+
+preprocessing_comparison = compare_shapes(
+    datasets,
+    processed_data,
+)
+relationship_checks = validate_relationships(
+    processed_data,
 )
 ```
 
-## 6. 원본을 보존하며 전처리하기
+전처리 과정에서는 다음 항목을 확인합니다.
 
-원본 DataFrame은 직접 수정하지 않고 복사본을 사용합니다.
+- 숫자형 변환 실패 건수
+- 날짜형 변환 실패 건수
+- 가격·수량·단가가 0 이하인 행
+- 전체 행 중복과 주요 키 중복
+- 전처리 전후 행 수 변화
+- 파일 간 외래키 미매칭
 
-```python
-def strip_string_columns(df):
-    result = df.copy()
-    for column in result.select_dtypes(include="object").columns:
-        result[column] = result[column].where(
-            result[column].isna(),
-            result[column].astype(str).str.strip(),
-        )
-    return result
+단순히 `errors="coerce"`를 사용하고 끝내지 말고, 변환 실패로 생긴 결측치의 개수와 처리 기준을 기록해야 합니다.
 
+## 8. 키 중복과 병합 검증하기
 
-def to_number(series):
-    return pd.to_numeric(
-        series.astype(str).str.replace(",", "", regex=False),
-        errors="coerce",
-    )
-```
-
-고객 데이터를 정리합니다.
+관계형 데이터에서는 전체 행 중복뿐 아니라 식별 키 중복을 확인해야 합니다.
 
 ```python
-customers_clean = strip_string_columns(customers)
-customers_clean["age"] = pd.to_numeric(
-    customers_clean["age"],
-    errors="coerce",
-)
+from src.midterm_project import build_key_duplicate_checks
 
-if customers_clean["age"].notna().any():
-    customers_clean["age"] = customers_clean["age"].fillna(
-        customers_clean["age"].median()
-    )
-
-customers_clean["city"] = (
-    customers_clean["city"]
-    .replace("", pd.NA)
-    .fillna("Unknown")
-)
-
-customers_clean = customers_clean.drop_duplicates()
-```
-
-상품 데이터를 정리합니다.
-
-```python
-products_clean = strip_string_columns(products)
-products_clean["price"] = to_number(products_clean["price"])
-products_clean = products_clean.dropna(
-    subset=["product_id", "category", "price"]
-)
-products_clean = products_clean[products_clean["price"] > 0]
-products_clean = products_clean.drop_duplicates()
-```
-
-주문 데이터를 정리합니다.
-
-```python
-status_map = {
-    "complete": "completed",
-    "Complete": "completed",
-    "COMPLETED": "completed",
-    "완료": "completed",
-    "cancel": "cancelled",
-    "Cancel": "cancelled",
-    "CANCELLED": "cancelled",
-    "취소": "cancelled",
-    "refund": "refunded",
-    "Refund": "refunded",
-    "REFUNDED": "refunded",
-    "환불": "refunded",
-}
-
-orders_clean = strip_string_columns(orders)
-orders_clean["order_status"] = (
-    orders_clean["order_status"].replace(status_map)
-)
-orders_clean["order_date"] = pd.to_datetime(
-    orders_clean["order_date"],
-    errors="coerce",
-)
-orders_clean = orders_clean.dropna(
-    subset=["order_id", "customer_id", "order_date", "order_status"]
-)
-orders_clean["order_month"] = (
-    orders_clean["order_date"].dt.to_period("M").astype(str)
-)
-orders_clean = orders_clean.drop_duplicates()
-```
-
-주문 상세 데이터를 정리하고 주문 상세 금액을 만듭니다.
-
-```python
-order_items_clean = strip_string_columns(order_items)
-order_items_clean["quantity"] = to_number(
-    order_items_clean["quantity"]
-)
-order_items_clean["unit_price"] = to_number(
-    order_items_clean["unit_price"]
-)
-order_items_clean = order_items_clean.dropna(
-    subset=[
-        "order_item_id",
-        "order_id",
-        "product_id",
-        "quantity",
-        "unit_price",
-    ]
-)
-order_items_clean = order_items_clean[
-    (order_items_clean["quantity"] > 0)
-    & (order_items_clean["unit_price"] > 0)
-].copy()
-order_items_clean["line_total"] = (
-    order_items_clean["quantity"]
-    * order_items_clean["unit_price"]
-)
-order_items_clean = order_items_clean.drop_duplicates()
-```
-
-전처리된 데이터는 `data/processed`에 저장하고 전후 크기를 비교합니다.
-
-```python
-processed_data = {
-    "customers": customers_clean,
-    "products": products_clean,
-    "orders": orders_clean,
-    "order_items": order_items_clean,
-}
-
-for name, df in processed_data.items():
-    df.to_csv(
-        PROCESSED_DIR / f"{name}_clean.csv",
-        index=False,
-        encoding="utf-8-sig",
-    )
-
-processed_summary = pd.DataFrame([
-    {
-        "dataset": name,
-        "rows_processed": df.shape[0],
-        "columns_processed": df.shape[1],
-    }
-    for name, df in processed_data.items()
-])
-
-preprocessing_comparison = dataset_summary.merge(
-    processed_summary,
-    on="dataset",
-    how="outer",
+key_duplicate_checks = build_key_duplicate_checks(
+    processed_data
 )
 ```
 
-숫자형·날짜형 변환 실패를 조용히 무시하지 말고 건수를 기록합니다. 전처리로 행이 제외되었다면 그 이유도 보고서에 남깁니다.
-
-## 7. 키 관계와 병합 조건 검증하기
-
-관계형 데이터에서는 전체 행 중복뿐 아니라 키 컬럼 중복을 확인해야 합니다.
+`left merge`라고 해서 왼쪽 행 수가 자동으로 유지되는 것은 아닙니다. 오른쪽 키가 중복되어 있으면 왼쪽 한 행이 여러 행으로 늘어날 수 있습니다.
 
 ```python
-key_duplicate_checks = pd.DataFrame({
-    "dataset": [
-        "customers",
-        "products",
-        "orders",
-        "order_items",
-    ],
-    "key": [
-        "customer_id",
-        "product_id",
-        "order_id",
-        "order_item_id",
-    ],
-    "duplicate_count": [
-        int(customers_clean["customer_id"].duplicated().sum()),
-        int(products_clean["product_id"].duplicated().sum()),
-        int(orders_clean["order_id"].duplicated().sum()),
-        int(order_items_clean["order_item_id"].duplicated().sum()),
-    ],
-})
-```
-
-외래키 미매칭도 확인합니다.
-
-```python
-relationship_checks = pd.DataFrame({
-    "check": [
-        "orders.customer_id → customers.customer_id",
-        "order_items.order_id → orders.order_id",
-        "order_items.product_id → products.product_id",
-    ],
-    "invalid_count": [
-        int((~orders_clean["customer_id"].isin(
-            customers_clean["customer_id"]
-        )).sum()),
-        int((~order_items_clean["order_id"].isin(
-            orders_clean["order_id"]
-        )).sum()),
-        int((~order_items_clean["product_id"].isin(
-            products_clean["product_id"]
-        )).sum()),
-    ],
-})
-```
-
-`left merge`라고 해서 왼쪽 행 수가 자동으로 유지되는 것은 아닙니다. 오른쪽 키가 중복되면 행이 늘어날 수 있습니다. `validate`와 `indicator`를 사용해 병합 관계를 명시하고 미매칭을 확인합니다.
-
-```python
-order_sales = order_items_clean.merge(
-    orders_clean[
+order_sales = processed_data["order_items"].merge(
+    processed_data["orders"](
         [
             "order_id",
             "customer_id",
             "order_date",
-            "order_month",
             "order_status",
         ]
-    ],
+    ),
     on="order_id",
     how="left",
     validate="many_to_one",
@@ -430,223 +283,106 @@ order_sales = order_items_clean.merge(
 )
 
 print(order_sales["_merge"].value_counts())
-order_sales = order_sales.drop(columns="_merge")
+```
+
+- `validate="many_to_one"`은 주문 상세의 `order_id`는 여러 번 나올 수 있지만 주문 테이블의 `order_id`는 한 번만 나와야 한다는 의미입니다.
+- `indicator=True`는 각 행이 양쪽 데이터에서 매칭되었는지 확인할 수 있는 `_merge` 컬럼을 추가합니다.
+- 병합 전후 행 수와 `left_only` 건수를 함께 확인합니다.
+
+## 9. 완료 주문 기준 분석 데이터 만들기
+
+주문 상세 금액을 만든 뒤 주문 상태를 연결합니다.
+
+```python
+order_items_clean = processed_data["order_items"].copy()
+
+if "line_total" not in order_items_clean.columns:
+    order_items_clean["line_total"] = (
+        order_items_clean["quantity"]
+        * order_items_clean["unit_price"]
+    )
 ```
 
 완료 주문만 분석 대상으로 선택합니다.
 
 ```python
+order_sales = order_items_clean.merge(
+    processed_data["orders"](
+        [
+            "order_id",
+            "customer_id",
+            "order_date",
+            "order_month",
+            "order_status",
+        ]
+    ),
+    on="order_id",
+    how="left",
+    validate="many_to_one",
+)
+
 completed_order_sales = order_sales[
     order_sales["order_status"] == "completed"
 ].copy()
 ```
 
-상품 정보를 붙입니다.
+전체 주문 상세 금액과 완료 주문 매출을 구분해 비교합니다.
 
 ```python
-completed_sales_items = completed_order_sales.merge(
-    products_clean[
-        ["product_id", "product_name", "category", "price"]
+amount_scope_summary = pd.DataFrame({
+    "scope": [
+        "전체 주문 상세 금액",
+        "완료 주문 매출",
+        "취소·환불 등 제외 금액",
     ],
-    on="product_id",
-    how="left",
-    validate="many_to_one",
-    indicator=True,
-)
-
-print(completed_sales_items["_merge"].value_counts())
-completed_sales_items = completed_sales_items.drop(columns="_merge")
+    "amount": [
+        order_sales["line_total"].sum(),
+        completed_order_sales["line_total"].sum(),
+        (
+            order_sales["line_total"].sum()
+            - completed_order_sales["line_total"].sum()
+        ),
+    ],
+})
 ```
 
-## 8. 완료 주문 기준 지표 계산하기
+## 10. 주요 지표 계산하기
 
-카테고리별 매출을 계산합니다.
+공통 분석 함수로 완료 주문 기준 결과표를 생성합니다.
 
 ```python
-category_sales = (
-    completed_sales_items
-    .groupby("category", as_index=False)
-    .agg(
-        total_quantity=("quantity", "sum"),
-        total_sales=("line_total", "sum"),
-    )
-    .sort_values("total_sales", ascending=False)
-)
+from src.midterm_project import build_analysis_tables
 
-category_sales["sales_ratio"] = (
-    category_sales["total_sales"]
-    / category_sales["total_sales"].sum()
-    * 100
-).round(2)
+analysis_tables = build_analysis_tables(processed_data)
+
+category_sales = analysis_tables["category_sales"]
+monthly_sales = analysis_tables["monthly_sales"]
+customer_sales = analysis_tables["customer_sales"]
+order_status_summary = analysis_tables[
+    "order_status_summary"
+]
 ```
 
-월별 매출과 주문 수를 계산합니다.
+### 카테고리별 완료 주문 매출
 
 ```python
-monthly_sales = (
-    completed_order_sales
-    .groupby("order_month", as_index=False)
-    .agg(
-        total_sales=("line_total", "sum"),
-        order_count=("order_id", "nunique"),
-    )
-    .sort_values("order_month")
-)
-
-monthly_sales["avg_order_value"] = (
-    monthly_sales["total_sales"]
-    / monthly_sales["order_count"]
-).round(0)
+category_sales
 ```
 
-고객별 구매 금액은 `customer_id`로 먼저 집계한 뒤 고객 속성을 붙입니다. 고객 이름은 결과 파일에 포함하지 않습니다.
+카테고리 매출이 높은 이유가 판매 수량 때문인지 평균 단가 때문인지는 이 표만으로 알 수 없습니다. 판매 수량과 가격 수준을 함께 확인합니다.
+
+### 월별 완료 주문 매출
 
 ```python
-customer_sales = (
-    completed_order_sales
-    .groupby("customer_id", as_index=False)
-    .agg(
-        order_count=("order_id", "nunique"),
-        total_sales=("line_total", "sum"),
-    )
-    .sort_values("total_sales", ascending=False)
-)
-
-customer_sales["avg_order_value"] = (
-    customer_sales["total_sales"]
-    / customer_sales["order_count"]
-).round(0)
-
-customer_sales = customer_sales.merge(
-    customers_clean[["customer_id", "city"]],
-    on="customer_id",
-    how="left",
-    validate="one_to_one",
-)
-
-customer_sales["customer_label"] = (
-    "Customer "
-    + customer_sales["customer_id"].astype(str)
-)
+monthly_sales
 ```
 
-주문 상태별 주문 수도 계산합니다.
+`order_count`는 주문 상세 행 수가 아니라 고유한 주문 건수입니다. 월별 매출 변화가 주문 수 변화 때문인지 평균 주문 금액 변화 때문인지 구분합니다.
+
+### 고객별 완료 주문 구매 금액
 
 ```python
-order_status_summary = (
-    orders_clean["order_status"]
-    .value_counts(dropna=False)
-    .rename_axis("order_status")
-    .reset_index(name="order_count")
-)
-
-order_status_summary["order_ratio"] = (
-    order_status_summary["order_count"]
-    / order_status_summary["order_count"].sum()
-    * 100
-).round(2)
-```
-
-결과 CSV는 Excel 호환성을 고려해 `utf-8-sig`로 저장합니다.
-
-```python
-outputs = {
-    "ch08_category_sales.csv": category_sales,
-    "ch08_monthly_sales.csv": monthly_sales,
-    "ch08_customer_sales.csv": customer_sales,
-    "ch08_order_status_summary.csv": order_status_summary,
-    "ch08_key_duplicate_checks.csv": key_duplicate_checks,
-    "ch08_relationship_checks.csv": relationship_checks,
-}
-
-for filename, df in outputs.items():
-    df.to_csv(
-        REPORT_DIR / filename,
-        index=False,
-        encoding="utf-8-sig",
-    )
-```
-
-## 9. 결과를 시각화하기
-
-그래프 제목에도 완료 주문 기준임을 표시합니다.
-
-```python
-plt.figure(figsize=(10, 5))
-plt.bar(
-    category_sales["category"],
-    category_sales["total_sales"],
-)
-plt.title("카테고리별 완료 주문 매출")
-plt.xlabel("카테고리")
-plt.ylabel("매출")
-plt.xticks(rotation=45)
-plt.tight_layout()
-plt.savefig(
-    FIGURE_DIR / "ch08_category_sales.png",
-    dpi=150,
-    bbox_inches="tight",
-)
-plt.show()
-```
-
-```python
-plt.figure(figsize=(10, 5))
-plt.plot(
-    monthly_sales["order_month"],
-    monthly_sales["total_sales"],
-    marker="o",
-)
-plt.title("월별 완료 주문 매출 추이")
-plt.xlabel("주문 월")
-plt.ylabel("매출")
-plt.xticks(rotation=45)
-plt.tight_layout()
-plt.savefig(
-    FIGURE_DIR / "ch08_monthly_sales.png",
-    dpi=150,
-    bbox_inches="tight",
-)
-plt.show()
-```
-
-```python
-top_customers = customer_sales.head(10).sort_values(
-    "total_sales"
-)
-
-plt.figure(figsize=(10, 6))
-plt.barh(
-    top_customers["customer_label"],
-    top_customers["total_sales"],
-)
-plt.title("완료 주문 구매 금액 상위 10명")
-plt.xlabel("총 구매 금액")
-plt.ylabel("익명화 고객")
-plt.tight_layout()
-plt.savefig(
-    FIGURE_DIR / "ch08_top_customers.png",
-    dpi=150,
-    bbox_inches="tight",
-)
-plt.show()
-```
-
-## 10. 결과를 해석하고 보고서로 정리하기
-
-해석은 관찰, 주의점, 다음 질문을 분리해 작성합니다.
-
-| 분석 | 관찰 | 주의점 | 다음 질문 |
-| --- | --- | --- | --- |
-| 카테고리별 매출 | 완료 주문 매출 비중이 높은 카테고리를 확인 | 수량과 단가의 영향을 구분해야 함 | 카테고리별 평균 판매 단가는? |
-| 월별 매출 | 월별 증가·감소 구간 확인 | 프로모션이나 계절성 원인을 단정할 수 없음 | 주문 수와 평균 주문 금액 중 무엇이 변했는가? |
-| 고객별 구매 금액 | 구매 금액 상위 고객군 확인 | 일회성 고액 구매와 반복 구매 구분 필요 | 최근 구매일과 구매 빈도는? |
-| 주문 상태 | 완료·취소·환불 비율 확인 | 상태 정의와 처리 기준 확인 필요 | 취소율은 월별로 달라지는가? |
-
-보고서에 들어가는 고객 결과는 실제 이름을 제외하고 `customer_label`, `city`, `order_count`, `total_sales`, `avg_order_value`만 사용합니다.
-
-```python
-customer_report = customer_sales[
+customer_sales[
     [
         "customer_label",
         "city",
@@ -657,19 +393,111 @@ customer_report = customer_sales[
 ].head(10)
 ```
 
-보고서에는 다음 내용을 포함합니다.
+고객 이름은 결과 CSV와 보고서에 포함하지 않습니다. `customer_id` 기반 익명화 라벨을 사용하고, 원본 고객 정보를 외부 LLM에 전달하지 않습니다.
 
-1. 분석 목적과 질문
-2. 사용 데이터와 데이터 구조
-3. 완료 주문 기준을 포함한 분석 기준
-4. 전처리 전후 비교
-5. 키 중복과 관계 점검
-6. 카테고리·월별·고객별 결과
-7. 주문 상태 분포
-8. 관찰, 한계, 다음 질문
-9. LLM 활용 및 검증 기록
+### 주문 상태별 주문 수
 
-## 11. LLM은 검토 파트너로 활용하기
+```python
+order_status_summary
+```
+
+주문 상태 분포는 전체 주문을 대상으로 계산합니다. 매출표의 완료 주문 기준과 분석 범위가 다르다는 점을 보고서에 명시합니다.
+
+## 11. 결과 합계 일치 검증하기
+
+카테고리별, 월별, 고객별 매출은 모두 같은 완료 주문 상세 데이터를 사용하므로 합계가 일치해야 합니다.
+
+```python
+completed_total = analysis_tables[
+    "completed_order_sales"
+]["line_total"].sum()
+
+category_total = category_sales["total_sales"].sum()
+monthly_total = monthly_sales["total_sales"].sum()
+customer_total = customer_sales["total_sales"].sum()
+
+assert (
+    completed_total
+    == category_total
+    == monthly_total
+    == customer_total
+)
+```
+
+합계가 다르면 필터링 범위, 병합 누락, 중복 키, 그룹화 기준을 다시 확인합니다.
+
+## 12. 시각화와 해석 메모 만들기
+
+그래프 제목에도 완료 주문 기준임을 표시합니다.
+
+```python
+from src.midterm_project import (
+    build_interpretation_notes,
+    create_project_figures,
+)
+
+interpretation_notes = build_interpretation_notes()
+
+create_project_figures(
+    analysis_tables,
+    FIGURE_DIR,
+    show=True,
+)
+```
+
+해석은 다음 세 부분으로 나누어 작성합니다.
+
+| 구분 | 작성 내용 |
+| --- | --- |
+| 관찰 | 데이터와 그래프에서 직접 확인한 사실 |
+| 주의점 | 현재 결과만으로 단정할 수 없는 내용 |
+| 다음 질문 | 추가로 확인할 지표나 데이터 |
+
+예를 들어 “특정 월의 매출이 증가했다”는 관찰이지만, “프로모션 때문에 증가했다”는 현재 데이터만으로 확인할 수 없는 가설입니다.
+
+## 13. 결과 파일과 보고서 저장하기
+
+결과표와 보고서는 공통 함수를 사용해 저장합니다.
+
+```python
+from src.midterm_project import (
+    build_midterm_report,
+    save_project_tables,
+)
+
+saved_tables = save_project_tables(
+    dataset_summary,
+    preprocessing_comparison,
+    key_duplicate_checks,
+    relationship_checks,
+    analysis_tables,
+    interpretation_notes,
+    REPORT_DIR,
+)
+
+report_text = build_midterm_report(
+    dataset_summary,
+    preprocessing_comparison,
+    key_duplicate_checks,
+    relationship_checks,
+    analysis_tables,
+    interpretation_notes,
+)
+
+report_path = REPORT_DIR / "ch08_midterm_report.md"
+report_path.write_text(report_text, encoding="utf-8")
+```
+
+보고서에는 다음 기준을 명시합니다.
+
+- 매출은 완료 주문만 포함
+- 취소·환불 주문을 포함한 금액과 완료 주문 매출을 구분
+- 키 중복, 외래키 미매칭, 병합 전후 행 수 확인
+- 고객 이름을 제외하고 익명화 라벨 사용
+- 관찰과 원인 가설을 구분
+- Notebook, CSV, 그래프, 보고서의 수치 일치 확인
+
+## 14. LLM은 검토 파트너로 활용하기
 
 LLM에는 실제 고객명이나 원본 행을 전달하지 않고 구조와 요약 결과만 제공합니다.
 
@@ -687,15 +515,15 @@ LLM에는 실제 고객명이나 원본 행을 전달하지 않고 구조와 요
 3. 병합 후 행 증가 또는 미매칭을 확인했는가?
 4. 관찰과 원인 가설을 구분했는가?
 5. 개인정보가 불필요하게 노출되지 않았는가?
-6. 결과를 재현할 수 있는 파일과 실행 순서가 있는가?
+6. Notebook, CSV, 그래프, 보고서의 수치가 일치하는가?
 
 데이터에 없는 원인은 단정하지 말고,
-수정이 필요한 부분과 추가 확인 질문을 구분해 주세요.
+필수 수정과 권장 개선을 구분해 주세요.
 ```
 
-LLM의 제안을 바로 반영하지 말고 실제 컬럼, 값의 종류, 집계 기준, 코드 실행 결과와 비교해 검증합니다.
+LLM의 제안은 실제 컬럼, 값의 종류, 집계 기준, 실행 결과와 비교해 검증합니다.
 
-## 12. 제출물과 최종 검증
+## 15. 제출물과 최종 검증
 
 최종 산출물은 다음과 같습니다.
 
@@ -709,6 +537,8 @@ LLM의 제안을 바로 반영하지 말고 실제 컬럼, 값의 종류, 집계
 - `reports/ch08_preprocessing_comparison.csv`
 - `reports/ch08_key_duplicate_checks.csv`
 - `reports/ch08_relationship_checks.csv`
+- `reports/ch08_merge_checks.csv`
+- `reports/ch08_amount_scope_summary.csv`
 - `reports/ch08_category_sales.csv`
 - `reports/ch08_monthly_sales.csv`
 - `reports/ch08_customer_sales.csv`
@@ -742,7 +572,7 @@ python scripts/generate_sample_data.py
 python scripts/run_midterm_project.py
 ```
 
-## 13. 다음 장으로 이어지는 흐름
+## 16. 다음 장으로 이어지는 흐름
 
 중간 프로젝트까지는 데이터를 불러오고, 전처리하고, 안전하게 병합하고, 질문에 맞는 지표를 계산하고, 시각화와 보고서로 정리하는 기본 흐름을 다루었습니다.
 
