@@ -1,55 +1,166 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1700" height="820" viewBox="0 0 1700 820" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
   <title id="title">온라인 쇼핑몰 주요 시각화 예시 대시보드</title>
-  <desc id="desc">카테고리별 매출, 월별 매출, 가격 분포, 가격과 판매 수량 관계를 한 화면에 요약한 대시보드</desc>
+  <desc id="desc">온라인 쇼핑몰 데이터를 비교, 추세, 분포, 관계, 순위 관점의 여섯 가지 그래프로 요약한 교육용 대시보드</desc>
   <defs>
-    <linearGradient id="head" x1="0" x2="1"><stop offset="0%" stop-color="#0f766e"/><stop offset="100%" stop-color="#7c3aed"/></linearGradient>
-    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="#0f172a" flood-opacity="0.12"/></filter>
+    <linearGradient id="topLine" x1="0" x2="1">
+      <stop offset="0%" stop-color="#0f766e"/>
+      <stop offset="100%" stop-color="#2563eb"/>
+    </linearGradient>
+    <filter id="softShadow" x="-14%" y="-14%" width="128%" height="128%">
+      <feDropShadow dx="0" dy="8" stdDeviation="9" flood-color="#0f172a" flood-opacity="0.07"/>
+    </filter>
     <style>
-      .bg{fill:#f8fafc}.h{fill:url(#head)} text{font-family:'Pretendard','Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif}
-      .title{font-size:40px;font-weight:800;fill:#fff}.sub{font-size:19px;font-weight:600;fill:#dcfce7}.card{fill:#fff;stroke:#cbd5e1;stroke-width:2;filter:url(#shadow)}
-      .ct{font-size:23px;font-weight:800;fill:#0f172a}.axis{stroke:#334155;stroke-width:2}.grid{stroke:#e2e8f0;stroke-width:1}.bar{fill:#bfdbfe;stroke:#60a5fa;stroke-width:1.5}.line{fill:none;stroke:#2563eb;stroke-width:4}.dot{fill:#2563eb}.tick{font-size:13px;font-weight:600;fill:#64748b}.small{font-size:15px;font-weight:650;fill:#475569}.point{fill:#c4b5fd;stroke:#7c3aed;stroke-width:1.5;opacity:.8}.note{fill:#eff6ff;stroke:#93c5fd;stroke-width:1.5}.nt{font-size:17px;font-weight:800;fill:#1d4ed8}
+      .bg{fill:#f8fafc}
+      .top{fill:url(#topLine)}
+      text{font-family:'Pretendard','Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif}
+      .title{font-size:48px;font-weight:850;fill:#0f172a}
+      .subtitle{font-size:24px;font-weight:600;fill:#334155}
+      .card{fill:#fff;stroke:#cbd5e1;stroke-width:2;filter:url(#softShadow)}
+      .cardTitle{font-size:25px;font-weight:850;fill:#0f172a}
+      .badge{fill:#eff6ff;stroke:none}
+      .badgeText{font-size:17px;font-weight:850;fill:#1d4ed8}
+      .axis{stroke:#64748b;stroke-width:2.5;stroke-linecap:round}
+      .grid{stroke:#e2e8f0;stroke-width:1.5}
+      .tick{font-size:16px;font-weight:700;fill:#475569}
+      .axisLabel{font-size:17px;font-weight:800;fill:#334155}
+      .barBlue{fill:#2563eb}
+      .barBlue2{fill:#60a5fa}
+      .lineGreen{fill:none;stroke:#0f9f7f;stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
+      .dotGreen{fill:#0f9f7f;stroke:#fff;stroke-width:2}
+      .hist{fill:#f59e0b}
+      .point{fill:#e11d48;opacity:.9}
+      .barNavy{fill:#334155}
+      .barPurple{fill:#7c3aed}
+      .footerBox{fill:#eff6ff;stroke:#bfdbfe;stroke-width:2}
+      .footer{font-size:22px;font-weight:750;fill:#1d4ed8}
     </style>
   </defs>
-  <rect class="bg" width="1700" height="820" rx="34"/>
-  <rect class="h" x="55" y="38" width="1590" height="95" rx="28"/>
-  <text class="title" x="92" y="96">온라인 쇼핑몰 주요 시각화 예시</text>
-  <text class="sub" x="92" y="123">비교, 추세, 분포, 관계를 한 화면에서 요약해 보고서나 발표 자료로 연결합니다</text>
 
-  <g transform="translate(80 170)">
-    <rect class="card" width="740" height="270" rx="24"/>
-    <text class="ct" x="28" y="44">카테고리별 매출</text>
-    <line class="axis" x1="70" y1="220" x2="680" y2="220"/><line class="axis" x1="70" y1="75" x2="70" y2="220"/>
-    <line class="grid" x1="70" y1="105" x2="680" y2="105"/><line class="grid" x1="70" y1="150" x2="680" y2="150"/><line class="grid" x1="70" y1="195" x2="680" y2="195"/>
-    <rect class="bar" x="120" y="105" width="70" height="115" rx="6"/><rect class="bar" x="245" y="135" width="70" height="85" rx="6"/><rect class="bar" x="370" y="160" width="70" height="60" rx="6"/><rect class="bar" x="495" y="180" width="70" height="40" rx="6"/>
-    <text class="tick" x="155" y="244" text-anchor="middle">전자기기</text><text class="tick" x="280" y="244" text-anchor="middle">생활용품</text><text class="tick" x="405" y="244" text-anchor="middle">패션</text><text class="tick" x="530" y="244" text-anchor="middle">식품</text>
+  <rect class="bg" width="1600" height="900"/>
+  <rect class="top" x="70" y="54" width="1460" height="10" rx="5"/>
+  <text class="title" x="800" y="126" text-anchor="middle">온라인 쇼핑몰 주요 시각화 예시 대시보드</text>
+  <text class="subtitle" x="800" y="168" text-anchor="middle">분석 질문에 따라 비교·추세·분포·관계·순위를 적절한 그래프로 표현합니다.</text>
+
+  <g transform="translate(70 205)">
+    <rect class="card" width="455" height="255" rx="22"/>
+    <text class="cardTitle" x="28" y="42">카테고리별 매출</text>
+    <rect class="badge" x="362" y="21" width="64" height="30" rx="10"/>
+    <text class="badgeText" x="394" y="42" text-anchor="middle">비교</text>
+    <line class="axis" x1="72" y1="196" x2="410" y2="196"/>
+    <line class="axis" x1="72" y1="84" x2="72" y2="196"/>
+    <line class="grid" x1="72" y1="122" x2="410" y2="122"/>
+    <line class="grid" x1="72" y1="159" x2="410" y2="159"/>
+    <text class="axisLabel" x="38" y="150" transform="rotate(-90 38 150)" text-anchor="middle">매출</text>
+    <rect class="barBlue" x="106" y="116" width="42" height="80" rx="5"/>
+    <rect class="barBlue" x="184" y="94" width="42" height="102" rx="5"/>
+    <rect class="barBlue" x="262" y="132" width="42" height="64" rx="5"/>
+    <rect class="barBlue" x="340" y="108" width="42" height="88" rx="5"/>
+    <text class="tick" x="127" y="225" text-anchor="middle">의류</text>
+    <text class="tick" x="205" y="225" text-anchor="middle">식품</text>
+    <text class="tick" x="283" y="225" text-anchor="middle">가전</text>
+    <text class="tick" x="361" y="225" text-anchor="middle">생활</text>
   </g>
 
-  <g transform="translate(880 170)">
-    <rect class="card" width="740" height="270" rx="24"/>
-    <text class="ct" x="28" y="44">월별 매출 추이</text>
-    <line class="axis" x1="70" y1="220" x2="680" y2="220"/><line class="axis" x1="70" y1="75" x2="70" y2="220"/>
-    <line class="grid" x1="70" y1="105" x2="680" y2="105"/><line class="grid" x1="70" y1="150" x2="680" y2="150"/><line class="grid" x1="70" y1="195" x2="680" y2="195"/>
-    <path class="line" d="M105 190 L205 170 L305 178 L405 130 L505 112 L605 145"/>
-    <circle class="dot" cx="105" cy="190" r="6"/><circle class="dot" cx="205" cy="170" r="6"/><circle class="dot" cx="305" cy="178" r="6"/><circle class="dot" cx="405" cy="130" r="6"/><circle class="dot" cx="505" cy="112" r="6"/><circle class="dot" cx="605" cy="145" r="6"/>
-    <text class="tick" x="105" y="244" text-anchor="middle">1월</text><text class="tick" x="205" y="244" text-anchor="middle">2월</text><text class="tick" x="305" y="244" text-anchor="middle">3월</text><text class="tick" x="405" y="244" text-anchor="middle">4월</text><text class="tick" x="505" y="244" text-anchor="middle">5월</text><text class="tick" x="605" y="244" text-anchor="middle">6월</text>
+  <g transform="translate(572 205)">
+    <rect class="card" width="455" height="255" rx="22"/>
+    <text class="cardTitle" x="28" y="42">월별 매출 추이</text>
+    <rect class="badge" x="362" y="21" width="64" height="30" rx="10"/>
+    <text class="badgeText" x="394" y="42" text-anchor="middle">추세</text>
+    <line class="axis" x1="70" y1="196" x2="414" y2="196"/>
+    <line class="axis" x1="70" y1="84" x2="70" y2="196"/>
+    <line class="grid" x1="70" y1="122" x2="414" y2="122"/>
+    <line class="grid" x1="70" y1="159" x2="414" y2="159"/>
+    <polyline class="lineGreen" points="92,174 150,151 208,160 266,118 324,104 382,132"/>
+    <circle class="dotGreen" cx="92" cy="174" r="7"/>
+    <circle class="dotGreen" cx="150" cy="151" r="7"/>
+    <circle class="dotGreen" cx="208" cy="160" r="7"/>
+    <circle class="dotGreen" cx="266" cy="118" r="7"/>
+    <circle class="dotGreen" cx="324" cy="104" r="7"/>
+    <circle class="dotGreen" cx="382" cy="132" r="7"/>
+    <text class="tick" x="92" y="225" text-anchor="middle">1월</text>
+    <text class="tick" x="208" y="225" text-anchor="middle">3월</text>
+    <text class="tick" x="324" y="225" text-anchor="middle">5월</text>
+    <text class="axisLabel" x="242" y="244" text-anchor="middle">시간 흐름</text>
   </g>
 
-  <g transform="translate(80 485)">
-    <rect class="card" width="740" height="260" rx="24"/>
-    <text class="ct" x="28" y="44">상품 가격 분포</text>
-    <line class="axis" x1="70" y1="210" x2="680" y2="210"/><line class="axis" x1="70" y1="75" x2="70" y2="210"/>
-    <rect class="bar" x="115" y="170" width="55" height="40" rx="5"/><rect class="bar" x="180" y="125" width="55" height="85" rx="5"/><rect class="bar" x="245" y="95" width="55" height="115" rx="5"/><rect class="bar" x="310" y="110" width="55" height="100" rx="5"/><rect class="bar" x="375" y="145" width="55" height="65" rx="5"/><rect class="bar" x="440" y="172" width="55" height="38" rx="5"/><rect class="bar" x="505" y="188" width="55" height="22" rx="5"/>
-    <text class="tick" x="300" y="238" text-anchor="middle">상품 가격 구간</text><text class="small" x="28" y="75">가격대별 상품 수</text>
+  <g transform="translate(1074 205)">
+    <rect class="card" width="455" height="255" rx="22"/>
+    <text class="cardTitle" x="28" y="42">상품 가격 분포</text>
+    <rect class="badge" x="362" y="21" width="64" height="30" rx="10"/>
+    <text class="badgeText" x="394" y="42" text-anchor="middle">분포</text>
+    <line class="axis" x1="74" y1="196" x2="410" y2="196"/>
+    <line class="axis" x1="74" y1="84" x2="74" y2="196"/>
+    <rect class="hist" x="100" y="164" width="34" height="32" rx="1"/>
+    <rect class="hist" x="135" y="134" width="34" height="62" rx="1"/>
+    <rect class="hist" x="170" y="104" width="34" height="92" rx="1"/>
+    <rect class="hist" x="205" y="90" width="34" height="106" rx="1"/>
+    <rect class="hist" x="240" y="108" width="34" height="88" rx="1"/>
+    <rect class="hist" x="275" y="139" width="34" height="57" rx="1"/>
+    <rect class="hist" x="310" y="168" width="34" height="28" rx="1"/>
+    <text class="tick" x="116" y="225" text-anchor="middle">낮음</text>
+    <text class="tick" x="222" y="225" text-anchor="middle">중간</text>
+    <text class="tick" x="328" y="225" text-anchor="middle">높음</text>
+    <text class="axisLabel" x="242" y="244" text-anchor="middle">가격 구간 →</text>
   </g>
 
-  <g transform="translate(880 485)">
-    <rect class="card" width="740" height="260" rx="24"/>
-    <text class="ct" x="28" y="44">상품 가격과 판매 수량 관계</text>
-    <line class="axis" x1="70" y1="210" x2="680" y2="210"/><line class="axis" x1="70" y1="75" x2="70" y2="210"/>
-    <circle class="point" cx="135" cy="115" r="7"/><circle class="point" cx="180" cy="140" r="7"/><circle class="point" cx="225" cy="122" r="7"/><circle class="point" cx="280" cy="155" r="7"/><circle class="point" cx="350" cy="170" r="7"/><circle class="point" cx="430" cy="150" r="7"/><circle class="point" cx="500" cy="185" r="7"/><circle class="point" cx="585" cy="195" r="7"/>
-    <text class="tick" x="370" y="238" text-anchor="middle">상품 가격</text><text class="small" x="28" y="75">총 판매 수량</text>
+  <g transform="translate(70 500)">
+    <rect class="card" width="455" height="255" rx="22"/>
+    <text class="cardTitle" x="28" y="42">가격 × 판매 수량</text>
+    <rect class="badge" x="362" y="21" width="64" height="30" rx="10"/>
+    <text class="badgeText" x="394" y="42" text-anchor="middle">관계</text>
+    <line class="axis" x1="76" y1="196" x2="410" y2="196"/>
+    <line class="axis" x1="76" y1="84" x2="76" y2="196"/>
+    <circle class="point" cx="112" cy="170" r="7"/>
+    <circle class="point" cx="152" cy="142" r="7"/>
+    <circle class="point" cx="188" cy="155" r="7"/>
+    <circle class="point" cx="224" cy="122" r="7"/>
+    <circle class="point" cx="266" cy="134" r="7"/>
+    <circle class="point" cx="304" cy="102" r="7"/>
+    <circle class="point" cx="342" cy="126" r="7"/>
+    <circle class="point" cx="378" cy="92" r="7"/>
+    <circle class="point" cx="332" cy="174" r="7"/>
+    <text class="axisLabel" x="243" y="229" text-anchor="middle">가격</text>
+    <text class="axisLabel" x="38" y="150" transform="rotate(-90 38 150)" text-anchor="middle">판매 수량</text>
   </g>
 
-  <rect class="note" x="455" y="770" width="790" height="34" rx="13"/>
-  <text class="nt" x="850" y="793" text-anchor="middle">대시보드는 핵심 패턴을 빠르게 보여주지만, 원인 해석은 추가 분석이 필요합니다</text>
+  <g transform="translate(572 500)">
+    <rect class="card" width="455" height="255" rx="22"/>
+    <text class="cardTitle" x="28" y="42">구매 금액 상위 고객</text>
+    <rect class="badge" x="362" y="21" width="64" height="30" rx="10"/>
+    <text class="badgeText" x="394" y="42" text-anchor="middle">순위</text>
+    <line class="axis" x1="132" y1="84" x2="132" y2="216"/>
+    <line class="axis" x1="132" y1="216" x2="400" y2="216"/>
+    <rect class="barNavy" x="156" y="86" width="214" height="24" rx="6"/>
+    <rect class="barNavy" x="156" y="120" width="178" height="24" rx="6"/>
+    <rect class="barNavy" x="156" y="154" width="138" height="24" rx="6"/>
+    <rect class="barNavy" x="156" y="188" width="94" height="24" rx="6"/>
+    <text class="tick" x="105" y="103" text-anchor="end">고객 A</text>
+    <text class="tick" x="105" y="137" text-anchor="end">고객 B</text>
+    <text class="tick" x="105" y="171" text-anchor="end">고객 C</text>
+    <text class="tick" x="105" y="205" text-anchor="end">고객 D</text>
+    <text class="axisLabel" x="278" y="240" text-anchor="middle">구매 금액 →</text>
+  </g>
+
+  <g transform="translate(1074 500)">
+    <rect class="card" width="455" height="255" rx="22"/>
+    <text class="cardTitle" x="28" y="42">주문 상태별 주문 수</text>
+    <rect class="badge" x="362" y="21" width="64" height="30" rx="10"/>
+    <text class="badgeText" x="394" y="42" text-anchor="middle">비교</text>
+    <line class="axis" x1="72" y1="196" x2="410" y2="196"/>
+    <line class="axis" x1="72" y1="84" x2="72" y2="196"/>
+    <line class="grid" x1="72" y1="122" x2="410" y2="122"/>
+    <line class="grid" x1="72" y1="159" x2="410" y2="159"/>
+    <rect class="barPurple" x="106" y="102" width="42" height="94" rx="5"/>
+    <rect class="barPurple" x="184" y="126" width="42" height="70" rx="5"/>
+    <rect class="barPurple" x="262" y="147" width="42" height="49" rx="5"/>
+    <rect class="barPurple" x="340" y="176" width="42" height="20" rx="5"/>
+    <text class="tick" x="127" y="225" text-anchor="middle">완료</text>
+    <text class="tick" x="205" y="225" text-anchor="middle">배송</text>
+    <text class="tick" x="283" y="225" text-anchor="middle">준비</text>
+    <text class="tick" x="361" y="225" text-anchor="middle">취소</text>
+    <text class="axisLabel" x="38" y="150" transform="rotate(-90 38 150)" text-anchor="middle">주문 수</text>
+  </g>
+
+  <rect class="footerBox" x="250" y="812" width="1100" height="54" rx="18"/>
+  <text class="footer" x="800" y="846" text-anchor="middle">한 화면에서 매출 비교, 시간 흐름, 값의 분포, 변수 관계와 상위 항목을 함께 확인합니다.</text>
 </svg>

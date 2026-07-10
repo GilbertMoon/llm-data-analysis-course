@@ -1,29 +1,136 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="620" viewBox="0 0 1600 620" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
   <title id="title">분석 질문별 그래프 선택 가이드</title>
-  <desc id="desc">비교, 추세, 분포, 관계, 상위 항목, 비율에 적합한 그래프 선택 가이드</desc>
+  <desc id="desc">확인하려는 분석 목적에 따라 적절한 그래프를 선택하는 가이드</desc>
   <defs>
-    <linearGradient id="head" x1="0" x2="1"><stop offset="0%" stop-color="#0f766e"/><stop offset="100%" stop-color="#2563eb"/></linearGradient>
-    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#0f172a" flood-opacity="0.12"/></filter>
+    <linearGradient id="topLine" x1="0" x2="1">
+      <stop offset="0%" stop-color="#0f766e"/>
+      <stop offset="100%" stop-color="#2563eb"/>
+    </linearGradient>
+    <filter id="softShadow" x="-16%" y="-16%" width="132%" height="132%">
+      <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#0f172a" flood-opacity="0.09"/>
+    </filter>
     <style>
-      .bg{fill:#f8fafc}.h{fill:url(#head)} text{font-family:'Pretendard','Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif}
-      .title{font-size:38px;font-weight:800;fill:#fff}.sub{font-size:18px;font-weight:600;fill:#ccfbf1}
-      .card{fill:#fff;stroke:#cbd5e1;stroke-width:2;filter:url(#shadow)}.tag{fill:#eff6ff;stroke:#93c5fd;stroke-width:1.5}.tagText{font-size:16px;font-weight:900;fill:#2563eb}
-      .main{font-size:25px;font-weight:800;fill:#0f172a}.chart{font-size:20px;font-weight:800;fill:#0f766e}.q{font-size:17px;font-weight:650;fill:#475569}.foot{fill:#fff7ed;stroke:#fdba74;stroke-width:2}.ft{font-size:20px;font-weight:800;fill:#9a3412}
+      .bg{fill:#f8fafc}
+      .top{fill:url(#topLine)}
+      text{font-family:'Pretendard','Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif}
+      .title{font-size:48px;font-weight:850;fill:#0f172a}
+      .subtitle{font-size:24px;font-weight:600;fill:#334155}
+      .card{fill:#fff;stroke:#bfdbfe;stroke-width:2.5;filter:url(#softShadow)}
+      .purpose{font-size:27px;font-weight:850;fill:#0f172a}
+      .label{font-size:18px;font-weight:800;fill:#64748b}
+      .badge{fill:#eff6ff;stroke:#93c5fd;stroke-width:2}
+      .badgeText{font-size:24px;font-weight:850;fill:#1d4ed8}
+      .example{font-size:21px;font-weight:700;fill:#334155}
+      .axis{stroke:#94a3b8;stroke-width:4;stroke-linecap:round}
+      .iconBlue{fill:#2563eb}
+      .iconGreen{fill:#0f9f7f}
+      .iconOrange{fill:#f59e0b}
+      .iconPink{fill:#e11d48}
+      .iconSlate{fill:#475569}
+      .line{fill:none;stroke:#0f9f7f;stroke-width:6;stroke-linecap:round;stroke-linejoin:round}
+      .footerBox{fill:#eff6ff;stroke:#bfdbfe;stroke-width:2}
+      .footer{font-size:22px;font-weight:750;fill:#1d4ed8}
     </style>
   </defs>
-  <rect class="bg" width="1600" height="620" rx="32"/>
-  <rect class="h" x="50" y="36" width="1500" height="92" rx="26"/>
-  <text class="title" x="86" y="92">분석 질문별 그래프 선택 가이드</text>
-  <text class="sub" x="86" y="118">질문의 성격을 먼저 정하면 적합한 그래프를 고르기 쉽습니다</text>
 
-  <g transform="translate(90 170)"><rect class="card" width="440" height="145" rx="24"/><rect class="tag" x="26" y="24" width="82" height="28" rx="14"/><text class="tagText" x="67" y="43" text-anchor="middle">비교</text><text class="main" x="26" y="82">범주별 크기 비교</text><text class="chart" x="26" y="112">추천: 막대그래프</text><text class="q" x="26" y="138">예: 카테고리별 매출은 어떻게 다른가?</text></g>
-  <g transform="translate(580 170)"><rect class="card" width="440" height="145" rx="24"/><rect class="tag" x="26" y="24" width="82" height="28" rx="14"/><text class="tagText" x="67" y="43" text-anchor="middle">추세</text><text class="main" x="26" y="82">시간 흐름 확인</text><text class="chart" x="26" y="112">추천: 선 그래프</text><text class="q" x="26" y="138">예: 월별 매출은 어떻게 변하는가?</text></g>
-  <g transform="translate(1070 170)"><rect class="card" width="440" height="145" rx="24"/><rect class="tag" x="26" y="24" width="82" height="28" rx="14"/><text class="tagText" x="67" y="43" text-anchor="middle">분포</text><text class="main" x="26" y="82">값의 몰림과 범위 확인</text><text class="chart" x="26" y="112">추천: 히스토그램</text><text class="q" x="26" y="138">예: 상품 가격은 어느 구간에 몰려 있는가?</text></g>
+  <rect class="bg" width="1600" height="900"/>
+  <rect class="top" x="70" y="54" width="1460" height="10" rx="5"/>
 
-  <g transform="translate(90 355)"><rect class="card" width="440" height="145" rx="24"/><rect class="tag" x="26" y="24" width="82" height="28" rx="14"/><text class="tagText" x="67" y="43" text-anchor="middle">관계</text><text class="main" x="26" y="82">두 숫자형 변수 탐색</text><text class="chart" x="26" y="112">추천: 산점도</text><text class="q" x="26" y="138">예: 가격과 판매 수량은 관계가 있는가?</text></g>
-  <g transform="translate(580 355)"><rect class="card" width="440" height="145" rx="24"/><rect class="tag" x="26" y="24" width="96" height="28" rx="14"/><text class="tagText" x="74" y="43" text-anchor="middle">상위 항목</text><text class="main" x="26" y="82">순위와 크기 비교</text><text class="chart" x="26" y="112">추천: 가로 막대그래프</text><text class="q" x="26" y="138">예: 구매 금액 상위 고객은 누구인가?</text></g>
-  <g transform="translate(1070 355)"><rect class="card" width="440" height="145" rx="24"/><rect class="tag" x="26" y="24" width="82" height="28" rx="14"/><text class="tagText" x="67" y="43" text-anchor="middle">비율</text><text class="main" x="26" y="82">전체 중 구성 비중</text><text class="chart" x="26" y="112">추천: 막대그래프 또는 파이 차트</text><text class="q" x="26" y="138">예: 주문 상태별 비중은 어떻게 되는가?</text></g>
+  <text class="title" x="800" y="126" text-anchor="middle">분석 질문별 그래프 선택 가이드</text>
+  <text class="subtitle" x="800" y="168" text-anchor="middle">확인하려는 분석 목적에 따라 적절한 그래프를 선택합니다.</text>
 
-  <rect class="foot" x="375" y="535" width="850" height="42" rx="14"/>
-  <text class="ft" x="800" y="563" text-anchor="middle">주의: 파이 차트는 항목이 많거나 차이가 작으면 비교가 어렵습니다</text>
+  <g transform="translate(100 210)">
+    <rect class="card" width="420" height="275" rx="24"/>
+    <g transform="translate(150 22)">
+      <line class="axis" x1="0" y1="82" x2="126" y2="82"/>
+      <rect class="iconBlue" x="13" y="42" width="18" height="40" rx="2"/>
+      <rect class="iconBlue" x="44" y="16" width="18" height="66" rx="2"/>
+      <rect class="iconBlue" x="75" y="54" width="18" height="28" rx="2"/>
+      <rect class="iconBlue" x="106" y="28" width="18" height="54" rx="2"/>
+    </g>
+    <text class="purpose" x="210" y="142" text-anchor="middle">범주별 크기 비교</text>
+    <text class="label" x="210" y="176" text-anchor="middle">추천 그래프</text>
+    <rect class="badge" x="112" y="188" width="196" height="42" rx="21"/>
+    <text class="badgeText" x="210" y="216" text-anchor="middle">막대그래프</text>
+    <text class="label" x="210" y="246" text-anchor="middle">예시</text>
+    <text class="example" x="210" y="270" text-anchor="middle">카테고리별 매출</text>
+  </g>
+
+  <g transform="translate(590 210)">
+    <rect class="card" width="420" height="275" rx="24"/>
+    <g transform="translate(144 22)">
+      <line class="axis" x1="0" y1="78" x2="132" y2="78"/>
+      <line class="axis" x1="0" y1="78" x2="0" y2="10"/>
+      <polyline class="line" points="16,58 42,46 68,52 94,24 122,36"/>
+      <circle class="iconGreen" cx="16" cy="58" r="7"/>
+      <circle class="iconGreen" cx="42" cy="46" r="7"/>
+      <circle class="iconGreen" cx="68" cy="52" r="7"/>
+      <circle class="iconGreen" cx="94" cy="24" r="7"/>
+      <circle class="iconGreen" cx="122" cy="36" r="7"/>
+    </g>
+    <text class="purpose" x="210" y="142" text-anchor="middle">시간 흐름 확인</text>
+    <text class="label" x="210" y="176" text-anchor="middle">추천 그래프</text>
+    <rect class="badge" x="112" y="188" width="196" height="42" rx="21"/>
+    <text class="badgeText" x="210" y="216" text-anchor="middle">선 그래프</text>
+    <text class="label" x="210" y="246" text-anchor="middle">예시</text>
+    <text class="example" x="210" y="270" text-anchor="middle">월별 매출</text>
+  </g>
+
+  <g transform="translate(1080 210)">
+    <rect class="card" width="420" height="275" rx="24"/>
+    <g transform="translate(140 22)">
+      <line class="axis" x1="0" y1="78" x2="140" y2="78"/>
+      <rect class="iconOrange" x="10" y="48" width="22" height="30" rx="1"/>
+      <rect class="iconOrange" x="34" y="28" width="22" height="50" rx="1"/>
+      <rect class="iconOrange" x="58" y="12" width="22" height="66" rx="1"/>
+      <rect class="iconOrange" x="82" y="22" width="22" height="56" rx="1"/>
+      <rect class="iconOrange" x="106" y="46" width="22" height="32" rx="1"/>
+    </g>
+    <text class="purpose" x="210" y="142" text-anchor="middle">값의 분포 확인</text>
+    <text class="label" x="210" y="176" text-anchor="middle">추천 그래프</text>
+    <rect class="badge" x="112" y="188" width="196" height="42" rx="21"/>
+    <text class="badgeText" x="210" y="216" text-anchor="middle">히스토그램</text>
+    <text class="label" x="210" y="246" text-anchor="middle">예시</text>
+    <text class="example" x="210" y="270" text-anchor="middle">상품 가격 분포</text>
+  </g>
+
+  <g transform="translate(345 505)">
+    <rect class="card" width="420" height="275" rx="24"/>
+    <g transform="translate(142 22)">
+      <line class="axis" x1="0" y1="82" x2="136" y2="82"/>
+      <line class="axis" x1="0" y1="82" x2="0" y2="10"/>
+      <circle class="iconPink" cx="25" cy="62" r="8"/>
+      <circle class="iconPink" cx="50" cy="45" r="8"/>
+      <circle class="iconPink" cx="70" cy="58" r="8"/>
+      <circle class="iconPink" cx="93" cy="31" r="8"/>
+      <circle class="iconPink" cx="113" cy="44" r="8"/>
+      <circle class="iconPink" cx="124" cy="20" r="8"/>
+    </g>
+    <text class="purpose" x="210" y="142" text-anchor="middle">두 변수 관계 확인</text>
+    <text class="label" x="210" y="176" text-anchor="middle">추천 그래프</text>
+    <rect class="badge" x="112" y="188" width="196" height="42" rx="21"/>
+    <text class="badgeText" x="210" y="216" text-anchor="middle">산점도</text>
+    <text class="label" x="210" y="246" text-anchor="middle">예시</text>
+    <text class="example" x="210" y="270" text-anchor="middle">가격과 판매 수량</text>
+  </g>
+
+  <g transform="translate(835 505)">
+    <rect class="card" width="420" height="275" rx="24"/>
+    <g transform="translate(139 22)">
+      <line class="axis" x1="0" y1="12" x2="0" y2="86"/>
+      <rect class="iconSlate" x="0" y="18" width="118" height="14" rx="2"/>
+      <rect class="iconSlate" x="0" y="38" width="92" height="14" rx="2"/>
+      <rect class="iconSlate" x="0" y="58" width="134" height="14" rx="2"/>
+      <rect class="iconSlate" x="0" y="78" width="74" height="14" rx="2"/>
+    </g>
+    <text class="purpose" x="210" y="142" text-anchor="middle">상위 항목 비교</text>
+    <text class="label" x="210" y="176" text-anchor="middle">추천 그래프</text>
+    <rect class="badge" x="86" y="188" width="248" height="42" rx="21"/>
+    <text class="badgeText" x="210" y="216" text-anchor="middle">가로 막대그래프</text>
+    <text class="label" x="210" y="246" text-anchor="middle">예시</text>
+    <text class="example" x="210" y="270" text-anchor="middle">구매 금액 상위 고객</text>
+  </g>
+
+  <rect class="footerBox" x="315" y="818" width="970" height="54" rx="18"/>
+  <text class="footer" x="800" y="852" text-anchor="middle">좋은 시각화는 분석 질문에 맞는 그래프를 선택하는 것에서 시작됩니다.</text>
 </svg>
