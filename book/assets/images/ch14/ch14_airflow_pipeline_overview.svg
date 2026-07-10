@@ -150,7 +150,7 @@
   </g>
 
   <path class="arrowBlue" d="M1425 500 V550 H1125 V575"/>
-  <text class="small" x="1270" y="540">검증 완료 후 운영 확인</text>
+  <text class="small" x="1270" y="534">검증 완료 후 운영 확인</text>
 
   <g transform="translate(850 575)">
     <rect class="ops" width="550" height="145" rx="22"/>
@@ -176,8 +176,9 @@
     <text class="small" x="45" y="130" text-anchor="middle">발송</text>
   </g>
 
-  <path class="arrowOrange" d="M650 500 V650 H820"/>
-  <text x="670" y="625" font-family="NanumSquare,NanumGothic,sans-serif" font-size="15" font-weight="700" fill="#c2410c">실패 시 로그 확인 후 해당 Task 재시도</text>
+  <path class="arrowOrange" d="M650 500 V610 H820"/>
+  <text x="668" y="592" font-family="NanumSquare,NanumGothic,sans-serif" font-size="14" font-weight="700" fill="#c2410c">실패 Task 로그 확인</text>
+  <text x="668" y="612" font-family="NanumSquare,NanumGothic,sans-serif" font-size="14" font-weight="700" fill="#c2410c">후 해당 Task 재실행</text>
 
   <rect class="note" x="250" y="772" width="1100" height="66" rx="20"/>
   <text class="noteText" x="800" y="813" text-anchor="middle">반복 분석은 Task로 나누고, Airflow가 순서·상태·실패 지점을 관리하게 합니다.</text>
