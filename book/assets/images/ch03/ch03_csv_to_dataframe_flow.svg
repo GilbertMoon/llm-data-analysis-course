@@ -18,25 +18,25 @@
   <text class="s" x="86" y="116">파일 경로 확인부터 DataFrame 점검까지, 데이터 분석의 첫 출발점</text>
 
   <g transform="translate(75 185)">
-    <rect class="box" width="250" height="150" rx="24"/>
+    <rect class="box" width="250" height="165" rx="24"/>
     <rect class="pill" x="28" y="28" width="70" height="30" rx="15"/><text class="pt" x="63" y="50" text-anchor="middle">STEP 1</text>
     <text class="bt" x="28" y="88">CSV 파일</text><text class="bd" x="28" y="124">customers.csv</text><text class="bd" x="28" y="150">orders.csv ...</text>
   </g>
   <path class="arr" d="M345 260H455"/>
   <g transform="translate(475 185)">
-    <rect class="box" width="250" height="150" rx="24"/>
+    <rect class="box" width="250" height="165" rx="24"/>
     <rect class="pill" x="28" y="28" width="70" height="30" rx="15"/><text class="pt" x="63" y="50" text-anchor="middle">STEP 2</text>
     <text class="bt" x="28" y="88">경로 확인</text><text class="code" x="28" y="124">Path("data/raw")</text><text class="bd" x="28" y="150">파일 존재 여부 확인</text>
   </g>
   <path class="arr" d="M745 260H855"/>
   <g transform="translate(875 185)">
-    <rect class="box" width="250" height="150" rx="24"/>
+    <rect class="box" width="250" height="165" rx="24"/>
     <rect class="pill" x="28" y="28" width="70" height="30" rx="15"/><text class="pt" x="63" y="50" text-anchor="middle">STEP 3</text>
     <text class="bt" x="28" y="88">CSV 읽기</text><text class="code" x="28" y="124">pd.read_csv()</text><text class="bd" x="28" y="150">표 형태로 변환</text>
   </g>
   <path class="arr" d="M1145 260H1255"/>
   <g transform="translate(1275 185)">
-    <rect class="box" width="250" height="150" rx="24"/>
+    <rect class="box" width="250" height="165" rx="24"/>
     <rect class="pill" x="28" y="28" width="70" height="30" rx="15"/><text class="pt" x="63" y="50" text-anchor="middle">STEP 4</text>
     <text class="bt" x="28" y="88">DataFrame 점검</text><text class="bd" x="28" y="124">shape · columns</text><text class="bd" x="28" y="150">head() · info()</text>
   </g>
