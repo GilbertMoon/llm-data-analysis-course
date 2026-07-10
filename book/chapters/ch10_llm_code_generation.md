@@ -62,7 +62,7 @@
 
 ## 3. 실습 환경 준비하기
 
-전체 실습은 `notebooks/ch10_llm_code_generation.ipynb`에서 진행할 수 있습니다. 저장소의 기존 링크 호환성을 위해 파일명은 유지하지만, 실제 주제는 10장 분류 분석입니다.
+전체 실습은 `notebooks/ch10_llm_code_generation.ipynb`에서 진행할 수 있습니다.
 
 전처리 파일이 없다면 프로젝트 루트에서 먼저 다음 명령을 실행합니다.
 
