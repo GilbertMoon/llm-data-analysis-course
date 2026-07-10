@@ -1,0 +1,35 @@
+name: Update ch15 overview image link
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/update-ch15-overview-link.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  update-link:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Replace PNG reference with SVG
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          path = Path('book/chapters/ch15_final_project.md')
+          text = path.read_text(encoding='utf-8')
+          old = '../assets/images/ch15/ch15_final_project_overview.png'
+          new = '../assets/images/ch15/ch15_final_project_overview.svg'
+          if old not in text:
+              raise SystemExit('PNG reference not found')
+          path.write_text(text.replace(old, new, 1), encoding='utf-8')
+          PY
+      - name: Commit link update
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add book/chapters/ch15_final_project.md
+          git commit -m 'Use SVG for ch15 final project overview'
+          git push
