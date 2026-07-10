@@ -42,7 +42,7 @@
 아래 그림은 최종 프로젝트의 전체 흐름을 보여줍니다.
 
 <figure class="figure">
-  <img src="../assets/images/ch15/ch15_final_project_overview.png" alt="기말 종합 프로젝트 전체 흐름도">
+  <img src="../assets/images/ch15/ch15_final_project_overview.svg" alt="기말 종합 프로젝트 전체 흐름도">
   <figcaption>그림 15-1. 최종 프로젝트 전체 흐름도</figcaption>
 </figure>
 
