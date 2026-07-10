@@ -175,6 +175,8 @@ Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 .\.venv\Scripts\Activate.ps1
 ```
 
+보안 정책으로 명령 실행이 제한된 기관이나 회사 PC에서는 임의로 시스템 전체 정책을 바꾸지 말고, 관리자 또는 담당 부서의 안내를 따릅니다.
+
 ## 5. 패키지 설치와 requirements.txt
 
 데이터 분석에는 기본 Python만으로는 부족한 경우가 많습니다. 표 형태 데이터를 다루려면 pandas가 필요하고, 수치 계산에는 numpy가 자주 쓰입니다. 그래프를 그릴 때는 matplotlib이나 seaborn을 사용하고, 머신러닝 실습에는 scikit-learn이 필요합니다.
@@ -183,8 +185,10 @@ Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 
 ```powershell
 python -m pip install --upgrade pip
-pip install -r requirements.txt
+python -m pip install -r requirements.txt
 ```
+
+`python -m pip` 형식을 사용하면 현재 선택한 Python 환경의 pip를 실행한다는 점이 더 명확합니다. macOS나 Linux에서 `python3`로 가상환경을 만들었더라도, 가상환경을 활성화한 뒤에는 일반적으로 `python -m pip`를 사용할 수 있습니다.
 
 처음부터 모든 패키지의 사용법을 외울 필요는 없습니다. 지금은 어떤 패키지가 어떤 역할을 하는지 정도만 가볍게 이해해 두면 충분합니다.
 
@@ -198,6 +202,7 @@ pip install -r requirements.txt
 | jupyter | Notebook 실행 지원 |
 | openpyxl | Excel 파일 처리 |
 | python-dotenv | `.env` 파일에서 환경변수 읽기 |
+| google-genai | Gemini API 사용 |
 | faker | 가상 샘플 데이터 생성 |
 | python-docx | Word 보고서 생성 |
 | ipykernel | VS Code Notebook 커널 연결 |
@@ -249,11 +254,15 @@ VS Code가 설치되어 있다면 프로젝트 폴더에서 다음 명령으로 
 code .
 ```
 
+### Fork 방식
+
+원본 저장소가 Template Repository로 설정되어 있지 않다면 `Fork` 버튼을 사용해 자신의 계정에 복사본을 만들 수 있습니다. Fork한 저장소를 clone한 뒤에는 개인 저장소에서 자유롭게 실습하고 변경 이력을 관리할 수 있습니다.
+
 ### Download ZIP 방식
 
 GitHub 사용이 익숙하지 않다면 처음에는 ZIP 파일로 내려받아 시작할 수도 있습니다. 다만 ZIP 방식은 Git 변경 이력을 바로 관리하기 어렵기 때문에, 프로젝트 결과를 지속적으로 남기려면 개인 저장소와 연결하는 과정이 추가로 필요합니다.
 
-가능하다면 Template Repository 방식으로 시작하는 것이 좋습니다. 개인 저장소에 작업을 남기면 이후 프로젝트 결과를 정리하거나 포트폴리오로 활용하기도 쉽습니다.
+가능하다면 Template Repository 또는 Fork 방식으로 시작하는 것이 좋습니다. 개인 저장소에 작업을 남기면 이후 프로젝트 결과를 정리하거나 포트폴리오로 활용하기도 쉽습니다.
 
 ## 7. VS Code에서 처음 실행해 보기
 
@@ -263,7 +272,7 @@ GitHub 사용이 익숙하지 않다면 처음에는 ZIP 파일로 내려받아 
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 python -m pip install --upgrade pip
-pip install -r requirements.txt
+python -m pip install -r requirements.txt
 python scripts/generate_sample_data.py
 ```
 
@@ -272,7 +281,8 @@ macOS나 Linux에서는 가상환경 생성과 활성화 명령이 조금 다릅
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
-pip install -r requirements.txt
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
 python scripts/generate_sample_data.py
 ```
 
@@ -285,10 +295,16 @@ orders.csv
 order_items.csv
 ```
 
-파일이 보이지 않는다면 스크립트가 실행된 위치를 먼저 확인해야 합니다. VS Code 터미널이 프로젝트 루트 폴더에서 열려 있어야 합니다. 현재 위치는 다음 코드로 확인할 수 있습니다.
+파일이 보이지 않는다면 스크립트가 실행된 위치를 먼저 확인해야 합니다. VS Code 터미널이 프로젝트 루트 폴더에서 열려 있어야 합니다. 현재 위치는 터미널에서 다음 명령으로 확인할 수 있습니다.
 
 ```powershell
 pwd
+```
+
+Windows 명령 프롬프트에서는 다음 명령을 사용합니다.
+
+```cmd
+cd
 ```
 
 Python 코드 안에서는 다음처럼 확인할 수 있습니다.
@@ -323,21 +339,25 @@ Notebook은 일반 `.py` 파일과 다르게 셀 단위로 실행합니다. 따�
 첫 번째 셀을 실행하려고 하거나 오른쪽 위 `Select Kernel`을 누르면 커널 선택 창이 나타납니다. 여기서는 다음 순서로 선택합니다.
 
 1. `Python Environments...` 선택
-2. 목록에서 `.venv (Python 3.11.x)` 또는 `.venv\Scripts\python.exe` 선택
+2. 목록에서 프로젝트 폴더 안의 `.venv` 환경 또는 `.venv\Scripts\python.exe` 선택
+
+Python의 세부 버전 표시는 설치 시점에 따라 달라질 수 있으므로, `Python 3.11.x`처럼 특정 버전 번호보다 **프로젝트 폴더의 `.venv`인지**를 기준으로 선택합니다.
 
 `Existing Jupyter Server...`, `base (Anaconda)`, `Python Global Env`는 지금 실습에서는 선택하지 않는 것이 좋습니다. 다른 환경을 선택하면 패키지를 설치했는데도 `ModuleNotFoundError`가 나거나, Notebook이 다른 Python을 바라보는 문제가 생길 수 있습니다.
 
 초보자가 특히 헷갈리는 부분은 다음입니다.
 
 - 터미널에 `(.venv)`가 보여도 Notebook 커널은 별도로 선택해야 합니다.
-- `pip install -r requirements.txt`를 실행한 환경과 Notebook 커널이 같아야 합니다.
+- `python -m pip install -r requirements.txt`를 실행한 환경과 Notebook 커널이 같아야 합니다.
 - 처음 실행할 때 커널 선택 창이 뜨는 것은 정상 동작입니다.
 
-만약 `.venv`가 목록에 보이지 않는다면 VS Code 창을 한 번 새로고침하거나, 터미널에서 아래 명령을 실행한 뒤 다시 시도할 수 있습니다.
+만약 `.venv`가 목록에 보이지 않는다면 VS Code 창을 한 번 새로고침하거나, 명령 팔레트에서 `Developer: Reload Window`를 실행한 뒤 다시 확인합니다. 그래도 보이지 않을 때만 다음 명령으로 커널을 등록합니다.
 
 ```powershell
 python -m ipykernel install --user --name llm-data-analysis-course --display-name "llm-data-analysis-course"
 ```
+
+위 명령으로 등록한 커널은 프로젝트 폴더가 삭제되어도 사용자 환경에 남을 수 있습니다. 일반적으로는 VS Code에서 `.venv` 인터프리터를 직접 선택하는 방식을 우선합니다.
 
 ### 8-3. 첫 번째 셀 실행하기
 
@@ -355,13 +375,17 @@ DATA_DIR = Path('../data/raw')
 sns.set_theme(style='whitegrid')
 ```
 
+이 경로는 Notebook의 현재 작업 폴더가 `notebooks`일 때 정상적으로 동작합니다. 실행 환경에 따라 작업 폴더가 프로젝트 루트로 잡히면 `Path('data/raw')`를 사용해야 할 수도 있습니다. 현재 작업 폴더는 `Path.cwd()`로 확인합니다.
+
 셀 왼쪽의 실행 버튼(▶)을 누르거나 `Shift + Enter`를 누르면 실행됩니다. 이 셀은 표나 그래프를 출력하지 않기 때문에, 실행 후 아무 결과가 화면에 바로 보이지 않아도 이상한 것이 아닙니다.
 
 다음 중 하나가 보이면 정상 실행으로 판단할 수 있습니다.
 
-- 셀 왼쪽에 초록 체크 표시가 보임
-- 실행 시간 예시 `30.8s`가 표시됨
+- 셀 왼쪽에 실행 완료 표시가 보임
+- 실행 시간이 표시됨
 - 오류 메시지 없이 다음 셀로 이동함
+
+VS Code 버전에 따라 완료 표시의 모양이나 실행 시간 표시는 달라질 수 있습니다.
 
 처음 실행할 때는 아래 메시지가 잠깐 보일 수 있습니다.
 
@@ -384,10 +408,12 @@ customers.head()
 
 만약 `ModuleNotFoundError`가 발생하면, 대개 현재 선택한 Notebook 커널에 패키지가 설치되지 않은 경우입니다. 이때는 `.venv` 커널이 맞는지 다시 확인합니다.
 
-만약 `FileNotFoundError`가 발생하면, 다음 두 가지를 우선 확인합니다.
+만약 `FileNotFoundError`가 발생하면, 다음 항목을 우선 확인합니다.
 
 1. `python scripts/generate_sample_data.py`를 이미 실행했는가?
-2. Notebook이 `../data/raw` 경로를 기준으로 데이터를 찾고 있는가?
+2. `data/raw/customers.csv` 파일이 실제로 존재하는가?
+3. `Path.cwd()`의 결과가 프로젝트 루트인가, `notebooks` 폴더인가?
+4. 현재 작업 폴더에 맞게 `data/raw` 또는 `../data/raw`를 사용했는가?
 
 상대 경로 오류는 데이터 분석 입문자가 가장 자주 만나는 문제 중 하나입니다. 오류가 발생했을 때는 파일이 실제로 어디에 있는지, 코드가 어느 위치에서 실행되고 있는지부터 확인하면 대부분 해결의 실마리를 찾을 수 있습니다.
 
@@ -398,9 +424,11 @@ customers.head()
 저장소에는 보통 `.env.example` 파일이 포함됩니다. 이 파일은 어떤 환경변수가 필요한지 보여 주는 예시입니다.
 
 ```text
-GEMINI_API_KEY=YOUR_API_KEY
-GEMINI_MODEL_NAME=MODEL_NAME
+GEMINI_API_KEY=your_gemini_api_key_here
+GEMINI_MODEL_NAME=gemini-2.5-flash-lite
 ```
+
+모델 이름과 사용 가능 여부는 API 제공사의 정책에 따라 변경될 수 있습니다. 실습 시점에 모델 관련 오류가 발생하면 Google AI for Developers의 현재 모델 목록과 저장소 안내를 확인합니다.
 
 실제 키를 사용할 때는 `.env.example`을 복사해 `.env` 파일을 만들고, 그 안에 개인 키를 입력합니다.
 
@@ -424,6 +452,14 @@ cp .env.example .env
 __pycache__/
 .ipynb_checkpoints/
 ```
+
+커밋하기 전에는 다음 명령으로 `.env`가 추적 대상에 포함되지 않았는지 확인합니다.
+
+```bash
+git status
+```
+
+이미 실수로 API Key를 GitHub에 올렸다면 파일만 삭제하는 것으로 끝나지 않습니다. 해당 키를 즉시 폐기하고 새 키를 발급받아야 합니다.
 
 LLM에게 오류를 질문할 때도 API Key, 비밀번호, 토큰, 개인 이메일, 내부 서버 주소가 포함되어 있지 않은지 먼저 확인해야 합니다. LLM은 오류 해결을 도와주는 도구이지만, 민감정보를 안전하게 다루는 책임은 사용자에게 있습니다.
 
@@ -466,11 +502,12 @@ VS Code에서 Notebook 파일을 실행하는 중 FileNotFoundError가 발생했
 - 데이터 파일 위치: data/raw/customers.csv
 - Notebook 위치: notebooks/ch02_environment_setup.ipynb
 - 사용한 코드: pd.read_csv('data/raw/customers.csv')
+- Path.cwd() 실행 결과: [여기에 결과 입력]
 
 요청:
-- 현재 작업 폴더를 확인하는 방법을 알려 주세요.
-- 상대 경로가 왜 달라질 수 있는지 설명해 주세요.
-- 가능한 수정 코드 예시를 제시해 주세요.
+- 현재 작업 폴더와 상대 경로의 관계를 설명해 주세요.
+- 현재 작업 폴더에 맞는 수정 코드 예시를 제시해 주세요.
+- 파일 존재 여부를 안전하게 확인하는 방법을 알려 주세요.
 ```
 
 LLM의 답변은 바로 실행하지 말고 한 번 더 확인해야 합니다. 특히 파일 삭제, 환경 초기화, 권한 변경, 시스템 설정 변경과 관련된 명령어는 신중하게 다뤄야 합니다.
@@ -484,20 +521,23 @@ LLM의 답변은 바로 실행하지 말고 한 번 더 확인해야 합니다. 
 ```bash
 git status
 git add .
+git status
 git commit -m "Set up analysis environment"
 git push
 ```
+
+`git add .` 뒤에 `git status`를 한 번 더 실행하면 실제로 커밋될 파일을 확인할 수 있습니다. `.env`나 불필요한 대용량 파일이 포함되어 있다면 커밋 전에 제외합니다.
 
 각 명령의 의미는 다음과 같습니다.
 
 | 명령어 | 의미 |
 | --- | --- |
-| `git status` | 변경된 파일 확인 |
-| `git add .` | 변경 파일을 commit 준비 상태로 올림 |
+| `git status` | 변경된 파일과 커밋 준비 상태 확인 |
+| `git add .` | 현재 폴더 아래 변경 파일을 커밋 준비 상태로 올림 |
 | `git commit -m "메시지"` | 변경 내용을 하나의 기록으로 저장 |
 | `git push` | 로컬 commit을 GitHub 저장소에 업로드 |
 
-GitHub에 올리면 안 되는 파일이 포함되지 않았는지 확인하는 것도 중요합니다. 특히 `.env`, `.venv`, 캐시 폴더, 대용량 데이터 파일은 주의해야 합니다.
+GitHub에 올리면 안 되는 파일이 포함되지 않았는지 확인하는 것도 중요합니다. 특히 `.env`, `.venv`, 캐시 폴더, 개인정보가 포함된 데이터, 불필요한 대용량 데이터 파일은 주의해야 합니다.
 
 ## 12. 환경 점검하기
 
@@ -509,12 +549,12 @@ GitHub에 올리면 안 되는 파일이 포함되지 않았는지 확인하는 
 | VS Code에서 프로젝트 열림 | 프로젝트 루트 폴더가 Explorer에 표시됨 |
 | 가상환경 생성 | `.venv` 폴더 존재 |
 | 가상환경 활성화 | 터미널 앞에 `(.venv)` 표시 |
-| 패키지 설치 | `pip install -r requirements.txt` 완료 |
+| 패키지 설치 | `python -m pip install -r requirements.txt` 완료 |
 | VS Code Python 인터프리터 | 프로젝트 `.venv` 선택 |
 | VS Code Notebook 커널 | Notebook 오른쪽 위 커널이 `.venv` |
 | 샘플 데이터 생성 | `data/raw`에 CSV 파일 존재 |
 | CSV 로드 확인 | `pd.read_csv()` 실행 성공 |
-| `.env` 보안 | `.env`가 `.gitignore`에 포함됨 |
+| `.env` 보안 | `.env`가 `.gitignore`에 포함되고 `git status`에 나타나지 않음 |
 | GitHub 연결 | `git status`, `git push` 흐름 확인 |
 
 문제가 생겼을 때는 오류 메시지를 그대로 받아들이기보다, 어느 단계에서 발생했는지 나누어 보는 것이 좋습니다.
