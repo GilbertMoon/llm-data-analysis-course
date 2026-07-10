@@ -7,7 +7,7 @@ jupyter
 notebook
 openpyxl
 python-dotenv
-google-generativeai
+google-genai
 python-docx
 faker
 tabulate
