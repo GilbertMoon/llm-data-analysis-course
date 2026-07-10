@@ -133,9 +133,10 @@
     <rect x="18" y="18" width="38" height="26" rx="13" fill="#ecfeff" stroke="#a5f3fc"/>
     <text x="37" y="36" text-anchor="middle" class="num">08</text>
     <text x="70" y="40" class="cardTitle">외부 데이터 수집·연결</text>
-    <text x="22" y="72" class="cardBody">공휴일·검색·날씨를 날짜·지역 키로 연결합니다.</text>
-    <line x1="22" y1="88" x2="296" y2="88" class="divider"/>
-    <text x="22" y="112" class="output">data/external/ · 선택형 실습</text>
+    <text x="22" y="66" class="cardBody">날짜·지역 키로</text>
+    <text x="22" y="85" class="cardBody">외부 데이터를 연결합니다.</text>
+    <line x1="22" y1="96" x2="296" y2="96" class="divider"/>
+    <text x="22" y="118" class="output">data/external/ · 선택형 실습</text>
   </g>
 
   <path class="turn" d="M233 548 V582 H280 V620"/>
@@ -156,10 +157,11 @@
     <rect class="card" width="330" height="128" rx="18" stroke="#86efac"/>
     <rect x="18" y="18" width="38" height="26" rx="13" fill="#ecfdf5" stroke="#a7f3d0"/>
     <text x="37" y="36" text-anchor="middle" class="num">10</text>
-    <text x="70" y="40" class="cardTitle">자동화·파이프라인 설계</text>
-    <text x="22" y="72" class="cardBody">Make 또는 Airflow로 실행·로그·알림을 설계합니다.</text>
-    <line x1="22" y1="88" x2="308" y2="88" class="divider"/>
-    <text x="22" y="112" class="output">ch15_automation_plan.md</text>
+    <text x="70" y="40" class="cardTitle">자동화·파이프라인</text>
+    <text x="22" y="66" class="cardBody">Make·Airflow로 실행과</text>
+    <text x="22" y="85" class="cardBody">로그·알림을 설계합니다.</text>
+    <line x1="22" y1="96" x2="308" y2="96" class="divider"/>
+    <text x="22" y="118" class="output">ch15_automation_plan.md</text>
   </g>
 
   <g transform="translate(1012 620)">
@@ -167,9 +169,10 @@
     <rect x="18" y="18" width="38" height="26" rx="13" fill="#fff1f2" stroke="#fecdd3"/>
     <text x="37" y="36" text-anchor="middle" class="num">11</text>
     <text x="70" y="40" class="cardTitle">최종 보고서·발표</text>
-    <text x="22" y="72" class="cardBody">결과·해석·한계·다음 단계를 하나의 스토리로 정리합니다.</text>
-    <line x1="22" y1="88" x2="346" y2="88" class="divider"/>
-    <text x="22" y="112" class="output">ch15_final_report.md · 발표 자료</text>
+    <text x="22" y="66" class="cardBody">결과·해석·한계·다음 단계를</text>
+    <text x="22" y="85" class="cardBody">하나의 스토리로 정리합니다.</text>
+    <line x1="22" y1="96" x2="346" y2="96" class="divider"/>
+    <text x="22" y="118" class="output">ch15_final_report.md · 발표 자료</text>
   </g>
 
   <rect x="180" y="788" width="1240" height="64" rx="20" fill="#eff6ff" stroke="#bfdbfe" stroke-width="2"/>
