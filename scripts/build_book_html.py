@@ -5,8 +5,8 @@ Usage:
 
 This builder is the source of truth for the distributable HTML files under
 ``book/output/html``. It normalizes chapter Markdown, renders HTML, adds stable
-heading IDs, creates a table of contents for every chapter, and copies image
-assets to the output folder.
+heading IDs, creates a table of contents for every chapter, removes stale
+chapter HTML files, and copies image assets to the output folder.
 """
 
 from __future__ import annotations
@@ -166,6 +166,16 @@ def build_page(title: str, body_html: str, css_text: str) -> str:
 """
 
 
+def clean_stale_chapter_html() -> None:
+    """Remove old chapter HTML files before rebuilding from current Markdown."""
+    if not OUTPUT_DIR.exists():
+        return
+
+    for output_path in OUTPUT_DIR.glob("ch*.html"):
+        output_path.unlink()
+        print(f"기존 HTML 삭제: {output_path}")
+
+
 def copy_assets() -> None:
     """Copy book/assets to book/output/assets so relative image paths work."""
     if not ASSETS_DIR.exists():
@@ -179,6 +189,7 @@ def copy_assets() -> None:
 def build_all_chapters() -> None:
     """Convert all chapter Markdown files to HTML."""
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    clean_stale_chapter_html()
     copy_assets()
     css_text = TEMPLATE_CSS.read_text(encoding="utf-8")
 
