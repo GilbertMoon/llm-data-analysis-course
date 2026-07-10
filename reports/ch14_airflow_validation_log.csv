@@ -1,0 +1,10 @@
+﻿file,exists,size,status
+/opt/airflow/project/data/processed/customers_clean.csv,True,5490,ok
+/opt/airflow/project/data/processed/products_clean.csv,True,4002,ok
+/opt/airflow/project/data/processed/orders_clean.csv,True,11354,ok
+/opt/airflow/project/data/processed/order_items_clean.csv,True,19798,ok
+/opt/airflow/project/reports/ch14_daily_sales.csv,True,6239,ok
+/opt/airflow/project/reports/ch14_category_sales.csv,True,245,ok
+/opt/airflow/project/reports/ch14_pipeline_task_summary.csv,True,847,ok
+/opt/airflow/project/reports/ch14_airflow_report.md,True,3306,ok
+/opt/airflow/project/reports/figures/ch14_daily_sales.png,True,154314,ok

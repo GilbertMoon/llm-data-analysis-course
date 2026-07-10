@@ -1,0 +1,7 @@
+﻿task_id,purpose,main_input,main_output
+check_input_files,원본 CSV 4개 존재 여부 확인,data/raw/*.csv,입력 확인 결과
+run_preprocessing,"문자열 공백, 날짜, 숫자형, line_total 전처리",data/raw/*.csv,data/processed/*_clean.csv
+run_analysis,일자별 매출과 카테고리별 매출 계산,data/processed/*_clean.csv,"reports/ch14_daily_sales.csv, reports/ch14_category_sales.csv"
+generate_visualizations,일자별 매출 추이 그래프 생성,reports/ch14_daily_sales.csv,reports/figures/ch14_daily_sales.png
+generate_report,Markdown 자동 보고서 생성,"reports/ch14_daily_sales.csv, reports/ch14_category_sales.csv",reports/ch14_airflow_report.md
+validate_outputs,주요 산출물 존재 여부와 파일 크기 검증,"data/processed, reports, reports/figures 산출물",reports/ch14_airflow_validation_log.csv
