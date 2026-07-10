@@ -51,12 +51,12 @@
   <path class="arr" d="M450 320H500"/>
   <path class="arr" d="M860 320H910"/>
 
-  <g transform="translate(1310 220)">
-    <rect class="save" width="200" height="160" rx="24"/>
-    <text class="saveText" x="100" y="54" text-anchor="middle">최종 저장</text>
+  <g transform="translate(1290 220)">
+    <rect class="save" width="240" height="160" rx="24"/>
+    <text class="saveText" x="120" y="54" text-anchor="middle">최종 저장</text>
     <text class="item" x="30" y="92">customers_clean.csv</text>
     <text class="item" x="30" y="120">orders_clean.csv</text>
     <text class="item" x="30" y="148">order_items_clean.csv</text>
   </g>
-  <path class="arr" d="M1270 320H1310"/>
+  <path class="arr" d="M1270 320H1290"/>
 </svg>
