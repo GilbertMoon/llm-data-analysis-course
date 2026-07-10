@@ -42,11 +42,11 @@
     <rect class="pk" x="225" y="24" width="52" height="26" rx="13"/><text class="tag pt" x="251" y="43" text-anchor="middle">PK</text><text class="field" x="290" y="44">product_id</text>
   </g>
 
-  <path class="rel" d="M410 290H505"/><text class="rl" x="428" y="270">customer_id</text><text class="rl" x="435" y="320">1:N</text>
-  <path class="rel" d="M835 290H930"/><text class="rl" x="850" y="270">order_id</text><text class="rl" x="855" y="320">1:N</text>
-  <path class="rel" d="M985 485 C1085 485 1120 430 1120 415"/><text class="rl" x="1020" y="470">product_id</text><text class="rl" x="1130" y="448">1:N</text>
+  <path class="rel" d="M410 290H505"/><text class="rl" x="457" y="258" text-anchor="middle">customer_id</text><text class="rl" x="457" y="323" text-anchor="middle">1:N</text>
+  <path class="rel" d="M835 290H930"/><text class="rl" x="882" y="258" text-anchor="middle">order_id</text><text class="rl" x="882" y="323" text-anchor="middle">1:N</text>
+  <path class="rel" d="M985 485 C1085 485 1120 430 1120 415"/><text class="rl" x="1060" y="452" text-anchor="middle">product_id</text><text class="rl" x="1160" y="438" text-anchor="middle">1:N</text>
 
-  <g transform="translate(1325 210)">
+  <g transform="translate(1310 210)">
     <rect class="note" width="205" height="165" rx="22"/>
     <text class="nt" x="102" y="42" text-anchor="middle">무결성 점검</text>
     <text class="nt" x="102" y="80" text-anchor="middle">isin() 사용</text>
