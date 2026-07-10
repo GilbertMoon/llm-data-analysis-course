@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="560" viewBox="0 0 1500 560" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="600" viewBox="0 0 1500 600" role="img" aria-labelledby="title desc">
   <title id="title">raw 데이터와 processed 데이터 분리 구조</title>
   <desc id="desc">원본 데이터와 전처리 데이터를 분리해 저장하는 폴더 구조와 장점</desc>
   <defs>
@@ -13,13 +13,13 @@
       .sep{stroke:#93c5fd;stroke-width:3;stroke-dasharray:10 8}
     </style>
   </defs>
-  <rect class="bg" width="1500" height="560" rx="32"/>
+  <rect class="bg" width="1500" height="600" rx="32"/>
   <rect class="h" x="50" y="36" width="1400" height="92" rx="26"/>
   <text class="title" x="86" y="92">raw / processed 데이터 분리 구조</text>
   <text class="sub" x="86" y="118">원본은 보존하고, 분석에 사용할 데이터는 별도 폴더에 저장합니다</text>
 
   <g transform="translate(110 180)">
-    <rect class="card" width="430" height="280" rx="24"/><rect class="headBox" width="430" height="68" rx="24"/>
+    <rect class="card" width="430" height="310" rx="24"/><rect class="headBox" width="430" height="68" rx="24"/>
     <text class="name" x="28" y="43">data/raw</text><text class="label" x="28" y="92">원본 데이터 보관</text>
     <text class="item" x="28" y="132">• customers.csv</text>
     <text class="item" x="28" y="170">• products.csv</text>
@@ -28,10 +28,10 @@
     <text class="item" x="28" y="284">• 수정하지 않고 그대로 유지</text>
   </g>
 
-  <line class="sep" x1="750" y1="175" x2="750" y2="465"/>
+  <line class="sep" x1="750" y1="175" x2="750" y2="495"/>
 
   <g transform="translate(860 180)">
-    <rect class="card" width="530" height="280" rx="24"/><rect class="headBox" width="530" height="68" rx="24"/>
+    <rect class="card" width="530" height="310" rx="24"/><rect class="headBox" width="530" height="68" rx="24"/>
     <text class="name" x="28" y="43">data/processed</text><text class="label" x="28" y="92">전처리 완료 데이터 저장</text>
     <text class="item" x="28" y="132">• customers_clean.csv</text>
     <text class="item" x="28" y="170">• products_clean.csv</text>
@@ -40,5 +40,5 @@
     <text class="item" x="28" y="284">• 분석과 시각화에 바로 사용</text>
   </g>
 
-  <g transform="translate(215 485)"><rect class="good" width="1070" height="48" rx="16"/><text class="g" x="535" y="31" text-anchor="middle">장점: 원본 복구 가능 · 전후 비교 가능 · 재현성 향상 · 보고서 설명 용이</text></g>
+  <g transform="translate(215 525)"><rect class="good" width="1070" height="48" rx="16"/><text class="g" x="535" y="31" text-anchor="middle">장점: 원본 복구 가능 · 전후 비교 가능 · 재현성 향상 · 보고서 설명 용이</text></g>
 </svg>
