@@ -76,7 +76,7 @@
 아래 그림은 최종 제출 패키지 구성을 보여줍니다.
 
 <figure class="figure">
-  <img src="../assets/images/ch15/ch15_project_deliverables.png" alt="기말 프로젝트 제출물 구성">
+  <img src="../assets/images/ch15/ch15_project_deliverables.svg" alt="기말 프로젝트 제출물 구성">
   <figcaption>그림 15-2. 최종 프로젝트 산출물 구성</figcaption>
 </figure>
 
