@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="650" viewBox="0 0 1200 650">
   <defs>
     <style>
-      .bg{fill:#f8fafc}.title{font:700 34px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#0f172a}.sub{font:500 18px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#334155}.hub{fill:#dbeafe;stroke:#93c5fd;stroke-width:3;rx:26;ry:26}.card{fill:#ffffff;stroke:#cbd5e1;stroke-width:2;rx:18;ry:18}.head{font:700 24px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#0f172a}.txt{font:500 16px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#334155}.line{fill:none;stroke:#94a3b8;stroke-width:3}.icon{fill:none;stroke:#2563eb;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}.footer{font:500 18px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#1e40af}
+      .bg{fill:#f8fafc}.title{font:700 34px 'Malgun Gothic','맑은 고딕',Arial,'Noto Sans KR',sans-serif;fill:#0f172a}.sub{font:500 18px 'Malgun Gothic','맑은 고딕',Arial,'Noto Sans KR',sans-serif;fill:#334155}.hub{fill:#dbeafe;stroke:#93c5fd;stroke-width:3;rx:26;ry:26}.card{fill:#ffffff;stroke:#cbd5e1;stroke-width:2;rx:18;ry:18}.head{font:700 24px 'Malgun Gothic','맑은 고딕',Arial,'Noto Sans KR',sans-serif;fill:#0f172a}.txt{font:500 16px 'Malgun Gothic','맑은 고딕',Arial,'Noto Sans KR',sans-serif;fill:#334155}.line{fill:none;stroke:#94a3b8;stroke-width:3}.icon{fill:none;stroke:#2563eb;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}.footer{font:500 18px 'Malgun Gothic','맑은 고딕',Arial,'Noto Sans KR',sans-serif;fill:#1e40af}
     </style>
   </defs>
   <rect class="bg" width="1200" height="650"/>

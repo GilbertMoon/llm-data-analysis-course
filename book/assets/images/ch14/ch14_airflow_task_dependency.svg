@@ -15,7 +15,7 @@
       <path d="M0 0 L10 5 L0 10 Z" fill="#dc2626"/>
     </marker>
     <style>
-      text{font-family:'NanumSquare','NanumGothic','Noto Sans CJK KR','Malgun Gothic',sans-serif}
+      text{font-family:'Malgun Gothic','맑은 고딕','NanumSquare','NanumGothic','Noto Sans CJK KR',sans-serif}
       .bg{fill:#f8fafc}
       .title{font-size:46px;font-weight:800;fill:#0f2d4d}
       .subtitle{font-size:22px;font-weight:500;fill:#475569}
@@ -29,8 +29,8 @@
       .num{fill:#eff6ff;stroke:#bfdbfe;stroke-width:1.2}
       .numText{font-size:14px;font-weight:800;fill:#2563eb}
       .statusOk{fill:#ecfdf5;stroke:#86efac;stroke-width:1.4}
-      .task{font-family:'NanumGothicCoding','Noto Sans Mono CJK KR','D2Coding','Consolas',monospace;font-size:16px;font-weight:800;fill:#0f172a}
-      .taskSmall{font-family:'NanumGothicCoding','Noto Sans Mono CJK KR','D2Coding','Consolas',monospace;font-size:14.5px;font-weight:800;fill:#0f172a}
+      .task{font-family:'Malgun Gothic','맑은 고딕','NanumGothicCoding','Noto Sans Mono CJK KR','D2Coding','Consolas',monospace;font-size:16px;font-weight:800;fill:#0f172a}
+      .taskSmall{font-family:'Malgun Gothic','맑은 고딕','NanumGothicCoding','Noto Sans Mono CJK KR','D2Coding','Consolas',monospace;font-size:14.5px;font-weight:800;fill:#0f172a}
       .desc{font-size:15px;font-weight:550;fill:#475569}
       .order{font-size:13px;font-weight:750;fill:#64748b}
       .flow{fill:none;stroke:#64748b;stroke-width:3.5;marker-end:url(#arrow)}

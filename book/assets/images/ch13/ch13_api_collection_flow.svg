@@ -6,29 +6,29 @@
     <style>
       .bg { fill: #f8fafc; }
       .top-line { fill: #2563eb; }
-      .title { font: 700 46px 'UnDotum','NanumSquare','Noto Sans KR','Malgun Gothic','Apple SD Gothic Neo',sans-serif; fill: #0f172a; }
-      .subtitle { font: 500 22px 'UnDotum','NanumSquare','Noto Sans KR','Malgun Gothic','Apple SD Gothic Neo',sans-serif; fill: #475569; }
-      .section-label { font: 700 17px 'UnDotum','NanumSquare','Noto Sans KR','Malgun Gothic','Apple SD Gothic Neo',sans-serif; }
+      .title { font: 700 46px 'Malgun Gothic','맑은 고딕','UnDotum','NanumSquare','Noto Sans KR','Apple SD Gothic Neo',sans-serif; fill: #0f172a; }
+      .subtitle { font: 500 22px 'Malgun Gothic','맑은 고딕','UnDotum','NanumSquare','Noto Sans KR','Apple SD Gothic Neo',sans-serif; fill: #475569; }
+      .section-label { font: 700 17px 'Malgun Gothic','맑은 고딕','UnDotum','NanumSquare','Noto Sans KR','Apple SD Gothic Neo',sans-serif; }
       .card { fill: #ffffff; stroke: #cbd5e1; stroke-width: 2.2; }
       .card-blue { stroke: #93c5fd; }
       .card-green { stroke: #86efac; }
       .card-violet { stroke: #c4b5fd; }
       .card-orange { stroke: #fdba74; }
       .number-badge { fill: #dbeafe; }
-      .number { font: 700 16px 'UnDotum','NanumSquare','Noto Sans KR','Malgun Gothic','Apple SD Gothic Neo',sans-serif; fill: #1d4ed8; }
+      .number { font: 700 16px 'Malgun Gothic','맑은 고딕','UnDotum','NanumSquare','Noto Sans KR','Apple SD Gothic Neo',sans-serif; fill: #1d4ed8; }
       .badge-blue { fill: #eff6ff; stroke: #bfdbfe; stroke-width: 1.5; }
       .badge-green { fill: #ecfdf5; stroke: #a7f3d0; stroke-width: 1.5; }
       .badge-violet { fill: #f5f3ff; stroke: #ddd6fe; stroke-width: 1.5; }
       .badge-orange { fill: #fff7ed; stroke: #fed7aa; stroke-width: 1.5; }
-      .badge-text-blue { font: 700 14px 'UnDotum','NanumSquare','Noto Sans KR','Malgun Gothic','Apple SD Gothic Neo',sans-serif; fill: #1d4ed8; }
-      .badge-text-green { font: 700 14px 'UnDotum','NanumSquare','Noto Sans KR','Malgun Gothic','Apple SD Gothic Neo',sans-serif; fill: #047857; }
-      .badge-text-violet { font: 700 14px 'UnDotum','NanumSquare','Noto Sans KR','Malgun Gothic','Apple SD Gothic Neo',sans-serif; fill: #6d28d9; }
-      .badge-text-orange { font: 700 14px 'UnDotum','NanumSquare','Noto Sans KR','Malgun Gothic','Apple SD Gothic Neo',sans-serif; fill: #c2410c; }
-      .card-title { font: 700 23px 'UnDotum','NanumSquare','Noto Sans KR','Malgun Gothic','Apple SD Gothic Neo',sans-serif; fill: #0f172a; }
-      .card-copy { font: 500 16px 'UnDotum','NanumSquare','Noto Sans KR','Malgun Gothic','Apple SD Gothic Neo',sans-serif; fill: #334155; }
-      .small-copy { font: 500 14.5px 'UnDotum','NanumSquare','Noto Sans KR','Malgun Gothic','Apple SD Gothic Neo',sans-serif; fill: #475569; }
-      .code { font: 600 15px 'Noto Sans Mono CJK KR','D2Coding','JetBrains Mono','Consolas',monospace; fill: #0f172a; }
-      .code-blue { font: 600 15px 'Noto Sans Mono CJK KR','D2Coding','JetBrains Mono','Consolas',monospace; fill: #1d4ed8; }
+      .badge-text-blue { font: 700 14px 'Malgun Gothic','맑은 고딕','UnDotum','NanumSquare','Noto Sans KR','Apple SD Gothic Neo',sans-serif; fill: #1d4ed8; }
+      .badge-text-green { font: 700 14px 'Malgun Gothic','맑은 고딕','UnDotum','NanumSquare','Noto Sans KR','Apple SD Gothic Neo',sans-serif; fill: #047857; }
+      .badge-text-violet { font: 700 14px 'Malgun Gothic','맑은 고딕','UnDotum','NanumSquare','Noto Sans KR','Apple SD Gothic Neo',sans-serif; fill: #6d28d9; }
+      .badge-text-orange { font: 700 14px 'Malgun Gothic','맑은 고딕','UnDotum','NanumSquare','Noto Sans KR','Apple SD Gothic Neo',sans-serif; fill: #c2410c; }
+      .card-title { font: 700 23px 'Malgun Gothic','맑은 고딕','UnDotum','NanumSquare','Noto Sans KR','Apple SD Gothic Neo',sans-serif; fill: #0f172a; }
+      .card-copy { font: 500 16px 'Malgun Gothic','맑은 고딕','UnDotum','NanumSquare','Noto Sans KR','Apple SD Gothic Neo',sans-serif; fill: #334155; }
+      .small-copy { font: 500 14.5px 'Malgun Gothic','맑은 고딕','UnDotum','NanumSquare','Noto Sans KR','Apple SD Gothic Neo',sans-serif; fill: #475569; }
+      .code { font: 600 15px 'Malgun Gothic','맑은 고딕','Noto Sans Mono CJK KR','D2Coding','JetBrains Mono','Consolas',monospace; fill: #0f172a; }
+      .code-blue { font: 600 15px 'Malgun Gothic','맑은 고딕','Noto Sans Mono CJK KR','D2Coding','JetBrains Mono','Consolas',monospace; fill: #1d4ed8; }
       .icon-stroke-blue { stroke: #2563eb; stroke-width: 3; fill: none; stroke-linecap: round; stroke-linejoin: round; }
       .icon-stroke-green { stroke: #059669; stroke-width: 3; fill: none; stroke-linecap: round; stroke-linejoin: round; }
       .icon-stroke-violet { stroke: #7c3aed; stroke-width: 3; fill: none; stroke-linecap: round; stroke-linejoin: round; }
@@ -40,14 +40,14 @@
       .arrow { stroke: #64748b; stroke-width: 3.2; fill: none; marker-end: url(#arrow); }
       .arrow-success { stroke: #059669; stroke-width: 2.8; fill: none; marker-end: url(#arrow-success); }
       .arrow-error { stroke: #ea580c; stroke-width: 2.5; fill: none; marker-end: url(#arrow-error); stroke-dasharray: 7 6; }
-      .flow-label { font: 700 15px 'UnDotum','NanumSquare','Noto Sans KR','Malgun Gothic','Apple SD Gothic Neo',sans-serif; fill: #475569; }
-      .success-label { font: 700 14px 'UnDotum','NanumSquare','Noto Sans KR','Malgun Gothic','Apple SD Gothic Neo',sans-serif; fill: #047857; }
-      .error-label { font: 700 14px 'UnDotum','NanumSquare','Noto Sans KR','Malgun Gothic','Apple SD Gothic Neo',sans-serif; fill: #c2410c; }
+      .flow-label { font: 700 15px 'Malgun Gothic','맑은 고딕','UnDotum','NanumSquare','Noto Sans KR','Apple SD Gothic Neo',sans-serif; fill: #475569; }
+      .success-label { font: 700 14px 'Malgun Gothic','맑은 고딕','UnDotum','NanumSquare','Noto Sans KR','Apple SD Gothic Neo',sans-serif; fill: #047857; }
+      .error-label { font: 700 14px 'Malgun Gothic','맑은 고딕','UnDotum','NanumSquare','Noto Sans KR','Apple SD Gothic Neo',sans-serif; fill: #c2410c; }
       .info-panel { fill: #eff6ff; stroke: #93c5fd; stroke-width: 2; }
-      .info-title { font: 700 21px 'UnDotum','NanumSquare','Noto Sans KR','Malgun Gothic','Apple SD Gothic Neo',sans-serif; fill: #0f2d4d; }
-      .info-text { font: 500 16px 'UnDotum','NanumSquare','Noto Sans KR','Malgun Gothic','Apple SD Gothic Neo',sans-serif; fill: #334155; }
+      .info-title { font: 700 21px 'Malgun Gothic','맑은 고딕','UnDotum','NanumSquare','Noto Sans KR','Apple SD Gothic Neo',sans-serif; fill: #0f2d4d; }
+      .info-text { font: 500 16px 'Malgun Gothic','맑은 고딕','UnDotum','NanumSquare','Noto Sans KR','Apple SD Gothic Neo',sans-serif; fill: #334155; }
       .footer-panel { fill: #ecfeff; stroke: #a5f3fc; stroke-width: 2; }
-      .footer { font: 600 19px 'UnDotum','NanumSquare','Noto Sans KR','Malgun Gothic','Apple SD Gothic Neo',sans-serif; fill: #164e63; }
+      .footer { font: 600 19px 'Malgun Gothic','맑은 고딕','UnDotum','NanumSquare','Noto Sans KR','Apple SD Gothic Neo',sans-serif; fill: #164e63; }
       .divider { stroke: #e2e8f0; stroke-width: 1.5; }
     </style>
 

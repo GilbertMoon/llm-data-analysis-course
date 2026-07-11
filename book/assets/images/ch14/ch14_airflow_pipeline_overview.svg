@@ -12,7 +12,7 @@
       <path d="M0 0 L10 5 L0 10 Z" fill="#ea580c"/>
     </marker>
     <style>
-      text{font-family:'NanumSquare','NanumGothic','Noto Sans CJK KR','Malgun Gothic',sans-serif}
+      text{font-family:'Malgun Gothic','맑은 고딕','NanumSquare','NanumGothic','Noto Sans CJK KR',sans-serif}
       .bg{fill:#f8fafc}
       .title{font-size:46px;font-weight:800;fill:#0f2d4d}
       .subtitle{font-size:22px;font-weight:500;fill:#475569}
@@ -26,7 +26,7 @@
       .num{fill:#eff6ff;stroke:#bfdbfe;stroke-width:1.2}
       .numText{font-size:14px;font-weight:800;fill:#2563eb}
       .cardTitle{font-size:21px;font-weight:800;fill:#0f172a}
-      .task{font-family:'NanumGothicCoding','Noto Sans Mono CJK KR','D2Coding','Consolas',monospace;font-size:13px;font-weight:700;fill:#334155}
+      .task{font-family:'Malgun Gothic','맑은 고딕','NanumGothicCoding','Noto Sans Mono CJK KR','D2Coding','Consolas',monospace;font-size:13px;font-weight:700;fill:#334155}
       .desc{font-size:15px;font-weight:500;fill:#475569}
       .out{font-size:14px;font-weight:700;fill:#0f2d4d}
       .badge{font-size:13px;font-weight:800}
@@ -177,8 +177,8 @@
   </g>
 
   <path class="arrowOrange" d="M650 500 V610 H820"/>
-  <text x="668" y="592" font-family="NanumSquare,NanumGothic,sans-serif" font-size="14" font-weight="700" fill="#c2410c">실패 Task 로그 확인</text>
-  <text x="668" y="612" font-family="NanumSquare,NanumGothic,sans-serif" font-size="14" font-weight="700" fill="#c2410c">후 해당 Task 재실행</text>
+  <text x="668" y="592" font-family="'Malgun Gothic','맑은 고딕',NanumSquare,NanumGothic,sans-serif" font-size="14" font-weight="700" fill="#c2410c">실패 Task 로그 확인</text>
+  <text x="668" y="612" font-family="'Malgun Gothic','맑은 고딕',NanumSquare,NanumGothic,sans-serif" font-size="14" font-weight="700" fill="#c2410c">후 해당 Task 재실행</text>
 
   <rect class="note" x="250" y="772" width="1100" height="66" rx="20"/>
   <text class="noteText" x="800" y="813" text-anchor="middle">반복 분석은 Task로 나누고, Airflow가 순서·상태·실패 지점을 관리하게 합니다.</text>

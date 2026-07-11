@@ -4,12 +4,12 @@
   <defs>
     <style>
       .bg { fill: #f8fafc; }
-      .title { font: 700 34px 'Arial', 'Noto Sans KR', sans-serif; fill: #0f172a; }
-      .subtitle { font: 500 18px 'Arial', 'Noto Sans KR', sans-serif; fill: #334155; }
-      .boxTitle { font: 700 24px 'Arial', 'Noto Sans KR', sans-serif; fill: #0f172a; }
-      .boxText { font: 500 18px 'Arial', 'Noto Sans KR', sans-serif; fill: #334155; }
-      .centerText { font: 700 28px 'Arial', 'Noto Sans KR', sans-serif; fill: #ffffff; }
-      .centerSub { font: 500 18px 'Arial', 'Noto Sans KR', sans-serif; fill: #dbeafe; }
+      .title { font: 700 34px 'Malgun Gothic','맑은 고딕','Arial','Noto Sans KR',sans-serif; fill: #0f172a; }
+      .subtitle { font: 500 18px 'Malgun Gothic','맑은 고딕','Arial','Noto Sans KR',sans-serif; fill: #334155; }
+      .boxTitle { font: 700 24px 'Malgun Gothic','맑은 고딕','Arial','Noto Sans KR',sans-serif; fill: #0f172a; }
+      .boxText { font: 500 18px 'Malgun Gothic','맑은 고딕','Arial','Noto Sans KR',sans-serif; fill: #334155; }
+      .centerText { font: 700 28px 'Malgun Gothic','맑은 고딕','Arial','Noto Sans KR',sans-serif; fill: #ffffff; }
+      .centerSub { font: 500 18px 'Malgun Gothic','맑은 고딕','Arial','Noto Sans KR',sans-serif; fill: #dbeafe; }
       .card { fill: #ffffff; stroke: #cbd5e1; stroke-width: 2; rx: 18; ry: 18; }
       .centerCard { fill: #2563eb; stroke: #1d4ed8; stroke-width: 3; rx: 26; ry: 26; }
       .arrow { stroke: #64748b; stroke-width: 3; fill: none; marker-end: url(#arrowhead); }

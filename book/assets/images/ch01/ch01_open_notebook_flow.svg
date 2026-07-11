@@ -13,7 +13,7 @@
       <path d="M 0 0 L 10 5 L 0 10 z" fill="#2563eb"/>
     </marker>
     <style>
-      text { font-family: 'Pretendard','Noto Sans KR','Malgun Gothic',sans-serif; }
+      text { font-family: 'Malgun Gothic','맑은 고딕','Pretendard','Noto Sans KR',sans-serif; }
       .bg { fill:#f8fafc; }
       .title { font-size:38px; font-weight:900; fill:#ffffff; }
       .subtitle { font-size:18px; font-weight:600; fill:#dbeafe; }
@@ -31,7 +31,7 @@
       .tiny { font-size:14px; font-weight:700; fill:#475569; }
       .mid { font-size:16px; font-weight:700; fill:#0f172a; }
       .small { font-size:15px; font-weight:600; fill:#334155; }
-      .code { font-family:'Consolas','D2Coding',monospace; font-size:16px; font-weight:700; fill:#0f172a; }
+      .code { font-family:'Malgun Gothic','맑은 고딕','Consolas','D2Coding',monospace; font-size:16px; font-weight:700; fill:#0f172a; }
       .arrowPath { fill:none; stroke:#2563eb; stroke-width:4; marker-end:url(#arrow); }
       .note { fill:#ecfeff; stroke:#67e8f9; stroke-width:2; rx:18; }
       .noteText { font-size:18px; font-weight:800; fill:#155e75; }
