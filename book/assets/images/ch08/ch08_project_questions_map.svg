@@ -1,32 +1,69 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="720" viewBox="0 0 1600 720" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
   <title id="title">중간 프로젝트 분석 질문 맵</title>
-  <desc id="desc">온라인 쇼핑몰 중간 프로젝트의 분석 질문과 계산 지표를 연결한 맵</desc>
+  <desc id="desc">온라인 쇼핑몰 중간 프로젝트를 중심으로 다섯 가지 분석 질문과 주요 지표를 연결한 교육용 도식이다. 모든 연결선은 박스의 외곽 테두리에서 시작하고 끝난다.</desc>
   <defs>
-    <linearGradient id="head" x1="0" x2="1"><stop offset="0%" stop-color="#7c3aed"/><stop offset="100%" stop-color="#2563eb"/></linearGradient>
-    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#0f172a" flood-opacity="0.12"/></filter>
     <style>
-      .bg{fill:#f8fafc}.h{fill:url(#head)} text{font-family:'Pretendard','Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif}.title{font-size:38px;font-weight:800;fill:#fff}.sub{font-size:18px;font-weight:600;fill:#ede9fe}
-      .hub{fill:#fff;stroke:#a78bfa;stroke-width:3;filter:url(#shadow)}.card{fill:#fff;stroke:#cbd5e1;stroke-width:2;filter:url(#shadow)}.line{stroke:#7c3aed;stroke-width:3;stroke-dasharray:8 8}.main{font-size:25px;font-weight:900;fill:#0f172a}.q{font-size:21px;font-weight:800;fill:#1d4ed8}.m{font-size:17px;font-weight:650;fill:#475569}.note{fill:#ecfdf5;stroke:#86efac;stroke-width:2}.noteText{font-size:20px;font-weight:800;fill:#166534}
+      .title { font: 700 32px 'Malgun Gothic', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif; fill: #1f3b63; }
+      .box-title { font: 700 16px 'Malgun Gothic', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif; fill: #243b5a; }
+      .box-sub { font: 400 12px 'Malgun Gothic', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif; fill: #445b78; }
+      .center-title { font: 700 17px 'Malgun Gothic', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif; fill: #1f3b63; }
+      .footer { font: 600 14px 'Malgun Gothic', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif; fill: #38516f; }
+      .box { fill: #ffffff; stroke: #9dc3ff; stroke-width: 2; }
+      .footer-box { fill: #eef5ff; stroke: #b7cff7; stroke-width: 2; }
+      .connector { stroke: #8fa4bf; stroke-width: 5; stroke-linecap: round; fill: none; }
     </style>
   </defs>
-  <rect class="bg" width="1600" height="720" rx="32"/>
-  <rect class="h" x="50" y="36" width="1500" height="92" rx="26"/>
-  <text class="title" x="86" y="92">중간 프로젝트 분석 질문 맵</text>
-  <text class="sub" x="86" y="118">분석 질문은 계산 가능한 지표와 연결되어야 합니다</text>
 
-  <circle class="hub" cx="800" cy="380" r="105"/>
-  <text class="main" x="800" y="362" text-anchor="middle">온라인 쇼핑몰</text>
-  <text class="main" x="800" y="394" text-anchor="middle">중간 프로젝트</text>
-  <text class="m" x="800" y="428" text-anchor="middle">질문 → 지표 → 해석</text>
+  <rect width="1600" height="900" fill="#f3f5f7"/>
+  <rect x="0" y="0" width="1600" height="18" fill="#2a5fda"/>
 
-  <line class="line" x1="718" y1="320" x2="400" y2="210"/><line class="line" x1="800" y1="275" x2="800" y2="200"/><line class="line" x1="882" y1="320" x2="1200" y2="210"/><line class="line" x1="710" y1="442" x2="410" y2="555"/><line class="line" x1="890" y1="442" x2="1190" y2="555"/>
+  <text class="title" x="80" y="88">중간 프로젝트 분석 질문 맵</text>
 
-  <g transform="translate(155 165)"><rect class="card" width="390" height="130" rx="24"/><text class="q" x="28" y="44">카테고리별 매출은?</text><text class="m" x="28" y="80">지표: total_sales</text><text class="m" x="28" y="108">지표: sales_ratio</text></g>
-  <g transform="translate(605 155)"><rect class="card" width="390" height="130" rx="24"/><text class="q" x="28" y="44">월별 매출 흐름은?</text><text class="m" x="28" y="80">지표: order_month</text><text class="m" x="28" y="108">지표: order_count</text></g>
-  <g transform="translate(1055 165)"><rect class="card" width="390" height="130" rx="24"/><text class="q" x="28" y="44">구매 금액 상위 고객은?</text><text class="m" x="28" y="80">지표: total_sales</text><text class="m" x="28" y="108">지표: avg_order_value</text></g>
-  <g transform="translate(155 515)"><rect class="card" width="390" height="130" rx="24"/><text class="q" x="28" y="44">주문 상태 분포는?</text><text class="m" x="28" y="80">지표: order_status</text><text class="m" x="28" y="108">지표: order_count</text></g>
-  <g transform="translate(1055 515)"><rect class="card" width="390" height="130" rx="24"/><text class="q" x="28" y="44">가격과 판매 수량 관계는?</text><text class="m" x="28" y="80">지표: price</text><text class="m" x="28" y="108">지표: total_quantity</text></g>
+  <g id="connectors">
+    <line class="connector" x1="620" y1="396" x2="540" y2="240"/>
+    <line class="connector" x1="980" y1="396" x2="1060" y2="240"/>
+    <line class="connector" x1="620" y1="432" x2="540" y2="610"/>
+    <line class="connector" x1="980" y1="432" x2="1060" y2="610"/>
+    <line class="connector" x1="800" y1="470" x2="800" y2="620"/>
+  </g>
 
-  <rect class="note" x="510" y="655" width="580" height="38" rx="14"/>
-  <text class="noteText" x="800" y="681" text-anchor="middle">현재 데이터로 답할 수 있는 질문부터 프로젝트를 설계합니다</text>
+  <g id="left-top">
+    <rect class="box" x="180" y="190" rx="24" ry="24" width="360" height="100"/>
+    <text class="box-title" x="360" y="223" text-anchor="middle">카테고리별 매출은?</text>
+    <text class="box-sub" x="360" y="264" text-anchor="middle">total_sales / sales_ratio</text>
+  </g>
+
+  <g id="right-top">
+    <rect class="box" x="1060" y="190" rx="24" ry="24" width="360" height="100"/>
+    <text class="box-title" x="1240" y="223" text-anchor="middle">월별 매출 흐름은?</text>
+    <text class="box-sub" x="1240" y="264" text-anchor="middle">order_month / order_count</text>
+  </g>
+
+  <g id="center-box">
+    <rect class="box" x="620" y="350" rx="28" ry="28" width="360" height="120"/>
+    <text class="center-title" x="800" y="406" text-anchor="middle">온라인 쇼핑몰 중간 프로젝트</text>
+  </g>
+
+  <g id="left-bottom">
+    <rect class="box" x="180" y="560" rx="24" ry="24" width="360" height="100"/>
+    <text class="box-title" x="360" y="593" text-anchor="middle">구매 금액 상위 고객은?</text>
+    <text class="box-sub" x="360" y="634" text-anchor="middle">total_sales / avg_order_value</text>
+  </g>
+
+  <g id="bottom-center">
+    <rect class="box" x="620" y="620" rx="24" ry="24" width="360" height="100"/>
+    <text class="box-title" x="800" y="653" text-anchor="middle">가격과 판매 수량 관계는?</text>
+    <text class="box-sub" x="800" y="694" text-anchor="middle">price / total_quantity</text>
+  </g>
+
+  <g id="right-bottom">
+    <rect class="box" x="1060" y="560" rx="24" ry="24" width="360" height="100"/>
+    <text class="box-title" x="1240" y="593" text-anchor="middle">주문 상태 분포는?</text>
+    <text class="box-sub" x="1240" y="634" text-anchor="middle">order_status / order_count</text>
+  </g>
+
+  <g id="footer">
+    <rect class="footer-box" x="120" y="790" rx="18" ry="18" width="1360" height="56"/>
+    <text class="footer" x="800" y="825" text-anchor="middle">분석 질문은 계산할 지표와 결과 형태를 함께 정해야 합니다.</text>
+  </g>
 </svg>
