@@ -10,14 +10,20 @@ templates/
 
 scripts/
 ├── build_chapter_docx.py                # Markdown → 챕터별 DOCX
-└── merge_chapter_docx.py                # 승인된 챕터 DOCX → 통합 DOCX
+├── merge_chapter_docx.py                # 승인된 챕터 DOCX → 통합 DOCX
+└── merge_chapter_docx_word.py           # Microsoft Word COM 기반 통합 DOCX/PDF
 
 requirements-docx.txt                    # Word 생성 전용 Python 패키지
 
 book/output/docx/
 ├── chapters/                            # 챕터별 DOCX 생성 위치
 ├── chapter_review_status.csv            # 수동 검수 상태와 파일 해시
-└── llm_data_analysis_course_full.docx   # 최종 통합 DOCX
+├── llm_data_analysis_course_full.docx   # 기존 docxcompose 통합 DOCX
+├── llm_data_analysis_course_full_word.docx
+└── word_merge_manifest.csv
+
+book/output/pdf/
+└── llm_data_analysis_course_full.pdf
 ```
 
 `book/output/docx/` 아래의 생성 결과는 Git으로 관리하지 않습니다. 원본 Markdown, 템플릿, 스크립트와 가이드만 저장소에서 관리합니다.
@@ -27,6 +33,8 @@ book/output/docx/
 - Python 3.10 이상
 - Pandoc
 - Microsoft Word 또는 LibreOffice
+
+Word COM 기반 통합 스크립트(`merge_chapter_docx_word.py`)는 Windows와 Microsoft Word가 필요합니다. LibreOffice에서는 실행되지 않으며, Word가 설치되지 않은 CI 환경에서는 `--dry-run`을 이용한 입력 검증만 가능합니다.
 
 ### Windows에서 Pandoc 설치
 
@@ -201,7 +209,77 @@ python scripts/merge_chapter_docx.py --no-page-breaks
 
 `--force`는 승인 또는 해시 검사를 무시하는 진단용 옵션입니다. 최종 출판 파일 생성에는 사용하지 않는 것을 권장합니다.
 
-## 7. 통합 Word 최종 검수
+## 7. Microsoft Word COM 기반 통합 DOCX/PDF 생성
+
+표 너비, 줄바꿈, 목록, 코드 블록, 이미지 배치처럼 개별 챕터 DOCX의 화면 서식을 최대한 그대로 유지해야 하는 최종 제출용 병합에는 Word COM 기반 스크립트를 사용합니다. 이 방식은 `docxcompose`나 `python-docx`로 XML을 재조립하지 않고, Microsoft Word가 각 챕터 DOCX를 직접 열어 본문 Range를 복사한 뒤 원본 서식 유지 방식으로 붙여 넣습니다.
+
+### 패키지 설치
+
+```powershell
+python -m pip install -r requirements-docx.txt
+```
+
+`requirements-docx.txt`에는 Word COM 자동화를 위한 `pywin32`가 포함되어 있습니다.
+
+### 사전 검증
+
+```powershell
+python scripts/merge_chapter_docx_word.py --dry-run
+```
+
+이 명령은 실제 Word를 실행하지 않고 다음 항목만 확인합니다.
+
+- 챕터별 DOCX 존재 여부와 ZIP 패키지 정상 여부
+- `chapter_review_status.csv`의 `approved` 상태
+- 승인 당시 `docx_sha256`과 현재 DOCX 해시 일치 여부
+- reference DOCX 존재와 정상 여부
+
+### DOCX와 PDF 생성
+
+```powershell
+python scripts/merge_chapter_docx_word.py
+```
+
+기본 출력:
+
+```text
+book/output/docx/llm_data_analysis_course_full_word.docx
+book/output/pdf/llm_data_analysis_course_full.pdf
+book/output/docx/word_merge_manifest.csv
+```
+
+Word 화면을 보면서 디버깅하려면 다음처럼 실행합니다.
+
+```powershell
+python scripts/merge_chapter_docx_word.py --visible
+```
+
+PDF 없이 DOCX만 생성하려면 다음 옵션을 사용합니다.
+
+```powershell
+python scripts/merge_chapter_docx_word.py --skip-pdf
+```
+
+### 병합 처리 방식
+
+- 공통 reference DOCX를 임시 작업 DOCX로 복사한 뒤 본문만 비웁니다.
+- 표지와 Word 목차 필드를 생성합니다.
+- 각 챕터 앞에 다음 페이지 구역 나누기를 삽입합니다.
+- 소스 챕터 DOCX를 읽기 전용으로 열고 `Range.Copy()`를 수행합니다.
+- 통합 문서 끝에 `PasteAndFormat(wdFormatOriginalFormatting)`으로 붙여 넣습니다.
+- 모든 구역의 머리글과 바닥글을 이전 구역과 연결하고 페이지 번호가 다시 시작되지 않게 설정합니다.
+- 통합 완료 후 전체 필드와 목차를 갱신하고 DOCX를 저장한 뒤 PDF로 내보냅니다.
+- 출력은 먼저 `.tmp.docx`, `.tmp.pdf`로 만든 뒤 검증에 성공하면 최종 파일명으로 교체합니다.
+
+### 제한사항
+
+- Windows와 Microsoft Word가 필요합니다.
+- LibreOffice에서는 실행되지 않습니다.
+- 생성 중에는 입력 챕터 DOCX와 출력 DOCX/PDF를 Word나 PDF 뷰어에서 열지 않는 것이 좋습니다.
+- `--force`는 승인 또는 해시 오류를 무시하는 진단용 옵션이므로 최종 제출용 생성에는 사용하지 않는 것을 권장합니다.
+- 최종 제출 전 통합 DOCX와 PDF의 전체 페이지를 육안 검수해야 합니다.
+
+## 8. 통합 Word 최종 검수
 
 통합 DOCX를 Microsoft Word에서 연 뒤 다음 순서로 확인합니다.
 
@@ -215,7 +293,19 @@ python scripts/merge_chapter_docx.py --no-page-breaks
 
 Word에서 필드 업데이트 확인 창이 표시되면 `전체 표 업데이트`를 선택합니다.
 
-## 8. 공통 템플릿 수정
+Word COM 방식으로 생성한 경우 목차는 스크립트가 가능한 범위에서 자동 갱신하지만, 최종 제출 전에는 Word에서 목차 페이지 번호, 챕터 시작 페이지, 전체 페이지 번호 연속 여부를 다시 확인합니다.
+
+특히 다음 항목을 원본 챕터 DOCX와 비교합니다.
+
+- Chapter 01의 주요 데이터 파일 표와 데이터 관계도
+- Chapter 08 project question map
+- Chapter 14 Airflow screenshots
+- Chapter 15 final project tables
+- 코드 블록 왼쪽 정렬
+- 긴 표의 열 너비
+- 글머리표와 번호 목록
+
+## 9. 공통 템플릿 수정
 
 공통 스타일을 변경하려면 다음 파일을 Word에서 수정합니다.
 
@@ -237,7 +327,7 @@ templates/llm_data_analysis_reference.docx
 
 템플릿을 수정한 뒤에는 챕터별 Word를 다시 생성하고 전체를 다시 검수해야 합니다.
 
-## 9. 권장 전체 실행 순서
+## 10. 권장 전체 실행 순서
 
 ```powershell
 # 1. 전용 패키지 설치
@@ -252,16 +342,22 @@ python scripts/build_chapter_docx.py
 # 4. Word에서 16개 파일 수동 검수
 # book/output/docx/chapter_review_status.csv에서 통과한 챕터를 approved로 변경
 
-# 5. 통합 가능 여부 확인
+# 5. 기존 docxcompose 방식 통합 가능 여부 확인
 python scripts/merge_chapter_docx.py --dry-run
 
-# 6. 통합 Word 생성
+# 6. 기존 docxcompose 방식 통합 Word 생성
 python scripts/merge_chapter_docx.py
 
-# 7. 통합 Word에서 Ctrl+A → F9 후 전체 문서 최종 검수
+# 7. Word COM 방식 통합 사전 검증
+python scripts/merge_chapter_docx_word.py --dry-run
+
+# 8. Word COM 방식 통합 DOCX/PDF 생성
+python scripts/merge_chapter_docx_word.py
+
+# 9. 통합 DOCX와 PDF 전체 문서 최종 검수
 ```
 
-## 10. 자주 발생하는 문제
+## 11. 자주 발생하는 문제
 
 ### `pandoc was not found`
 
@@ -279,6 +375,23 @@ python scripts/build_chapter_docx.py --svg-mode png
 
 ```powershell
 python -m pip install -r requirements-docx.txt
+```
+
+### `pywin32 is not installed`
+
+Word COM 기반 통합에 필요한 패키지가 설치되지 않은 상태입니다.
+
+```powershell
+python -m pip install -r requirements-docx.txt
+```
+
+### `Microsoft Word COM could not be started`
+
+Windows에 Microsoft Word가 설치되어 있는지 확인합니다. 설치되어 있다면 열려 있는 Word 창에서 입력 챕터 DOCX나 출력 통합 DOCX를 닫고 다시 실행합니다.
+
+```powershell
+python scripts/merge_chapter_docx_word.py --dry-run
+python scripts/merge_chapter_docx_word.py --visible
 ```
 
 ### 통합 시 `status is pending`

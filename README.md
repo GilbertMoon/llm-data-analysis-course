@@ -101,6 +101,19 @@ python scripts/build_chapter_docx.py
 python scripts/merge_chapter_docx.py
 ```
 
+Windows에서 Microsoft Word가 설치되어 있고, 개별 챕터 DOCX의 표·그림·목록·코드 블록 서식을 최대한 그대로 보존해 통합본과 PDF를 만들려면 Word COM 기반 병합 스크립트를 사용할 수 있습니다.
+
+```powershell
+python scripts/merge_chapter_docx_word.py --dry-run
+python scripts/merge_chapter_docx_word.py
+```
+
+기본 출력:
+
+- `book/output/docx/llm_data_analysis_course_full_word.docx`
+- `book/output/pdf/llm_data_analysis_course_full.pdf`
+- `book/output/docx/word_merge_manifest.csv`
+
 설치 방법, SVG 처리, 수동 검수 기준과 목차 업데이트 방법은 [`docs/word_build_guide.md`](docs/word_build_guide.md)를 참고하세요.
 
 ## 14장 Docker Compose 기반 Airflow 실습
