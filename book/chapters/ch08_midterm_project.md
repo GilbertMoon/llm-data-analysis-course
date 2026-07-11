@@ -76,7 +76,7 @@
 분석 질문은 계산 가능한 지표와 연결되어야 합니다. 질문이 모호하면 필요한 데이터와 분석 코드도 모호해집니다.
 
 <figure class="figure">
-  <img src="../assets/images/ch08/ch08_project_questions_map.png" alt="중간 프로젝트 분석 질문 맵">
+  <img src="../assets/images/ch08/ch08_project_questions_map.svg" alt="중간 프로젝트 분석 질문 맵">
   <figcaption>그림 8-4. 중간 프로젝트 분석 질문 맵</figcaption>
 </figure>
 
