@@ -202,18 +202,19 @@ def resolve_reference_doc(path: Path) -> Path:
 
 
 def find_svg_converter() -> str | None:
+    # Prefer desktop/vector renderers when available because they usually preserve
+    # system Korean fonts more faithfully. CairoSVG is the portable fallback.
+    for candidate in ("inkscape", "inkscape.exe", "rsvg-convert"):
+        resolved = shutil.which(candidate)
+        if resolved:
+            return resolved
+
     try:
         import cairosvg  # noqa: F401
 
         return "cairosvg"
     except Exception:  # noqa: BLE001
-        pass
-
-    for candidate in ("inkscape", "inkscape.exe"):
-        resolved = shutil.which(candidate)
-        if resolved:
-            return resolved
-    return None
+        return None
 
 
 def convert_svg_to_png(svg_path: Path, png_path: Path, converter: str) -> None:
@@ -222,6 +223,13 @@ def convert_svg_to_png(svg_path: Path, png_path: Path, converter: str) -> None:
         import cairosvg
 
         cairosvg.svg2png(url=str(svg_path), write_to=str(png_path), output_width=1800)
+        return
+
+    if Path(converter).name.lower().startswith("rsvg-convert"):
+        subprocess.run(
+            [converter, "--width", "1800", "--output", str(png_path), str(svg_path)],
+            check=True,
+        )
         return
 
     subprocess.run(
@@ -328,7 +336,10 @@ def prepare_markdown(md_path: Path, temp_dir: Path, svg_mode: str) -> PreparedMa
 
         target = local_path
         if local_path.suffix.lower() == ".svg" and svg_mode != "keep" and converter:
-            contains_korean_text = False
+            key = hashlib.sha1(str(local_path).encode("utf-8")).hexdigest()[:10]
+            target = temp_dir / "images" / f"{local_path.stem}_{key}.png"
+            convert_svg_to_png(local_path, target, converter)
+            converted_svg_count += 1
             if svg_mode == "auto":
                 try:
                     contains_korean_text = bool(
@@ -336,15 +347,10 @@ def prepare_markdown(md_path: Path, temp_dir: Path, svg_mode: str) -> PreparedMa
                     )
                 except OSError:
                     contains_korean_text = False
-            if contains_korean_text:
-                warnings.append(
-                    f"Korean text detected in SVG; kept as SVG to avoid font substitution: {ref}"
-                )
-            else:
-                key = hashlib.sha1(str(local_path).encode("utf-8")).hexdigest()[:10]
-                target = temp_dir / "images" / f"{local_path.stem}_{key}.png"
-                convert_svg_to_png(local_path, target, converter)
-                converted_svg_count += 1
+                if contains_korean_text:
+                    warnings.append(
+                        f"SVG with Korean text was converted to PNG; verify font rendering in Word: {ref}"
+                    )
 
         safe_ref = target.resolve().as_posix()
         title_part = f' "{title}"' if title else ""
