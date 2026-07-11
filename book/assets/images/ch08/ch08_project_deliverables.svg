@@ -15,8 +15,8 @@
     <style>
       .bg{fill:#f8fafc}
       .top{fill:url(#topLine)}
-      text{font-family:'Pretendard','Noto Sans KR','Malgun Gothic','Apple SD Gothic Neo',sans-serif}
-      .mono{font-family:'D2Coding','JetBrains Mono','Consolas',monospace}
+      text{font-family:'Malgun Gothic','맑은 고딕','Pretendard','Noto Sans KR','Apple SD Gothic Neo',sans-serif}
+      .mono{font-family:'Malgun Gothic','맑은 고딕','D2Coding','JetBrains Mono','Consolas',monospace}
       .title{font-size:48px;font-weight:850;fill:#0f172a}
       .subtitle{font-size:24px;font-weight:600;fill:#334155}
       .card{fill:#fff;stroke:#cbd5e1;stroke-width:2;filter:url(#softShadow)}

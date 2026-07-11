@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720">
   <defs>
     <style>
-      .bg{fill:#f8fafc}.title{font:700 34px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#0f172a}.sub{font:500 18px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#334155}.box{fill:#fff;stroke:#cbd5e1;stroke-width:2;rx:18;ry:18}.accent{fill:#dbeafe;stroke:#93c5fd;stroke-width:2;rx:18;ry:18}.head{font:700 21px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#0f172a}.txt{font:500 15px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#334155}.arrow{stroke:#64748b;stroke-width:3;fill:none;marker-end:url(#a)}.footer{font:500 18px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#1e40af}
+      .bg{fill:#f8fafc}.title{font:700 34px 'Malgun Gothic','맑은 고딕',Arial,'Noto Sans KR',sans-serif;fill:#0f172a}.sub{font:500 18px 'Malgun Gothic','맑은 고딕',Arial,'Noto Sans KR',sans-serif;fill:#334155}.box{fill:#fff;stroke:#cbd5e1;stroke-width:2;rx:18;ry:18}.accent{fill:#dbeafe;stroke:#93c5fd;stroke-width:2;rx:18;ry:18}.head{font:700 21px 'Malgun Gothic','맑은 고딕',Arial,'Noto Sans KR',sans-serif;fill:#0f172a}.txt{font:500 15px 'Malgun Gothic','맑은 고딕',Arial,'Noto Sans KR',sans-serif;fill:#334155}.arrow{stroke:#64748b;stroke-width:3;fill:none;marker-end:url(#a)}.footer{font:500 18px 'Malgun Gothic','맑은 고딕',Arial,'Noto Sans KR',sans-serif;fill:#1e40af}
     </style>
     <marker id="a" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><polygon points="0 0,10 4,0 8" fill="#64748b"/></marker>
   </defs>

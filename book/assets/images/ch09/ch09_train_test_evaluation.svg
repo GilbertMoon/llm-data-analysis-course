@@ -5,9 +5,9 @@
     <style>
       .bg{fill:#f8fafc}
       .top-line{stroke:#2563eb;stroke-width:8;stroke-linecap:round}
-      .title{font:700 48px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#0f172a}
-      .subtitle{font:500 24px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#334155}
-      .section{font:700 20px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#475569}
+      .title{font:700 48px 'Malgun Gothic','맑은 고딕',Arial,'Noto Sans KR',sans-serif;fill:#0f172a}
+      .subtitle{font:500 24px 'Malgun Gothic','맑은 고딕',Arial,'Noto Sans KR',sans-serif;fill:#334155}
+      .section{font:700 20px 'Malgun Gothic','맑은 고딕',Arial,'Noto Sans KR',sans-serif;fill:#475569}
       .card{fill:#fff;stroke:#cbd5e1;stroke-width:2.5;rx:22;ry:22}
       .data{fill:#f1f5f9;stroke:#94a3b8}
       .split{fill:#fff;stroke:#60a5fa}
@@ -18,19 +18,19 @@
       .metric{fill:#fff7ed;stroke:#fb923c}
       .warn-box{fill:#fff7ed;stroke:#fb923c;stroke-width:2;rx:18;ry:18}
       .footer-box{fill:#ecfeff;stroke:#22d3ee;stroke-width:2.5;rx:20;ry:20}
-      .badge{font:700 16px Arial,'Noto Sans KR','Malgun Gothic',sans-serif}
+      .badge{font:700 16px 'Malgun Gothic','맑은 고딕',Arial,'Noto Sans KR',sans-serif}
       .badge-blue{fill:#dbeafe;stroke:#60a5fa}
       .badge-green{fill:#dcfce7;stroke:#22c55e}
-      .head{font:700 27px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#0f172a}
-      .subhead{font:700 20px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#1e40af}
-      .txt{font:500 18px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#334155}
-      .small{font:500 16px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#475569}
-      .code{font:700 20px Consolas,'Courier New',monospace;fill:#2563eb}
-      .code-dark{font:700 18px Consolas,'Courier New',monospace;fill:#0f172a}
-      .code-small{font:700 16px Consolas,'Courier New',monospace;fill:#0f172a}
-      .warn{font:700 18px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#b45309}
-      .footer{font:700 22px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#0f3b5f}
-      .formula{font:700 18px Consolas,'Courier New',monospace;fill:#2563eb}
+      .head{font:700 27px 'Malgun Gothic','맑은 고딕',Arial,'Noto Sans KR',sans-serif;fill:#0f172a}
+      .subhead{font:700 20px 'Malgun Gothic','맑은 고딕',Arial,'Noto Sans KR',sans-serif;fill:#1e40af}
+      .txt{font:500 18px 'Malgun Gothic','맑은 고딕',Arial,'Noto Sans KR',sans-serif;fill:#334155}
+      .small{font:500 16px 'Malgun Gothic','맑은 고딕',Arial,'Noto Sans KR',sans-serif;fill:#475569}
+      .code{font:700 20px 'Malgun Gothic','맑은 고딕',Consolas,'Courier New',monospace;fill:#2563eb}
+      .code-dark{font:700 18px 'Malgun Gothic','맑은 고딕',Consolas,'Courier New',monospace;fill:#0f172a}
+      .code-small{font:700 16px 'Malgun Gothic','맑은 고딕',Consolas,'Courier New',monospace;fill:#0f172a}
+      .warn{font:700 18px 'Malgun Gothic','맑은 고딕',Arial,'Noto Sans KR',sans-serif;fill:#b45309}
+      .footer{font:700 22px 'Malgun Gothic','맑은 고딕',Arial,'Noto Sans KR',sans-serif;fill:#0f3b5f}
+      .formula{font:700 18px 'Malgun Gothic','맑은 고딕',Consolas,'Courier New',monospace;fill:#2563eb}
       .train-line{stroke:#2563eb;stroke-width:4;fill:none}
       .test-line{stroke:#16a34a;stroke-width:4;fill:none}
       .eval-line{stroke:#f97316;stroke-width:4;fill:none}

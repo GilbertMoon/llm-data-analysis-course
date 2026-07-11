@@ -7,7 +7,7 @@
     <linearGradient id="head" x1="0" x2="1"><stop offset="0" stop-color="#0f766e"/><stop offset="1" stop-color="#2563eb"/></linearGradient>
     <style>
       .bg{fill:#f8fafc}.h{fill:url(#head)}.box{fill:#fff;stroke:#bfdbfe;stroke-width:2;filter:url(#shadow)}
-      text{font-family:'Pretendard','Noto Sans KR','Apple SD Gothic Neo',sans-serif}.t{font-size:38px;font-weight:800;fill:#fff}.s{font-size:18px;font-weight:600;fill:#dbeafe}
+      text{font-family:'Malgun Gothic','맑은 고딕','Pretendard','Noto Sans KR','Apple SD Gothic Neo',sans-serif}.t{font-size:38px;font-weight:800;fill:#fff}.s{font-size:18px;font-weight:600;fill:#dbeafe}
       .bt{font-size:27px;font-weight:800;fill:#0f172a}.bd{font-size:18px;font-weight:600;fill:#64748b}.code{font-size:20px;font-weight:800;fill:#1d4ed8}.arr{stroke:#2563eb;stroke-width:4;fill:none;marker-end:url(#arrow)}
       .pill{fill:#eff6ff;stroke:#93c5fd}.pt{font-size:17px;font-weight:800;fill:#2563eb}
     </style>

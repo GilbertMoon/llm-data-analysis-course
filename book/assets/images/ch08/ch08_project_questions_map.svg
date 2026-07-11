@@ -3,11 +3,11 @@
   <desc id="desc">온라인 쇼핑몰 중간 프로젝트를 중심으로 다섯 가지 분석 질문과 주요 지표를 연결한 교육용 도식이다. 모든 연결선은 박스의 외곽 테두리에서 시작하고 끝난다.</desc>
   <defs>
     <style>
-      .title { font: 700 40px 'Malgun Gothic', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif; fill: #1f3b63; }
-      .box-title { font: 700 24px 'Malgun Gothic', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif; fill: #243b5a; }
-      .box-sub { font: 500 17px 'Malgun Gothic', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif; fill: #445b78; }
-      .center-title { font: 700 26px 'Malgun Gothic', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif; fill: #1f3b63; }
-      .footer { font: 600 18px 'Malgun Gothic', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif; fill: #38516f; }
+      .title { font: 700 40px 'Malgun Gothic','맑은 고딕','Apple SD Gothic Neo','Noto Sans KR',sans-serif; fill: #1f3b63; }
+      .box-title { font: 700 24px 'Malgun Gothic','맑은 고딕','Apple SD Gothic Neo','Noto Sans KR',sans-serif; fill: #243b5a; }
+      .box-sub { font: 500 17px 'Malgun Gothic','맑은 고딕','Apple SD Gothic Neo','Noto Sans KR',sans-serif; fill: #445b78; }
+      .center-title { font: 700 26px 'Malgun Gothic','맑은 고딕','Apple SD Gothic Neo','Noto Sans KR',sans-serif; fill: #1f3b63; }
+      .footer { font: 600 18px 'Malgun Gothic','맑은 고딕','Apple SD Gothic Neo','Noto Sans KR',sans-serif; fill: #38516f; }
       .box { fill: #ffffff; stroke: #9dc3ff; stroke-width: 2; }
       .footer-box { fill: #eef5ff; stroke: #b7cff7; stroke-width: 2; }
       .connector { stroke: #8fa4bf; stroke-width: 5; stroke-linecap: round; fill: none; }

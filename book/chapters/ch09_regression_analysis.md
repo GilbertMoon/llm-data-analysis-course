@@ -43,29 +43,27 @@
 
 이번 장에서는 다음과 같이 문제를 정의합니다.
 
-```text
-예측 대상:
-- 한 주문의 주문 상세 금액 합계(order_total)
+- 예측 대상:
+  - 한 주문의 주문 상세 금액 합계(`order_total`)
 
-교육용 예측 시점:
-- 주문 메타데이터와 고객 특성은 확인할 수 있지만
+- 교육용 예측 시점:
+  - 주문 메타데이터와 고객 특성은 확인할 수 있지만
   주문 상세의 수량·단가·금액은 모델에 제공하지 않는 시점
 
-사용할 입력값:
-- payment_method
-- order_month
-- order_dayofweek
-- gender
-- age
-- city
+- 사용할 입력값:
+  - `payment_method`
+  - `order_month`
+  - `order_dayofweek`
+  - `gender`
+  - `age`
+  - `city`
 
-입력에서 제외할 값:
-- order_id, customer_id
-- order_status
-- product_id
-- quantity, unit_price, line_total
-- item_count, total_quantity, avg_unit_price
-```
+- 입력에서 제외할 값:
+  - `order_id`, `customer_id`
+  - `order_status`
+  - `product_id`
+  - `quantity`, `unit_price`, `line_total`
+  - `item_count`, `total_quantity`, `avg_unit_price`
 
 `order_id`와 `customer_id`는 식별자이므로 일반적인 숫자 변수처럼 사용하지 않습니다. `order_status`는 주문 처리 이후에 확정될 수 있으므로 예측 시점 이후 정보가 될 가능성이 있습니다. 주문 상세에서 계산한 수량·단가·금액 관련 값은 목표값과 직접 연결되므로 입력에서 제외합니다.
 
@@ -1091,17 +1089,15 @@ LLM은 코드 초안을 빠르게 만들 수 있지만 예측 시점과 데이�
 
 이번 장에서는 다음 과정을 다뤘습니다.
 
-```text
-예측 시점 정의
-→ 목표값 생성
-→ 누수 가능성이 있는 입력값 제외
-→ 시간 순서 훈련·테스트 분할
-→ 파이프라인 기반 전처리
-→ 베이스라인·선형 회귀·랜덤 포레스트 비교
-→ MAE·RMSE·R² 평가
-→ 교차검증과 잔차 확인
-→ 모델 사용 가능성 판단
-```
+- 예측 시점 정의
+- 목표값 생성
+- 누수 가능성이 있는 입력값 제외
+- 시간 순서 훈련·테스트 분할
+- 파이프라인 기반 전처리
+- 베이스라인·선형 회귀·랜덤 포레스트 비교
+- MAE·RMSE·R² 평가
+- 교차검증과 잔차 확인
+- 모델 사용 가능성 판단
 
 직접 더 연습해 보고 싶다면 다음을 수행해 봅니다.
 

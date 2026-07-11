@@ -5,9 +5,9 @@
     <style>
       .bg{fill:#f8fafc}
       .top-line{stroke:#2563eb;stroke-width:8;stroke-linecap:round}
-      .title{font:700 48px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#0f172a}
-      .subtitle{font:500 24px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#334155}
-      .label-top{font:700 20px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#475569}
+      .title{font:700 48px 'Malgun Gothic','맑은 고딕',Arial,'Noto Sans KR',sans-serif;fill:#0f172a}
+      .subtitle{font:500 24px 'Malgun Gothic','맑은 고딕',Arial,'Noto Sans KR',sans-serif;fill:#334155}
+      .label-top{font:700 20px 'Malgun Gothic','맑은 고딕',Arial,'Noto Sans KR',sans-serif;fill:#475569}
       .card{fill:#fff;stroke:#cbd5e1;stroke-width:2.5;rx:22;ry:22}
       .model-blue{fill:#eff6ff;stroke:#60a5fa}
       .model-green{fill:#f0fdf4;stroke:#34d399}
@@ -18,21 +18,21 @@
       .footer-box{fill:#ecfeff;stroke:#22d3ee;stroke-width:2.5;rx:20;ry:20}
       .badge-blue{fill:#dbeafe;stroke:#60a5fa}
       .badge-green{fill:#dcfce7;stroke:#22c55e}
-      .badge-text{font:700 17px Arial,'Noto Sans KR','Malgun Gothic',sans-serif}
-      .model-name{font:700 32px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#0f172a}
-      .ko-name{font:700 21px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#1e40af}
-      .class-name{font:700 18px Consolas,'Courier New',monospace;fill:#334155}
-      .label{font:700 18px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#0f172a}
-      .txt{font:500 18px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#334155}
-      .small{font:500 16px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#475569}
-      .flow-title{font:700 25px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#0f172a}
-      .flow-code{font:700 19px Consolas,'Courier New',monospace;fill:#2563eb}
-      .metric-name{font:700 36px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#0f172a}
-      .metric-full{font:700 16px Consolas,'Courier New',monospace;fill:#475569}
-      .direction{font:700 20px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#1d4ed8}
-      .warn{font:700 17px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#b45309}
-      .footer-head{font:700 24px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#0f172a}
-      .footer{font:700 22px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#0f3b5f}
+      .badge-text{font:700 17px 'Malgun Gothic','맑은 고딕',Arial,'Noto Sans KR',sans-serif}
+      .model-name{font:700 32px 'Malgun Gothic','맑은 고딕',Arial,'Noto Sans KR',sans-serif;fill:#0f172a}
+      .ko-name{font:700 21px 'Malgun Gothic','맑은 고딕',Arial,'Noto Sans KR',sans-serif;fill:#1e40af}
+      .class-name{font:700 18px 'Malgun Gothic','맑은 고딕',Consolas,'Courier New',monospace;fill:#334155}
+      .label{font:700 18px 'Malgun Gothic','맑은 고딕',Arial,'Noto Sans KR',sans-serif;fill:#0f172a}
+      .txt{font:500 18px 'Malgun Gothic','맑은 고딕',Arial,'Noto Sans KR',sans-serif;fill:#334155}
+      .small{font:500 16px 'Malgun Gothic','맑은 고딕',Arial,'Noto Sans KR',sans-serif;fill:#475569}
+      .flow-title{font:700 25px 'Malgun Gothic','맑은 고딕',Arial,'Noto Sans KR',sans-serif;fill:#0f172a}
+      .flow-code{font:700 19px 'Malgun Gothic','맑은 고딕',Consolas,'Courier New',monospace;fill:#2563eb}
+      .metric-name{font:700 36px 'Malgun Gothic','맑은 고딕',Arial,'Noto Sans KR',sans-serif;fill:#0f172a}
+      .metric-full{font:700 16px 'Malgun Gothic','맑은 고딕',Consolas,'Courier New',monospace;fill:#475569}
+      .direction{font:700 20px 'Malgun Gothic','맑은 고딕',Arial,'Noto Sans KR',sans-serif;fill:#1d4ed8}
+      .warn{font:700 17px 'Malgun Gothic','맑은 고딕',Arial,'Noto Sans KR',sans-serif;fill:#b45309}
+      .footer-head{font:700 24px 'Malgun Gothic','맑은 고딕',Arial,'Noto Sans KR',sans-serif;fill:#0f172a}
+      .footer{font:700 22px 'Malgun Gothic','맑은 고딕',Arial,'Noto Sans KR',sans-serif;fill:#0f3b5f}
       .line{stroke:#64748b;stroke-width:4;fill:none}
       .soft-line{stroke:#94a3b8;stroke-width:3.5;fill:none}
       .icon-blue{stroke:#2563eb;fill:none;stroke-width:4;stroke-linecap:round;stroke-linejoin:round}

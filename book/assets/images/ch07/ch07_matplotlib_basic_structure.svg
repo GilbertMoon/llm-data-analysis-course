@@ -12,7 +12,7 @@
     <style>
       .bg{fill:#f8fafc}
       .top{fill:url(#topLine)}
-      text{font-family:'Pretendard','Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif}
+      text{font-family:'Malgun Gothic','맑은 고딕','Pretendard','Noto Sans KR','Apple SD Gothic Neo',sans-serif}
       .title{font-size:48px;font-weight:850;fill:#0f172a}
       .subtitle{font-size:24px;font-weight:600;fill:#334155}
       .card{fill:#fff;stroke:#bfdbfe;stroke-width:2.5;filter:url(#softShadow)}
@@ -31,8 +31,8 @@
       .badge{fill:#eff6ff;stroke:#93c5fd;stroke-width:2}
       .badgeText{font-size:18px;font-weight:850;fill:#1d4ed8}
       .codePanel{fill:#0f172a;stroke:#1e293b;stroke-width:2}
-      .code{font-family:'D2Coding','JetBrains Mono','Consolas',monospace;font-size:19px;font-weight:650;fill:#e2e8f0}
-      .codeSmall{font-family:'D2Coding','JetBrains Mono','Consolas',monospace;font-size:17px;font-weight:650;fill:#cbd5e1}
+      .code{font-family:'Malgun Gothic','맑은 고딕','D2Coding','JetBrains Mono','Consolas',monospace;font-size:19px;font-weight:650;fill:#e2e8f0}
+      .codeSmall{font-family:'Malgun Gothic','맑은 고딕','D2Coding','JetBrains Mono','Consolas',monospace;font-size:17px;font-weight:650;fill:#cbd5e1}
       .fn{fill:#93c5fd}
       .str{fill:#86efac}
       .role{font-size:16px;font-weight:800;fill:#bfdbfe}

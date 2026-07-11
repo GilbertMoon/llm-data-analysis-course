@@ -14,22 +14,22 @@
     </linearGradient>
     <style>
       .bg { fill: #f8fafc; }
-      .title-main { font-family: 'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif; font-size: 40px; font-weight: 800; fill: #ffffff; }
-      .title-sub { font-family: 'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif; font-size: 18px; font-weight: 500; fill: #ccfbf1; }
+      .title-main { font-family: 'Malgun Gothic','맑은 고딕','Pretendard','Noto Sans KR','Apple SD Gothic Neo',sans-serif; font-size: 40px; font-weight: 800; fill: #ffffff; }
+      .title-sub { font-family: 'Malgun Gothic','맑은 고딕','Pretendard','Noto Sans KR','Apple SD Gothic Neo',sans-serif; font-size: 18px; font-weight: 500; fill: #ccfbf1; }
       .table { fill: #ffffff; stroke: #cbd5e1; stroke-width: 2; filter: url(#shadow); }
       .table-head { fill: #eff6ff; stroke: #bfdbfe; stroke-width: 1; }
-      .table-name { font-family: 'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif; font-size: 28px; font-weight: 800; fill: #0f172a; }
-      .role { font-family: 'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif; font-size: 17px; font-weight: 700; fill: #2563eb; }
-      .field { font-family: 'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif; font-size: 20px; font-weight: 600; fill: #334155; }
+      .table-name { font-family: 'Malgun Gothic','맑은 고딕','Pretendard','Noto Sans KR','Apple SD Gothic Neo',sans-serif; font-size: 28px; font-weight: 800; fill: #0f172a; }
+      .role { font-family: 'Malgun Gothic','맑은 고딕','Pretendard','Noto Sans KR','Apple SD Gothic Neo',sans-serif; font-size: 17px; font-weight: 700; fill: #2563eb; }
+      .field { font-family: 'Malgun Gothic','맑은 고딕','Pretendard','Noto Sans KR','Apple SD Gothic Neo',sans-serif; font-size: 20px; font-weight: 600; fill: #334155; }
       .pk { fill: #fef3c7; stroke: #f59e0b; stroke-width: 1.5; }
       .fk { fill: #dcfce7; stroke: #22c55e; stroke-width: 1.5; }
-      .tag { font-family: 'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif; font-size: 15px; font-weight: 800; }
+      .tag { font-family: 'Malgun Gothic','맑은 고딕','Pretendard','Noto Sans KR','Apple SD Gothic Neo',sans-serif; font-size: 15px; font-weight: 800; }
       .tag-pk { fill: #92400e; }
       .tag-fk { fill: #166534; }
       .rel { fill: none; stroke: #2563eb; stroke-width: 4; stroke-linecap: round; marker-end: url(#arrow); }
-      .rel-label { font-family: 'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif; font-size: 18px; font-weight: 800; fill: #1d4ed8; }
+      .rel-label { font-family: 'Malgun Gothic','맑은 고딕','Pretendard','Noto Sans KR','Apple SD Gothic Neo',sans-serif; font-size: 18px; font-weight: 800; fill: #1d4ed8; }
       .note { fill: #ffffff; stroke: #e2e8f0; stroke-width: 2; }
-      .note-text { font-family: 'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif; font-size: 20px; font-weight: 700; fill: #475569; }
+      .note-text { font-family: 'Malgun Gothic','맑은 고딕','Pretendard','Noto Sans KR','Apple SD Gothic Neo',sans-serif; font-size: 20px; font-weight: 700; fill: #475569; }
     </style>
   </defs>
 

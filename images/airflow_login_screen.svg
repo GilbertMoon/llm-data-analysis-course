@@ -14,8 +14,8 @@
       <path d="M0 0 L10 5 L0 10 Z" fill="#2563eb"/>
     </marker>
     <style>
-      text { font-family: "NanumSquare","Noto Sans KR","Malgun Gothic",sans-serif; }
-      .mono { font-family: "D2Coding","Cascadia Mono","Consolas",monospace; }
+      text { font-family: 'Malgun Gothic','맑은 고딕',"NanumSquare","Noto Sans KR",sans-serif; }
+      .mono { font-family: 'Malgun Gothic','맑은 고딕',"D2Coding","Cascadia Mono","Consolas",monospace; }
       .title { font-size: 46px; font-weight: 800; fill: #0f2d4d; }
       .subtitle { font-size: 22px; font-weight: 500; fill: #475569; }
       .section { font-size: 25px; font-weight: 800; fill: #0f172a; }
@@ -23,7 +23,7 @@
       .small { font-size: 16px; font-weight: 500; fill: #475569; }
       .code { font-size: 17px; font-weight: 650; fill: #0f172a; }
       .badge { font-size: 15px; font-weight: 800; }
-      .terminal { font-family: "D2Coding","Cascadia Mono","Consolas",monospace;
+      .terminal { font-family: 'Malgun Gothic','맑은 고딕',"D2Coding","Cascadia Mono","Consolas",monospace;
                   font-size: 15px; font-weight: 650; fill: #a7f3d0; }
       .buttonText { font-size: 19px; font-weight: 800; fill: #ffffff; }
     </style>

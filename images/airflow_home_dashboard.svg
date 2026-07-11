@@ -11,8 +11,8 @@
       <path d="M0 0 L10 5 L0 10 Z" fill="#2563eb"/>
     </marker>
     <style>
-      text { font-family: "NanumSquare","Noto Sans KR","Malgun Gothic",sans-serif; }
-      .mono { font-family: "D2Coding","Cascadia Mono","Consolas",monospace; }
+      text { font-family: 'Malgun Gothic','맑은 고딕',"NanumSquare","Noto Sans KR",sans-serif; }
+      .mono { font-family: 'Malgun Gothic','맑은 고딕',"D2Coding","Cascadia Mono","Consolas",monospace; }
       .title { font-size: 46px; font-weight: 800; fill: #0f2d4d; }
       .subtitle { font-size: 22px; font-weight: 500; fill: #475569; }
       .browserText { font-size: 15px; fill: #475569; }

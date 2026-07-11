@@ -4,19 +4,19 @@
   <defs>
     <style>
       .bg { fill: #f8fafc; }
-      .title { font: 700 34px 'Arial', 'Noto Sans KR', sans-serif; fill: #0f172a; }
-      .subtitle { font: 500 18px 'Arial', 'Noto Sans KR', sans-serif; fill: #334155; }
+      .title { font: 700 34px 'Malgun Gothic','맑은 고딕','Arial','Noto Sans KR',sans-serif; fill: #0f172a; }
+      .subtitle { font: 500 18px 'Malgun Gothic','맑은 고딕','Arial','Noto Sans KR',sans-serif; fill: #334155; }
       .frame { fill: #ffffff; stroke: #cbd5e1; stroke-width: 2; rx: 20; ry: 20; }
       .topbar { fill: #e2e8f0; }
       .sidebar { fill: #f1f5f9; }
       .editor { fill: #ffffff; }
       .cellCode { fill: #eef2ff; stroke: #c7d2fe; stroke-width: 1.5; rx: 14; ry: 14; }
       .cellOut { fill: #f8fafc; stroke: #dbeafe; stroke-width: 1.5; rx: 14; ry: 14; }
-      .label { font: 700 22px 'Arial', 'Noto Sans KR', sans-serif; fill: #0f172a; }
-      .text { font: 500 17px 'Consolas', 'Courier New', monospace; fill: #1e293b; }
-      .small { font: 500 16px 'Arial', 'Noto Sans KR', sans-serif; fill: #475569; }
+      .label { font: 700 22px 'Malgun Gothic','맑은 고딕','Arial','Noto Sans KR',sans-serif; fill: #0f172a; }
+      .text { font: 500 17px 'Malgun Gothic','맑은 고딕','Consolas','Courier New',monospace; fill: #1e293b; }
+      .small { font: 500 16px 'Malgun Gothic','맑은 고딕','Arial','Noto Sans KR',sans-serif; fill: #475569; }
       .chip { fill: #dbeafe; stroke: #93c5fd; stroke-width: 1; rx: 10; ry: 10; }
-      .chipText { font: 600 15px 'Arial', 'Noto Sans KR', sans-serif; fill: #1d4ed8; }
+      .chipText { font: 600 15px 'Malgun Gothic','맑은 고딕','Arial','Noto Sans KR',sans-serif; fill: #1d4ed8; }
       .icon { fill: #94a3b8; }
     </style>
   </defs>

@@ -5,29 +5,29 @@
     <style>
       .bg{fill:#f8fafc}
       .top-line{stroke:#2563eb;stroke-width:8;stroke-linecap:round}
-      .title{font:700 48px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#0f172a}
-      .subtitle{font:500 24px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#334155}
-      .band{font:700 20px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#475569}
+      .title{font:700 48px 'Malgun Gothic','맑은 고딕',Arial,'Noto Sans KR',sans-serif;fill:#0f172a}
+      .subtitle{font:500 24px 'Malgun Gothic','맑은 고딕',Arial,'Noto Sans KR',sans-serif;fill:#334155}
+      .band{font:700 20px 'Malgun Gothic','맑은 고딕',Arial,'Noto Sans KR',sans-serif;fill:#475569}
       .card{fill:#fff;stroke:#cbd5e1;stroke-width:2.5}
       .design{fill:#eff6ff;stroke:#60a5fa}
       .collect{fill:#ecfdf5;stroke:#34d399}
       .store{fill:#f5f3ff;stroke:#a78bfa}
       .policy{fill:#fff7ed;stroke:#fb923c}
-      .num{font:700 16px Arial,'Noto Sans KR','Malgun Gothic',sans-serif}
-      .head{font:700 24px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#0f172a}
-      .txt{font:500 17px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#334155}
-      .small{font:500 15px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#475569}
-      .code{font:700 16px Consolas,'Courier New',monospace;fill:#2563eb}
-      .badge{font:700 14px Arial,'Noto Sans KR','Malgun Gothic',sans-serif}
+      .num{font:700 16px 'Malgun Gothic','맑은 고딕',Arial,'Noto Sans KR',sans-serif}
+      .head{font:700 24px 'Malgun Gothic','맑은 고딕',Arial,'Noto Sans KR',sans-serif;fill:#0f172a}
+      .txt{font:500 17px 'Malgun Gothic','맑은 고딕',Arial,'Noto Sans KR',sans-serif;fill:#334155}
+      .small{font:500 15px 'Malgun Gothic','맑은 고딕',Arial,'Noto Sans KR',sans-serif;fill:#475569}
+      .code{font:700 16px 'Malgun Gothic','맑은 고딕',Consolas,'Courier New',monospace;fill:#2563eb}
+      .badge{font:700 14px 'Malgun Gothic','맑은 고딕',Arial,'Noto Sans KR',sans-serif}
       .badge-blue{fill:#dbeafe;stroke:#60a5fa}
       .badge-green{fill:#dcfce7;stroke:#22c55e}
       .badge-purple{fill:#ede9fe;stroke:#8b5cf6}
       .badge-orange{fill:#ffedd5;stroke:#fb923c}
       .principle{fill:#fff;stroke:#93c5fd;stroke-width:2.5}
       .footer-box{fill:#ecfeff;stroke:#22d3ee;stroke-width:2.5}
-      .principle-head{font:700 24px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#0f172a}
-      .principle-text{font:700 18px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#1e3a8a}
-      .footer{font:700 22px Arial,'Noto Sans KR','Malgun Gothic',sans-serif;fill:#0f3b5f}
+      .principle-head{font:700 24px 'Malgun Gothic','맑은 고딕',Arial,'Noto Sans KR',sans-serif;fill:#0f172a}
+      .principle-text{font:700 18px 'Malgun Gothic','맑은 고딕',Arial,'Noto Sans KR',sans-serif;fill:#1e3a8a}
+      .footer{font:700 22px 'Malgun Gothic','맑은 고딕',Arial,'Noto Sans KR',sans-serif;fill:#0f3b5f}
       .arrow{stroke:#64748b;stroke-width:3.5;fill:none}
       .icon-blue{stroke:#2563eb;fill:none;stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
       .icon-green{stroke:#059669;fill:none;stroke-width:4;stroke-linecap:round;stroke-linejoin:round}

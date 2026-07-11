@@ -7,7 +7,7 @@
     <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#2563eb"/></marker>
     <style>
       .bg{fill:#f8fafc}.h{fill:url(#head)}
-      text{font-family:'Pretendard','Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif}
+      text{font-family:'Malgun Gothic','맑은 고딕','Pretendard','Noto Sans KR','Apple SD Gothic Neo',sans-serif}
       .title{font-size:38px;font-weight:800;fill:#fff}.sub{font-size:18px;font-weight:600;fill:#dbeafe}
       .node{fill:#fff;stroke:#bfdbfe;stroke-width:2;filter:url(#shadow)}
       .num{fill:#eff6ff;stroke:#93c5fd;stroke-width:1.5}.nt{font-size:17px;font-weight:900;fill:#2563eb}

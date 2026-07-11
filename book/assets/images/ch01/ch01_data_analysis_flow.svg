@@ -14,24 +14,24 @@
     </linearGradient>
     <style>
       .bg { fill: #f8fafc; }
-      .title { font-family: 'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif; font-size: 42px; font-weight: 800; fill: #0f172a; }
-      .subtitle { font-family: 'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif; font-size: 22px; font-weight: 500; fill: #475569; }
+      .title { font-family: 'Malgun Gothic','맑은 고딕','Pretendard','Noto Sans KR','Apple SD Gothic Neo',sans-serif; font-size: 42px; font-weight: 800; fill: #0f172a; }
+      .subtitle { font-family: 'Malgun Gothic','맑은 고딕','Pretendard','Noto Sans KR','Apple SD Gothic Neo',sans-serif; font-size: 22px; font-weight: 500; fill: #475569; }
       .step { fill: #ffffff; stroke: #bfdbfe; stroke-width: 2; filter: url(#shadow); }
-      .step-title { font-family: 'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif; font-size: 25px; font-weight: 800; fill: #0f172a; }
-      .step-desc { font-family: 'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif; font-size: 17px; font-weight: 500; fill: #64748b; }
+      .step-title { font-family: 'Malgun Gothic','맑은 고딕','Pretendard','Noto Sans KR','Apple SD Gothic Neo',sans-serif; font-size: 25px; font-weight: 800; fill: #0f172a; }
+      .step-desc { font-family: 'Malgun Gothic','맑은 고딕','Pretendard','Noto Sans KR','Apple SD Gothic Neo',sans-serif; font-size: 17px; font-weight: 500; fill: #64748b; }
       .badge { fill: #eff6ff; stroke: #93c5fd; stroke-width: 1.5; }
-      .badge-text { font-family: 'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif; font-size: 18px; font-weight: 800; fill: #2563eb; }
+      .badge-text { font-family: 'Malgun Gothic','맑은 고딕','Pretendard','Noto Sans KR','Apple SD Gothic Neo',sans-serif; font-size: 18px; font-weight: 800; fill: #2563eb; }
       .arrow { fill: none; stroke: #2563eb; stroke-width: 4; stroke-linecap: round; marker-end: url(#arrow); }
       .human { fill: #fef3c7; stroke: #f59e0b; stroke-width: 2; }
-      .human-text { font-family: 'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif; font-size: 22px; font-weight: 800; fill: #92400e; }
-      .human-sub { font-family: 'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif; font-size: 17px; font-weight: 600; fill: #b45309; }
+      .human-text { font-family: 'Malgun Gothic','맑은 고딕','Pretendard','Noto Sans KR','Apple SD Gothic Neo',sans-serif; font-size: 22px; font-weight: 800; fill: #92400e; }
+      .human-sub { font-family: 'Malgun Gothic','맑은 고딕','Pretendard','Noto Sans KR','Apple SD Gothic Neo',sans-serif; font-size: 17px; font-weight: 600; fill: #b45309; }
     </style>
   </defs>
 
   <rect class="bg" width="1800" height="620" rx="34"/>
   <rect x="54" y="40" width="1692" height="92" rx="28" fill="url(#headerGrad)" opacity="0.95"/>
-  <text x="90" y="96" font-family="Pretendard, Noto Sans KR, sans-serif" font-size="40" font-weight="800" fill="#ffffff">AI와 함께하는 데이터 분석 전체 흐름</text>
-  <text x="90" y="123" font-family="Pretendard, Noto Sans KR, sans-serif" font-size="18" font-weight="500" fill="#dbeafe">질문을 분석 가능한 문제로 바꾸고, 데이터·모델·보고서·자동화까지 연결하는 과정</text>
+  <text x="90" y="96" font-family="'Malgun Gothic','맑은 고딕',Pretendard,Noto Sans KR,sans-serif" font-size="40" font-weight="800" fill="#ffffff">AI와 함께하는 데이터 분석 전체 흐름</text>
+  <text x="90" y="123" font-family="'Malgun Gothic','맑은 고딕',Pretendard,Noto Sans KR,sans-serif" font-size="18" font-weight="500" fill="#dbeafe">질문을 분석 가능한 문제로 바꾸고, 데이터·모델·보고서·자동화까지 연결하는 과정</text>
 
   <!-- Row 1 -->
   <g transform="translate(80 180)">

@@ -6,31 +6,31 @@
     <style>
       .bg{fill:#f8fafc}
       .top{fill:#2563eb}
-      .title{font:700 46px 'UnDotum','NanumSquare','Noto Sans KR','Malgun Gothic','Apple SD Gothic Neo',sans-serif;fill:#0f172a}
-      .sub{font:500 22px 'UnDotum','NanumSquare','Noto Sans KR','Malgun Gothic','Apple SD Gothic Neo',sans-serif;fill:#475569}
-      .section{font:700 15px 'UnDotum','NanumSquare','Noto Sans KR','Malgun Gothic',sans-serif;fill:#64748b}
+      .title{font:700 46px 'Malgun Gothic','맑은 고딕','UnDotum','NanumSquare','Noto Sans KR','Apple SD Gothic Neo',sans-serif;fill:#0f172a}
+      .sub{font:500 22px 'Malgun Gothic','맑은 고딕','UnDotum','NanumSquare','Noto Sans KR','Apple SD Gothic Neo',sans-serif;fill:#475569}
+      .section{font:700 15px 'Malgun Gothic','맑은 고딕','UnDotum','NanumSquare','Noto Sans KR',sans-serif;fill:#64748b}
       .card{fill:#fff;stroke:#cbd5e1;stroke-width:2.2}
       .card-blue{stroke:#93c5fd}
       .card-green{stroke:#86efac}
       .card-violet{stroke:#c4b5fd}
       .card-amber{stroke:#fcd34d}
       .num-bg{fill:#dbeafe}
-      .num{font:700 16px 'UnDotum','NanumSquare','Noto Sans KR','Malgun Gothic',sans-serif;fill:#1d4ed8}
-      .card-title{font:700 25px 'UnDotum','NanumSquare','Noto Sans KR','Malgun Gothic','Apple SD Gothic Neo',sans-serif;fill:#0f172a}
-      .card-copy{font:500 17px 'UnDotum','NanumSquare','Noto Sans KR','Malgun Gothic','Apple SD Gothic Neo',sans-serif;fill:#334155}
-      .small{font:500 16px 'UnDotum','NanumSquare','Noto Sans KR','Malgun Gothic','Apple SD Gothic Neo',sans-serif;fill:#475569}
-      .tiny{font:600 14px 'UnDotum','NanumSquare','Noto Sans KR','Malgun Gothic',sans-serif;fill:#64748b}
-      .mono{font:600 15px 'D2Coding','JetBrains Mono',Consolas,'Courier New',monospace;fill:#1e293b}
-      .mono-blue{font:600 15px 'D2Coding','JetBrains Mono',Consolas,'Courier New',monospace;fill:#1d4ed8}
+      .num{font:700 16px 'Malgun Gothic','맑은 고딕','UnDotum','NanumSquare','Noto Sans KR',sans-serif;fill:#1d4ed8}
+      .card-title{font:700 25px 'Malgun Gothic','맑은 고딕','UnDotum','NanumSquare','Noto Sans KR','Apple SD Gothic Neo',sans-serif;fill:#0f172a}
+      .card-copy{font:500 17px 'Malgun Gothic','맑은 고딕','UnDotum','NanumSquare','Noto Sans KR','Apple SD Gothic Neo',sans-serif;fill:#334155}
+      .small{font:500 16px 'Malgun Gothic','맑은 고딕','UnDotum','NanumSquare','Noto Sans KR','Apple SD Gothic Neo',sans-serif;fill:#475569}
+      .tiny{font:600 14px 'Malgun Gothic','맑은 고딕','UnDotum','NanumSquare','Noto Sans KR',sans-serif;fill:#64748b}
+      .mono{font:600 15px 'Malgun Gothic','맑은 고딕','D2Coding','JetBrains Mono',Consolas,'Courier New',monospace;fill:#1e293b}
+      .mono-blue{font:600 15px 'Malgun Gothic','맑은 고딕','D2Coding','JetBrains Mono',Consolas,'Courier New',monospace;fill:#1d4ed8}
       .badge{stroke-width:1.4}
       .badge-blue{fill:#eff6ff;stroke:#bfdbfe}
       .badge-green{fill:#ecfdf5;stroke:#a7f3d0}
       .badge-violet{fill:#f5f3ff;stroke:#ddd6fe}
       .badge-amber{fill:#fffbeb;stroke:#fde68a}
-      .badge-text-blue{font:700 14px 'UnDotum','NanumSquare','Noto Sans KR','Malgun Gothic',sans-serif;fill:#1d4ed8}
-      .badge-text-green{font:700 14px 'UnDotum','NanumSquare','Noto Sans KR','Malgun Gothic',sans-serif;fill:#047857}
-      .badge-text-violet{font:700 14px 'UnDotum','NanumSquare','Noto Sans KR','Malgun Gothic',sans-serif;fill:#6d28d9}
-      .badge-text-amber{font:700 14px 'UnDotum','NanumSquare','Noto Sans KR','Malgun Gothic',sans-serif;fill:#b45309}
+      .badge-text-blue{font:700 14px 'Malgun Gothic','맑은 고딕','UnDotum','NanumSquare','Noto Sans KR',sans-serif;fill:#1d4ed8}
+      .badge-text-green{font:700 14px 'Malgun Gothic','맑은 고딕','UnDotum','NanumSquare','Noto Sans KR',sans-serif;fill:#047857}
+      .badge-text-violet{font:700 14px 'Malgun Gothic','맑은 고딕','UnDotum','NanumSquare','Noto Sans KR',sans-serif;fill:#6d28d9}
+      .badge-text-amber{font:700 14px 'Malgun Gothic','맑은 고딕','UnDotum','NanumSquare','Noto Sans KR',sans-serif;fill:#b45309}
       .divider{stroke:#e2e8f0;stroke-width:1.5}
       .arrow{stroke:#64748b;stroke-width:3.2;fill:none;marker-end:url(#arrow)}
       .arrow-blue{stroke:#2563eb;stroke-width:3.2;fill:none;marker-end:url(#arrowBlue)}
@@ -42,9 +42,9 @@
       .icon-fill-green{fill:#ecfdf5;stroke:#86efac;stroke-width:2}
       .icon-fill-violet{fill:#f5f3ff;stroke:#c4b5fd;stroke-width:2}
       .icon-fill-amber{fill:#fffbeb;stroke:#fcd34d;stroke-width:2}
-      .check-title{font:700 22px 'UnDotum','NanumSquare','Noto Sans KR','Malgun Gothic',sans-serif;fill:#0f172a}
-      .check-copy{font:600 16px 'UnDotum','NanumSquare','Noto Sans KR','Malgun Gothic',sans-serif;fill:#334155}
-      .footer{font:600 20px 'UnDotum','NanumSquare','Noto Sans KR','Malgun Gothic',sans-serif;fill:#1e3a8a}
+      .check-title{font:700 22px 'Malgun Gothic','맑은 고딕','UnDotum','NanumSquare','Noto Sans KR',sans-serif;fill:#0f172a}
+      .check-copy{font:600 16px 'Malgun Gothic','맑은 고딕','UnDotum','NanumSquare','Noto Sans KR',sans-serif;fill:#334155}
+      .footer{font:600 20px 'Malgun Gothic','맑은 고딕','UnDotum','NanumSquare','Noto Sans KR',sans-serif;fill:#1e3a8a}
     </style>
     <marker id="arrow" markerWidth="11" markerHeight="9" refX="10" refY="4.5" orient="auto">
       <polygon points="0 0,11 4.5,0 9" fill="#64748b"/>
