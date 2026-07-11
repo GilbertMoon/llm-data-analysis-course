@@ -36,6 +36,10 @@ automation/airflow/config/
 automation/airflow/plugins/
 automation/airflow/*.db
 
+# Generated Word publishing outputs
+book/output/docx/*
+!book/output/docx/.gitkeep
+
 # OS/editor files
 .DS_Store
 Thumbs.db
