@@ -1,63 +1,56 @@
-"""Chapter 12 LLM 코드 생성과 검증 실행 스크립트.
+"""Run the Chapter 12 LLM-generated code validation workflow.
 
-실행 방법:
+Run from any working directory:
+
     python scripts/run_llm_code_validation.py
 
-전제 조건:
+Prerequisite:
+
     python scripts/preprocess_data.py
-
-입력:
-    data/processed/customers_clean.csv
-    data/processed/products_clean.csv
-    data/processed/orders_clean.csv
-    data/processed/order_items_clean.csv
-
-출력:
-    reports/ch12_dataset_inventory.csv
-    reports/ch12_required_column_check.csv
-    reports/ch12_relationship_key_check.csv
-    reports/ch12_category_sales_validated.csv
-    reports/ch12_category_sales_validation.csv
-    reports/ch12_monthly_sales_validated.csv
-    reports/ch12_monthly_sales_validation.csv
-    reports/ch12_ml_leakage_review.csv
-    reports/ch12_llm_code_review_checklist.csv
-    reports/ch12_error_fix_prompt_template.md
-    reports/ch12_code_validation_summary.md
 """
 
+from __future__ import annotations
+
 from pathlib import Path
+import sys
 
-from src.llm_code_validation import run_llm_code_validation
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from src.llm_code_validation import run_llm_code_validation  # noqa: E402
 
 
-PROCESSED_DIR = Path("data/processed")
-REPORT_DIR = Path("reports")
+PROCESSED_DIR = PROJECT_ROOT / "data" / "processed"
+REPORT_DIR = PROJECT_ROOT / "reports"
+
+
+def _print_table(title: str, value: object) -> None:
+    print(f"\n[{title}]")
+    if hasattr(value, "to_string"):
+        print(value.to_string(index=False))
+    else:
+        print(value)
 
 
 def main() -> None:
-    """12장 LLM 코드 생성과 검증 자료를 생성합니다."""
+    """Generate the Chapter 12 validation evidence and report files."""
     result = run_llm_code_validation(
         processed_dir=PROCESSED_DIR,
         report_dir=REPORT_DIR,
     )
     outputs = result["outputs"]
 
-    print("12장 LLM 코드 생성과 검증 자료 생성 완료")
-    print("\n[데이터셋 인벤토리]")
-    print(outputs["inventory"].to_string(index=False))
-
-    print("\n[필수 컬럼 점검]")
-    print(outputs["required_column_check"].to_string(index=False))
-
-    print("\n[키 관계 점검]")
-    print(outputs["relationship_check"].to_string(index=False))
-
-    print("\n[카테고리별 매출 검증]")
-    print(outputs["category_validation"].to_string(index=False))
-
-    print("\n[월별 매출 검증]")
-    print(outputs["monthly_validation"].to_string(index=False))
+    print("12장 LLM 분석 코드 검증 완료")
+    _print_table("데이터셋 인벤토리", outputs["inventory"])
+    _print_table("필수 컬럼 점검", outputs["required_column_check"])
+    _print_table("고유 키 점검", outputs["primary_key_check"])
+    _print_table("키 관계 점검", outputs["relationship_check"])
+    _print_table("카테고리 집계 검증", outputs["category_validation"])
+    _print_table("월별 집계 검증", outputs["monthly_validation"])
+    _print_table("생성 코드 정적 점검 예시", outputs["static_scan"])
 
     print("\n[저장된 결과 파일]")
     for name, path in result["output_paths"].items():

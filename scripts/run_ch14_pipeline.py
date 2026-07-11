@@ -1,32 +1,29 @@
-"""Chapter 14 로컬 분석 파이프라인 통합 실행 스크립트.
+"""Run the Chapter 14 validated local analysis pipeline.
 
-Airflow에 연결하기 전에 Python 스크립트만으로 전체 흐름이 정상 실행되는지 확인합니다.
+Run from any working directory:
 
-실행 방법:
     python scripts/run_ch14_pipeline.py
 
-출력:
-    data/processed/*_clean.csv
-    reports/ch14_daily_sales.csv
-    reports/ch14_category_sales.csv
-    reports/ch14_pipeline_task_summary.csv
-    reports/figures/ch14_daily_sales.png
-    reports/ch14_airflow_report.md
-    reports/ch14_airflow_validation_log.csv
-    reports/ch14_airflow_setup_guide.csv
+The same functions are used by the Airflow TaskFlow Dag.
 """
 
+from __future__ import annotations
+
 from pathlib import Path
+import sys
 
-from src.automation_pipeline import project_root_from_file, run_local_pipeline
 
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
-BASE_DIR = project_root_from_file(Path(__file__))
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from src.automation_pipeline import run_local_pipeline  # noqa: E402
 
 
 def main() -> None:
-    """14장 로컬 분석 파이프라인을 순서대로 실행합니다."""
-    result = run_local_pipeline(BASE_DIR)
+    """Run the local pipeline and print the validation summary."""
+    result = run_local_pipeline(PROJECT_ROOT)
 
     print("14장 로컬 분석 파이프라인 완료")
     print("\n[입력 파일 확인]")
@@ -47,11 +44,16 @@ def main() -> None:
     print("\n[보고서]")
     print(result["report_path"])
 
-    print("\n[검증 로그]")
+    print("\n[검증 결과]")
     print(result["validation_log"].to_string(index=False))
 
-    print("\n[Airflow 설정 가이드]")
-    print(result["setup_guide_path"])
+    failed = result["validation_log"].loc[
+        result["validation_log"]["status"].ne("ok")
+    ]
+    if not failed.empty:
+        raise SystemExit("검증 실패 항목이 있습니다.")
+
+    print("\n모든 검증 항목이 ok입니다.")
 
 
 if __name__ == "__main__":

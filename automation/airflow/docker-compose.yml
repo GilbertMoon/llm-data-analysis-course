@@ -1,45 +1,44 @@
-# Chapter 14 Docker Compose 기반 Airflow 실습 환경
+# Chapter 14 Docker Compose based Airflow 3.3.0 learning environment.
 #
-# Docker 설치 방법은 강의안에서 안내한 별도 블로그 글을 참고합니다.
-# 이 파일은 Docker Desktop과 Docker Compose가 이미 설치되어 있다고 가정합니다.
+# This file is for local learning and exploration only. It is not a
+# production deployment template and provides no production security guarantee.
 #
-# 실행 위치:
+# Run:
 #   cd automation/airflow
-#
-# 최초 1회 초기화:
+#   cp .env.example .env
+#   # Edit every value marked CHANGE_ME before starting.
+#   docker compose build
 #   docker compose up airflow-init
+#   docker compose up -d
 #
-# Airflow 실행:
-#   docker compose up
-#
-# Airflow UI:
-#   http://localhost:8080
-#   ID: airflow
-#   PW: airflow
-#
-# 종료:
+# Stop:
 #   docker compose down
 #
-# 완전 초기화:
+# Reset metadata and account data:
 #   docker compose down --volumes --remove-orphans
 
 x-airflow-common: &airflow-common
-  build: .
-  image: llm-data-analysis-course-airflow:3.3.0
+  build:
+    context: .
+    args:
+      AIRFLOW_VERSION: ${AIRFLOW_VERSION:-3.3.0}
+  image: llm-data-analysis-course-airflow:${AIRFLOW_VERSION:-3.3.0}
   environment: &airflow-common-env
     AIRFLOW__CORE__EXECUTOR: LocalExecutor
     AIRFLOW__CORE__LOAD_EXAMPLES: "false"
     AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "true"
-    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
+    AIRFLOW__CORE__DEFAULT_TIMEZONE: ${AIRFLOW_DEFAULT_TIMEZONE:-utc}
+    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:${AIRFLOW_DB_PASSWORD:?Set AIRFLOW_DB_PASSWORD in .env}@postgres/airflow
     AIRFLOW__SCHEDULER__ENABLE_HEALTH_CHECK: "true"
     AIRFLOW__CORE__EXECUTION_API_SERVER_URL: http://airflow-api-server:8080/execution/
-    AIRFLOW__API_AUTH__JWT_SECRET: llm-course-airflow-dev-jwt-secret
+    AIRFLOW__API_AUTH__JWT_SECRET: ${AIRFLOW_API_JWT_SECRET:?Set AIRFLOW_API_JWT_SECRET in .env}
     PROJECT_ROOT: /opt/airflow/project
     PYTHONPATH: /opt/airflow/project
+    AIRFLOW_DAG_TIMEZONE: ${AIRFLOW_DAG_TIMEZONE:-Asia/Seoul}
     _AIRFLOW_DB_MIGRATE: "true"
     _AIRFLOW_WWW_USER_CREATE: "true"
     _AIRFLOW_WWW_USER_USERNAME: ${_AIRFLOW_WWW_USER_USERNAME:-airflow}
-    _AIRFLOW_WWW_USER_PASSWORD: ${_AIRFLOW_WWW_USER_PASSWORD:-airflow}
+    _AIRFLOW_WWW_USER_PASSWORD: ${_AIRFLOW_WWW_USER_PASSWORD:?Set _AIRFLOW_WWW_USER_PASSWORD in .env}
   volumes:
     - ${AIRFLOW_PROJECT_DIR:-../..}:/opt/airflow/project
     - ./dags:/opt/airflow/dags
@@ -58,13 +57,14 @@ services:
     container_name: llm-course-airflow-postgres
     environment:
       POSTGRES_USER: airflow
-      POSTGRES_PASSWORD: airflow
+      POSTGRES_PASSWORD: ${AIRFLOW_DB_PASSWORD:?Set AIRFLOW_DB_PASSWORD in .env}
       POSTGRES_DB: airflow
     volumes:
       - postgres-db-volume:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "airflow"]
+      test: ["CMD-SHELL", "pg_isready -U airflow -d airflow"]
       interval: 10s
+      timeout: 5s
       retries: 5
       start_period: 5s
     restart: unless-stopped
@@ -85,7 +85,13 @@ services:
     container_name: llm-course-airflow-api-server
     command: api-server
     ports:
-      - "8080:8080"
+      - "${AIRFLOW_UI_PORT:-8080}:8080"
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8080/api/v2/monitor/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
     depends_on:
       postgres:
         condition: service_healthy
@@ -103,7 +109,7 @@ services:
       airflow-init:
         condition: service_completed_successfully
       airflow-api-server:
-        condition: service_started
+        condition: service_healthy
     restart: unless-stopped
 
   airflow-dag-processor:
@@ -116,7 +122,7 @@ services:
       airflow-init:
         condition: service_completed_successfully
       airflow-api-server:
-        condition: service_started
+        condition: service_healthy
     restart: unless-stopped
 
   airflow-triggerer:
@@ -129,7 +135,7 @@ services:
       airflow-init:
         condition: service_completed_successfully
       airflow-api-server:
-        condition: service_started
+        condition: service_healthy
     restart: unless-stopped
 
 volumes:

@@ -1,10 +1,12 @@
 # 9장. 회귀 분석으로 숫자 예측하기
 
-지금까지는 데이터를 불러오고, 정리하고, 질문을 만들고, 그래프로 확인하는 과정을 살펴보았습니다. 이 과정은 주로 **무슨 일이 있었는가**를 이해하는 데 초점을 둡니다. 이제 한 걸음 더 나아가 **앞으로 어떤 값이 나올 수 있는가**를 예측해 보겠습니다.
+지금까지는 데이터를 불러오고, 정리하고, 질문을 만들고, 그래프로 확인하는 과정을 살펴보았습니다. 이러한 과정은 주로 **무슨 일이 있었는가**를 이해하는 데 초점을 둡니다. 이제 한 걸음 더 나아가, 이미 관찰한 데이터의 패턴을 바탕으로 새로운 숫자 값을 추정하는 회귀 모델링을 살펴보겠습니다.
 
-회귀 분석은 숫자를 예측하는 머신러닝 문제입니다. 예를 들어 온라인 쇼핑몰 데이터에서는 주문 금액, 상품 매출, 고객별 구매 금액 같은 값을 예측 대상으로 삼을 수 있습니다. 이번 장에서는 복잡한 수학 이론보다, 데이터 분석 프로젝트에서 회귀 모델이 어떤 흐름으로 만들어지는지 이해하는 데 집중합니다.
+회귀는 금액, 수량, 점수, 온도처럼 연속적인 숫자 값을 예측하는 머신러닝 문제입니다. 그러나 회귀 모델을 만드는 목적은 단순히 높은 점수를 얻는 것이 아닙니다. **예측 시점을 먼저 정하고, 그 시점에 실제로 사용할 수 있는 정보만 입력값으로 선택한 뒤, 단순한 기준보다 모델이 더 유용한지 검증하는 것**이 중요합니다.
 
-회귀 모델은 마법처럼 정답을 맞히는 도구가 아닙니다. 과거 데이터의 패턴을 학습해 새로운 데이터의 숫자 값을 추정하는 도구입니다. 따라서 어떤 값을 예측할지, 어떤 컬럼을 입력값으로 사용할지, 모델이 얼마나 잘 맞는지 어떻게 평가할지 사람이 신중하게 결정해야 합니다.
+이 장에서는 온라인 쇼핑몰 데이터로 주문 금액을 예측하는 교육용 예제를 다룹니다. 주문 상세 금액은 수량과 단가로 직접 계산되므로, 같은 주문에서 만든 `total_quantity`, `avg_unit_price`, `line_total` 같은 값을 입력값으로 사용하면 목표값을 사실상 미리 알려 주는 문제가 생깁니다. 따라서 이번 실습에서는 주문 상세 정보는 목표값을 만드는 데만 사용하고, 모델 입력에는 주문 시점·결제 수단·고객의 비식별 특성만 사용합니다.
+
+이 예제는 실제 운영 모델을 완성하는 것이 아니라, 데이터 누수를 피하고 회귀 모델을 정직하게 평가하는 과정을 익히기 위한 실습입니다. 현재 가상 데이터는 변수 사이의 예측 패턴이 강하게 설계되어 있지 않으므로, 복잡한 모델도 단순 평균 기준보다 크게 좋아지지 않을 수 있습니다. 낮은 성능 역시 중요한 분석 결과입니다.
 
 <figure class="figure">
   <img src="../assets/images/ch09/ch09_regression_overview_flow.svg" alt="회귀 분석 전체 흐름도">
@@ -13,508 +15,1102 @@
 
 ## 이 장에서 생각해 볼 질문
 
-회귀 분석을 시작하기 전에 다음 질문을 먼저 생각해 봅니다.
+- 어떤 숫자를 예측하려고 하는가?
+- 모델은 어느 시점에 예측을 수행한다고 가정하는가?
+- 예측 시점에 실제로 알 수 있는 입력값은 무엇인가?
+- 목표값이나 목표값의 계산 재료가 입력값에 섞이지 않았는가?
+- 데이터를 시간 순서대로 나누어야 하는 이유는 무엇인가?
+- 모델은 단순 평균 예측보다 실제로 나은가?
+- MAE, RMSE, R²는 각각 무엇을 알려 주는가?
+- 훈련 성능과 테스트 성능의 차이는 과적합을 나타내는가?
+- 성능이 낮을 때 모델을 억지로 운영에 사용하지 않을 수 있는가?
+- LLM이 작성한 회귀 코드는 어떤 기준으로 검증해야 하는가?
 
-- 우리는 어떤 숫자를 예측하려고 하는가?
-- 예측 대상이 되는 값은 데이터에 실제로 존재하는가?
-- 예측에 사용할 수 있는 입력 컬럼은 무엇인가?
-- 학습 데이터와 테스트 데이터를 왜 나눠야 하는가?
-- 모델의 예측 오차는 어떻게 해석해야 하는가?
-- 선형 회귀와 랜덤 포레스트 회귀는 어떤 차이가 있는가?
-- LLM이 만든 회귀 분석 코드는 어떻게 검증해야 하는가?
+## 1. 회귀 문제는 예측 시점부터 정의한다
 
-## 1. 회귀 분석이란 무엇인가
+회귀는 연속적인 숫자 값을 예측합니다. 범주를 예측하는 분류와 달리, 회귀의 결과는 금액이나 수량처럼 숫자로 표현됩니다.
 
-회귀 분석은 연속적인 숫자 값을 예측하는 문제입니다. **맞다/아니다**처럼 범주를 예측하는 분류와 달리, 회귀는 금액, 수량, 점수, 온도, 시간처럼 숫자로 표현되는 값을 예측합니다.
+온라인 쇼핑몰에서는 다음과 같은 회귀 문제를 생각할 수 있습니다.
 
-온라인 쇼핑몰 데이터에서는 다음과 같은 회귀 문제를 생각해 볼 수 있습니다.
-
-| 예측 질문 | 예측 대상 | 입력값 예시 |
+| 예측 질문 | 예측 대상 | 예측 시점에 사용할 수 있는 정보 예시 |
 | --- | --- | --- |
-| 주문 금액을 예측할 수 있을까? | 주문별 총금액 | 주문 상품 수, 총수량, 평균 단가, 결제수단 |
-| 고객별 구매 금액을 예측할 수 있을까? | 고객별 총 구매 금액 | 주문 횟수, 평균 주문 금액, 지역, 연령 |
-| 상품별 매출을 예측할 수 있을까? | 상품별 총매출 | 가격, 카테고리, 판매 수량 |
-| 다음 달 매출을 예측할 수 있을까? | 월별 매출 | 이전 월 매출, 주문 수, 평균 주문 금액 |
+| 새 주문의 금액은 어느 정도일까? | 주문 상세 금액 합계 | 주문 시점, 결제 수단, 고객 연령·지역 |
+| 고객의 다음 30일 구매 금액은 얼마일까? | 미래 30일 구매 금액 | 예측 기준일 이전 구매 이력 |
+| 상품의 다음 달 판매 수량은 얼마일까? | 다음 달 판매 수량 | 이전 기간 판매량, 가격, 카테고리 |
+| 다음 달 완료 주문 금액은 얼마일까? | 다음 달 완료 주문 금액 | 이전 월 금액, 주문 수, 계절 정보 |
 
-이번 장에서는 가장 이해하기 쉬운 예시로 **주문별 총금액 예측**을 다룹니다. 주문 상세 데이터에서 주문별 총금액을 만들고, 주문 상품 수, 총수량, 평균 단가, 결제수단 같은 정보를 사용해 주문 금액을 예측해 보겠습니다.
+같은 목표값이라도 **언제 예측하는가**에 따라 사용할 수 있는 입력값이 달라집니다. 예를 들어 주문이 모두 완료된 뒤 주문 상세를 집계할 수 있다면 주문 금액은 예측할 필요 없이 계산하면 됩니다. 반대로 주문 상세 처리가 지연되어 주문 메타데이터만 먼저 도착하는 상황이라면, 주문 금액을 미리 추정하는 교육용 문제를 만들 수 있습니다.
 
-## 2. 회귀 모델을 만들 때 필요한 것
-
-회귀 모델을 만들려면 먼저 입력값과 예측 대상을 구분해야 합니다.
-
-| 구분 | 설명 | 예시 |
-| --- | --- | --- |
-| 입력값(feature) | 예측에 사용할 정보 | 상품 수, 총수량, 평균 단가, 결제수단 |
-| 예측 대상(target) | 모델이 예측해야 하는 값 | 주문별 총금액 |
-| 학습 데이터(train) | 모델이 패턴을 배우는 데이터 | 전체 데이터의 일부 |
-| 테스트 데이터(test) | 모델 성능을 확인하는 데이터 | 학습에 사용하지 않은 데이터 |
-| 평가 지표(metric) | 예측이 얼마나 맞는지 확인하는 기준 | MAE, RMSE, R² |
-
-중요한 것은 예측 대상과 입력값이 뒤섞이지 않도록 하는 것입니다. 예를 들어 주문별 총금액을 예측하면서 이미 계산된 `order_total`을 입력값으로 사용하면 의미가 없습니다. 모델은 정답을 미리 보고 맞히는 셈이 됩니다. 이런 문제를 **데이터 누수(data leakage)**라고 합니다.
-
-<figure class="figure">
-  <img src="../assets/images/ch09/ch09_feature_target_split.svg" alt="입력값과 예측 대상 분리 개념도">
-  <figcaption>그림 9-2. 입력값과 예측 대상 분리 개념도</figcaption>
-</figure>
-
-회귀 분석에서는 다음 흐름을 따릅니다.
+이번 장에서는 다음과 같이 문제를 정의합니다.
 
 ```text
-데이터 준비
-→ 예측 대상 정의
-→ 입력 변수 선택
-→ 범주형 변수 인코딩
-→ 학습/테스트 데이터 분리
-→ 모델 학습
-→ 예측
-→ 평가
-→ 결과 해석
-```
-
-## 3. 회귀 평가 지표 읽기
-
-모델이 얼마나 잘 예측했는지는 평가 지표로 확인합니다. 회귀 분석에서 자주 사용하는 지표는 MAE, RMSE, R²입니다.
-
-| 지표 | 의미 | 해석 |
-| --- | --- | --- |
-| MAE | 평균 절대 오차 | 예측값이 실제값과 평균적으로 얼마나 차이 나는지 봅니다. |
-| RMSE | 평균 제곱근 오차 | 큰 오차에 더 민감하게 반응합니다. |
-| R² | 설명력 | 모델이 실제 값의 변동을 얼마나 설명하는지 봅니다. |
-
-MAE가 12,000이라면 모델의 예측이 실제 주문 금액과 평균적으로 약 12,000원 정도 차이 난다고 해석할 수 있습니다. RMSE는 큰 오차에 더 민감하므로, 일부 주문에서 예측이 크게 빗나가면 값이 커집니다. R²는 보통 1에 가까울수록 좋지만, 데이터와 문제에 따라 해석에 주의해야 합니다.
-
-평가 지표는 숫자 하나로 모델을 판단하기 위한 것이 아니라, 모델의 한계를 이해하기 위한 도구입니다.
-
-## 4. 사용할 모델: 선형 회귀와 랜덤 포레스트 회귀
-
-이번 장에서는 두 가지 회귀 모델을 사용합니다.
-
-첫 번째는 선형 회귀입니다. 선형 회귀는 입력값과 예측 대상 사이의 관계를 직선적인 관계로 설명하려는 모델입니다. 구조가 단순하고 해석이 쉽기 때문에 회귀 분석의 출발점으로 적합합니다.
-
-두 번째는 랜덤 포레스트 회귀입니다. 랜덤 포레스트는 여러 개의 의사결정나무를 사용해 예측하는 모델입니다. 선형 회귀보다 복잡한 패턴을 잡아낼 수 있지만, 그만큼 해석은 조금 어려울 수 있습니다.
-
-| 모델 | 장점 | 주의할 점 |
-| --- | --- | --- |
-| Linear Regression | 단순하고 빠르며 해석이 쉽습니다. | 비선형 관계를 잘 잡지 못할 수 있습니다. |
-| RandomForestRegressor | 복잡한 패턴을 잡는 데 유리합니다. | 해석이 어렵고 과적합을 확인해야 합니다. |
-
-처음부터 복잡한 모델을 사용하는 것보다, 단순한 모델과 비교하면서 모델 성능과 해석 가능성을 함께 보는 것이 좋습니다.
-
-<figure class="figure">
-  <img src="../assets/images/ch09/ch09_model_metric_comparison.svg" alt="회귀 모델과 평가 지표 비교">
-  <figcaption>그림 9-3. 회귀 모델과 평가 지표 비교</figcaption>
-</figure>
-
-## 5. 데이터 준비하기
-
-이번 장의 코드는 `notebooks/ch09_regression_analysis.ipynb`로 구성하는 것이 좋습니다. 먼저 필요한 패키지를 불러옵니다.
-
-```python
-from pathlib import Path
-
-import pandas as pd
-import numpy as np
-
-from sklearn.model_selection import train_test_split
-from sklearn.compose import ColumnTransformer
-from sklearn.preprocessing import OneHotEncoder
-from sklearn.pipeline import Pipeline
-from sklearn.linear_model import LinearRegression
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
-```
-
-실행 위치에 따라 데이터 경로가 달라질 수 있으므로 기준 폴더를 설정합니다.
-
-```python
-current_dir = Path.cwd()
-
-if current_dir.name == "notebooks":
-    base_dir = current_dir.parent
-else:
-    base_dir = current_dir
-
-processed_dir = base_dir / "data" / "processed"
-raw_dir = base_dir / "data" / "raw"
-report_dir = base_dir / "reports"
-
-report_dir.mkdir(parents=True, exist_ok=True)
-
-print("processed_dir:", processed_dir)
-print("raw_dir:", raw_dir)
-print("report_dir:", report_dir)
-```
-
-전처리된 데이터가 있다면 `data/processed`에서 불러오고, 없다면 `data/raw`를 사용할 수 있습니다. 여기서는 우선 전처리 데이터를 기준으로 설명합니다.
-
-```python
-customers = pd.read_csv(processed_dir / "customers_clean.csv")
-products = pd.read_csv(processed_dir / "products_clean.csv")
-orders = pd.read_csv(processed_dir / "orders_clean.csv")
-order_items = pd.read_csv(processed_dir / "order_items_clean.csv")
-```
-
-만약 위 파일이 없다면 다음처럼 원본 데이터를 불러올 수 있습니다.
-
-```python
-customers = pd.read_csv(raw_dir / "customers.csv")
-products = pd.read_csv(raw_dir / "products.csv")
-orders = pd.read_csv(raw_dir / "orders.csv")
-order_items = pd.read_csv(raw_dir / "order_items.csv")
-```
-
-분석에 필요한 기본 컬럼을 확인합니다.
-
-```python
-print("customers:", customers.shape, list(customers.columns))
-print("products:", products.shape, list(products.columns))
-print("orders:", orders.shape, list(orders.columns))
-print("order_items:", order_items.shape, list(order_items.columns))
-```
-
-`line_total`이 없다면 수량과 단가를 곱해 만듭니다.
-
-```python
-if "line_total" not in order_items.columns:
-    order_items["line_total"] = order_items["quantity"] * order_items["unit_price"]
-```
-
-## 6. 주문별 예측 데이터 만들기
-
-주문 금액을 예측하려면 주문 상세 데이터를 주문 단위로 요약해야 합니다. 하나의 주문에는 여러 상품이 포함될 수 있기 때문입니다.
-
-```python
-order_features = (
-    order_items
-    .groupby("order_id", as_index=False)
-    .agg(
-        item_count=("product_id", "count"),
-        total_quantity=("quantity", "sum"),
-        avg_unit_price=("unit_price", "mean"),
-        order_total=("line_total", "sum")
-    )
-)
-
-order_features.head()
-```
-
-여기서 `order_total`이 예측 대상입니다. 나머지 `item_count`, `total_quantity`, `avg_unit_price`는 입력값 후보입니다.
-
-주문 정보와 고객 정보를 연결해 더 많은 입력값을 사용할 수 있습니다.
-
-```python
-orders["order_date"] = pd.to_datetime(orders["order_date"], errors="coerce")
-orders["order_month"] = orders["order_date"].dt.month
-orders["order_dayofweek"] = orders["order_date"].dt.dayofweek
-
-model_data = order_features.merge(
-    orders[["order_id", "customer_id", "payment_method", "order_status", "order_month", "order_dayofweek"]],
-    on="order_id",
-    how="left"
-)
-
-model_data = model_data.merge(
-    customers[["customer_id", "gender", "age", "city"]],
-    on="customer_id",
-    how="left"
-)
-
-model_data.head()
-```
-
-모델 데이터의 결측치를 확인합니다.
-
-```python
-model_data.isna().sum()
-```
-
-이번 장에서는 흐름을 단순하게 보기 위해 결측치가 있는 행을 제외합니다. 실제 프로젝트에서는 결측치의 원인을 먼저 확인하고, 평균 대체, 별도 범주 처리, 제거 여부를 신중히 결정해야 합니다.
-
-```python
-model_data = model_data.dropna().copy()
-model_data.shape
-```
-
-예측 대상의 기본 통계를 확인합니다.
-
-```python
-model_data["order_total"].describe()
-```
-
-## 7. 입력값과 예측 대상 나누기
-
-이제 입력값과 예측 대상을 나눕니다. 예측 대상은 `order_total`입니다.
-
-```python
-target = "order_total"
-
-feature_cols = [
-    "item_count",
-    "total_quantity",
-    "avg_unit_price",
-    "payment_method",
-    "order_status",
-    "order_month",
-    "order_dayofweek",
-    "gender",
-    "age",
-    "city"
-]
-
-X = model_data[feature_cols]
-y = model_data[target]
-```
-
-숫자형 컬럼과 범주형 컬럼을 구분합니다.
-
-```python
-numeric_features = [
-    "item_count",
-    "total_quantity",
-    "avg_unit_price",
-    "order_month",
-    "order_dayofweek",
-    "age"
-]
-
-categorical_features = [
-    "payment_method",
-    "order_status",
-    "gender",
-    "city"
-]
-```
-
-범주형 컬럼은 모델이 바로 이해하기 어렵기 때문에 숫자 형태로 변환해야 합니다. 여기서는 `OneHotEncoder`를 사용합니다.
-
-```python
-preprocessor = ColumnTransformer(
-    transformers=[
-        ("cat", OneHotEncoder(handle_unknown="ignore"), categorical_features)
-    ],
-    remainder="passthrough"
-)
-```
-
-`handle_unknown="ignore"`는 테스트 데이터에 학습 데이터에서 보지 못한 범주가 나와도 오류가 나지 않도록 해 줍니다.
-
-학습 데이터와 테스트 데이터를 나눕니다.
-
-```python
-X_train, X_test, y_train, y_test = train_test_split(
-    X,
-    y,
-    test_size=0.2,
-    random_state=42
-)
-
-print("X_train:", X_train.shape)
-print("X_test:", X_test.shape)
-```
-
-학습 데이터는 모델이 패턴을 배우는 데 사용하고, 테스트 데이터는 학습에 사용하지 않은 데이터에서 성능을 확인하는 데 사용합니다.
-
-<figure class="figure">
-  <img src="../assets/images/ch09/ch09_train_test_evaluation.svg" alt="학습 데이터와 테스트 데이터 평가 흐름">
-  <figcaption>그림 9-4. 학습 데이터와 테스트 데이터 평가 흐름</figcaption>
-</figure>
-
-## 8. 선형 회귀 모델 만들기
-
-먼저 선형 회귀 모델을 만들어 봅니다. 전처리와 모델을 하나의 파이프라인으로 묶으면 코드가 더 안전하고 깔끔해집니다.
-
-```python
-linear_model = Pipeline(steps=[
-    ("preprocessor", preprocessor),
-    ("model", LinearRegression())
-])
-
-linear_model.fit(X_train, y_train)
-```
-
-테스트 데이터에 대해 예측합니다.
-
-```python
-y_pred_linear = linear_model.predict(X_test)
-```
-
-평가 지표를 계산합니다.
-
-```python
-linear_mae = mean_absolute_error(y_test, y_pred_linear)
-linear_rmse = mean_squared_error(y_test, y_pred_linear, squared=False)
-linear_r2 = r2_score(y_test, y_pred_linear)
-
-print("Linear Regression MAE:", linear_mae)
-print("Linear Regression RMSE:", linear_rmse)
-print("Linear Regression R2:", linear_r2)
-```
-
-MAE는 예측값이 실제값과 평균적으로 얼마나 차이 나는지를 보여줍니다. 주문 금액의 단위가 원이라면 MAE도 원 단위로 해석할 수 있습니다.
-
-## 9. 랜덤 포레스트 회귀 모델 만들기
-
-이번에는 랜덤 포레스트 회귀 모델을 사용해 봅니다.
-
-```python
-rf_model = Pipeline(steps=[
-    ("preprocessor", preprocessor),
-    ("model", RandomForestRegressor(
-        n_estimators=200,
-        random_state=42
-    ))
-])
-
-rf_model.fit(X_train, y_train)
-```
-
-예측하고 평가합니다.
-
-```python
-y_pred_rf = rf_model.predict(X_test)
-
-rf_mae = mean_absolute_error(y_test, y_pred_rf)
-rf_rmse = mean_squared_error(y_test, y_pred_rf, squared=False)
-rf_r2 = r2_score(y_test, y_pred_rf)
-
-print("Random Forest MAE:", rf_mae)
-print("Random Forest RMSE:", rf_rmse)
-print("Random Forest R2:", rf_r2)
-```
-
-두 모델의 결과를 비교합니다.
-
-```python
-model_comparison = pd.DataFrame({
-    "model": ["Linear Regression", "Random Forest"],
-    "MAE": [linear_mae, rf_mae],
-    "RMSE": [linear_rmse, rf_rmse],
-    "R2": [linear_r2, rf_r2]
-})
-
-model_comparison
-```
-
-결과를 저장합니다.
-
-```python
-model_comparison.to_csv(report_dir / "ch09_regression_model_comparison.csv", index=False)
-```
-
-성능이 더 좋아 보이는 모델이 항상 좋은 모델은 아닙니다. 모델이 너무 복잡하면 새로운 데이터에서 성능이 떨어질 수 있습니다. 따라서 모델 비교에서는 평가 지표와 함께 해석 가능성, 데이터 크기, 문제 목적을 함께 고려해야 합니다.
-
-## 10. 실제값과 예측값 비교하기
-
-모델 성능을 숫자로만 보는 것보다 실제값과 예측값을 함께 보는 것이 좋습니다.
-
-```python
-prediction_result = X_test.copy()
-prediction_result["actual_order_total"] = y_test.values
-prediction_result["predicted_order_total"] = y_pred_rf
-prediction_result["error"] = prediction_result["actual_order_total"] - prediction_result["predicted_order_total"]
-prediction_result["abs_error"] = prediction_result["error"].abs()
-
-prediction_result.sort_values("abs_error", ascending=False).head(10)
-```
-
-오차가 큰 주문을 보면 모델이 어떤 상황에서 잘 맞지 않는지 확인할 수 있습니다. 예를 들어 특정 결제수단, 특정 지역, 높은 주문 금액에서 오차가 크다면 추가 분석이 필요합니다.
-
-오차 요약도 확인합니다.
-
-```python
-prediction_result["abs_error"].describe()
-```
-
-결과를 저장합니다.
-
-```python
-prediction_result.to_csv(report_dir / "ch09_regression_predictions.csv", index=False)
-```
-
-## 11. 회귀 결과를 해석하는 방법
-
-회귀 모델의 결과를 해석할 때는 “모델이 완벽하게 예측했다”는 식으로 표현하면 안 됩니다. 테스트 데이터에서 어느 정도의 오차가 있었는지, 그 오차가 업무적으로 받아들일 수 있는 수준인지 판단해야 합니다.
-
-예를 들어 다음과 같이 표현할 수 있습니다.
-
-```text
-주문별 총금액을 예측하기 위해 선형 회귀와 랜덤 포레스트 회귀 모델을 비교했습니다.
-테스트 데이터 기준으로 MAE와 RMSE를 확인하여 평균적인 예측 오차를 비교했습니다.
-랜덤 포레스트 모델의 오차가 더 낮게 나타났다면, 현재 데이터에서는 비선형 패턴을 일부 반영한 모델이 더 적합할 가능성이 있습니다.
-다만 데이터 규모와 입력 변수 구성이 제한적이므로, 실제 운영 예측에 사용하기 전에는 추가 검증이 필요합니다.
-```
-
-이 문장에서 중요한 점은 “가능성이 있다”, “추가 검증이 필요하다”는 표현입니다. 모델 결과는 의사결정의 참고 자료이지, 그 자체로 확정적인 결론은 아닙니다.
-
-## 12. LLM에게 회귀 분석 코드를 요청할 때
-
-LLM은 회귀 분석 코드 초안을 만드는 데 도움을 줄 수 있습니다. 하지만 모델링 코드는 오류가 나지 않는 것만으로 충분하지 않습니다. 예측 대상과 입력값이 적절히 분리되었는지, 데이터 누수가 없는지, 평가 방식이 맞는지 반드시 확인해야 합니다.
-
-예를 들어 다음처럼 질문할 수 있습니다.
-
-```text
-온라인 쇼핑몰 주문 데이터를 사용해 주문별 총금액을 예측하는 회귀 모델을 만들려고 합니다.
-
-데이터 구조:
-- order_items: order_id, product_id, quantity, unit_price, line_total
-- orders: order_id, customer_id, order_date, payment_method, order_status
-- customers: customer_id, gender, age, city
-
 예측 대상:
-- order_total: 주문별 line_total 합계
+- 한 주문의 주문 상세 금액 합계(order_total)
 
-입력값 후보:
-- item_count
-- total_quantity
-- avg_unit_price
+교육용 예측 시점:
+- 주문 메타데이터와 고객 특성은 확인할 수 있지만
+  주문 상세의 수량·단가·금액은 모델에 제공하지 않는 시점
+
+사용할 입력값:
 - payment_method
-- order_status
 - order_month
 - order_dayofweek
 - gender
 - age
 - city
 
-요청:
-1. 주문별 모델링 데이터셋을 만드는 pandas 코드를 작성해 주세요.
-2. train/test split을 적용해 주세요.
-3. LinearRegression과 RandomForestRegressor를 비교해 주세요.
-4. MAE, RMSE, R2를 계산해 주세요.
-5. 데이터 누수가 발생할 수 있는 부분을 설명해 주세요.
-
-주의:
-- 실제 데이터에 없는 컬럼명을 만들지 마세요.
-- order_total을 입력값으로 사용하지 마세요.
-- 범주형 컬럼은 OneHotEncoder를 사용해 주세요.
-- 초보자도 이해할 수 있도록 단계별 설명을 포함해 주세요.
+입력에서 제외할 값:
+- order_id, customer_id
+- order_status
+- product_id
+- quantity, unit_price, line_total
+- item_count, total_quantity, avg_unit_price
 ```
 
-LLM이 만든 답변은 다음 기준으로 검토합니다.
+`order_id`와 `customer_id`는 식별자이므로 일반적인 숫자 변수처럼 사용하지 않습니다. `order_status`는 주문 처리 이후에 확정될 수 있으므로 예측 시점 이후 정보가 될 가능성이 있습니다. 주문 상세에서 계산한 수량·단가·금액 관련 값은 목표값과 직접 연결되므로 입력에서 제외합니다.
+
+이 문제는 실제 서비스 배포를 위한 완성된 예측 문제라기보다, **입력값의 가용 시점과 데이터 누수를 판단하는 연습**입니다.
+
+## 2. 데이터 누수는 정답 컬럼만의 문제가 아니다
+
+데이터 누수(data leakage)는 모델이 실제 예측 시점에는 사용할 수 없는 정보를 훈련 과정에서 미리 보는 문제입니다.
+
+가장 명확한 누수는 목표값 자체를 입력에 넣는 것입니다.
+
+```python
+# 잘못된 예시
+X = model_data[["order_total", "age", "city"]]
+y = model_data["order_total"]
+```
+
+하지만 목표값의 계산 재료나 결과 이후에 만들어지는 컬럼도 누수가 될 수 있습니다.
+
+| 입력값 후보 | 사용 여부 | 이유 |
+| --- | --- | --- |
+| `order_total` | 제외 | 예측 대상 자체입니다. |
+| `line_total` | 제외 | 주문 금액을 구성하는 직접 계산값입니다. |
+| `quantity`, `unit_price` | 제외 | 목표값 계산에 직접 사용됩니다. |
+| `total_quantity`, `avg_unit_price` | 제외 | 같은 주문 상세에서 만든 목표값의 대리 변수입니다. |
+| `item_count` | 제외 | 주문 상세가 모두 확인된 뒤 계산되는 값입니다. |
+| `order_status` | 제외 | 예측 시점 이후에 확정될 수 있습니다. |
+| `order_id`, `customer_id` | 제외 | 식별자를 외우거나 특정 고객을 암기할 위험이 있습니다. |
+| `payment_method` | 사용 | 이 실습에서 예측 시점에 이미 확인된다고 가정합니다. |
+| 주문 월·요일 | 사용 | 주문일에서 만들 수 있는 시점 정보입니다. |
+| 연령·성별·지역 | 사용 | 고객 데이터에 있는 비식별 특성입니다. |
+
+여기서 중요한 기준은 “이 컬럼이 데이터 파일에 존재하는가?”가 아니라, **실제 예측 시점에 이 값을 사용할 수 있는가?**입니다.
+
+<figure class="figure">
+  <img src="../assets/images/ch09/ch09_feature_target_split.svg" alt="입력값과 예측 대상 분리 개념도">
+  <figcaption>그림 9-2. 입력값과 예측 대상 분리 개념도</figcaption>
+</figure>
+
+## 3. 회귀 평가 지표와 베이스라인
+
+회귀 모델은 한 가지 지표만으로 판단하지 않습니다. 이번 장에서는 MAE, RMSE, R²를 함께 확인합니다.
+
+| 지표 | 의미 | 해석할 때 주의할 점 |
+| --- | --- | --- |
+| MAE | 평균 절대 오차 | 목표값과 같은 단위로 평균적인 오차 크기를 보여 줍니다. |
+| RMSE | 평균 제곱근 오차 | 큰 오차에 더 민감합니다. MAE보다 훨씬 크면 일부 큰 오차를 확인합니다. |
+| R² | 결정계수 | 기준 평균 예측과 비교해 변동을 얼마나 설명하는지 봅니다. 음수가 될 수도 있습니다. |
+
+주문 금액의 단위가 원이라면 MAE와 RMSE도 원 단위입니다. 예를 들어 MAE가 120,000이라면 예측값과 실제값이 평균적으로 약 12만 원 차이 난다고 해석할 수 있습니다.
+
+R²는 보통 1에 가까울수록 좋지만 반드시 0과 1 사이에 있는 것은 아닙니다.
+
+- `R² = 1`: 테스트 데이터를 완벽하게 예측했습니다.
+- `R² = 0`: 테스트 데이터의 평균값을 예측하는 것과 비슷합니다.
+- `R² < 0`: 단순 평균 예측보다도 성능이 낮습니다.
+
+모델의 성능을 판단하려면 **베이스라인(baseline)**이 필요합니다. 이번 장에서는 훈련 데이터의 평균을 모든 테스트 주문에 예측하는 `DummyRegressor`를 기준 모델로 사용합니다. 복잡한 모델이 베이스라인보다 낫지 않다면, 현재 입력값만으로는 목표값을 충분히 예측하기 어렵다는 뜻일 수 있습니다.
+
+## 4. 선형 회귀와 랜덤 포레스트 회귀
+
+이번 장에서는 베이스라인과 함께 두 가지 회귀 모델을 비교합니다.
+
+| 모델 | 역할 | 장점 | 주의할 점 |
+| --- | --- | --- | --- |
+| DummyRegressor | 단순 기준 | 모델이 최소한 넘어야 할 기준을 제공합니다. | 입력값의 관계를 학습하지 않습니다. |
+| LinearRegression | 선형 모델 | 구조가 단순하고 비교적 해석하기 쉽습니다. | 복잡한 비선형 관계를 표현하기 어렵습니다. |
+| RandomForestRegressor | 트리 앙상블 | 비선형 관계와 변수 간 상호작용을 표현할 수 있습니다. | 과적합 가능성이 있고 해석이 더 어렵습니다. |
+
+복잡한 모델이 항상 더 좋은 것은 아닙니다. 입력값에 예측 정보가 거의 없다면 랜덤 포레스트도 베이스라인보다 나아지지 않을 수 있습니다. 반대로 훈련 성능만 지나치게 높고 테스트 성능이 낮다면 과적합을 의심해야 합니다.
+
+<figure class="figure">
+  <img src="../assets/images/ch09/ch09_model_metric_comparison.svg" alt="회귀 모델과 평가 지표 비교">
+  <figcaption>그림 9-3. 회귀 모델과 평가 지표 비교</figcaption>
+</figure>
+
+## 5. 실습 환경과 데이터 불러오기
+
+이번 장의 전체 코드는 `notebooks/ch09_regression_analysis.ipynb`에서 실행할 수 있습니다.
+
+먼저 필요한 패키지를 불러옵니다.
+
+```python
+from pathlib import Path
+
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+
+from sklearn.compose import ColumnTransformer
+from sklearn.dummy import DummyRegressor
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.impute import SimpleImputer
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import (
+    mean_absolute_error,
+    mean_squared_error,
+    r2_score,
+)
+from sklearn.model_selection import (
+    TimeSeriesSplit,
+    cross_validate,
+)
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import (
+    OneHotEncoder,
+    StandardScaler,
+)
+```
+
+프로젝트 루트와 `notebooks` 폴더에서 실행하는 경우를 모두 처리합니다.
+
+```python
+project_root = Path.cwd()
+
+if project_root.name == "notebooks":
+    project_root = project_root.parent
+
+processed_dir = project_root / "data" / "processed"
+report_dir = project_root / "reports"
+figure_dir = report_dir / "figures"
+
+report_dir.mkdir(parents=True, exist_ok=True)
+figure_dir.mkdir(parents=True, exist_ok=True)
+
+print("프로젝트 루트:", project_root.resolve())
+print("전처리 데이터:", processed_dir.resolve())
+```
+
+5장에서 저장한 전처리 파일이 모두 존재하는지 확인합니다.
+
+```python
+required_files = [
+    "customers_clean.csv",
+    "orders_clean.csv",
+    "order_items_clean.csv",
+]
+
+for file_name in required_files:
+    file_path = processed_dir / file_name
+    print(f"{file_name}: {file_path.exists()}")
+```
+
+하나라도 `False`라면 5장의 전처리 실습을 먼저 실행합니다. 원본 데이터로 바로 대체하면 5장에서 적용한 숫자 변환, 이상값 처리, 키 검증 기준이 달라질 수 있으므로 이 장에서는 전처리 파일만 사용합니다.
+
+```python
+customers = pd.read_csv(
+    processed_dir / "customers_clean.csv"
+)
+orders = pd.read_csv(
+    processed_dir / "orders_clean.csv"
+)
+order_items = pd.read_csv(
+    processed_dir / "order_items_clean.csv"
+)
+```
+
+필요한 컬럼을 확인합니다.
+
+```python
+required_columns = {
+    "customers": {
+        "customer_id",
+        "gender",
+        "age",
+        "city",
+    },
+    "orders": {
+        "order_id",
+        "customer_id",
+        "order_date",
+        "payment_method",
+        "order_status",
+    },
+    "order_items": {
+        "order_id",
+        "quantity",
+        "unit_price",
+    },
+}
+
+datasets = {
+    "customers": customers,
+    "orders": orders,
+    "order_items": order_items,
+}
+
+for name, columns in required_columns.items():
+    missing_columns = columns - set(
+        datasets[name].columns
+    )
+
+    if missing_columns:
+        raise KeyError(
+            f"{name}에 필요한 컬럼이 없습니다: "
+            f"{sorted(missing_columns)}"
+        )
+```
+
+`line_total`이 없다면 수량과 단가로 다시 만듭니다. 이 컬럼은 목표값 생성에만 사용하며 모델 입력에는 넣지 않습니다.
+
+```python
+if "line_total" not in order_items.columns:
+    order_items["line_total"] = (
+        pd.to_numeric(
+            order_items["quantity"],
+            errors="coerce",
+        )
+        * pd.to_numeric(
+            order_items["unit_price"],
+            errors="coerce",
+        )
+    )
+```
+
+## 6. 주문 단위 목표값 만들기
+
+주문 상세는 한 주문에 여러 행이 있을 수 있으므로 주문별 금액으로 집계합니다.
+
+```python
+order_totals = (
+    order_items
+    .groupby("order_id", as_index=False)
+    .agg(
+        order_total=("line_total", "sum"),
+    )
+)
+```
+
+`order_total`은 한 주문의 주문 상세 금액 합계입니다. 취소·환불 주문도 주문 당시의 상세 금액을 가질 수 있으므로, 이 값을 회계상의 매출이나 순매출이라고 부르지 않습니다.
+
+주문 정보와 고객 특성을 연결합니다.
+
+```python
+orders["order_date"] = pd.to_datetime(
+    orders["order_date"],
+    errors="coerce",
+)
+
+model_data = orders.merge(
+    order_totals,
+    on="order_id",
+    how="inner",
+    validate="one_to_one",
+)
+
+model_data = model_data.merge(
+    customers[
+        [
+            "customer_id",
+            "gender",
+            "age",
+            "city",
+        ]
+    ],
+    on="customer_id",
+    how="left",
+    validate="many_to_one",
+)
+```
+
+병합 결과를 확인합니다.
+
+```python
+print("주문 수:", len(orders))
+print("모델링 데이터 행 수:", len(model_data))
+print(
+    "주문일 변환 실패:",
+    model_data["order_date"].isna().sum(),
+)
+print(
+    "주문 금액 결측치:",
+    model_data["order_total"].isna().sum(),
+)
+```
+
+주문일에서 월과 요일을 만듭니다.
+
+```python
+model_data["order_month"] = (
+    model_data["order_date"].dt.month
+)
+
+model_data["order_dayofweek"] = (
+    model_data["order_date"].dt.dayofweek
+)
+```
+
+예측 대상의 분포를 확인합니다.
+
+```python
+model_data["order_total"].describe()
+```
+
+주문 금액이 한쪽으로 치우쳐 있거나 매우 큰 주문이 일부 있다면 MAE와 RMSE의 차이가 커질 수 있습니다. 현재 장에서는 값을 자동으로 제거하지 않고, 5장의 전처리 기준과 실제 업무 의미를 먼저 확인합니다.
+
+## 7. 입력값과 목표값 정의하기
+
+이번 실습에서 사용할 입력값은 다음과 같습니다.
+
+```python
+numeric_features = [
+    "order_month",
+    "order_dayofweek",
+    "age",
+]
+
+categorical_features = [
+    "payment_method",
+    "gender",
+    "city",
+]
+
+feature_columns = (
+    numeric_features
+    + categorical_features
+)
+
+target_column = "order_total"
+```
+
+누수 위험이 있는 컬럼이 입력에 포함되지 않았는지 확인합니다.
+
+```python
+forbidden_features = {
+    "order_total",
+    "line_total",
+    "quantity",
+    "unit_price",
+    "item_count",
+    "total_quantity",
+    "avg_unit_price",
+    "order_status",
+    "order_id",
+    "customer_id",
+}
+
+leaked_features = (
+    set(feature_columns)
+    & forbidden_features
+)
+
+if leaked_features:
+    raise ValueError(
+        "입력값에 누수 위험 컬럼이 있습니다: "
+        f"{sorted(leaked_features)}"
+    )
+```
+
+날짜와 목표값이 없는 행은 사용할 수 없으므로 제외 건수를 기록합니다.
+
+```python
+before_drop = len(model_data)
+
+model_data = model_data.dropna(
+    subset=[
+        "order_date",
+        target_column,
+    ]
+).copy()
+
+print(
+    "필수값 결측으로 제외된 행:",
+    before_drop - len(model_data),
+)
+```
+
+숫자형·범주형 입력의 결측치는 이후 파이프라인 안에서 처리합니다. 전체 데이터를 미리 대체하면 테스트 데이터의 분포가 훈련 과정에 섞일 수 있으므로, 훈련 데이터에 맞춘 대체 규칙을 모델 파이프라인 안에 넣습니다.
+
+## 8. 시간 순서대로 훈련·테스트 데이터 나누기
+
+이번 예제는 과거 주문으로 이후 주문을 예측하는 상황을 모방하기 위해 날짜 순서대로 나눕니다.
+
+```python
+model_data = model_data.sort_values(
+    ["order_date", "order_id"]
+).reset_index(drop=True)
+
+split_index = int(
+    len(model_data) * 0.8
+)
+
+train_data = model_data.iloc[
+    :split_index
+].copy()
+
+test_data = model_data.iloc[
+    split_index:
+].copy()
+```
+
+훈련·테스트 기간을 확인합니다.
+
+```python
+print(
+    "훈련 기간:",
+    train_data["order_date"].min(),
+    "~",
+    train_data["order_date"].max(),
+)
+
+print(
+    "테스트 기간:",
+    test_data["order_date"].min(),
+    "~",
+    test_data["order_date"].max(),
+)
+
+print("훈련 행 수:", len(train_data))
+print("테스트 행 수:", len(test_data))
+```
+
+입력값과 목표값을 분리합니다.
+
+```python
+X_train = train_data[
+    feature_columns
+]
+
+y_train = train_data[
+    target_column
+]
+
+X_test = test_data[
+    feature_columns
+]
+
+y_test = test_data[
+    target_column
+]
+```
+
+무작위 분할은 간단하지만 미래 주문이 훈련 데이터에 섞일 수 있습니다. 시간 흐름이 있는 업무 문제에서는 날짜 기준 분할이 더 현실적인 경우가 많습니다. 다만 실제 배포 목적과 데이터 생성 과정을 고려해 분할 방식을 결정해야 합니다.
+
+<figure class="figure">
+  <img src="../assets/images/ch09/ch09_train_test_evaluation.svg" alt="훈련 데이터와 테스트 데이터 평가 흐름">
+  <figcaption>그림 9-4. 훈련 데이터와 테스트 데이터 평가 흐름</figcaption>
+</figure>
+
+## 9. 전처리와 모델을 파이프라인으로 묶기
+
+숫자형 컬럼은 중앙값으로 결측치를 대체하고 표준화합니다. 범주형 컬럼은 최빈값으로 결측치를 대체한 뒤 원-핫 인코딩합니다.
+
+```python
+def make_preprocessor():
+    numeric_pipeline = Pipeline(
+        steps=[
+            (
+                "imputer",
+                SimpleImputer(
+                    strategy="median"
+                ),
+            ),
+            (
+                "scaler",
+                StandardScaler(),
+            ),
+        ]
+    )
+
+    categorical_pipeline = Pipeline(
+        steps=[
+            (
+                "imputer",
+                SimpleImputer(
+                    strategy="most_frequent"
+                ),
+            ),
+            (
+                "encoder",
+                OneHotEncoder(
+                    handle_unknown="ignore",
+                    sparse_output=False,
+                ),
+            ),
+        ]
+    )
+
+    return ColumnTransformer(
+        transformers=[
+            (
+                "numeric",
+                numeric_pipeline,
+                numeric_features,
+            ),
+            (
+                "categorical",
+                categorical_pipeline,
+                categorical_features,
+            ),
+        ]
+    )
+```
+
+`SimpleImputer`와 `OneHotEncoder`가 파이프라인 안에 있으면 훈련 데이터에서 학습한 대체값과 범주 정보만 테스트 데이터에 적용됩니다. `handle_unknown="ignore"`는 테스트 기간에 처음 등장한 범주 때문에 예측이 중단되는 것을 방지합니다.
+
+모델을 각각 독립적인 파이프라인으로 만듭니다.
+
+```python
+models = {
+    "Baseline Mean": Pipeline(
+        steps=[
+            (
+                "preprocessor",
+                make_preprocessor(),
+            ),
+            (
+                "model",
+                DummyRegressor(
+                    strategy="mean"
+                ),
+            ),
+        ]
+    ),
+    "Linear Regression": Pipeline(
+        steps=[
+            (
+                "preprocessor",
+                make_preprocessor(),
+            ),
+            (
+                "model",
+                LinearRegression(),
+            ),
+        ]
+    ),
+    "Random Forest": Pipeline(
+        steps=[
+            (
+                "preprocessor",
+                make_preprocessor(),
+            ),
+            (
+                "model",
+                RandomForestRegressor(
+                    n_estimators=300,
+                    min_samples_leaf=5,
+                    random_state=42,
+                    n_jobs=-1,
+                ),
+            ),
+        ]
+    ),
+}
+```
+
+`min_samples_leaf=5`는 각 말단 노드에 최소 5개의 훈련 샘플이 남도록 하여, 작은 데이터에서 지나치게 세밀한 규칙을 만드는 것을 줄이기 위한 설정입니다. 이 값이 항상 최선이라는 뜻은 아니며, 검증 결과에 따라 조정합니다.
+
+## 10. 모델 훈련과 테스트 평가
+
+평가 지표를 계산하는 함수를 만듭니다.
+
+```python
+def evaluate_regression(
+    y_true,
+    y_pred,
+):
+    mse = mean_squared_error(
+        y_true,
+        y_pred,
+    )
+
+    return {
+        "MAE": mean_absolute_error(
+            y_true,
+            y_pred,
+        ),
+        "RMSE": np.sqrt(mse),
+        "R2": r2_score(
+            y_true,
+            y_pred,
+        ),
+    }
+```
+
+각 모델을 훈련하고 훈련·테스트 성능을 모두 기록합니다.
+
+```python
+comparison_rows = []
+predictions = {}
+
+for model_name, model in models.items():
+    model.fit(
+        X_train,
+        y_train,
+    )
+
+    train_pred = model.predict(
+        X_train
+    )
+
+    test_pred = model.predict(
+        X_test
+    )
+
+    train_metrics = evaluate_regression(
+        y_train,
+        train_pred,
+    )
+
+    test_metrics = evaluate_regression(
+        y_test,
+        test_pred,
+    )
+
+    comparison_rows.append(
+        {
+            "model": model_name,
+            "train_MAE": train_metrics["MAE"],
+            "test_MAE": test_metrics["MAE"],
+            "test_RMSE": test_metrics["RMSE"],
+            "test_R2": test_metrics["R2"],
+        }
+    )
+
+    predictions[model_name] = test_pred
+```
+
+결과표를 만듭니다.
+
+```python
+model_comparison = pd.DataFrame(
+    comparison_rows
+).sort_values(
+    "test_MAE"
+)
+
+model_comparison
+```
+
+베이스라인 대비 MAE 개선율도 확인합니다.
+
+```python
+baseline_mae = model_comparison.loc[
+    model_comparison["model"].eq(
+        "Baseline Mean"
+    ),
+    "test_MAE",
+].iloc[0]
+
+model_comparison[
+    "MAE_improvement_vs_baseline_pct"
+] = (
+    (
+        baseline_mae
+        - model_comparison["test_MAE"]
+    )
+    / baseline_mae
+    * 100
+).round(2)
+
+model_comparison
+```
+
+개선율이 양수이면 베이스라인보다 MAE가 낮고, 음수이면 단순 평균보다도 오차가 큽니다. 작은 차이를 과장해서 해석해서는 안 됩니다.
+
+훈련 MAE가 매우 낮은데 테스트 MAE가 크다면 과적합 가능성을 확인합니다. 반대로 모든 모델이 베이스라인과 비슷하다면 현재 입력값에 주문 금액을 설명할 정보가 충분하지 않을 수 있습니다.
+
+## 11. 시간 순서 교차검증으로 안정성 확인하기
+
+한 번의 테스트 분할 결과는 특정 기간에 따라 달라질 수 있습니다. 훈련 데이터 안에서 `TimeSeriesSplit`을 사용해 여러 시점의 검증 결과를 확인할 수 있습니다.
+
+```python
+time_cv = TimeSeriesSplit(
+    n_splits=5
+)
+
+cv_rows = []
+
+for model_name in [
+    "Linear Regression",
+    "Random Forest",
+]:
+    cv_result = cross_validate(
+        models[model_name],
+        X_train,
+        y_train,
+        cv=time_cv,
+        scoring={
+            "mae": (
+                "neg_mean_absolute_error"
+            ),
+            "r2": "r2",
+        },
+    )
+
+    cv_rows.append(
+        {
+            "model": model_name,
+            "cv_MAE_mean": (
+                -cv_result[
+                    "test_mae"
+                ].mean()
+            ),
+            "cv_MAE_std": (
+                cv_result[
+                    "test_mae"
+                ].std()
+            ),
+            "cv_R2_mean": (
+                cv_result[
+                    "test_r2"
+                ].mean()
+            ),
+        }
+    )
+
+cv_summary = pd.DataFrame(
+    cv_rows
+)
+
+cv_summary
+```
+
+교차검증 MAE의 표준편차가 크다면 시점에 따라 성능이 불안정하다는 뜻입니다. R²가 반복적으로 음수라면 현재 변수로는 평균 예측을 안정적으로 넘지 못하고 있을 가능성이 큽니다.
+
+테스트 데이터는 최종 평가용으로 남겨 두는 것이 좋습니다. 테스트 결과를 보고 모델과 변수를 계속 바꾸면 테스트 데이터에도 간접적으로 과적합될 수 있습니다.
+
+## 12. 실제값과 예측값, 잔차 확인하기
+
+테스트 MAE가 가장 낮은 비베이스라인 모델을 선택해 진단합니다.
+
+```python
+candidate_results = (
+    model_comparison.loc[
+        ~model_comparison["model"].eq(
+            "Baseline Mean"
+        )
+    ]
+    .sort_values("test_MAE")
+)
+
+selected_model_name = (
+    candidate_results.iloc[0][
+        "model"
+    ]
+)
+
+selected_prediction = predictions[
+    selected_model_name
+]
+```
+
+내부 검토용 결과표를 만듭니다.
+
+```python
+prediction_result = (
+    test_data[
+        [
+            "order_id",
+            "order_date",
+        ]
+    ]
+    .reset_index(drop=True)
+    .copy()
+)
+
+prediction_result["actual_order_total"] = (
+    y_test
+    .reset_index(drop=True)
+)
+
+prediction_result[
+    "predicted_order_total"
+] = selected_prediction
+
+prediction_result["residual"] = (
+    prediction_result[
+        "actual_order_total"
+    ]
+    - prediction_result[
+        "predicted_order_total"
+    ]
+)
+
+prediction_result["abs_error"] = (
+    prediction_result[
+        "residual"
+    ].abs()
+)
+
+prediction_result.sort_values(
+    "abs_error",
+    ascending=False,
+).head(10)
+```
+
+`residual`은 실제값에서 예측값을 뺀 값입니다.
+
+- 잔차가 양수이면 실제값을 낮게 예측했습니다.
+- 잔차가 음수이면 실제값을 높게 예측했습니다.
+- 큰 절대 오차가 특정 금액대나 시점에 몰리는지 확인합니다.
+
+실제값과 예측값을 산점도로 확인합니다.
+
+```python
+fig, ax = plt.subplots(
+    figsize=(7, 6)
+)
+
+ax.scatter(
+    prediction_result[
+        "actual_order_total"
+    ],
+    prediction_result[
+        "predicted_order_total"
+    ],
+    alpha=0.7,
+)
+
+min_value = min(
+    prediction_result[
+        "actual_order_total"
+    ].min(),
+    prediction_result[
+        "predicted_order_total"
+    ].min(),
+)
+
+max_value = max(
+    prediction_result[
+        "actual_order_total"
+    ].max(),
+    prediction_result[
+        "predicted_order_total"
+    ].max(),
+)
+
+ax.plot(
+    [min_value, max_value],
+    [min_value, max_value],
+    linestyle="--",
+)
+
+ax.set_title(
+    f"실제 주문 금액과 예측값: "
+    f"{selected_model_name}"
+)
+ax.set_xlabel("실제 주문 금액")
+ax.set_ylabel("예측 주문 금액")
+
+fig.tight_layout()
+fig.savefig(
+    figure_dir
+    / "ch09_actual_vs_predicted.png",
+    dpi=150,
+    bbox_inches="tight",
+)
+plt.show()
+```
+
+점이 대각선에 가까울수록 실제값과 예측값이 비슷합니다. 다만 그래프가 그럴듯해 보여도 반드시 평가 지표와 함께 해석합니다.
+
+잔차 분포도 확인합니다.
+
+```python
+fig, ax = plt.subplots(
+    figsize=(8, 5)
+)
+
+ax.hist(
+    prediction_result["residual"],
+    bins=15,
+)
+
+ax.axvline(
+    0,
+    linestyle="--",
+)
+
+ax.set_title("예측 잔차 분포")
+ax.set_xlabel(
+    "잔차(실제값 - 예측값)"
+)
+ax.set_ylabel("주문 수")
+
+fig.tight_layout()
+fig.savefig(
+    figure_dir
+    / "ch09_residual_histogram.png",
+    dpi=150,
+    bbox_inches="tight",
+)
+plt.show()
+```
+
+잔차가 0 주변에 고르게 분포하지 않고 한쪽으로 치우치거나 큰 오차가 반복되면 모델이 특정 구간을 체계적으로 잘못 예측하는지 확인합니다.
+
+## 13. 결과를 저장하고 해석하기
+
+모델 비교 결과를 저장합니다.
+
+```python
+model_comparison.to_csv(
+    report_dir
+    / "ch09_regression_model_comparison.csv",
+    index=False,
+    encoding="utf-8-sig",
+)
+
+cv_summary.to_csv(
+    report_dir
+    / "ch09_regression_cv_summary.csv",
+    index=False,
+    encoding="utf-8-sig",
+)
+```
+
+예측 결과에는 주문 식별자가 포함되어 있으므로 외부 공개 보고서에 그대로 포함하지 않습니다. 내부 오류 분석용 파일로 저장하고 접근 권한을 관리합니다.
+
+```python
+prediction_result.to_csv(
+    report_dir
+    / "ch09_regression_predictions_internal.csv",
+    index=False,
+    encoding="utf-8-sig",
+)
+```
+
+결과는 다음 기준으로 해석합니다.
+
+1. **베이스라인보다 나은가?**  
+   복잡한 모델의 테스트 MAE가 단순 평균보다 낮은지 확인합니다.
+
+2. **오차가 업무적으로 허용 가능한가?**  
+   MAE가 낮아 보여도 주문 금액 규모와 비교해야 합니다.
+
+3. **큰 오차가 반복되는가?**  
+   RMSE가 MAE보다 훨씬 크면 일부 주문의 큰 오차를 확인합니다.
+
+4. **과적합이 있는가?**  
+   훈련 MAE와 테스트 MAE의 차이를 확인합니다.
+
+5. **기간에 따라 성능이 흔들리는가?**  
+   시간 순서 교차검증의 평균과 표준편차를 확인합니다.
+
+6. **현재 변수만으로 예측할 수 있는 문제인가?**  
+   모든 모델이 베이스라인과 비슷하거나 R²가 음수라면 유용한 신호가 부족할 수 있습니다.
+
+예를 들어 다음처럼 작성할 수 있습니다.
+
+```text
+주문 시점과 고객 특성만으로 주문 금액을 예측하기 위해
+단순 평균, 선형 회귀, 랜덤 포레스트 회귀를 비교했습니다.
+
+테스트 데이터와 시간 순서 교차검증 결과를 함께 확인한 결과,
+복잡한 모델이 베이스라인보다 일관되게 개선되는지 평가했습니다.
+
+현재 가상 데이터에서는 입력 변수와 주문 금액 사이의 관계가
+강하지 않을 수 있으므로 R²가 낮거나 음수가 나오는 것도 가능합니다.
+이는 코드 실패가 아니라 현재 입력 정보의 예측 한계를 보여주는 결과입니다.
+
+실제 운영에 사용하려면 예측 시점 이전의 고객 구매 이력,
+프로모션, 유입 채널 등 추가 변수를 적법하게 확보하고
+새로운 기간의 데이터에서 다시 검증해야 합니다.
+```
+
+낮은 성능을 감추거나 데이터 누수가 있는 변수를 추가해 점수만 높이면 안 됩니다. 모델을 사용하지 않는 결정도 올바른 분석 결과가 될 수 있습니다.
+
+## 14. LLM에게 회귀 코드를 요청할 때
+
+LLM에게는 원본 고객명이나 전체 거래 데이터를 제공하지 않고, 컬럼 구조와 문제 정의만 전달합니다.
+
+```text
+온라인 쇼핑몰 주문 금액을 예측하는 교육용 회귀 모델을 만들려고 합니다.
+
+예측 대상:
+- order_total: 주문별 line_total 합계
+
+예측 시점:
+- 주문 메타데이터와 고객의 비식별 특성은 알 수 있지만
+  주문 상세의 수량, 단가, 금액은 모델에 제공하지 않음
+
+사용 가능한 입력값:
+- payment_method
+- order_month
+- order_dayofweek
+- gender
+- age
+- city
+
+사용하면 안 되는 입력값:
+- order_total, line_total
+- quantity, unit_price
+- item_count, total_quantity, avg_unit_price
+- order_status
+- order_id, customer_id
+
+요청:
+1. 날짜 순서로 훈련 데이터 80%, 테스트 데이터 20%를 나누어 주세요.
+2. 결측치 처리와 OneHotEncoder를 Pipeline 안에 넣어 주세요.
+3. DummyRegressor, LinearRegression, RandomForestRegressor를 비교해 주세요.
+4. MAE, RMSE, R²와 베이스라인 대비 개선율을 계산해 주세요.
+5. 훈련·테스트 성능 차이와 데이터 누수 가능성을 설명해 주세요.
+6. R²가 음수일 때의 의미도 설명해 주세요.
+
+주의:
+- 실제 데이터에 없는 컬럼을 만들지 마세요.
+- 테스트 데이터로 전처리 규칙을 학습하지 마세요.
+- 높은 성능을 가정하거나 결과를 임의로 만들어내지 마세요.
+```
+
+LLM이 만든 코드는 다음 기준으로 검토합니다.
 
 | 검토 항목 | 확인 |
 | --- | --- |
-| 예측 대상이 명확히 분리되었는가? | □ |
-| 정답 컬럼을 입력값으로 사용하지 않았는가? | □ |
-| 실제 데이터에 없는 컬럼명을 만들지 않았는가? | □ |
-| 범주형 컬럼을 적절히 인코딩했는가? | □ |
-| train/test split을 적용했는가? | □ |
-| 테스트 데이터 기준으로 평가했는가? | □ |
-| MAE, RMSE, R²를 함께 확인했는가? | □ |
-| 성능 결과를 과장해서 해석하지 않았는가? | □ |
+| 예측 시점이 명확한가? | □ |
+| 목표값과 목표값의 계산 재료를 입력에서 제외했는가? | □ |
+| 예측 이후에 알 수 있는 정보를 사용하지 않았는가? | □ |
+| 식별자를 일반 숫자 변수로 사용하지 않았는가? | □ |
+| 전처리기가 훈련 데이터 안에서만 학습되는가? | □ |
+| 시간 순서 또는 업무 목적에 맞는 분할을 사용했는가? | □ |
+| 단순 베이스라인과 비교했는가? | □ |
+| 테스트 데이터로 최종 성능을 평가했는가? | □ |
+| MAE, RMSE, R²를 올바르게 해석했는가? | □ |
+| 음수 R²와 낮은 성능을 숨기지 않았는가? | □ |
+| 훈련 성능과 테스트 성능을 비교했는가? | □ |
+| 개인정보나 거래 식별자를 외부 LLM에 입력하지 않았는가? | □ |
 
-LLM은 모델링 흐름을 빠르게 정리해 줄 수 있지만, 최종 판단은 사람이 해야 합니다.
+LLM은 코드 초안을 빠르게 만들 수 있지만 예측 시점과 데이터 의미를 스스로 보장하지는 못합니다. 자연스럽게 실행되는 코드라도 목표값의 계산 재료를 입력에 넣거나, 전체 데이터에서 전처리한 뒤 분할하거나, 테스트 결과를 과장할 수 있습니다.
 
-## 13. 회귀 분석에서 다음 단계로
+## 15. 다음 단계
 
-이번 장에서는 온라인 쇼핑몰 데이터를 사용해 주문별 총금액을 예측하는 회귀 분석 흐름을 살펴보았습니다. 중요한 것은 모델 이름을 외우는 것이 아니라, 예측 대상을 정의하고, 입력값을 선택하고, 학습 데이터와 테스트 데이터를 나누고, 평가 지표를 해석하는 흐름을 이해하는 것입니다.
+이번 장에서는 다음 과정을 다뤘습니다.
 
-직접 더 연습해 보고 싶다면 다음을 해볼 수 있습니다.
+```text
+예측 시점 정의
+→ 목표값 생성
+→ 누수 가능성이 있는 입력값 제외
+→ 시간 순서 훈련·테스트 분할
+→ 파이프라인 기반 전처리
+→ 베이스라인·선형 회귀·랜덤 포레스트 비교
+→ MAE·RMSE·R² 평가
+→ 교차검증과 잔차 확인
+→ 모델 사용 가능성 판단
+```
 
-- 고객별 총 구매 금액을 예측하는 데이터셋을 만들어 봅니다.
-- 상품별 총매출을 예측하는 회귀 모델을 만들어 봅니다.
-- 입력값에서 `avg_unit_price`를 제외했을 때 성능이 어떻게 바뀌는지 비교합니다.
-- RandomForestRegressor의 `n_estimators` 값을 바꿔 성능을 비교합니다.
-- 예측 오차가 큰 주문 10건을 살펴보고 공통점을 찾아봅니다.
-- LLM에게 회귀 분석 코드를 작성하게 한 뒤 데이터 누수 여부를 검토합니다.
+직접 더 연습해 보고 싶다면 다음을 수행해 봅니다.
 
-다음 장에서는 숫자를 예측하는 회귀와 달리, 특정 상태나 범주를 예측하는 분류 분석을 다룹니다. 예를 들어 주문이 완료될지 취소될지, 고객이 구매할 가능성이 높은지 같은 문제를 생각해 볼 수 있습니다.
+- 무작위 분할과 시간 순서 분할의 결과를 비교합니다.
+- 입력값에서 고객 특성을 제외했을 때 성능 변화를 확인합니다.
+- 예측 시점 이전의 고객 구매 이력을 누수 없이 만드는 방법을 설계합니다.
+- 목표값에 로그 변환을 적용했을 때 MAE와 잔차 분포가 어떻게 달라지는지 확인합니다.
+- 랜덤 포레스트의 `min_samples_leaf` 값을 바꾸어 과적합 변화를 비교합니다.
+- 베이스라인보다 성능이 나아지지 않는 이유를 데이터 생성 방식과 연결해 설명합니다.
+- LLM이 제안한 회귀 코드에서 예측 시점 이후 정보가 포함되었는지 검토합니다.
+
+다음 장에서는 숫자를 예측하는 회귀와 달리, 특정 상태나 범주를 예측하는 분류 분석을 다룹니다. 분류에서도 예측 시점, 데이터 누수, 베이스라인, 평가 지표를 같은 원칙으로 확인해야 합니다.
