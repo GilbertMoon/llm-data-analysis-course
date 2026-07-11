@@ -90,7 +90,8 @@ python scripts/build_chapter_docx.py --chapters 4 5 6
 ### SVG 처리 방식
 
 ```powershell
-# 기본값: 변환기를 찾으면 PNG로 변환하고, 없으면 SVG 유지
+# 기본값: Inkscape, rsvg-convert 또는 CairoSVG를 찾으면 PNG로 변환
+# 변환기가 없으면 원본 SVG를 Pandoc에 전달하고 경고 표시
 python scripts/build_chapter_docx.py --svg-mode auto
 
 # SVG를 반드시 PNG로 변환. 변환기가 없으면 오류
@@ -100,7 +101,7 @@ python scripts/build_chapter_docx.py --svg-mode png
 python scripts/build_chapter_docx.py --svg-mode keep
 ```
 
-Word 버전이나 렌더러에 따라 SVG 표시 결과가 달라질 수 있으므로, 안정적인 출판 결과가 필요하면 `png` 또는 `auto`를 권장합니다.
+Word 버전이나 렌더러에 따라 SVG 표시 결과가 달라질 수 있으므로, 안정적인 출판 결과가 필요하면 `png` 또는 `auto`를 권장합니다. 한글이 들어간 SVG를 PNG로 변환한 뒤에는 글꼴이 깨지거나 대체되지 않았는지 Word에서 확인합니다.
 
 ## 4. 챕터별 수동 검수
 
