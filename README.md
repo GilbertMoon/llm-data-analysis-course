@@ -90,6 +90,19 @@ jupyter notebook
 
 브라우저가 열리면 `notebooks/` 폴더의 주차별 노트북을 순서대로 실행합니다. 실제 수업 진행은 VS Code를 중심으로 하되, Jupyter Notebook은 코드 실행 결과와 해석을 함께 정리하는 분석 노트 형식으로 활용합니다.
 
+## Word 강의안 생성 및 통합
+
+`book/chapters/`의 0~15장 Markdown을 공통 Word 템플릿으로 변환하고, 챕터별 수동 검수 후 통합 DOCX를 생성할 수 있습니다.
+
+```powershell
+python -m pip install -r requirements-docx.txt
+python scripts/build_chapter_docx.py
+# 개별 Word 검수 후 chapter_review_status.csv의 status를 approved로 변경
+python scripts/merge_chapter_docx.py
+```
+
+설치 방법, SVG 처리, 수동 검수 기준과 목차 업데이트 방법은 [`docs/word_build_guide.md`](docs/word_build_guide.md)를 참고하세요.
+
 ## 14장 Docker Compose 기반 Airflow 실습
 
 Docker 설치 과정은 별도 블로그 글을 참고합니다.
