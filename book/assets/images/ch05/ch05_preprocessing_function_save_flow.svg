@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="580" viewBox="0 0 1600 580" role="img" aria-labelledby="title desc">
+  <title id="title">전처리 함수화와 저장 흐름도</title>
+  <desc id="desc">전처리 함수를 정의하고 여러 데이터셋에 적용한 뒤 저장하는 흐름</desc>
+  <defs>
+    <linearGradient id="head" x1="0" x2="1"><stop offset="0%" stop-color="#0f766e"/><stop offset="100%" stop-color="#7c3aed"/></linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#0f172a" flood-opacity="0.12"/></filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#7c3aed"/></marker>
+    <style>
+      .bg{fill:#f8fafc}.h{fill:url(#head)} text{font-family:'Malgun Gothic','맑은 고딕','Pretendard','Noto Sans KR','Apple SD Gothic Neo',sans-serif}
+      .title{font-size:38px;font-weight:800;fill:#fff}.sub{font-size:18px;font-weight:600;fill:#dcfce7}
+      .block{fill:#fff;stroke:#cbd5e1;stroke-width:2;filter:url(#shadow)} .tag{fill:#ecfeff;stroke:#67e8f9;stroke-width:1.5}.tagText{font-size:16px;font-weight:900;fill:#0891b2}
+      .main{font-size:24px;font-weight:800;fill:#0f172a}.item{font-size:18px;font-weight:650;fill:#334155}.arr{fill:none;stroke:#7c3aed;stroke-width:4;marker-end:url(#arrow)}
+      .save{fill:#eef2ff;stroke:#c4b5fd;stroke-width:2}.saveText{font-size:21px;font-weight:800;fill:#5b21b6}
+    </style>
+  </defs>
+  <rect class="bg" width="1600" height="580" rx="32"/>
+  <rect class="h" x="50" y="36" width="1500" height="92" rx="26"/>
+  <text class="title" x="86" y="92">전처리 함수화와 저장 흐름</text>
+  <text class="sub" x="86" y="118">같은 처리 기준을 재사용할 수 있도록 함수로 정리하고 저장합니다</text>
+
+  <g transform="translate(90 190)">
+    <rect class="block" width="360" height="260" rx="24"/>
+    <rect class="tag" x="28" y="24" width="92" height="28" rx="14"/><text class="tagText" x="74" y="43" text-anchor="middle">함수 정의</text>
+    <text class="main" x="28" y="88">전처리 기준 정리</text>
+    <text class="item" x="28" y="128">• 문자열 정리</text>
+    <text class="item" x="28" y="160">• 결측치 처리</text>
+    <text class="item" x="28" y="192">• 날짜와 숫자 변환</text>
+    <text class="item" x="28" y="224">• 중복 제거와 이상값 처리</text>
+  </g>
+
+  <g transform="translate(500 190)">
+    <rect class="block" width="360" height="260" rx="24"/>
+    <rect class="tag" x="28" y="24" width="92" height="28" rx="14"/><text class="tagText" x="74" y="43" text-anchor="middle">함수 적용</text>
+    <text class="main" x="28" y="88">여러 데이터셋에 재사용</text>
+    <text class="item" x="28" y="128">• 고객 데이터</text>
+    <text class="item" x="28" y="160">• 상품 데이터</text>
+    <text class="item" x="28" y="192">• 주문 데이터</text>
+    <text class="item" x="28" y="224">• 주문 상세 데이터</text>
+  </g>
+
+  <g transform="translate(910 190)">
+    <rect class="block" width="360" height="260" rx="24"/>
+    <rect class="tag" x="28" y="24" width="92" height="28" rx="14"/><text class="tagText" x="74" y="43" text-anchor="middle">안전 장치</text>
+    <text class="main" x="28" y="88">구조 변화에 대비</text>
+    <text class="item" x="28" y="128">• 필요한 컬럼 존재 여부 확인</text>
+    <text class="item" x="28" y="160">• 원본 데이터를 직접 수정하지 않기</text>
+    <text class="item" x="28" y="192">• 처리 결과 다시 검토하기</text>
+    <text class="item" x="28" y="224">• 같은 기준으로 반복 실행 가능</text>
+  </g>
+
+  <path class="arr" d="M450 320H500"/>
+  <path class="arr" d="M860 320H910"/>
+
+  <g transform="translate(1290 220)">
+    <rect class="save" width="240" height="160" rx="24"/>
+    <text class="saveText" x="120" y="54" text-anchor="middle">최종 저장</text>
+    <text class="item" x="30" y="92">customers_clean.csv</text>
+    <text class="item" x="30" y="120">orders_clean.csv</text>
+    <text class="item" x="30" y="148">order_items_clean.csv</text>
+  </g>
+  <path class="arr" d="M1270 320H1290"/>
+</svg>

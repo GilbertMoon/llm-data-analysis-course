@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900"
+     role="img" aria-labelledby="title desc">
+  <title id="title">기말 프로젝트 주요 분석 대시보드 예시</title>
+  <desc id="desc">총매출, 주문 수, 평균 주문금액, 취소율의 핵심 지표와 월별 매출 추이, 카테고리별 매출, 구매 금액 상위 고객, 가격과 판매 수량 관계 및 핵심 관찰을 한 화면에 요약한 교육용 대시보드</desc>
+
+  <defs>
+    <filter id="shadow" x="-15%" y="-20%" width="130%" height="145%">
+      <feDropShadow dx="0" dy="5" stdDeviation="8" flood-color="#0f172a" flood-opacity="0.10"/>
+    </filter>
+    <style>
+      text { font-family: 'Malgun Gothic','맑은 고딕',"NanumSquare","Noto Sans KR",sans-serif; }
+      .mono { font-family: 'Malgun Gothic','맑은 고딕',"D2Coding","Cascadia Mono","Consolas",monospace; }
+      .title { font-size: 46px; font-weight: 800; fill: #0f2d4d; }
+      .subtitle { font-size: 21px; font-weight: 500; fill: #475569; }
+      .kpiLabel { font-size: 16px; font-weight: 700; fill: #64748b; }
+      .kpiValue { font-size: 30px; font-weight: 850; fill: #0f172a; }
+      .panelTitle { font-size: 22px; font-weight: 800; fill: #0f172a; }
+      .panelSub { font-size: 14px; font-weight: 500; fill: #64748b; }
+      .axisLabel { font-size: 12px; font-weight: 600; fill: #64748b; }
+      .valueLabel { font-size: 13px; font-weight: 750; fill: #334155; }
+      .insightTitle { font-size: 21px; font-weight: 800; fill: #0f2d4d; }
+      .insight { font-size: 15px; font-weight: 600; fill: #334155; }
+      .footer { font-size: 19px; font-weight: 750; fill: #1e3a8a; }
+      .panel { fill: #ffffff; stroke: #cbd5e1; stroke-width: 2; filter: url(#shadow); }
+      .grid { stroke: #e2e8f0; stroke-width: 1.2; }
+      .axis { stroke: #94a3b8; stroke-width: 1.8; }
+    </style>
+  </defs>
+
+  <rect width="1600" height="900" fill="#f8fafc"/>
+  <rect x="40" y="22" width="1520" height="12" rx="6" fill="#2563eb"/>
+
+  <text x="74" y="92" class="title">기말 프로젝트 주요 분석 대시보드 예시</text>
+  <text x="74" y="128" class="subtitle">핵심 지표와 그래프를 요약하되, 수치의 의미와 한계는 보고서에서 함께 설명합니다.</text>
+
+  <rect x="1362" y="66" width="164" height="42" rx="21" fill="#eff6ff" stroke="#93c5fd"/>
+  <text x="1444" y="93" text-anchor="middle" font-size="16" font-weight="800" fill="#1d4ed8">예시 데이터</text>
+
+  <g transform="translate(74 160)">
+    <rect class="panel" width="330" height="112" rx="18"/>
+    <circle cx="52" cy="56" r="30" fill="#dbeafe"/>
+    <path d="M35 67V49M47 67V38M59 67V45M71 67V29" stroke="#2563eb" stroke-width="5" stroke-linecap="round"/>
+    <text x="96" y="42" class="kpiLabel">총매출</text>
+    <text x="96" y="78" class="kpiValue">₩12.5M</text>
+  </g>
+
+  <g transform="translate(448 160)">
+    <rect class="panel" width="330" height="112" rx="18"/>
+    <circle cx="52" cy="56" r="30" fill="#dcfce7"/>
+    <rect x="36" y="37" width="32" height="38" rx="5" fill="none" stroke="#16a34a" stroke-width="3"/>
+    <line x1="43" y1="48" x2="61" y2="48" stroke="#16a34a" stroke-width="3"/>
+    <line x1="43" y1="57" x2="61" y2="57" stroke="#16a34a" stroke-width="3"/>
+    <line x1="43" y1="66" x2="57" y2="66" stroke="#16a34a" stroke-width="3"/>
+    <text x="96" y="42" class="kpiLabel">주문 수</text>
+    <text x="96" y="78" class="kpiValue">1,240건</text>
+  </g>
+
+  <g transform="translate(822 160)">
+    <rect class="panel" width="330" height="112" rx="18"/>
+    <circle cx="52" cy="56" r="30" fill="#fef3c7"/>
+    <circle cx="52" cy="56" r="18" fill="none" stroke="#d97706" stroke-width="3"/>
+    <text x="52" y="63" text-anchor="middle" font-size="21" font-weight="850" fill="#d97706">₩</text>
+    <text x="96" y="42" class="kpiLabel">평균 주문금액</text>
+    <text x="96" y="78" class="kpiValue">₩10,080</text>
+  </g>
+
+  <g transform="translate(1196 160)">
+    <rect class="panel" width="330" height="112" rx="18"/>
+    <circle cx="52" cy="56" r="30" fill="#fce7f3"/>
+    <path d="M38 68l10-10l8 5l13-19" fill="none" stroke="#db2777" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="69" cy="44" r="4" fill="#db2777"/>
+    <text x="96" y="42" class="kpiLabel">취소율</text>
+    <text x="96" y="78" class="kpiValue">6.5%</text>
+  </g>
+
+  <g transform="translate(74 304)">
+    <rect class="panel" width="700" height="300" rx="20"/>
+    <text x="28" y="42" class="panelTitle">월별 매출 추이</text>
+    <text x="28" y="66" class="panelSub">단위: 백만원 · 1월부터 6월까지</text>
+    <line x1="72" y1="245" x2="652" y2="245" class="axis"/>
+    <line x1="72" y1="90" x2="72" y2="245" class="axis"/>
+    <line x1="72" y1="195" x2="652" y2="195" class="grid"/>
+    <line x1="72" y1="145" x2="652" y2="145" class="grid"/>
+    <line x1="72" y1="95" x2="652" y2="95" class="grid"/>
+    <text x="54" y="249" text-anchor="end" class="axisLabel">0</text>
+    <text x="54" y="199" text-anchor="end" class="axisLabel">1</text>
+    <text x="54" y="149" text-anchor="end" class="axisLabel">2</text>
+    <text x="54" y="99" text-anchor="end" class="axisLabel">3</text>
+    <path d="M92 170 L198 155 L304 160 L410 140 L516 125 L622 95 L622 245 L92 245 Z" fill="#dbeafe" opacity="0.55"/>
+    <polyline points="92,170 198,155 304,160 410,140 516,125 622,95" fill="none" stroke="#2563eb" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+    <g fill="#2563eb" stroke="#ffffff" stroke-width="3">
+      <circle cx="92" cy="170" r="7"/><circle cx="198" cy="155" r="7"/><circle cx="304" cy="160" r="7"/><circle cx="410" cy="140" r="7"/><circle cx="516" cy="125" r="7"/><circle cx="622" cy="95" r="7"/>
+    </g>
+    <text x="92" y="268" text-anchor="middle" class="axisLabel">1월</text><text x="198" y="268" text-anchor="middle" class="axisLabel">2월</text><text x="304" y="268" text-anchor="middle" class="axisLabel">3월</text><text x="410" y="268" text-anchor="middle" class="axisLabel">4월</text><text x="516" y="268" text-anchor="middle" class="axisLabel">5월</text><text x="622" y="268" text-anchor="middle" class="axisLabel">6월</text>
+    <text x="622" y="82" text-anchor="middle" class="valueLabel">3.0</text>
+  </g>
+
+  <g transform="translate(806 304)">
+    <rect class="panel" width="720" height="300" rx="20"/>
+    <text x="28" y="42" class="panelTitle">카테고리별 매출</text>
+    <text x="28" y="66" class="panelSub">총매출 기여도 비교 · 단위: 백만원</text>
+    <line x1="76" y1="245" x2="674" y2="245" class="axis"/>
+    <line x1="76" y1="90" x2="76" y2="245" class="axis"/>
+    <line x1="76" y1="195" x2="674" y2="195" class="grid"/>
+    <line x1="76" y1="145" x2="674" y2="145" class="grid"/>
+    <line x1="76" y1="95" x2="674" y2="95" class="grid"/>
+    <rect x="118" y="98" width="92" height="147" rx="10" fill="#3b82f6"/>
+    <rect x="260" y="121" width="92" height="124" rx="10" fill="#10b981"/>
+    <rect x="402" y="133" width="92" height="112" rx="10" fill="#f59e0b"/>
+    <rect x="544" y="145" width="92" height="100" rx="10" fill="#ec4899"/>
+    <text x="164" y="88" text-anchor="middle" class="valueLabel">3.8</text><text x="306" y="111" text-anchor="middle" class="valueLabel">3.2</text><text x="448" y="123" text-anchor="middle" class="valueLabel">2.9</text><text x="590" y="135" text-anchor="middle" class="valueLabel">2.6</text>
+    <text x="164" y="270" text-anchor="middle" class="axisLabel">전자기기</text><text x="306" y="270" text-anchor="middle" class="axisLabel">생활용품</text><text x="448" y="270" text-anchor="middle" class="axisLabel">패션</text><text x="590" y="270" text-anchor="middle" class="axisLabel">식품</text>
+  </g>
+
+  <g transform="translate(74 634)">
+    <rect class="panel" width="500" height="170" rx="20"/>
+    <text x="24" y="36" class="panelTitle">구매 금액 상위 고객</text>
+    <text x="24" y="58" class="panelSub">상위 고객군 집중도 확인 · 단위: 백만원</text>
+    <text x="26" y="91" class="axisLabel">C022</text><rect x="80" y="76" width="342" height="20" rx="10" fill="#2563eb"/><text x="438" y="91" class="valueLabel">1.45</text>
+    <text x="26" y="122" class="axisLabel">C001</text><rect x="80" y="107" width="284" height="20" rx="10" fill="#60a5fa"/><text x="380" y="122" class="valueLabel">1.20</text>
+    <text x="26" y="153" class="axisLabel">C014</text><rect x="80" y="138" width="248" height="20" rx="10" fill="#93c5fd"/><text x="344" y="153" class="valueLabel">1.05</text>
+  </g>
+
+  <g transform="translate(604 634)">
+    <rect class="panel" width="446" height="170" rx="20"/>
+    <text x="24" y="36" class="panelTitle">가격 × 판매 수량</text>
+    <text x="24" y="58" class="panelSub">두 변수의 관계를 탐색하는 산점도</text>
+    <line x1="62" y1="140" x2="408" y2="140" class="axis"/><line x1="62" y1="76" x2="62" y2="140" class="axis"/>
+    <g fill="#7c3aed" opacity="0.75">
+      <circle cx="92" cy="126" r="7"/><circle cx="130" cy="108" r="7"/><circle cx="170" cy="116" r="7"/><circle cx="215" cy="91" r="7"/><circle cx="260" cy="103" r="7"/><circle cx="312" cy="81" r="7"/><circle cx="360" cy="122" r="7"/><circle cx="390" cy="97" r="7"/>
+    </g>
+    <text x="235" y="161" text-anchor="middle" class="axisLabel">상품 가격</text>
+    <text x="26" y="112" text-anchor="middle" transform="rotate(-90 26 112)" class="axisLabel">판매 수량</text>
+  </g>
+
+  <g transform="translate(1080 634)">
+    <rect class="panel" width="446" height="170" rx="20" stroke="#93c5fd"/>
+    <text x="24" y="36" class="insightTitle">핵심 관찰</text>
+    <rect x="24" y="52" width="398" height="1" fill="#e2e8f0"/>
+    <circle cx="32" cy="78" r="5" fill="#2563eb"/><text x="48" y="84" class="insight">6월 매출이 가장 높게 관찰됨</text>
+    <circle cx="32" cy="108" r="5" fill="#10b981"/><text x="48" y="114" class="insight">전자기기 매출 비중이 가장 큼</text>
+    <circle cx="32" cy="138" r="5" fill="#f59e0b"/><text x="48" y="144" class="insight">취소율 6.5%의 원인 추가 확인 필요</text>
+  </g>
+
+  <rect x="180" y="830" width="1240" height="48" rx="18" fill="#eff6ff" stroke="#bfdbfe"/>
+  <text x="800" y="861" text-anchor="middle" class="footer">대시보드는 핵심 결과를 빠르게 보여주는 요약 화면이며, 분석 근거와 한계는 보고서에서 설명합니다.</text>
+</svg>

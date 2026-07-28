@@ -1,0 +1,132 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1220" viewBox="0 0 1600 1220" role="img" aria-labelledby="title desc">
+  <title id="title">VS Code에서 Notebook을 열고 실행하는 흐름</title>
+  <desc id="desc">실제 VS Code 화면 흐름에 가깝게, Notebook 열기, 커널 선택, 첫 셀 실행, 정상 실행 확인 단계를 세로 순서로 설명하는 SVG</desc>
+  <defs>
+    <style>
+      text { font-family: 'Malgun Gothic','맑은 고딕','Pretendard','Noto Sans KR',sans-serif; }
+      .bg { fill:#f8fafc; }
+      .header { fill:#2563eb; }
+      .title { font-size:42px; font-weight:900; fill:#ffffff; }
+      .subtitle { font-size:18px; font-weight:600; fill:#dbeafe; }
+      .card { fill:#ffffff; stroke:#dbe4f0; stroke-width:2; rx:26; }
+      .stepNo { fill:#2563eb; }
+      .stepNoText { font-size:20px; font-weight:900; fill:#ffffff; }
+      .stepTitle { font-size:28px; font-weight:900; fill:#0f172a; }
+      .body { font-size:19px; font-weight:600; fill:#334155; }
+      .sub { font-size:16px; font-weight:600; fill:#64748b; }
+      .label { font-size:16px; font-weight:800; fill:#0f172a; }
+      .mono { font-family:'Malgun Gothic','맑은 고딕','Consolas','D2Coding',monospace; }
+      .arrow { stroke:#60a5fa; stroke-width:6; fill:none; marker-end:url(#arrowhead); }
+      .vscode { fill:#111827; stroke:#0f172a; stroke-width:2; rx:18; }
+      .vscodeTop { fill:#1f2937; }
+      .vscodeSide { fill:#0b1220; }
+      .vscodeMain { fill:#0f172a; }
+      .panelLight { fill:#ffffff; stroke:#93c5fd; stroke-width:2; rx:14; }
+      .soft { fill:#eff6ff; }
+      .soft2 { fill:#dbeafe; }
+      .ok { fill:#16a34a; }
+      .note { fill:#ecfeff; stroke:#67e8f9; stroke-width:2; rx:18; }
+      .noteText { font-size:20px; font-weight:800; fill:#155e75; }
+      .muted { fill:#94a3b8; }
+    </style>
+    <marker id="arrowhead" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#60a5fa"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" width="1600" height="1220" rx="28"/>
+  <rect class="header" x="48" y="38" width="1504" height="110" rx="28"/>
+  <text x="84" y="98" class="title">VS Code에서 Notebook을 열고 실행하는 흐름</text>
+  <text x="84" y="130" class="subtitle">처음 실행할 때 헷갈리는 지점을 실제 화면 흐름에 가깝게 정리했습니다. 핵심은 파일 열기 → .venv 커널 선택 → 첫 셀 실행 → 정상 실행 확인입니다.</text>
+
+  <path d="M 800 200 L 800 250" class="arrow"/>
+  <path d="M 800 455 L 800 505" class="arrow"/>
+  <path d="M 800 710 L 800 760" class="arrow"/>
+
+  <!-- Step 1 -->
+  <rect class="card" x="90" y="180" width="1420" height="250"/>
+  <circle class="stepNo" cx="138" cy="228" r="28"/><text x="138" y="235" text-anchor="middle" class="stepNoText">1</text>
+  <text x="182" y="236" class="stepTitle">Notebook 파일 열기</text>
+  <text x="132" y="286" class="body">Explorer에서 <tspan font-weight="900">notebooks</tspan> 폴더를 열고</text>
+  <text x="132" y="318" class="body"><tspan font-weight="900">ch02_environment_setup.ipynb</tspan>를 클릭합니다.</text>
+  <text x="132" y="350" class="body">상단 탭에 Notebook 이름과 Markdown, Code 셀이 보이면 정상입니다.</text>
+  <text x="132" y="382" class="sub">실제 의미: 파일을 여는 것과 코드를 실행하는 것은 다른 단계입니다.</text>
+
+  <rect class="vscode" x="850" y="208" width="590" height="172"/>
+  <rect class="vscodeTop" x="850" y="208" width="590" height="26" rx="18"/>
+  <rect class="vscodeSide" x="850" y="234" width="120" height="146"/>
+  <rect class="vscodeMain" x="970" y="234" width="470" height="146"/>
+  <text x="874" y="252" font-size="13" font-weight="700" fill="#cbd5e1">EXPLORER</text>
+  <text x="874" y="278" font-size="12" font-weight="700" fill="#93c5fd">notebooks</text>
+  <rect x="872" y="287" width="78" height="14" rx="4" fill="#162133"/>
+  <rect x="876" y="310" width="86" height="16" rx="4" fill="#1d4ed8"/>
+  <text x="883" y="322" font-size="10" font-weight="700" fill="#ffffff">ch02_environment_setup.ipynb</text>
+  <rect x="990" y="248" width="210" height="22" rx="8" fill="#162133"/>
+  <text x="1004" y="263" font-size="11" font-weight="700" fill="#e2e8f0">ch02_environment_setup.ipynb</text>
+  <text x="1000" y="292" font-size="14" font-weight="800" fill="#f8fafc">실습 배경</text>
+  <text x="1000" y="314" font-size="11" font-weight="600" fill="#94a3b8">이번 장의 내용을 실습하면서 데이터 로드, 탐색, 전처리 흐름을 확인합니다.</text>
+  <rect x="998" y="330" width="398" height="30" rx="8" fill="#111827" stroke="#334155"/>
+  <text x="1015" y="349" font-size="12" class="mono" fill="#93c5fd">from pathlib import Path</text>
+
+  <!-- Step 2 -->
+  <rect class="card" x="90" y="435" width="1420" height="250"/>
+  <circle class="stepNo" cx="138" cy="483" r="28"/><text x="138" y="490" text-anchor="middle" class="stepNoText">2</text>
+  <text x="182" y="491" class="stepTitle">커널 선택하기</text>
+  <text x="132" y="541" class="body">첫 셀 실행 시 <tspan font-weight="900">Select Kernel</tspan> 창이 뜨면</text>
+  <text x="132" y="573" class="body">먼저 <tspan font-weight="900">Python Environments...</tspan>를 선택합니다.</text>
+  <text x="132" y="605" class="body">그 다음 목록에서 프로젝트의 <tspan font-weight="900">.venv (Python 3.11.x)</tspan>를 선택합니다.</text>
+  <text x="132" y="637" class="sub">중요: 터미널에 <tspan class="mono">(.venv)</tspan>가 보여도 Notebook 커널은 자동 선택되지 않습니다.</text>
+  <text x="132" y="661" class="sub">오른쪽 위 커널도 별도로 맞춰야 합니다.</text>
+
+  <rect class="panelLight" x="850" y="462" width="300" height="160"/>
+  <text x="875" y="494" font-size="17" font-weight="800" fill="#0f172a">Select Kernel</text>
+  <rect x="876" y="512" width="248" height="34" rx="8" fill="#dbeafe"/>
+  <text x="892" y="534" font-size="15" font-weight="700" fill="#334155">Python Environments...</text>
+  <rect x="876" y="554" width="248" height="34" rx="8" fill="#eff6ff"/>
+  <text x="892" y="576" font-size="15" font-weight="700" fill="#334155">Existing Jupyter Server...</text>
+
+  <rect class="panelLight" x="1170" y="462" width="270" height="160"/>
+  <text x="1192" y="494" font-size="17" font-weight="800" fill="#0f172a">Python Environments</text>
+  <rect x="1190" y="514" width="230" height="24" rx="6" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="1202" y="531" font-size="12" font-weight="700" fill="#64748b">Type to filter...</text>
+  <rect x="1190" y="545" width="230" height="32" rx="8" fill="#dbeafe"/>
+  <text x="1202" y="566" font-size="14" font-weight="800" fill="#1d4ed8">.venv (Python 3.11.9)</text>
+  <rect x="1190" y="582" width="230" height="24" rx="6" fill="#ffffff" stroke="#e2e8f0"/>
+  <text x="1202" y="598" font-size="12" font-weight="700" fill="#64748b">base (Anaconda)</text>
+
+  <!-- Step 3 -->
+  <rect class="card" x="90" y="690" width="1420" height="250"/>
+  <circle class="stepNo" cx="138" cy="738" r="28"/><text x="138" y="745" text-anchor="middle" class="stepNoText">3</text>
+  <text x="182" y="746" class="stepTitle">첫 번째 셀 실행하기</text>
+  <text x="132" y="796" class="body">첫 코드 셀은 import와 기본 경로 설정입니다.</text>
+  <text x="132" y="828" class="body">셀 왼쪽 실행 버튼(▶) 또는 <tspan class="mono">Shift+Enter</tspan>로 실행합니다.</text>
+  <text x="132" y="860" class="sub">이 셀은 표를 출력하지 않아도 정상입니다.</text>
+  <text x="132" y="884" class="sub">패키지 import와 <tspan class="mono">DATA_DIR = Path('../data/raw')</tspan> 설정이 핵심입니다.</text>
+
+  <rect x="830" y="720" width="620" height="170" rx="18" fill="#0f172a" stroke="#334155" stroke-width="2"/>
+  <rect x="830" y="720" width="620" height="34" rx="18" fill="#111827"/>
+  <circle cx="850" cy="737" r="6" fill="#94a3b8"/>
+  <polygon points="875,729 887,737 875,745" fill="#e2e8f0"/>
+  <text x="903" y="742" font-size="13" font-weight="700" fill="#cbd5e1">Python</text>
+  <text x="870" y="785" font-size="18" class="mono" fill="#c4b5fd">from pathlib import Path</text>
+  <text x="870" y="815" font-size="18" class="mono" fill="#67e8f9">import pandas as pd</text>
+  <text x="870" y="845" font-size="18" class="mono" fill="#93c5fd">DATA_DIR = Path('../data/raw')</text>
+
+  <!-- Step 4 -->
+  <rect class="card" x="90" y="945" width="1420" height="190"/>
+  <circle class="stepNo" cx="138" cy="993" r="28"/><text x="138" y="1000" text-anchor="middle" class="stepNoText">4</text>
+  <text x="182" y="1001" class="stepTitle">정상 실행 확인</text>
+  <text x="132" y="1051" class="body">초록 체크 표시, 실행 시간, 오류 없이 이동한 상태를 확인합니다.</text>
+  <text x="132" y="1083" class="body">처음에는 <tspan class="mono">Matplotlib is building the font cache</tspan></text>
+  <text x="132" y="1115" class="body">메시지가 잠깐 보일 수 있으며, 오류가 아니라 정상 동작입니다.</text>
+
+  <rect class="panelLight" x="915" y="982" width="470" height="100"/>
+  <circle class="ok" cx="946" cy="1013" r="10"/>
+  <path d="M 941 1014 L 945 1018 L 953 1008" fill="none" stroke="#ffffff" stroke-width="2.5"/>
+  <text x="968" y="1018" font-size="15" font-weight="800" fill="#0f172a">30.8s</text>
+  <text x="940" y="1050" font-size="16" class="mono" fill="#334155">Matplotlib is building the font cache;</text>
+  <text x="940" y="1074" font-size="16" class="mono" fill="#334155">this may take a moment.</text>
+
+  <rect class="note" x="255" y="1150" width="1090" height="48"/>
+  <text x="800" y="1181" text-anchor="middle" class="noteText">핵심: Notebook 열기 → .venv 커널 선택 → 첫 셀 실행 → 초록 체크 확인</text>
+</svg>

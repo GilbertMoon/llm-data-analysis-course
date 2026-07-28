@@ -1,0 +1,178 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">입력값과 예측 대상 분리</title>
+  <desc id="desc">주문 금액 회귀 모델에서 숫자형과 범주형 입력 특성을 X로 분리하고, order_total을 예측 대상 y로 지정하며, 정답 컬럼을 입력값에 포함할 때 발생하는 데이터 누수를 설명하는 개념도</desc>
+  <defs>
+    <linearGradient id="topLine" x1="0" x2="1">
+      <stop offset="0%" stop-color="#2563eb"/>
+      <stop offset="100%" stop-color="#0f766e"/>
+    </linearGradient>
+    <filter id="softShadow" x="-14%" y="-14%" width="128%" height="128%">
+      <feDropShadow dx="0" dy="8" stdDeviation="9" flood-color="#0f172a" flood-opacity="0.07"/>
+    </filter>
+    <marker id="arrowBlue" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="11" markerHeight="11" orient="auto">
+      <path d="M0 0L12 6L0 12Z" fill="#2563eb"/>
+    </marker>
+    <marker id="arrowOrange" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="11" markerHeight="11" orient="auto">
+      <path d="M0 0L12 6L0 12Z" fill="#f97316"/>
+    </marker>
+    <style>
+      .bg{fill:#f8fafc}
+      .top{fill:url(#topLine)}
+      text{font-family:'Malgun Gothic','맑은 고딕','Pretendard','Noto Sans KR','Apple SD Gothic Neo',sans-serif}
+      .mono{font-family:'Malgun Gothic','맑은 고딕','D2Coding','JetBrains Mono','Consolas',monospace}
+      .title{font-size:48px;font-weight:850;fill:#0f172a}
+      .subtitle{font-size:24px;font-weight:600;fill:#334155}
+      .card{fill:#fff;stroke:#cbd5e1;stroke-width:2;filter:url(#softShadow)}
+      .dataHead{fill:#f1f5f9;stroke:#cbd5e1;stroke-width:2}
+      .xCard{fill:#eff6ff;stroke:#93c5fd;stroke-width:2.3;filter:url(#softShadow)}
+      .yCard{fill:#fff7ed;stroke:#fdba74;stroke-width:2.3;filter:url(#softShadow)}
+      .warnCard{fill:#fff7ed;stroke:#fb923c;stroke-width:2.3;filter:url(#softShadow)}
+      .head{font-size:29px;font-weight:900;fill:#0f172a}
+      .subhead{font-size:18px;font-weight:800;fill:#475569}
+      .label{font-size:19px;font-weight:850;fill:#0f172a}
+      .body{font-size:18px;font-weight:700;fill:#334155}
+      .code{font-size:18px;font-weight:750;fill:#1e293b}
+      .codeSmall{font-size:14px;font-weight:750;fill:#1e293b}
+      .codeLarge{font-size:23px;font-weight:850;fill:#1e293b}
+      .tiny{font-size:15px;font-weight:800;fill:#475569}
+      .badge{fill:#fff;stroke:#bfdbfe;stroke-width:1.6}
+      .badgeText{font-size:15px;font-weight:900;fill:#1d4ed8}
+      .numBox{fill:#eff6ff;stroke:#bfdbfe;stroke-width:1.5}
+      .catBox{fill:#f5f3ff;stroke:#c4b5fd;stroke-width:1.5}
+      .targetBox{fill:#fffbeb;stroke:#fdba74;stroke-width:1.7}
+      .targetText{fill:#c2410c}
+      .blue{fill:#1d4ed8}
+      .purple{fill:#6d28d9}
+      .orange{fill:#f97316}
+      .red{fill:#dc2626}
+      .blueLine{fill:none;stroke:#2563eb;stroke-width:4.5;stroke-linecap:round;marker-end:url(#arrowBlue)}
+      .orangeLine{fill:none;stroke:#f97316;stroke-width:4.5;stroke-linecap:round;marker-end:url(#arrowOrange)}
+      .guide{fill:none;stroke:#94a3b8;stroke-width:3;stroke-dasharray:8 8}
+      .footerBox{fill:#eff6ff;stroke:#bfdbfe;stroke-width:2}
+      .footerFormula{font-size:23px;font-weight:850;fill:#1d4ed8}
+      .footer{font-size:21px;font-weight:750;fill:#0f172a}
+      .iconLine{stroke:#64748b;fill:none;stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round}
+    </style>
+  </defs>
+
+  <rect class="bg" width="1600" height="900"/>
+  <rect class="top" x="70" y="54" width="1460" height="10" rx="5"/>
+  <text class="title" x="90" y="126">입력값과 예측 대상 분리</text>
+  <text class="subtitle" x="90" y="166">여러 입력 특성 X를 사용해 연속형 숫자 목표 y를 예측합니다.</text>
+
+  <path class="blueLine" d="M510 392 C590 360 640 322 695 302"/>
+  <text class="tiny blue" x="608" y="333" text-anchor="middle">특성 선택</text>
+  <path class="orangeLine" d="M510 585 C590 614 640 650 695 675"/>
+  <text class="tiny orange" x="608" y="642" text-anchor="middle">정답 분리</text>
+
+  <g transform="translate(70 215)">
+    <rect class="card" width="470" height="500" rx="26"/>
+    <rect class="dataHead" x="24" y="24" width="422" height="72" rx="18"/>
+    <g transform="translate(44 42)">
+      <rect x="0" y="0" width="58" height="40" rx="6" class="iconLine"/>
+      <path class="iconLine" d="M0 14h58M19 0v40M39 0v40"/>
+    </g>
+    <text class="head" x="120" y="55">모델링 데이터</text>
+    <text class="subhead mono" x="120" y="82">model_data</text>
+
+    <g transform="translate(30 122)">
+      <rect class="numBox" width="195" height="262" rx="17"/>
+      <rect class="badge" x="18" y="16" width="98" height="27" rx="9"/>
+      <text class="badgeText" x="67" y="35" text-anchor="middle">NUMERIC · 6</text>
+      <text class="label blue" x="18" y="70">숫자형 입력 후보</text>
+      <text class="code mono" x="18" y="103">item_count</text>
+      <text class="code mono" x="18" y="133">total_quantity</text>
+      <text class="code mono" x="18" y="163">avg_unit_price</text>
+      <text class="code mono" x="18" y="193">order_month</text>
+      <text class="code mono" x="18" y="223">order_dayofweek</text>
+      <text class="code mono" x="18" y="253">age</text>
+    </g>
+
+    <g transform="translate(245 122)">
+      <rect class="catBox" width="195" height="262" rx="17"/>
+      <rect class="badge" x="18" y="16" width="106" height="27" rx="9"/>
+      <text class="badgeText purple" x="71" y="35" text-anchor="middle">CATEGORY · 4</text>
+      <text class="label purple" x="18" y="70">범주형 입력 후보</text>
+      <text class="code mono" x="18" y="103">payment_method</text>
+      <text class="code mono" x="18" y="133">order_status</text>
+      <text class="code mono" x="18" y="163">gender</text>
+      <text class="code mono" x="18" y="193">city</text>
+      <text class="tiny purple" x="18" y="235">인코딩 후 사용</text>
+    </g>
+
+    <g transform="translate(30 405)">
+      <rect class="targetBox" width="410" height="66" rx="17"/>
+      <text class="label targetText" x="18" y="28">예측 대상</text>
+      <text class="codeLarge mono targetText" x="146" y="31">order_total</text>
+      <text class="tiny targetText" x="18" y="54">주문별 총금액</text>
+    </g>
+  </g>
+
+  <g transform="translate(650 213)">
+    <rect class="xCard" width="500" height="355" rx="26"/>
+    <text class="head" x="32" y="52">입력값 X</text>
+    <text class="body" x="32" y="82">모델이 예측할 때 참고하는 정보</text>
+    <rect class="badge" x="340" y="30" width="126" height="30" rx="10"/>
+    <text class="badgeText" x="403" y="51" text-anchor="middle">10개 특성</text>
+    <text class="codeLarge mono" x="32" y="122">X = model_data[feature_cols]</text>
+
+    <g transform="translate(32 152)">
+      <rect class="numBox" width="216" height="172" rx="16"/>
+      <text class="label blue" x="18" y="33">숫자형 특성</text>
+      <text class="tiny" x="18" y="60">모델에 숫자로 전달</text>
+      <text class="codeSmall mono" x="18" y="82">item_count</text>
+      <text class="codeSmall mono" x="18" y="102">total_quantity</text>
+      <text class="codeSmall mono" x="18" y="122">avg_unit_price</text>
+      <text class="codeSmall mono" x="18" y="142">order_month</text>
+      <text class="codeSmall mono" x="18" y="162">order_dayofweek · age</text>
+    </g>
+
+    <g transform="translate(262 152)">
+      <rect class="catBox" width="206" height="172" rx="16"/>
+      <text class="label purple" x="18" y="33">범주형 특성</text>
+      <text class="tiny" x="18" y="60">One-Hot Encoding 후 전달</text>
+      <text class="codeSmall mono" x="18" y="92">payment_method</text>
+      <text class="codeSmall mono" x="18" y="116">order_status</text>
+      <text class="codeSmall mono" x="18" y="140">gender</text>
+      <text class="codeSmall mono" x="18" y="164">city</text>
+    </g>
+  </g>
+
+  <g transform="translate(650 610)">
+    <rect class="yCard" width="500" height="165" rx="26"/>
+    <text class="head" x="32" y="52">예측 대상 y</text>
+    <text class="body" x="32" y="82">모델이 맞혀야 하는 연속형 숫자</text>
+    <text class="codeLarge mono targetText" x="32" y="126">y = model_data["order_total"]</text>
+    <rect class="targetBox" x="342" y="34" width="126" height="72" rx="18"/>
+    <text class="codeLarge mono targetText" x="405" y="66" text-anchor="middle">y</text>
+    <text class="tiny targetText" x="405" y="94" text-anchor="middle">주문별 총금액</text>
+  </g>
+
+  <path class="guide" d="M912 610 C980 570 1070 548 1205 548"/>
+  <path class="orangeLine" d="M1138 692 C1210 660 1252 617 1285 572"/>
+
+  <g transform="translate(1190 285)">
+    <rect class="warnCard" width="340" height="330" rx="26"/>
+    <g transform="translate(32 30)">
+      <path d="M48 0L96 84H0Z" fill="#fffbeb" stroke="#f97316" stroke-width="4" stroke-linejoin="round"/>
+      <text x="48" y="62" text-anchor="middle" font-size="42" font-weight="900" fill="#f97316">!</text>
+    </g>
+    <text class="head" x="150" y="65">데이터 누수 주의</text>
+    <text class="body" x="32" y="120">정답 컬럼을 입력값으로 사용하면</text>
+    <text class="body" x="32" y="150">모델이 정답을 미리 보게 됩니다.</text>
+
+    <g transform="translate(38 178)">
+      <rect class="targetBox" width="126" height="42" rx="13"/>
+      <text class="code mono targetText" x="63" y="28" text-anchor="middle">order_total</text>
+      <text class="red" x="178" y="31" text-anchor="middle" font-size="34" font-weight="900">×</text>
+      <rect class="numBox" x="210" width="70" height="42" rx="13"/>
+      <text class="code mono blue" x="245" y="28" text-anchor="middle">X</text>
+    </g>
+    <text class="codeLarge mono red" x="170" y="262" text-anchor="middle">X에서 order_total 제외</text>
+    <text class="tiny" x="170" y="296" text-anchor="middle">성능이 비정상적으로 높아질 수 있음</text>
+  </g>
+
+  <rect class="footerBox" x="245" y="812" width="1110" height="58" rx="19"/>
+  <text class="footerFormula mono" x="800" y="838" text-anchor="middle">X = 입력 특성 10개   |   y = order_total   |   X에서 order_total 제외</text>
+  <text class="footer" x="800" y="862" text-anchor="middle">예측 대상은 입력값에서 반드시 제외해야 합니다.</text>
+</svg>

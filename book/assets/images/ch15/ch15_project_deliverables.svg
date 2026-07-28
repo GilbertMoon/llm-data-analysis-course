@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900"
+     role="img" aria-labelledby="title desc">
+  <title id="title">기말 프로젝트 제출물 구성</title>
+  <desc id="desc">Notebook, 데이터 개요, 전처리 데이터, EDA 결과, 시각화, 머신러닝 결과, 외부 데이터 결과, LLM 활용 기록, 최종 보고서, 자동화 설계로 구성된 최종 제출 패키지</desc>
+
+  <defs>
+    <filter id="shadow" x="-15%" y="-20%" width="130%" height="145%">
+      <feDropShadow dx="0" dy="5" stdDeviation="9" flood-color="#0f172a" flood-opacity="0.10"/>
+    </filter>
+    <style>
+      text { font-family: 'Malgun Gothic','맑은 고딕',"NanumSquare","Noto Sans KR",sans-serif; }
+      .mono { font-family: 'Malgun Gothic','맑은 고딕',"D2Coding","Cascadia Mono","Consolas",monospace; }
+      .title { font-size: 46px; font-weight: 800; fill: #0f2d4d; }
+      .subtitle { font-size: 21px; font-weight: 500; fill: #475569; }
+      .package { font-size: 24px; font-weight: 800; fill: #1e3a8a; }
+      .packageSub { font-size: 17px; font-weight: 600; fill: #475569; }
+      .num { font-size: 14px; font-weight: 800; fill: #2563eb; }
+      .cardTitle { font-size: 21px; font-weight: 800; fill: #0f172a; }
+      .cardDesc { font-size: 15px; font-weight: 500; fill: #334155; }
+      .file { font-size: 13px; font-weight: 700; fill: #475569; }
+      .group { font-size: 16px; font-weight: 800; }
+      .checkTitle { font-size: 20px; font-weight: 800; fill: #0f2d4d; }
+      .check { font-size: 16px; font-weight: 600; fill: #334155; }
+      .footer { font-size: 20px; font-weight: 750; fill: #1e3a8a; }
+      .card { fill: #ffffff; stroke-width: 2; filter: url(#shadow); }
+      .divider { stroke: #e2e8f0; stroke-width: 1.4; }
+    </style>
+  </defs>
+
+  <rect width="1600" height="900" fill="#f8fafc"/>
+  <rect x="40" y="22" width="1520" height="12" rx="6" fill="#2563eb"/>
+
+  <text x="74" y="92" class="title">기말 프로젝트 제출물 구성</text>
+  <text x="74" y="128" class="subtitle">실행 가능한 코드, 분석 결과, 해석, 검증 기록과 운영 설계를 하나의 패키지로 제출합니다.</text>
+
+  <rect x="240" y="158" width="1120" height="72" rx="22" fill="#eff6ff" stroke="#93c5fd" stroke-width="2"/>
+  <text x="800" y="190" text-anchor="middle" class="package">최종 제출 패키지</text>
+  <text x="800" y="216" text-anchor="middle" class="packageSub">실행 코드 + 데이터 산출물 + 분석 결과 + 검증 기록 + 보고서 + 자동화 설계</text>
+
+  <rect x="620" y="252" width="360" height="34" rx="17" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="800" y="275" text-anchor="middle" class="group" fill="#334155">필수 제출물 10종</text>
+
+  <g transform="translate(74 306)">
+    <rect class="card" width="252" height="178" rx="18" stroke="#93c5fd"/>
+    <rect x="18" y="16" width="38" height="26" rx="13" fill="#eff6ff" stroke="#bfdbfe"/>
+    <text x="37" y="34" text-anchor="middle" class="num">01</text>
+    <g transform="translate(190 16)" stroke="#2563eb" stroke-width="2" fill="none">
+      <rect x="0" y="0" width="38" height="48" rx="5"/><path d="M25 0v12h13"/>
+      <line x1="8" y1="22" x2="30" y2="22"/><line x1="8" y1="31" x2="30" y2="31"/>
+    </g>
+    <text x="18" y="75" class="cardTitle">Notebook</text>
+    <text x="18" y="101" class="cardDesc">전체 분석 흐름을 실행</text>
+    <line x1="18" y1="117" x2="234" y2="117" class="divider"/>
+    <text x="18" y="142" class="file mono">notebooks/</text>
+    <text x="18" y="162" class="file mono">ch15_final_project.ipynb</text>
+  </g>
+
+  <g transform="translate(374 306)">
+    <rect class="card" width="252" height="178" rx="18" stroke="#93c5fd"/>
+    <rect x="18" y="16" width="38" height="26" rx="13" fill="#eff6ff" stroke="#bfdbfe"/>
+    <text x="37" y="34" text-anchor="middle" class="num">02</text>
+    <g transform="translate(190 18)" stroke="#2563eb" stroke-width="2" fill="none">
+      <rect x="0" y="0" width="42" height="42" rx="5"/>
+      <line x1="0" y1="14" x2="42" y2="14"/><line x1="14" y1="14" x2="14" y2="42"/><line x1="28" y1="14" x2="28" y2="42"/>
+    </g>
+    <text x="18" y="75" class="cardTitle">데이터 개요</text>
+    <text x="18" y="101" class="cardDesc">행·열·컬럼·결측 요약</text>
+    <line x1="18" y1="117" x2="234" y2="117" class="divider"/>
+    <text x="18" y="142" class="file mono">reports/</text>
+    <text x="18" y="162" class="file mono">ch15_dataset_summary.csv</text>
+  </g>
+
+  <g transform="translate(674 306)">
+    <rect class="card" width="252" height="178" rx="18" stroke="#86efac"/>
+    <rect x="18" y="16" width="38" height="26" rx="13" fill="#ecfdf5" stroke="#a7f3d0"/>
+    <text x="37" y="34" text-anchor="middle" class="num">03</text>
+    <g transform="translate(190 18)" stroke="#059669" stroke-width="2" fill="none">
+      <path d="M2 3h42L29 21v23l-12 6V21z"/><line x1="10" y1="11" x2="36" y2="11"/>
+    </g>
+    <text x="18" y="75" class="cardTitle">전처리 데이터</text>
+    <text x="18" y="101" class="cardDesc">분석용 정제 데이터</text>
+    <line x1="18" y1="117" x2="234" y2="117" class="divider"/>
+    <text x="18" y="142" class="file mono">data/processed/</text>
+    <text x="18" y="162" class="file mono">*_clean.csv</text>
+  </g>
+
+  <g transform="translate(974 306)">
+    <rect class="card" width="252" height="178" rx="18" stroke="#fcd34d"/>
+    <rect x="18" y="16" width="38" height="26" rx="13" fill="#fffbeb" stroke="#fde68a"/>
+    <text x="37" y="34" text-anchor="middle" class="num">04</text>
+    <g transform="translate(190 18)" stroke="#d97706" stroke-width="2" fill="none">
+      <rect x="0" y="0" width="44" height="44" rx="5"/>
+      <line x1="0" y1="15" x2="44" y2="15"/><line x1="15" y1="15" x2="15" y2="44"/><line x1="29" y1="15" x2="29" y2="44"/>
+    </g>
+    <text x="18" y="75" class="cardTitle">EDA 결과</text>
+    <text x="18" y="101" class="cardDesc">카테고리·월별 집계</text>
+    <line x1="18" y1="117" x2="234" y2="117" class="divider"/>
+    <text x="18" y="142" class="file mono">ch15_category_sales.csv</text>
+    <text x="18" y="162" class="file mono">ch15_monthly_sales.csv</text>
+  </g>
+
+  <g transform="translate(1274 306)">
+    <rect class="card" width="252" height="178" rx="18" stroke="#d8b4fe"/>
+    <rect x="18" y="16" width="38" height="26" rx="13" fill="#f5f3ff" stroke="#ddd6fe"/>
+    <text x="37" y="34" text-anchor="middle" class="num">05</text>
+    <g transform="translate(190 18)" stroke="#7c3aed" stroke-width="2" fill="none">
+      <rect x="0" y="0" width="44" height="44" rx="5"/>
+      <polyline points="7,34 16,25 25,29 36,13"/><circle cx="16" cy="25" r="2"/><circle cx="36" cy="13" r="2"/>
+    </g>
+    <text x="18" y="75" class="cardTitle">시각화</text>
+    <text x="18" y="101" class="cardDesc">핵심 그래프 이미지</text>
+    <line x1="18" y1="117" x2="234" y2="117" class="divider"/>
+    <text x="18" y="142" class="file mono">reports/figures/</text>
+    <text x="18" y="162" class="file mono">ch15_*.png</text>
+  </g>
+
+  <g transform="translate(74 512)">
+    <rect class="card" width="252" height="178" rx="18" stroke="#fcd34d"/>
+    <rect x="18" y="16" width="38" height="26" rx="13" fill="#fffbeb" stroke="#fde68a"/>
+    <text x="37" y="34" text-anchor="middle" class="num">06</text>
+    <g transform="translate(190 18)" stroke="#d97706" stroke-width="2" fill="none">
+      <circle cx="22" cy="22" r="18"/><line x1="22" y1="4" x2="22" y2="40"/><line x1="4" y1="22" x2="40" y2="22"/>
+      <circle cx="30" cy="14" r="4"/>
+    </g>
+    <text x="18" y="75" class="cardTitle">머신러닝 결과</text>
+    <text x="18" y="101" class="cardDesc">회귀·분류 모델 비교</text>
+    <line x1="18" y1="117" x2="234" y2="117" class="divider"/>
+    <text x="18" y="142" class="file mono">reports/</text>
+    <text x="18" y="162" class="file mono">ch15_model_comparison.csv</text>
+  </g>
+
+  <g transform="translate(374 512)">
+    <rect class="card" width="252" height="178" rx="18" stroke="#67e8f9"/>
+    <rect x="18" y="16" width="38" height="26" rx="13" fill="#ecfeff" stroke="#a5f3fc"/>
+    <text x="37" y="34" text-anchor="middle" class="num">07</text>
+    <g transform="translate(190 18)" stroke="#0891b2" stroke-width="2" fill="none">
+      <circle cx="14" cy="22" r="10"/><circle cx="34" cy="22" r="10"/><line x1="22" y1="22" x2="26" y2="22"/>
+    </g>
+    <text x="18" y="75" class="cardTitle">외부 데이터 결과</text>
+    <text x="18" y="101" class="cardDesc">공휴일 등 통합 분석</text>
+    <line x1="18" y1="117" x2="234" y2="117" class="divider"/>
+    <text x="18" y="142" class="file mono">reports/</text>
+    <text x="18" y="162" class="file mono">ch15_holiday_sales_*.csv</text>
+  </g>
+
+  <g transform="translate(674 512)">
+    <rect class="card" width="252" height="178" rx="18" stroke="#c4b5fd"/>
+    <rect x="18" y="16" width="38" height="26" rx="13" fill="#f5f3ff" stroke="#ddd6fe"/>
+    <text x="37" y="34" text-anchor="middle" class="num">08</text>
+    <g transform="translate(190 18)" stroke="#7c3aed" stroke-width="2" fill="none">
+      <rect x="0" y="0" width="44" height="34" rx="7"/><path d="M12 34l-2 10l12-10"/>
+      <line x1="9" y1="12" x2="35" y2="12"/><line x1="9" y1="21" x2="30" y2="21"/>
+    </g>
+    <text x="18" y="75" class="cardTitle">LLM 활용 기록</text>
+    <text x="18" y="101" class="cardDesc">사용 목적과 검증 내역</text>
+    <line x1="18" y1="117" x2="234" y2="117" class="divider"/>
+    <text x="18" y="142" class="file mono">reports/</text>
+    <text x="18" y="162" class="file mono">ch15_llm_usage_log.md</text>
+  </g>
+
+  <g transform="translate(974 512)">
+    <rect class="card" width="252" height="178" rx="18" stroke="#fda4af"/>
+    <rect x="18" y="16" width="38" height="26" rx="13" fill="#fff1f2" stroke="#fecdd3"/>
+    <text x="37" y="34" text-anchor="middle" class="num">09</text>
+    <g transform="translate(190 16)" stroke="#e11d48" stroke-width="2" fill="none">
+      <rect x="0" y="0" width="38" height="48" rx="5"/><path d="M25 0v12h13"/>
+      <line x1="8" y1="22" x2="30" y2="22"/><line x1="8" y1="31" x2="30" y2="31"/><line x1="8" y1="40" x2="26" y2="40"/>
+    </g>
+    <text x="18" y="75" class="cardTitle">최종 보고서</text>
+    <text x="18" y="101" class="cardDesc">결과·해석·한계 정리</text>
+    <line x1="18" y1="117" x2="234" y2="117" class="divider"/>
+    <text x="18" y="142" class="file mono">reports/</text>
+    <text x="18" y="162" class="file mono">ch15_final_report.md</text>
+  </g>
+
+  <g transform="translate(1274 512)">
+    <rect class="card" width="252" height="178" rx="18" stroke="#86efac"/>
+    <rect x="18" y="16" width="38" height="26" rx="13" fill="#ecfdf5" stroke="#a7f3d0"/>
+    <text x="37" y="34" text-anchor="middle" class="num">10</text>
+    <g transform="translate(190 18)" stroke="#059669" stroke-width="2" fill="none">
+      <circle cx="22" cy="22" r="9"/><path d="M22 2v7M22 35v7M2 22h7M35 22h7M8 8l5 5M31 31l5 5M36 8l-5 5M13 31l-5 5"/>
+    </g>
+    <text x="18" y="75" class="cardTitle">자동화 설계</text>
+    <text x="18" y="101" class="cardDesc">반복 실행·로그·알림</text>
+    <line x1="18" y1="117" x2="234" y2="117" class="divider"/>
+    <text x="18" y="142" class="file mono">reports/</text>
+    <text x="18" y="162" class="file mono">ch15_automation_plan.md</text>
+  </g>
+
+  <rect x="150" y="724" width="1300" height="78" rx="20" fill="#ffffff" stroke="#bfdbfe" stroke-width="2"/>
+  <text x="182" y="755" class="checkTitle">제출 전 최종 점검</text>
+  <g fill="none" stroke="#16a34a" stroke-width="2.5">
+    <circle cx="190" cy="779" r="10"/><path d="M184 779l4 4l7-9"/>
+    <circle cx="478" cy="779" r="10"/><path d="M472 779l4 4l7-9"/>
+    <circle cx="798" cy="779" r="10"/><path d="M792 779l4 4l7-9"/>
+    <circle cx="1143" cy="779" r="10"/><path d="M1137 779l4 4l7-9"/>
+  </g>
+  <text x="208" y="784" class="check">Notebook 전체 실행</text>
+  <text x="496" y="784" class="check">파일명·폴더 경로 확인</text>
+  <text x="816" y="784" class="check">보고서와 결과 수치 일치</text>
+  <text x="1161" y="784" class="check">LLM 검증 기록 포함</text>
+
+  <rect x="220" y="824" width="1160" height="48" rx="18" fill="#eff6ff" stroke="#bfdbfe"/>
+  <text x="800" y="855" text-anchor="middle" class="footer">좋은 제출물은 파일 수가 아니라 분석 흐름과 결과의 재현 가능성으로 평가합니다.</text>
+</svg>

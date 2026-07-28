@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900"
+     role="img" aria-labelledby="title desc">
+  <title id="title">기말 종합 프로젝트 전체 흐름</title>
+  <desc id="desc">분석 목적 정의에서 데이터 구조 점검, 전처리, 탐색적 분석, 시각화, 머신러닝, LLM 검증, 외부 데이터 연결, 통합 분석, 자동화 설계, 최종 보고서와 발표까지 이어지는 11단계 프로젝트 흐름</desc>
+
+  <defs>
+    <filter id="shadow" x="-15%" y="-20%" width="130%" height="145%">
+      <feDropShadow dx="0" dy="5" stdDeviation="8" flood-color="#0f172a" flood-opacity="0.10"/>
+    </filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0 0 L10 5 L0 10 Z" fill="#64748b"/>
+    </marker>
+    <marker id="arrowBlue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0 0 L10 5 L0 10 Z" fill="#2563eb"/>
+    </marker>
+    <style>
+      text { font-family: 'Malgun Gothic','맑은 고딕',"NanumSquare","Noto Sans KR",sans-serif; }
+      .mono { font-family: 'Malgun Gothic','맑은 고딕',"D2Coding","Cascadia Mono","Consolas",monospace; }
+      .title { font-size: 46px; font-weight: 800; fill: #0f2d4d; }
+      .subtitle { font-size: 21px; font-weight: 500; fill: #475569; }
+      .phase { font-size: 16px; font-weight: 800; }
+      .num { font-size: 14px; font-weight: 800; fill: #2563eb; }
+      .cardTitle { font-size: 21px; font-weight: 800; fill: #0f172a; }
+      .cardBody { font-size: 15px; font-weight: 500; fill: #334155; }
+      .output { font-size: 13px; font-weight: 700; fill: #475569; }
+      .noteTitle { font-size: 20px; font-weight: 800; fill: #0f2d4d; }
+      .noteBody { font-size: 16px; font-weight: 500; fill: #334155; }
+      .footer { font-size: 20px; font-weight: 750; fill: #1e3a8a; }
+      .card { fill: #ffffff; stroke-width: 2; filter: url(#shadow); }
+      .line { fill: none; stroke: #64748b; stroke-width: 3; marker-end: url(#arrow); }
+      .turn { fill: none; stroke: #2563eb; stroke-width: 3; marker-end: url(#arrowBlue); }
+      .divider { stroke: #e2e8f0; stroke-width: 1.4; }
+    </style>
+  </defs>
+
+  <rect width="1600" height="900" fill="#f8fafc"/>
+  <rect x="40" y="22" width="1520" height="12" rx="6" fill="#2563eb"/>
+
+  <text x="74" y="92" class="title">기말 종합 프로젝트 전체 흐름</text>
+  <text x="74" y="128" class="subtitle">분석 질문에서 최종 보고서까지, 데이터 분석 전 과정을 하나의 프로젝트로 연결합니다.</text>
+
+  <rect x="74" y="158" width="350" height="40" rx="20" fill="#eff6ff" stroke="#bfdbfe"/>
+  <text x="249" y="184" text-anchor="middle" class="phase" fill="#1d4ed8">① 분석 설계와 데이터 준비</text>
+  <rect x="440" y="158" width="350" height="40" rx="20" fill="#fffbeb" stroke="#fde68a"/>
+  <text x="615" y="184" text-anchor="middle" class="phase" fill="#a16207">② 분석·시각화·모델링</text>
+  <rect x="806" y="158" width="350" height="40" rx="20" fill="#f5f3ff" stroke="#ddd6fe"/>
+  <text x="981" y="184" text-anchor="middle" class="phase" fill="#6d28d9">③ 검증과 외부 데이터 확장</text>
+  <rect x="1172" y="158" width="354" height="40" rx="20" fill="#ecfdf5" stroke="#a7f3d0"/>
+  <text x="1349" y="184" text-anchor="middle" class="phase" fill="#047857">④ 운영 설계와 최종 제출</text>
+
+  <path class="line" d="M392 286 H424"/>
+  <path class="line" d="M758 286 H790"/>
+  <path class="line" d="M1124 286 H1156"/>
+
+  <g transform="translate(74 222)">
+    <rect class="card" width="318" height="128" rx="18" stroke="#93c5fd"/>
+    <rect x="18" y="18" width="38" height="26" rx="13" fill="#eff6ff" stroke="#bfdbfe"/>
+    <text x="37" y="36" text-anchor="middle" class="num">01</text>
+    <text x="70" y="40" class="cardTitle">분석 목적 정의</text>
+    <text x="22" y="72" class="cardBody">의사결정과 핵심 질문을 먼저 정합니다.</text>
+    <line x1="22" y1="88" x2="296" y2="88" class="divider"/>
+    <text x="22" y="112" class="output">산출물 · 분석 질문과 범위</text>
+  </g>
+
+  <g transform="translate(440 222)">
+    <rect class="card" width="318" height="128" rx="18" stroke="#93c5fd"/>
+    <rect x="18" y="18" width="38" height="26" rx="13" fill="#eff6ff" stroke="#bfdbfe"/>
+    <text x="37" y="36" text-anchor="middle" class="num">02</text>
+    <text x="70" y="40" class="cardTitle">데이터 구조 점검</text>
+    <text x="22" y="72" class="cardBody">4개 CSV의 컬럼·키·결측치를 확인합니다.</text>
+    <line x1="22" y1="88" x2="296" y2="88" class="divider"/>
+    <text x="22" y="112" class="output">ch15_dataset_summary.csv</text>
+  </g>
+
+  <g transform="translate(806 222)">
+    <rect class="card" width="318" height="128" rx="18" stroke="#86efac"/>
+    <rect x="18" y="18" width="38" height="26" rx="13" fill="#ecfdf5" stroke="#a7f3d0"/>
+    <text x="37" y="36" text-anchor="middle" class="num">03</text>
+    <text x="70" y="40" class="cardTitle">전처리 기준 수립</text>
+    <text x="22" y="72" class="cardBody">결측·타입·중복·파생변수를 정리합니다.</text>
+    <line x1="22" y1="88" x2="296" y2="88" class="divider"/>
+    <text x="22" y="112" class="output">data/processed/*_clean.csv</text>
+  </g>
+
+  <g transform="translate(1172 222)">
+    <rect class="card" width="354" height="128" rx="18" stroke="#fcd34d"/>
+    <rect x="18" y="18" width="38" height="26" rx="13" fill="#fffbeb" stroke="#fde68a"/>
+    <text x="37" y="36" text-anchor="middle" class="num">04</text>
+    <text x="70" y="40" class="cardTitle">EDA·핵심 지표</text>
+    <text x="22" y="72" class="cardBody">매출·고객·상품·월별 흐름을 계산합니다.</text>
+    <line x1="22" y1="88" x2="332" y2="88" class="divider"/>
+    <text x="22" y="112" class="output">reports/ch15_*.csv</text>
+  </g>
+
+  <path class="turn" d="M1349 350 V384 H1384 V420"/>
+  <path class="line" d="M1172 484 H1140"/>
+  <path class="line" d="M806 484 H774"/>
+  <path class="line" d="M440 484 H408"/>
+
+  <g transform="translate(1172 420)">
+    <rect class="card" width="354" height="128" rx="18" stroke="#d8b4fe"/>
+    <rect x="18" y="18" width="38" height="26" rx="13" fill="#f5f3ff" stroke="#ddd6fe"/>
+    <text x="37" y="36" text-anchor="middle" class="num">05</text>
+    <text x="70" y="40" class="cardTitle">시각화</text>
+    <text x="22" y="72" class="cardBody">분석 질문에 맞는 핵심 그래프를 저장합니다.</text>
+    <line x1="22" y1="88" x2="332" y2="88" class="divider"/>
+    <text x="22" y="112" class="output">reports/figures/ch15_*.png</text>
+  </g>
+
+  <g transform="translate(806 420)">
+    <rect class="card" width="318" height="128" rx="18" stroke="#fcd34d"/>
+    <rect x="18" y="18" width="38" height="26" rx="13" fill="#fffbeb" stroke="#fde68a"/>
+    <text x="37" y="36" text-anchor="middle" class="num">06</text>
+    <text x="70" y="40" class="cardTitle">회귀·분류 모델링</text>
+    <text x="22" y="72" class="cardBody">기준 모델과 평가 지표를 비교합니다.</text>
+    <line x1="22" y1="88" x2="296" y2="88" class="divider"/>
+    <text x="22" y="112" class="output">ch15_model_comparison.csv</text>
+  </g>
+
+  <g transform="translate(440 420)">
+    <rect class="card" width="318" height="128" rx="18" stroke="#c4b5fd"/>
+    <rect x="18" y="18" width="38" height="26" rx="13" fill="#f5f3ff" stroke="#ddd6fe"/>
+    <text x="37" y="36" text-anchor="middle" class="num">07</text>
+    <text x="70" y="40" class="cardTitle">LLM 활용·검증</text>
+    <text x="22" y="72" class="cardBody">질문·코드·해석을 검토하고 기록합니다.</text>
+    <line x1="22" y1="88" x2="296" y2="88" class="divider"/>
+    <text x="22" y="112" class="output">ch15_llm_usage_log.md</text>
+  </g>
+
+  <g transform="translate(74 420)">
+    <rect class="card" width="318" height="128" rx="18" stroke="#67e8f9"/>
+    <rect x="18" y="18" width="38" height="26" rx="13" fill="#ecfeff" stroke="#a5f3fc"/>
+    <text x="37" y="36" text-anchor="middle" class="num">08</text>
+    <text x="70" y="40" class="cardTitle">외부 데이터 수집·연결</text>
+    <text x="22" y="66" class="cardBody">날짜·지역 키로</text>
+    <text x="22" y="85" class="cardBody">외부 데이터를 연결합니다.</text>
+    <line x1="22" y1="96" x2="296" y2="96" class="divider"/>
+    <text x="22" y="118" class="output">data/external/ · 선택형 실습</text>
+  </g>
+
+  <path class="turn" d="M233 548 V582 H280 V620"/>
+  <path class="line" d="M554 684 H618"/>
+  <path class="line" d="M948 684 H1012"/>
+
+  <g transform="translate(220 620)">
+    <rect class="card" width="334" height="128" rx="18" stroke="#67e8f9"/>
+    <rect x="18" y="18" width="38" height="26" rx="13" fill="#ecfeff" stroke="#a5f3fc"/>
+    <text x="37" y="36" text-anchor="middle" class="num">09</text>
+    <text x="70" y="40" class="cardTitle">외부 데이터 통합 분석</text>
+    <text x="22" y="72" class="cardBody">내부 지표와 외부 맥락을 함께 비교합니다.</text>
+    <line x1="22" y1="88" x2="312" y2="88" class="divider"/>
+    <text x="22" y="112" class="output">ch15_holiday_sales_comparison.csv</text>
+  </g>
+
+  <g transform="translate(618 620)">
+    <rect class="card" width="330" height="128" rx="18" stroke="#86efac"/>
+    <rect x="18" y="18" width="38" height="26" rx="13" fill="#ecfdf5" stroke="#a7f3d0"/>
+    <text x="37" y="36" text-anchor="middle" class="num">10</text>
+    <text x="70" y="40" class="cardTitle">자동화·파이프라인</text>
+    <text x="22" y="66" class="cardBody">Make·Airflow로 실행과</text>
+    <text x="22" y="85" class="cardBody">로그·알림을 설계합니다.</text>
+    <line x1="22" y1="96" x2="308" y2="96" class="divider"/>
+    <text x="22" y="118" class="output">ch15_automation_plan.md</text>
+  </g>
+
+  <g transform="translate(1012 620)">
+    <rect class="card" width="368" height="128" rx="18" stroke="#fda4af"/>
+    <rect x="18" y="18" width="38" height="26" rx="13" fill="#fff1f2" stroke="#fecdd3"/>
+    <text x="37" y="36" text-anchor="middle" class="num">11</text>
+    <text x="70" y="40" class="cardTitle">최종 보고서·발표</text>
+    <text x="22" y="66" class="cardBody">결과·해석·한계·다음 단계를</text>
+    <text x="22" y="85" class="cardBody">하나의 스토리로 정리합니다.</text>
+    <line x1="22" y1="96" x2="346" y2="96" class="divider"/>
+    <text x="22" y="118" class="output">ch15_final_report.md · 발표 자료</text>
+  </g>
+
+  <rect x="180" y="788" width="1240" height="64" rx="20" fill="#eff6ff" stroke="#bfdbfe" stroke-width="2"/>
+  <text x="800" y="828" text-anchor="middle" class="footer">질문 → 데이터 → 코드 → 결과 → 해석 → 검증 → 전달이 하나의 흐름으로 이어져야 합니다.</text>
+</svg>

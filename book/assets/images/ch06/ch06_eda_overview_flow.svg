@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="620" viewBox="0 0 1200 620">
+  <defs>
+    <style>
+      .bg{fill:#f8fafc}.title{font:700 34px 'Malgun Gothic','맑은 고딕',Arial,'Noto Sans KR',sans-serif;fill:#0f172a}.sub{font:500 18px 'Malgun Gothic','맑은 고딕',Arial,'Noto Sans KR',sans-serif;fill:#334155}.box{fill:#fff;stroke:#cbd5e1;stroke-width:2;rx:18;ry:18}.accent{fill:#dbeafe;stroke:#93c5fd;stroke-width:2;rx:18;ry:18}.note{fill:#eef2ff;stroke:#c7d2fe;stroke-width:2;rx:16;ry:16}.txt{font:700 22px 'Malgun Gothic','맑은 고딕',Arial,'Noto Sans KR',sans-serif;fill:#0f172a}.small{font:500 15px 'Malgun Gothic','맑은 고딕',Arial,'Noto Sans KR',sans-serif;fill:#334155}.method{font:700 14px 'Malgun Gothic','맑은 고딕',Consolas,'Courier New',monospace;fill:#1d4ed8}.caption{font:500 18px 'Malgun Gothic','맑은 고딕',Arial,'Noto Sans KR',sans-serif;fill:#1e40af}.arrow{stroke:#64748b;stroke-width:3;fill:none;marker-end:url(#a)}
+    </style>
+    <marker id="a" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><polygon points="0 0,10 4,0 8" fill="#64748b"/></marker>
+  </defs>
+  <rect class="bg" width="1200" height="620"/>
+  <text x="600" y="58" text-anchor="middle" class="title">EDA 전체 흐름도</text>
+  <text x="600" y="90" text-anchor="middle" class="sub">전처리된 데이터를 탐색하고 질문을 구체화해 보고서로 연결하는 과정</text>
+  <rect x="40" y="200" width="130" height="120" class="box"/><text x="105" y="242" text-anchor="middle" class="txt">전처리</text><text x="105" y="270" text-anchor="middle" class="small">데이터 불러오기</text><text x="105" y="298" text-anchor="middle" class="method">read_csv()</text>
+  <rect x="200" y="200" width="130" height="120" class="box"/><text x="265" y="242" text-anchor="middle" class="txt">분포 확인</text><text x="265" y="270" text-anchor="middle" class="small">기초 탐색</text><text x="265" y="298" text-anchor="middle" class="method">describe()</text>
+  <rect x="360" y="200" width="130" height="120" class="box"/><text x="425" y="242" text-anchor="middle" class="txt">질문 만들기</text><text x="425" y="270" text-anchor="middle" class="small">무엇을 볼까?</text><text x="425" y="298" text-anchor="middle" class="method">question</text>
+  <rect x="520" y="200" width="130" height="120" class="box"/><text x="585" y="242" text-anchor="middle" class="txt">지표 계산</text><text x="585" y="270" text-anchor="middle" class="small">집계표 만들기</text><text x="585" y="298" text-anchor="middle" class="method">groupby()</text>
+  <rect x="680" y="200" width="130" height="120" class="box"/><text x="745" y="242" text-anchor="middle" class="txt">패턴 확인</text><text x="745" y="270" text-anchor="middle" class="small">차이와 관계</text><text x="745" y="298" text-anchor="middle" class="method">plot · corr</text>
+  <rect x="840" y="200" width="130" height="120" class="box"/><text x="905" y="242" text-anchor="middle" class="txt">추가 질문</text><text x="905" y="270" text-anchor="middle" class="small">다음 분석</text><text x="905" y="298" text-anchor="middle" class="method">next question</text>
+  <rect x="1000" y="200" width="160" height="120" class="accent"/><text x="1080" y="242" text-anchor="middle" class="txt">요약 보고서</text><text x="1080" y="270" text-anchor="middle" class="small">결과 정리</text><text x="1080" y="298" text-anchor="middle" class="method">Markdown</text>
+  <path class="arrow" d="M170 260H195"/><path class="arrow" d="M330 260H355"/><path class="arrow" d="M490 260H515"/><path class="arrow" d="M650 260H675"/><path class="arrow" d="M810 260H835"/><path class="arrow" d="M970 260H995"/>
+  <rect x="380" y="370" width="440" height="110" class="note"/>
+  <text x="600" y="413" text-anchor="middle" class="txt">관찰 → 가설 → 추가 질문</text>
+  <text x="600" y="448" text-anchor="middle" class="small">EDA는 결론을 단정하기보다, 더 좋은 질문으로 이어지는 탐색 과정이다.</text>
+  <text x="600" y="555" text-anchor="middle" class="caption">EDA는 데이터를 탐색하면서 분석 질문을 구체화하는 과정입니다.</text>
+</svg>

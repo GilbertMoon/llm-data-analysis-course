@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720">
+  <defs><style>.bg{fill:#f8fafc}.title{font:700 34px 'Malgun Gothic','맑은 고딕',Arial,'Noto Sans KR',sans-serif;fill:#0f172a}.sub{font:500 18px 'Malgun Gothic','맑은 고딕',Arial,'Noto Sans KR',sans-serif;fill:#334155}.box{fill:#fff;stroke:#cbd5e1;stroke-width:2;rx:18;ry:18}.accent{fill:#dbeafe;stroke:#93c5fd;stroke-width:2;rx:18;ry:18}.head{font:700 25px 'Malgun Gothic','맑은 고딕',Arial,'Noto Sans KR',sans-serif;fill:#0f172a}.txt{font:500 19px 'Malgun Gothic','맑은 고딕',Arial,'Noto Sans KR',sans-serif;fill:#334155}.example{font:700 21px 'Malgun Gothic','맑은 고딕',Consolas,'Courier New',monospace;fill:#1d4ed8}.formula{font:700 30px 'Malgun Gothic','맑은 고딕',Consolas,'Courier New',monospace;fill:#1d4ed8}</style></defs>
+  <rect class="bg" width="1200" height="720"/>
+  <text x="600" y="58" text-anchor="middle" class="title">파생 컬럼 line_total 생성 개념도</text>
+  <text x="600" y="90" text-anchor="middle" class="sub">기존 컬럼을 계산해 분석에 필요한 새로운 컬럼을 만든다.</text>
+  <rect x="100" y="220" width="240" height="165" class="box"/><text x="220" y="270" text-anchor="middle" class="head">quantity</text><text x="220" y="313" text-anchor="middle" class="txt">상품 수량</text><text x="220" y="350" text-anchor="middle" class="example">예: 3</text>
+  <rect x="480" y="220" width="240" height="165" class="box"/><text x="600" y="270" text-anchor="middle" class="head">unit_price</text><text x="600" y="313" text-anchor="middle" class="txt">상품 단가</text><text x="600" y="350" text-anchor="middle" class="example">예: 12,000</text>
+  <rect x="860" y="220" width="240" height="165" class="accent"/><text x="980" y="270" text-anchor="middle" class="head">line_total</text><text x="980" y="313" text-anchor="middle" class="txt">주문 상세 금액</text><text x="980" y="350" text-anchor="middle" class="example">예: 36,000</text>
+  <text x="410" y="318" text-anchor="middle" class="formula">×</text>
+  <text x="790" y="318" text-anchor="middle" class="formula">=</text>
+  <rect x="185" y="470" width="830" height="86" class="box"/><text x="600" y="522" text-anchor="middle" class="formula">line_total = 3 × 12,000 = 36,000</text>
+</svg>

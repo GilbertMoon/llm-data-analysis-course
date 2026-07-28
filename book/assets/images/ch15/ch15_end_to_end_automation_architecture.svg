@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1700" height="700" viewBox="0 0 1700 700" role="img" aria-labelledby="title desc">
+  <title id="title">기말 프로젝트 End-to-End 자동화 아키텍처</title>
+  <desc id="desc">원본 CSV에서 Airflow DAG 분석 파이프라인을 거쳐 Google Drive 저장, Make Scenario, Gmail 발송, Google Sheets 로그 기록으로 이어지는 자동화 구조</desc>
+  <defs>
+    <linearGradient id="head" x1="0" x2="1"><stop offset="0%" stop-color="#2563eb"/><stop offset="100%" stop-color="#0f766e"/></linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#0f172a" flood-opacity="0.13"/></filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#2563eb"/></marker>
+    <style>
+      .bg{fill:#f8fafc}.h{fill:url(#head)} text{font-family:'Malgun Gothic','맑은 고딕','Pretendard','Noto Sans KR','Apple SD Gothic Neo',sans-serif}.title{font-size:38px;font-weight:900;fill:#fff}.sub{font-size:18px;font-weight:650;fill:#dbeafe}.zone{fill:#fff;stroke:#cbd5e1;stroke-width:2;filter:url(#shadow)}.air{fill:#f5f3ff;stroke:#c4b5fd}.make{fill:#ecfdf5;stroke:#86efac}.input{fill:#eff6ff;stroke:#93c5fd}.warn{fill:#fff7ed;stroke:#fdba74}.main{font-size:23px;font-weight:900;fill:#0f172a}.small{font-size:16px;font-weight:700;fill:#475569}.node{fill:#fff;stroke:#bfdbfe;stroke-width:2;filter:url(#shadow)}.node2{fill:#fff;stroke:#86efac;stroke-width:2;filter:url(#shadow)}.arr{fill:none;stroke:#2563eb;stroke-width:4;marker-end:url(#arrow)}.note{fill:#ecfdf5;stroke:#86efac;stroke-width:2}.noteText{font-size:20px;font-weight:800;fill:#166534}
+    </style>
+  </defs>
+  <rect class="bg" width="1700" height="700" rx="34"/>
+  <rect class="h" x="55" y="38" width="1590" height="92" rx="28"/>
+  <text class="title" x="92" y="94">기말 프로젝트 End-to-End 자동화 아키텍처</text>
+  <text class="sub" x="92" y="120">Airflow는 분석 실행을 관리하고, Make는 보고서 전달과 로그 기록을 자동화합니다</text>
+
+  <g transform="translate(80 175)">
+    <rect class="zone input" width="330" height="360" rx="28"/>
+    <text class="main" x="34" y="56">데이터 입력</text>
+    <rect class="node" x="45" y="105" width="240" height="70" rx="18"/><text class="small" x="165" y="146" text-anchor="middle">원본 CSV</text>
+    <rect class="node" x="45" y="205" width="240" height="70" rx="18"/><text class="small" x="165" y="246" text-anchor="middle">외부 데이터</text>
+  </g>
+
+  <path class="arr" d="M420 355H500"/>
+  <g transform="translate(520 155)">
+    <rect class="zone air" width="600" height="400" rx="28"/>
+    <text class="main" x="34" y="56">Airflow 분석 파이프라인</text>
+    <g transform="translate(45 95)"><rect class="node" width="230" height="64" rx="16"/><text class="small" x="115" y="39" text-anchor="middle">전처리 Task</text></g>
+    <g transform="translate(325 95)"><rect class="node" width="230" height="64" rx="16"/><text class="small" x="115" y="39" text-anchor="middle">분석 Task</text></g>
+    <g transform="translate(45 190)"><rect class="node" width="230" height="64" rx="16"/><text class="small" x="115" y="39" text-anchor="middle">시각화 Task</text></g>
+    <g transform="translate(325 190)"><rect class="node" width="230" height="64" rx="16"/><text class="small" x="115" y="39" text-anchor="middle">보고서 생성 Task</text></g>
+    <g transform="translate(185 285)"><rect class="node" width="230" height="64" rx="16"/><text class="small" x="115" y="39" text-anchor="middle">결과 검증 Task</text></g>
+    <path class="arr" d="M275 127H320"/><path class="arr" d="M440 160 C440 190 180 180 160 190"/><path class="arr" d="M275 222H320"/><path class="arr" d="M440 254 C440 290 330 300 305 315"/>
+  </g>
+
+  <path class="arr" d="M1130 355H1210"/>
+  <g transform="translate(1230 175)">
+    <rect class="zone make" width="390" height="360" rx="28"/>
+    <text class="main" x="34" y="56">Make 업무 자동화</text>
+    <rect class="node2" x="45" y="95" width="300" height="62" rx="18"/><text class="small" x="195" y="133" text-anchor="middle">Google Drive 저장</text>
+    <rect class="node2" x="45" y="180" width="300" height="62" rx="18"/><text class="small" x="195" y="218" text-anchor="middle">Gmail 발송</text>
+    <rect class="node2" x="45" y="265" width="300" height="62" rx="18"/><text class="small" x="195" y="303" text-anchor="middle">Google Sheets 로그</text>
+  </g>
+
+  <g transform="translate(695 585)">
+    <rect class="warn" width="310" height="48" rx="18"/>
+    <text x="155" y="31" text-anchor="middle" font-size="18" font-weight="900" fill="#9a3412">오류 발생 시 로그 확인 및 알림</text>
+  </g>
+  <rect class="note" x="350" y="650" width="1000" height="34" rx="14"/>
+  <text class="noteText" x="850" y="673" text-anchor="middle">분석 실행, 결과 검증, 보고서 전달, 로그 기록을 분리하면 운영 구조가 단순해집니다</text>
+</svg>

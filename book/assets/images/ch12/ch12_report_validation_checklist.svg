@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="720" viewBox="0 0 1600 720" role="img" aria-labelledby="title desc">
+  <title id="title">자동 생성 보고서 검증 체크리스트</title>
+  <desc id="desc">자동 생성된 분석 보고서를 최종 제출하기 전에 확인해야 할 입력 파일, 그래프 경로, 해석 근거, 한계점, 개인정보 노출 점검 항목</desc>
+  <defs>
+    <linearGradient id="head" x1="0" x2="1"><stop offset="0%" stop-color="#2563eb"/><stop offset="100%" stop-color="#0f766e"/></linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#0f172a" flood-opacity="0.12"/></filter>
+    <style>
+      .bg{fill:#f8fafc}.h{fill:url(#head)} text{font-family:'Malgun Gothic','맑은 고딕','Pretendard','Noto Sans KR','Apple SD Gothic Neo',sans-serif}.title{font-size:38px;font-weight:800;fill:#fff}.sub{font-size:18px;font-weight:600;fill:#dbeafe}
+      .card{fill:#fff;stroke:#cbd5e1;stroke-width:2;filter:url(#shadow)}.row{fill:#f8fafc;stroke:#e2e8f0;stroke-width:1}.box{fill:#ecfdf5;stroke:#22c55e;stroke-width:2}.check{font-size:20px;font-weight:900;fill:#16a34a}.item{font-size:18px;font-weight:700;fill:#334155}.warn{fill:#fff7ed;stroke:#fdba74;stroke-width:2}.warnText{font-size:20px;font-weight:900;fill:#9a3412}.file{font-family:'Malgun Gothic','맑은 고딕','D2Coding','Consolas',monospace;font-size:18px;font-weight:700;fill:#475569}.note{fill:#ecfdf5;stroke:#86efac;stroke-width:2}.noteText{font-size:20px;font-weight:800;fill:#166534}
+    </style>
+  </defs>
+  <rect class="bg" width="1600" height="720" rx="32"/>
+  <rect class="h" x="50" y="36" width="1500" height="92" rx="26"/>
+  <text class="title" x="86" y="92">자동 생성 보고서 검증 체크리스트</text>
+  <text class="sub" x="86" y="118">자동 생성된 보고서도 최종 제출 전에는 반드시 사람이 검증해야 합니다</text>
+
+  <g transform="translate(90 160)">
+    <rect class="card" width="860" height="470" rx="26"/>
+    <text x="34" y="48" font-size="28" font-weight="900" fill="#0f172a">검증 항목</text>
+    <g transform="translate(34 76)"><rect class="row" width="790" height="34" rx="12"/><rect class="box" x="10" y="7" width="20" height="20" rx="4"/><text class="check" x="20" y="24" text-anchor="middle">✓</text><text class="item" x="48" y="23">입력 CSV 존재</text></g>
+    <g transform="translate(34 113)"><rect class="row" width="790" height="34" rx="12"/><rect class="box" x="10" y="7" width="20" height="20" rx="4"/><text class="check" x="20" y="24" text-anchor="middle">✓</text><text class="item" x="48" y="23">그래프 이미지 존재</text></g>
+    <g transform="translate(34 150)"><rect class="row" width="790" height="34" rx="12"/><rect class="box" x="10" y="7" width="20" height="20" rx="4"/><text class="check" x="20" y="24" text-anchor="middle">✓</text><text class="item" x="48" y="23">보고서 작성일 표시</text></g>
+    <g transform="translate(34 187)"><rect class="row" width="790" height="34" rx="12"/><rect class="box" x="10" y="7" width="20" height="20" rx="4"/><text class="check" x="20" y="24" text-anchor="middle">✓</text><text class="item" x="48" y="23">데이터 개요와 주요 결과표 포함</text></g>
+    <g transform="translate(34 224)"><rect class="row" width="790" height="34" rx="12"/><rect class="box" x="10" y="7" width="20" height="20" rx="4"/><text class="check" x="20" y="24" text-anchor="middle">✓</text><text class="item" x="48" y="23">그래프 경로 정상</text></g>
+    <g transform="translate(34 261)"><rect class="row" width="790" height="34" rx="12"/><rect class="box" x="10" y="7" width="20" height="20" rx="4"/><text class="check" x="20" y="24" text-anchor="middle">✓</text><text class="item" x="48" y="23">해석 문장 근거 확인</text></g>
+    <g transform="translate(34 298)"><rect class="row" width="790" height="34" rx="12"/><rect class="box" x="10" y="7" width="20" height="20" rx="4"/><text class="check" x="20" y="24" text-anchor="middle">✓</text><text class="item" x="48" y="23">원인 단정 없음</text></g>
+    <g transform="translate(34 335)"><rect class="row" width="790" height="34" rx="12"/><rect class="box" x="10" y="7" width="20" height="20" rx="4"/><text class="check" x="20" y="24" text-anchor="middle">✓</text><text class="item" x="48" y="23">한계점 포함</text></g>
+    <g transform="translate(34 372)"><rect class="row" width="790" height="34" rx="12"/><rect class="box" x="10" y="7" width="20" height="20" rx="4"/><text class="check" x="20" y="24" text-anchor="middle">✓</text><text class="item" x="48" y="23">개인정보 노출 없음</text></g>
+    <g transform="translate(34 409)"><rect class="row" width="790" height="34" rx="12"/><rect class="box" x="10" y="7" width="20" height="20" rx="4"/><text class="check" x="20" y="24" text-anchor="middle">✓</text><text class="item" x="48" y="23">최신 결과 반영</text></g>
+  </g>
+
+  <g transform="translate(1040 235)">
+    <rect class="card" width="400" height="225" rx="26"/>
+    <text x="34" y="56" font-size="28" font-weight="900" fill="#0f172a">최종 보고서</text>
+    <text class="file" x="34" y="105">ch12_auto_report.md</text>
+    <text class="file" x="34" y="145">reports/</text>
+    <text class="file" x="34" y="185">figures/</text>
+  </g>
+  <rect class="warn" x="1030" y="500" width="420" height="60" rx="20"/>
+  <text class="warnText" x="1240" y="537" text-anchor="middle">자동 생성 ≠ 자동 승인</text>
+
+  <rect class="note" x="345" y="660" width="910" height="38" rx="14"/>
+  <text class="noteText" x="800" y="686" text-anchor="middle">최종 제출 전에는 파일, 그래프, 해석, 개인정보를 모두 확인합니다</text>
+</svg>
