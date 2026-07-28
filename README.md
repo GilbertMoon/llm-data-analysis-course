@@ -76,14 +76,18 @@ jupyter notebook
 | --- | --- |
 | 2장 개발 환경 | `notebooks/ch02_environment_setup.ipynb` |
 | 3장 데이터 첫인상 | `notebooks/ch03_data_overview.ipynb` |
+| 4장 pandas 기초 | `notebooks/ch04_pandas_basic.ipynb` |
 | 5장 데이터 전처리 | `notebooks/ch05_data_preprocessing.ipynb` |
 | 6장 EDA 질문 만들기 | `notebooks/ch06_eda_questions.ipynb` |
 | 7장 데이터 시각화 | `notebooks/ch07_visualization.ipynb` |
+| 8장 중간 프로젝트 | `notebooks/ch08_midterm_project.ipynb` |
 | 9장 회귀 분석 | `notebooks/ch09_regression_analysis.ipynb` |
 | 10장 LLM 코드 생성·검증 | `notebooks/ch10_llm_code_generation.ipynb` |
-| 11장 LLM 프롬프트 분석 | `notebooks/ch09_llm_prompt_analysis.ipynb` |
+| 11장 LLM 프롬프트 분석 | `notebooks/ch11_llm_prompt_analysis.ipynb` |
 | 12장 보고서 생성 | `notebooks/ch12_report_generation.ipynb` |
+| 13장 외부 데이터 수집 | `notebooks/ch13_external_data_collection.ipynb` |
 | 14장 Airflow 파이프라인 | `notebooks/ch14_airflow_pipeline.ipynb` |
+| 15장 기말 프로젝트 | `notebooks/ch15_final_project.ipynb` |
 
 > 저장소의 파일명은 책의 최종 편집 과정에서 일부 변경될 수 있습니다. 해당 장의 최신 파일을 우선 사용하세요.
 
