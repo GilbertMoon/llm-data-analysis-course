@@ -1,55 +1,29 @@
 # LLM 기반 데이터 분석 실무 입문
+## 공식 실습 자료
 
-이 저장소는 **LLM 기반 데이터 분석 실무 입문** 과정을 위한 실습 및 ebook형 강의안 저장소입니다. Python 데이터 분석의 기본 흐름을 익힌 뒤, 간단한 머신러닝, LLM 활용, 외부 데이터 수집, 보고서 작성, 자동화 개념까지 하나의 분석 프로젝트 흐름으로 연결합니다.
+이 저장소는 『LLM 기반 데이터 분석 실무 입문』의 **공식 실습용 Companion Repository**입니다.
 
-전체 방향은 전통적인 수업 교재보다는 **일반 ebook처럼 읽히는 강의안**에 가깝게 구성합니다. 각 장은 개념 설명, 짧은 예시, 실습 아이디어, 프로젝트 확장 흐름을 함께 담아 수업 자료와 자기주도 학습 자료로 모두 활용할 수 있도록 합니다.
+책의 본문·편집 원고·출판 제작 자료는 포함하지 않으며, 독자가 책을 따라 실습하는 데 필요한 Python 코드, Jupyter Notebook, 샘플 데이터 생성 코드, API 및 자동화 예제를 제공합니다.
 
-## 저장소 목적
+## 제공 자료
 
-- 데이터 분석 입문자가 따라갈 수 있는 Python 기반 분석 흐름 제공
-- pandas, matplotlib, seaborn 기반의 기초 분석 코드 예제 제공
-- scikit-learn을 활용한 간단한 회귀/분류 머신러닝 실습 제공
-- ChatGPT/Gemini 같은 LLM을 분석 질문, 코드 생성, 결과 해석, 보고서 작성에 활용하는 방법 정리
-- 공공데이터, 네이버 API, 크롤링을 통한 외부 데이터 수집 흐름 소개
-- Make, n8n, Airflow를 활용한 분석 자동화와 파이프라인 개념 실습 제공
-- 중간 프로젝트와 기말 프로젝트 제출을 위한 공통 기준 제공
+- 장별 Jupyter Notebook
+- Python 데이터 분석 실습 코드
+- 개인정보가 없는 가상 쇼핑몰 샘플 데이터 생성 코드
+- pandas 기반 데이터 처리·전처리·EDA 예제
+- matplotlib/seaborn 기반 시각화 예제
+- scikit-learn 기반 회귀·분류 실습
+- Gemini API를 활용한 LLM 데이터 분석 실습
+- 외부 데이터 수집 예제
+- Docker Compose / Apache Airflow 자동화 실습
 
-## 15주 강의 구성 요약
-
-| 주차 | 주제 | 주요 내용 |
-| --- | --- | --- |
-| 1주차 | AI 기반 데이터 분석 개요 및 개발 환경 설정 | 데이터 분석 흐름, LLM 활용 방향, Python, VS Code, Jupyter Notebook 개념, GitHub, 가상환경, 패키지 설치 |
-| 2주차 | 데이터 구조 이해 | CSV 데이터 읽기, 컬럼/행 구조, 데이터 타입, 기본 탐색 |
-| 3주차 | pandas 기초 | DataFrame, 선택, 필터링, 정렬, 집계 기초 |
-| 4주차 | 데이터 전처리 | 결측치, 중복, 이상치, 날짜 처리, 데이터 정리 |
-| 5주차 | EDA 질문 만들기 | 분석 질문, 가설 설정, 그룹별 비교, 탐색적 분석 흐름 |
-| 6주차 | 데이터 시각화 | matplotlib/seaborn, 막대그래프, 선그래프, 분포 시각화 |
-| 7주차 | 머신러닝 기초 | 지도학습 개념, 분류/회귀 개념, feature/target, train/test split, 평가 지표 |
-| 8주차 | 중간 프로젝트 | 샘플 데이터 기반 EDA, 전처리, 시각화, 기초 인사이트 제출 |
-| 9주차 | 회귀 분석 실습 | 매출/가격 예측, Linear Regression, RandomForestRegressor, MAE/RMSE/R² |
-| 10주차 | 분류 분석 실습 | 주문 취소/구매 여부 예측, Logistic Regression, RandomForestClassifier, accuracy/precision/recall |
-| 11주차 | LLM을 활용한 분석 프롬프트 | 데이터 설명, 분석 질문 생성, 전처리/시각화/ML 코드 생성 프롬프트 |
-| 12주차 | LLM 코드 생성과 검증 | LLM이 생성한 pandas/ML 코드 검토, 오류 수정, 결과 검증, 보고서 초안 작성 |
-| 13주차 | 외부 데이터 수집 | 공공데이터, 네이버 API, 기본 크롤링 개념 및 활용 |
-| 14주차 | 분석 자동화와 파이프라인 | Docker Compose 기반 Airflow DAG 실습, Make/n8n 연계 아이디어 |
-| 15주차 | 기말 프로젝트 | EDA + 시각화 + ML + LLM 활용 + 외부 데이터 + 자동화 아이디어 발표 |
-
-## 사용 기술 스택
+## 권장 환경
 
 - Python 3.10 이상
 - VS Code
 - Jupyter Notebook
-- pandas, numpy
-- matplotlib, seaborn
-- scikit-learn
-- Faker
-- python-docx
-- python-dotenv
-- Google Gemini API
-- 공공데이터 API, 네이버 API, 기본 크롤링 도구
-- Make, n8n
-- Docker Desktop, Docker Compose, Apache Airflow
-- GitHub
+- Git
+- Docker Desktop (14장 Airflow 실습 시)
 
 ## 설치 방법
 
@@ -57,59 +31,65 @@
 git clone https://github.com/GilbertMoon/llm-data-analysis-course.git
 cd llm-data-analysis-course
 python -m venv .venv
+```
+
+Windows PowerShell 또는 명령 프롬프트:
+
+```powershell
 .venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-macOS 또는 Linux에서는 가상환경 활성화 명령만 다릅니다.
+macOS/Linux:
 
 ```bash
 source .venv/bin/activate
+pip install -r requirements.txt
 ```
 
-## 실습 데이터 다운로드 또는 생성 방법
+## 실습 데이터 생성
 
-수업에서는 개인정보가 없는 가상 쇼핑몰 데이터를 사용합니다. 아래 명령으로 `data/raw/` 폴더에 CSV 파일을 생성할 수 있습니다.
+수업과 책의 실습에서는 개인정보가 없는 가상 쇼핑몰 데이터를 사용합니다.
 
 ```bash
 python scripts/generate_sample_data.py
 ```
 
-생성되는 파일은 다음과 같습니다.
+주요 생성 파일:
 
 - `customers.csv`
 - `products.csv`
 - `orders.csv`
 - `order_items.csv`
 
-## Jupyter Notebook 실행 방법
+## Jupyter Notebook 실행
 
 ```bash
 jupyter notebook
 ```
 
-브라우저가 열리면 `notebooks/` 폴더의 주차별 노트북을 순서대로 실행합니다. 실제 수업 진행은 VS Code를 중심으로 하되, Jupyter Notebook은 코드 실행 결과와 해석을 함께 정리하는 분석 노트 형식으로 활용합니다.
+브라우저가 열리면 `notebooks/` 폴더에서 책의 장에 해당하는 Notebook을 실행합니다.
 
-## Word 강의안 생성 및 통합
+## 책 ↔ 실습 파일 연결
 
-`book/chapters/`의 0~15장 Markdown을 공통 Word 템플릿으로 변환하고, 챕터별 수동 검수 후 통합 DOCX를 생성할 수 있습니다.
+| 책의 장 | 주요 실습 Notebook |
+| --- | --- |
+| 2장 개발 환경 | `notebooks/ch02_environment_setup.ipynb` |
+| 3장 데이터 첫인상 | `notebooks/ch03_data_overview.ipynb` |
+| 5장 데이터 전처리 | `notebooks/ch05_data_preprocessing.ipynb` |
+| 6장 EDA 질문 만들기 | `notebooks/ch06_eda_questions.ipynb` |
+| 7장 데이터 시각화 | `notebooks/ch07_visualization.ipynb` |
+| 9장 회귀 분석 | `notebooks/ch09_regression_analysis.ipynb` |
+| 10장 LLM 코드 생성·검증 | `notebooks/ch10_llm_code_generation.ipynb` |
+| 11장 LLM 프롬프트 분석 | `notebooks/ch09_llm_prompt_analysis.ipynb` |
+| 12장 보고서 생성 | `notebooks/ch12_report_generation.ipynb` |
+| 14장 Airflow 파이프라인 | `notebooks/ch14_airflow_pipeline.ipynb` |
 
-```powershell
-python -m pip install -r requirements-docx.txt
-python scripts/build_chapter_docx.py
-# 개별 Word 검수 후 chapter_review_status.csv의 status를 approved로 변경
-python scripts/merge_chapter_docx.py
-```
-
-설치 방법, SVG 처리, 수동 검수 기준과 목차 업데이트 방법은 [`docs/word_build_guide.md`](docs/word_build_guide.md)를 참고하세요.
+> 저장소의 파일명은 책의 최종 편집 과정에서 일부 변경될 수 있습니다. 해당 장의 최신 파일을 우선 사용하세요.
 
 ## 14장 Docker Compose 기반 Airflow 실습
 
-Docker 설치 과정은 별도 블로그 글을 참고합니다.
-
-- Docker 설치 가이드: https://blog.naver.com/dev-dog/224341211248
-
-설치 확인:
+Docker 설치 후 다음 명령으로 설치 여부를 확인합니다.
 
 ```bash
 docker --version
@@ -117,59 +97,40 @@ docker compose version
 docker run hello-world
 ```
 
-Airflow 실행 전 Python 분석 코드 자체를 먼저 검증합니다.
+Python 분석 파이프라인을 먼저 검증합니다.
 
 ```bash
 python scripts/generate_sample_data.py
 python scripts/run_ch14_pipeline.py
 ```
 
-Docker Compose 기반 Airflow 실행:
+Airflow 실행:
 
 ```bash
 cd automation/airflow
 cp .env.example .env
 # Windows PowerShell: copy .env.example .env
-
 docker compose up airflow-init
 docker compose up
 ```
 
-Airflow UI:
+자세한 내용은 `docs/ch14_docker_airflow_guide.md`를 참고하세요.
 
-```text
-http://localhost:8080
-ID: airflow
-PW: airflow
-```
+## API Key 보안
 
-자세한 안내는 `docs/ch14_docker_airflow_guide.md`를 참고하세요.
+실제 API Key는 GitHub에 커밋하지 않습니다. `.env.example`을 복사하여 `.env`를 만들고 개인 키는 `.env`에만 저장하세요.
 
-## 중간/기말 프로젝트 안내
-
-중간 프로젝트는 8주차에 진행합니다. 제공된 샘플 데이터를 바탕으로 분석 질문을 만들고, 전처리, 집계, 시각화, 기초 인사이트 작성을 수행합니다. 머신러닝은 필수보다는 선택 확장 요소로 둡니다.
-
-기말 프로젝트는 15주차에 진행합니다. EDA, 시각화, 간단한 머신러닝 모델, LLM 프롬프트 활용, 분석 보고서, 자동화 아이디어를 함께 정리합니다.
-
-## GitHub 제출 방법
-
-1. 본인 계정으로 저장소를 fork합니다.
-2. 실습 노트북과 보고서 파일을 작성합니다.
-3. 변경사항을 commit합니다.
-4. GitHub 저장소 URL 또는 Pull Request URL을 LMS에 제출합니다.
-
-```bash
-git add .
-git commit -m "Add week 1 practice"
-git push origin main
-```
-
-## API Key 보안 주의사항
-
-실제 API Key는 절대 GitHub에 커밋하지 않습니다. `.env.example` 파일을 복사해 `.env` 파일을 만들고, 개인 키는 `.env`에만 저장합니다.
-
-```bash
+```powershell
 copy .env.example .env
 ```
 
-`.env` 파일은 `.gitignore`에 포함되어 있어 GitHub에 업로드되지 않습니다.
+`.env`는 `.gitignore`에 포함되어야 합니다.
+
+## 저장소 역할
+
+이 저장소는 **독자 실습용 공개 저장소**입니다.
+
+- 포함: 실행 코드, Notebook, 샘플 데이터, 실습 환경, 학습 보조 문서
+- 제외: 책 원고, 편집·교정 자료, 출판용 Word/PDF/HTML 생성 과정, 내부 검수 자료
+
+책의 본문과 출판 제작 파일은 별도의 저자 전용 저장소에서 관리합니다.
