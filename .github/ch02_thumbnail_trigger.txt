@@ -1,1 +1,0 @@
-render chapter02 blog thumbnail
