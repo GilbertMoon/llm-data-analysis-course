@@ -1,0 +1,166 @@
+name: Build Chapter01 Blog Thumbnail
+
+on:
+  push:
+    paths:
+      - '.github/ch01_thumbnail_trigger.txt'
+
+permissions:
+  contents: write
+
+jobs:
+  build-thumbnail:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install rendering dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y fonts-noto-cjk
+          python -m pip install --upgrade pip pillow
+
+      - name: Render 1536x1024 PNG
+        shell: bash
+        run: |
+          export FONT_REG="$(fc-match -f '%{file}\n' 'Noto Sans CJK KR' | head -1)"
+          export FONT_BOLD="$(fc-match -f '%{file}\n' 'Noto Sans CJK KR:style=Bold' | head -1)"
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          from PIL import Image, ImageDraw, ImageFont
+
+          W, H = 1536, 1024
+          bg = '#061832'
+          panel = '#0A2348'
+          panel2 = '#0D2D5C'
+          cyan = '#2FD6F6'
+          blue = '#3C8DFF'
+          white = '#F7FAFF'
+          soft = '#B7CBE8'
+          green = '#66D6A6'
+          violet = '#7D6CFF'
+          orange = '#FFB24A'
+          border = '#2E76CC'
+
+          im = Image.new('RGB', (W, H), bg)
+          d = ImageDraw.Draw(im)
+          reg_path = os.environ['FONT_REG']
+          bold_path = os.environ['FONT_BOLD']
+
+          def f(size, bold=False):
+              return ImageFont.truetype(bold_path if bold else reg_path, size)
+
+          def rr(xy, r=22, fill=panel, outline=border, width=2):
+              d.rounded_rectangle(xy, radius=r, fill=fill, outline=outline, width=width)
+
+          def text(xy, s, size, fill=white, bold=False, anchor=None):
+              d.text(xy, s, font=f(size, bold), fill=fill, anchor=anchor)
+
+          # left title area
+          rr((46, 48, 205, 184), 24, '#0B3D91', '#4CA4FF', 3)
+          text((125, 116), '01', 82, white, True, 'mm')
+          text((50, 242), 'AI와 함께하는', 68, white, True)
+          text((50, 330), '데이터 분석의 시작', 72, cyan, True)
+          text((52, 448), '질문 정의부터 AI 활용과 검증까지', 34, soft)
+          d.rounded_rectangle((50, 518, 590, 526), radius=4, fill=blue)
+
+          bullets = [
+              ('?', '분석은 코드가 아니라 질문에서 시작됩니다'),
+              ('AI', 'AI(LLM)는 아이디어와 코드 초안을 돕습니다'),
+              ('✓', '최종 검증과 판단은 사람이 책임집니다'),
+          ]
+          y = 595
+          for icon, msg in bullets:
+              d.ellipse((50, y-28, 106, y+28), fill='#124EB1')
+              text((78, y), icon, 24 if icon != 'AI' else 18, white, True, 'mm')
+              text((128, y), msg, 29, soft, False, 'lm')
+              y += 86
+
+          rr((48, 818, 590, 954), 18, '#063052', cyan, 2)
+          text((78, 854), '핵심: AI는 초안, 판단과 검증은 사람', 31, cyan, True)
+          text((78, 904), 'AI 결과를 실제 데이터와 코드로 확인합니다.', 26, soft)
+
+          # right main panel
+          rr((628, 55, 1494, 958), 24, '#071F42', '#2E76CC', 2)
+          text((664, 87), '데이터 분석 전체 흐름', 32, white, True)
+
+          # top flow
+          flow = [('질문','?'), ('데이터','DB'), ('분석','↗'), ('시각화','▥'), ('보고서','≡')]
+          xs = [735, 905, 1075, 1245, 1415]
+          for i, ((label, icon), x) in enumerate(zip(flow, xs)):
+              d.ellipse((x-48, 126, x+48, 222), fill='#0B2C58', outline='#65B9FF', width=2)
+              text((x, 174), icon, 28 if icon != 'DB' else 22, white, True, 'mm')
+              text((x, 248), label, 29, white, True, 'ma')
+              if i < len(xs)-1:
+                  d.line((x+55, 174, xs[i+1]-55, 174), fill='#8CBDF0', width=5)
+                  d.polygon([(xs[i+1]-55,174),(xs[i+1]-72,164),(xs[i+1]-72,184)], fill='#8CBDF0')
+
+          # LLM to human validation
+          rr((660, 320, 815, 565), 22, '#273E9B', '#8F84FF', 2)
+          text((737, 385), 'LLM', 40, white, True, 'mm')
+          text((737, 437), 'AI 어시스턴트', 24, white, True, 'mm')
+          text((737, 485), '아이디어 · 코드 지원', 21, soft, False, 'mm')
+
+          rr((875, 330, 1120, 440), 18, '#1B2F70', violet, 2)
+          text((900, 355), '아이디어 초안', 27, white, True)
+          text((900, 398), '분석 방향 · 추가 질문 제안', 21, soft)
+          rr((875, 465, 1120, 575), 18, '#1B2F70', violet, 2)
+          text((900, 490), '코드 초안', 27, white, True)
+          text((900, 533), 'pandas · 시각화 코드 제안', 21, soft)
+          d.line((815, 405, 865, 385), fill=violet, width=5)
+          d.line((815, 470, 865, 520), fill=violet, width=5)
+
+          rr((1190, 330, 1460, 575), 22, '#084E55', '#2ED8C1', 2)
+          text((1325, 370), '사람의 검증 & 최종 판단', 27, green, True, 'ma')
+          checks = ['사실 확인', '논리 검증', '비즈니스 타당성', '최종 결론 승인']
+          yy = 430
+          for c in checks:
+              d.ellipse((1215, yy-10, 1235, yy+10), fill=green)
+              text((1255, yy), c, 22, white, False, 'lm')
+              yy += 42
+          d.line((1120, 405, 1180, 405), fill='#7ED9F5', width=5)
+          d.line((1120, 520, 1180, 520), fill='#7ED9F5', width=5)
+
+          # shopping data relationship
+          rr((654, 638, 1468, 900), 20, '#0A2851', '#315E9B', 2)
+          text((680, 662), '학습에 사용하는 데이터: 온라인 쇼핑몰 데이터', 26, white, True)
+          boxes = [
+              (680, 716, 855, 855, '고객 (customers)', ['customer_id (PK)', '회원정보']),
+              (880, 716, 1055, 855, '주문 (orders)', ['order_id (PK)', 'customer_id (FK)']),
+              (1080, 716, 1275, 855, '주문상세 (order_items)', ['order_id (FK)', 'product_id (FK)']),
+              (1300, 716, 1450, 855, '상품 (products)', ['product_id (PK)', '상품정보']),
+          ]
+          colors = ['#EAF7F1','#EAF1FF','#F0EDFF','#E5F8FA']
+          head = ['#249C8B','#246FD1','#6955D9','#169EB3']
+          for idx,(x1,y1,x2,y2,title,lines) in enumerate(boxes):
+              d.rounded_rectangle((x1,y1,x2,y2), radius=15, fill=colors[idx], outline=head[idx], width=2)
+              d.rounded_rectangle((x1,y1,x2,y1+42), radius=15, fill=head[idx])
+              d.rectangle((x1,y1+27,x2,y1+42), fill=head[idx])
+              text(((x1+x2)//2,y1+22), title, 19, white, True, 'mm')
+              yy=y1+64
+              for line in lines:
+                  text((x1+14,yy), line, 17, '#173252', False)
+                  yy+=31
+          # arrows: customers -> orders -> order_items <- products
+          for a,b in [(855,880),(1055,1080)]:
+              d.line((a,785,b,785),fill=soft,width=4)
+              d.polygon([(b,785),(b-10,778),(b-10,792)],fill=soft)
+          d.line((1275,785,1300,785),fill=soft,width=4)
+          d.polygon([(1275,785),(1285,778),(1285,792)],fill=soft)
+          text((1065, 875), '질문 → 데이터 → AI 초안 → 실행 검증 → 사람 판단', 22, soft, True, 'ma')
+
+          out = Path('book/assets/images/ch01/ch01_blog_thumbnail.png')
+          out.parent.mkdir(parents=True, exist_ok=True)
+          im.save(out, 'PNG', optimize=True)
+          print(out, out.stat().st_size)
+          PY
+
+      - name: Commit rendered thumbnail
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add book/assets/images/ch01/ch01_blog_thumbnail.png
+          git diff --cached --quiet && exit 0
+          git commit -m 'feat: add chapter01 blog thumbnail'
+          git push
