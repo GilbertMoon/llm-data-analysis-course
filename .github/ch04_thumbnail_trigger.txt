@@ -1,0 +1,1 @@
+render chapter04 blog thumbnail
