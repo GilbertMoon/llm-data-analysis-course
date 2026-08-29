@@ -1,0 +1,119 @@
+name: Build Chapter04 Blog Thumbnail
+
+on:
+  push:
+    paths:
+      - '.github/ch04_thumbnail_trigger.txt'
+
+permissions:
+  contents: write
+
+jobs:
+  build-thumbnail:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install rendering dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y fonts-noto-cjk python3-pil
+
+      - name: Render 1536x1024 PNG
+        run: |
+          python3 - <<'PY'
+          from PIL import Image, ImageDraw, ImageFont
+          from pathlib import Path
+
+          W, H = 1536, 1024
+          img = Image.new('RGB', (W, H), '#071a33')
+          d = ImageDraw.Draw(img)
+
+          font_dir = Path('/usr/share/fonts/opentype/noto')
+          regular = next(iter(sorted(font_dir.glob('NotoSansCJK-Regular.ttc'))), None)
+          bold = next(iter(sorted(font_dir.glob('NotoSansCJK-Bold.ttc'))), None)
+          if regular is None:
+              regular = next(font_dir.rglob('NotoSansCJK-Regular.ttc'))
+          if bold is None:
+              bold = regular
+
+          def F(size, weight='regular'):
+              return ImageFont.truetype(str(bold if weight == 'bold' else regular), size)
+
+          # background panels
+          d.rounded_rectangle((54, 48, 1482, 976), radius=34, fill='#0b2445', outline='#2477d4', width=3)
+          d.rounded_rectangle((82, 76, 440, 264), radius=26, fill='#0a315e')
+          d.text((112, 92), '04', font=F(122, 'bold'), fill='#72d9ff')
+          d.text((116, 218), 'PANDAS', font=F(34, 'bold'), fill='#dbeeff')
+
+          # title
+          d.text((505, 92), 'pandas로', font=F(66, 'bold'), fill='white')
+          d.text((505, 172), '데이터에 질문하기', font=F(72, 'bold'), fill='white')
+          d.text((505, 266), '선택 · 필터 · 병합 · 집계 — 질문을 검증 가능한 코드로 바꾸기', font=F(30), fill='#a8c8e8')
+
+          # main flow cards
+          labels = [
+              ('1', '선택·필터', '필요한 행과 열'),
+              ('2', 'line_total', '수량 × 단가'),
+              ('3', 'merge 검증', 'validate + indicator'),
+              ('4', 'completed', '분석 범위 확정'),
+              ('5', 'groupby', '카테고리·월·고객'),
+          ]
+          x0, y0, card_w, card_h, gap = 92, 388, 250, 214, 24
+          for i, (n, title, sub) in enumerate(labels):
+              x = x0 + i * (card_w + gap)
+              d.rounded_rectangle((x, y0, x+card_w, y0+card_h), radius=24, fill='#102f55', outline='#3d8edf', width=2)
+              d.ellipse((x+22, y0+22, x+74, y0+74), fill='#1d6ac2')
+              d.text((x+39, y0+28), n, font=F(24, 'bold'), fill='white', anchor='mm')
+              d.text((x+22, y0+98), title, font=F(30, 'bold'), fill='white')
+              d.text((x+22, y0+147), sub, font=F(23), fill='#b8d3eb')
+              if i < len(labels)-1:
+                  ax = x + card_w + 6
+                  ay = y0 + card_h//2
+                  d.line((ax, ay, ax+18, ay), fill='#72d9ff', width=5)
+                  d.polygon([(ax+18, ay), (ax+7, ay-8), (ax+7, ay+8)], fill='#72d9ff')
+
+          # verification block
+          d.rounded_rectangle((92, 646, 973, 904), radius=26, fill='#081b31', outline='#2c6ca7', width=2)
+          d.text((122, 674), '검증해야 할 4가지', font=F(34, 'bold'), fill='#72d9ff')
+          checks = [
+              '병합 전후 행 수가 같은가?',
+              '_merge에 미매칭 행이 없는가?',
+              'completed만 계산 범위에 포함했는가?',
+              '집계 합계가 원본 line_total과 일치하는가?',
+          ]
+          yy = 734
+          for t in checks:
+              d.ellipse((126, yy+8, 143, yy+25), fill='#4ad38a')
+              d.text((158, yy), t, font=F(27), fill='#dcecff')
+              yy += 48
+
+          # principle panel
+          d.rounded_rectangle((1010, 646, 1444, 904), radius=26, fill='#123b67', outline='#72d9ff', width=2)
+          d.text((1044, 678), '핵심 원칙', font=F(34, 'bold'), fill='#72d9ff')
+          d.text((1044, 742), '실행되는 코드', font=F(30, 'bold'), fill='white')
+          d.text((1044, 785), '≠', font=F(38, 'bold'), fill='#ffd166')
+          d.text((1092, 783), '올바른 분석', font=F(30, 'bold'), fill='white')
+          d.text((1044, 838), '질문 → 계산 기준 → 검증', font=F(24), fill='#c2def5')
+
+          # footer
+          d.text((96, 938), 'LLM 기반 데이터 분석 실무 입문', font=F(24, 'bold'), fill='#81b8eb')
+          d.text((1440, 938), 'AI-Database-Book', font=F(24, 'bold'), fill='#81b8eb', anchor='ra')
+
+          out = Path('book/assets/images/ch04/ch04_blog_thumbnail.png')
+          out.parent.mkdir(parents=True, exist_ok=True)
+          img.save(out, 'PNG', optimize=True)
+          print(out, out.stat().st_size)
+          PY
+
+      - name: Commit rendered thumbnail
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add book/assets/images/ch04/ch04_blog_thumbnail.png
+          if git diff --cached --quiet; then
+            echo 'No thumbnail change.'
+          else
+            git commit -m 'feat: add chapter04 blog thumbnail'
+            git push
+          fi
