@@ -1,0 +1,126 @@
+name: Build Chapter03 Blog Thumbnail
+
+on:
+  push:
+    paths:
+      - '.github/ch03_thumbnail_trigger.txt'
+
+permissions:
+  contents: write
+
+jobs:
+  build-thumbnail:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install rendering dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y fonts-noto-cjk
+          python -m pip install --upgrade pip pillow
+
+      - name: Render 1536x1024 PNG
+        shell: bash
+        run: |
+          export FONT_REG="$(fc-match -f '%{file}\n' 'Noto Sans CJK KR' | head -1)"
+          export FONT_BOLD="$(fc-match -f '%{file}\n' 'Noto Sans CJK KR:style=Bold' | head -1)"
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          from PIL import Image, ImageDraw, ImageFont
+
+          W, H = 1536, 1024
+          bg = '#061832'; panel = '#0A2348'; panel2 = '#0D2D5C'
+          cyan = '#2FD6F6'; blue = '#3C8DFF'; white = '#F7FAFF'; soft = '#B7CBE8'
+          green = '#66D6A6'; violet = '#7D6CFF'; orange = '#FFB24A'; border = '#2E76CC'
+
+          im = Image.new('RGB', (W, H), bg)
+          d = ImageDraw.Draw(im)
+          reg_path = os.environ['FONT_REG']; bold_path = os.environ['FONT_BOLD']
+          def f(size, bold=False): return ImageFont.truetype(bold_path if bold else reg_path, size)
+          def rr(xy, r=22, fill=panel, outline=border, width=2): d.rounded_rectangle(xy, radius=r, fill=fill, outline=outline, width=width)
+          def txt(xy, s, size, fill=white, bold=False, anchor=None): d.text(xy, s, font=f(size,bold), fill=fill, anchor=anchor)
+
+          # left title
+          rr((46, 48, 205, 184), 24, '#0B3D91', '#4CA4FF', 3)
+          txt((125,116),'03',82,white,True,'mm')
+          txt((50,240),'데이터의',66,white,True)
+          txt((50,330),'첫인상 읽기',76,cyan,True)
+          txt((52,450),'CSV를 읽고 구조·품질·키 관계를 먼저 검증',31,soft)
+          d.rounded_rectangle((50,520,590,528), radius=4, fill=blue)
+
+          bullets=[('1','shape · columns · dtypes 확인'),('2','결측치 · 중복 · ID 고유성 확인'),('3','날짜 · 파일 간 키 관계 검증')]
+          y=602
+          for icon,msg in bullets:
+              d.ellipse((50,y-28,106,y+28), fill='#124EB1')
+              txt((78,y),icon,23,white,True,'mm'); txt((128,y),msg,29,soft,False,'lm'); y+=86
+
+          rr((48,818,590,954),18,'#063052',cyan,2)
+          txt((78,854),'핵심: 바꾸기 전에 먼저 기록',32,cyan,True)
+          txt((78,904),'실제 실행 결과가 모든 판단의 기준입니다.',26,soft)
+
+          # right panel
+          rr((628,55,1494,958),24,'#071F42','#2E76CC',2)
+          txt((664,86),'데이터 구조 점검 흐름',32,white,True)
+
+          # flow row
+          flow=[('CSV','파일'),('DataFrame','로딩'),('shape/info','구조'),('missing/dup','품질'),('ID/날짜','검증')]
+          xs=[730,895,1060,1225,1390]
+          for i,(a,b) in enumerate(flow):
+              x=xs[i]; d.ellipse((x-48,125,x+48,221),fill='#0B2C58',outline='#65B9FF',width=2)
+              txt((x,173),str(i+1),31,white,True,'mm'); txt((x,246),a,22,white,True,'ma'); txt((x,278),b,18,soft,False,'ma')
+              if i<4:
+                  d.line((x+55,173,xs[i+1]-55,173),fill='#8CBDF0',width=5)
+                  d.polygon([(xs[i+1]-55,173),(xs[i+1]-72,163),(xs[i+1]-72,183)],fill='#8CBDF0')
+
+          # four dataset cards
+          txt((664,330),'온라인 쇼핑몰 4개 CSV',28,white,True)
+          cards=[
+              (660,375,850,535,'customers','customer_id','고객 · 연령 · 지역','#249C8B'),
+              (870,375,1060,535,'products','product_id','상품 · 카테고리 · 가격','#246FD1'),
+              (1080,375,1270,535,'orders','order_id','주문 · 날짜 · 상태','#6955D9'),
+              (1290,375,1470,535,'order_items','order_item_id','상품 · 수량 · 단가','#169EB3')]
+          for x1,y1,x2,y2,name,key,desc,c in cards:
+              rr((x1,y1,x2,y2),16,'#EAF1FF',c,2)
+              d.rounded_rectangle((x1,y1,x2,y1+44),radius=16,fill=c); d.rectangle((x1,y1+28,x2,y1+44),fill=c)
+              txt(((x1+x2)//2,y1+23),name,19,white,True,'mm')
+              txt((x1+14,y1+68),key,17,'#173252',True); txt((x1+14,y1+104),desc,16,'#173252')
+
+          # relation arrows
+          txt((664,582),'키 관계 검증',27,green,True)
+          relations=['orders.customer_id → customers.customer_id','order_items.order_id → orders.order_id','order_items.product_id → products.product_id']
+          yy=625
+          for r in relations:
+              d.ellipse((674,yy-9,692,yy+9),fill=green); txt((712,yy),r,22,white,False,'lm'); yy+=45
+
+          # validation blocks
+          rr((660,775,925,920),18,'#0D2D5C',violet,2)
+          txt((686,802),'구조 확인',25,white,True)
+          txt((686,845),'shape · head · info',21,soft)
+          txt((686,880),'columns · dtypes',21,soft)
+
+          rr((950,775,1215,920),18,'#0D2D5C',orange,2)
+          txt((976,802),'품질 확인',25,white,True)
+          txt((976,845),'결측치 · 중복',21,soft)
+          txt((976,880),'값 범위 · 범주 빈도',21,soft)
+
+          rr((1240,775,1470,920),18,'#084E55',green,2)
+          txt((1266,802),'실행 증거',25,green,True)
+          txt((1266,845),'날짜 변환 실패',20,white)
+          txt((1266,878),'없는 FK = 0 확인',20,white)
+
+          out=Path('book/assets/images/ch03/ch03_blog_thumbnail.png')
+          out.parent.mkdir(parents=True,exist_ok=True)
+          im.save(out,'PNG',optimize=True)
+          print(out, out.stat().st_size)
+          PY
+
+      - name: Commit rendered thumbnail
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add book/assets/images/ch03/ch03_blog_thumbnail.png
+          git diff --cached --quiet && exit 0
+          git commit -m 'feat: add chapter03 blog thumbnail'
+          git push
