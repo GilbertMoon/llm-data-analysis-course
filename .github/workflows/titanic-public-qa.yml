@@ -1,0 +1,94 @@
+name: Titanic Public QA
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/titanic-public-qa.yml'
+      - 'notebooks/titanic_ai_analysis.ipynb'
+      - 'practice/titanic_ai_analysis/**'
+      - 'data/titanic/**'
+      - 'scripts/prepare_titanic_data.py'
+      - 'scripts/titanic_modeling_smoke_test.py'
+      - 'scripts/validate_titanic_public_release.py'
+      - 'src/titanic_app/**'
+      - 'requirements.txt'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+
+      - name: Run automated Titanic release QA
+        env:
+          MPLBACKEND: Agg
+        run: |
+          python scripts/validate_titanic_public_release.py
+
+      - name: Start Streamlit headless
+        run: |
+          mkdir -p tmp/titanic_public_qa
+          nohup streamlit run src/titanic_app/app.py \
+            --server.headless true \
+            --server.port 8501 \
+            > tmp/titanic_public_qa/streamlit.log 2>&1 &
+          echo $! > tmp/titanic_public_qa/streamlit.pid
+
+      - name: Verify Streamlit health and page response
+        run: |
+          python - <<'PY'
+          import time
+          import requests
+
+          health_url = 'http://127.0.0.1:8501/_stcore/health'
+          page_url = 'http://127.0.0.1:8501/'
+          last_error = None
+
+          for _ in range(30):
+              try:
+                  response = requests.get(health_url, timeout=2)
+                  if response.status_code == 200 and response.text.strip().lower() == 'ok':
+                      break
+              except Exception as exc:
+                  last_error = exc
+              time.sleep(1)
+          else:
+              raise RuntimeError(f'Streamlit health check failed: {last_error}')
+
+          page = requests.get(page_url, timeout=5)
+          page.raise_for_status()
+          print('Streamlit health PASS')
+          print('Streamlit page status:', page.status_code)
+          PY
+
+      - name: Show Streamlit log on failure
+        if: failure()
+        run: |
+          cat tmp/titanic_public_qa/streamlit.log || true
+
+      - name: Upload QA report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: titanic-public-qa
+          path: |
+            tmp/titanic_public_qa/qa_report.json
+            tmp/titanic_public_qa/streamlit.log
+          if-no-files-found: warn
