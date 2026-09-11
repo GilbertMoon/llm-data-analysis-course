@@ -44,10 +44,13 @@ SibSp, Parch, Ticket, Fare, Cabin, Embarked
 
 - `titanic_ai_analysis.md` : 학생용 전체 진행 가이드
 - `titanic_ai_analysis_template.md` : 실행 결과와 개인 판단을 기록하는 Markdown 템플릿
-- `../../notebooks/titanic_ai_analysis.ipynb` : STEP 00~17 실행 Notebook 골격
+- `../../notebooks/titanic_ai_analysis.ipynb` : STEP 00~17 주 실행 Notebook
 - `../../data/titanic/README.md` : 데이터 준비/검증 방법
 - `../../data/titanic/SOURCE.md` : 출처·사용 정책
 - `../../data/titanic/dataset_manifest.json` : 기계 판독 가능한 무결성 기준
+- `../../src/titanic_app/features.py` : Notebook/Streamlit이 공유하는 결정적 Feature 규칙
+- `../../src/titanic_app/app.py` : STEP 17 Streamlit 예측 앱
+- `../../scripts/titanic_modeling_smoke_test.py` : STEP 11~16 모델링 계약 실행 검증 스크립트
 
 ## 진행 흐름
 
@@ -64,6 +67,56 @@ model_source= STEP 11에서 df로 다시 만드는 모델링 기준 데이터
 
 최종 모델링은 `model_source → X/y → train/test split → ColumnTransformer + Pipeline` 순서로 진행합니다. 전체 데이터에서 미리 학습한 중앙값, 최빈값, 범주 목록, scaling 기준을 test 데이터에 섞지 않습니다.
 
+기본 Model Input Contract는 다음과 같습니다.
+
+```text
+raw input:
+Pclass, Sex, Age, SibSp, Parch, Fare, Embarked
+
+fixed derived feature:
+FamilySize = SibSp + Parch + 1
+IsAlone = 1 if FamilySize == 1 else 0
+
+learned preprocessing:
+SimpleImputer / OneHotEncoder / StandardScaler
+→ train data에서만 Pipeline 내부 fit
+```
+
+## STEP 11~16 모델링 계약 빠른 검증
+
+데이터 준비 후 저장소 루트에서 다음 명령을 실행할 수 있습니다.
+
+```powershell
+python scripts/titanic_modeling_smoke_test.py
+```
+
+이 스크립트는 원본 `df`에서 모델 입력을 다시 만들고 split-first 원칙, LogisticRegression Baseline, RandomForest 추가 모델, train 내부 5-Fold CV, `predict_proba()`의 class 1 위치 확인, 모델 저장/재로드 일치 여부, 새로운 승객 예측까지 검사합니다.
+
+Notebook에서 최종 모델을 선택한 뒤 artifact를 저장하는 것이 정식 흐름입니다. 실습 전 개발 검증 목적으로 Baseline artifact가 필요하면 다음 옵션을 사용할 수 있습니다.
+
+```powershell
+python scripts/titanic_modeling_smoke_test.py --save-artifacts
+```
+
+생성 파일은 다음과 같습니다.
+
+```text
+models/titanic_final_pipeline.joblib
+models/titanic_model_contract.json
+```
+
+## STEP 17 Streamlit
+
+STEP 16에서 모델과 Contract가 준비된 뒤 실행합니다.
+
+```powershell
+streamlit run src/titanic_app/app.py
+```
+
+앱은 저장된 Pipeline을 그대로 사용합니다. 앱에서 median/mode를 다시 계산하거나 `pd.get_dummies()`를 수행하거나 scaler를 fit하지 않습니다. `src/titanic_app/features.py`의 동일한 결정적 Feature 규칙만 Notebook과 공유합니다.
+
 ## 현재 상태
 
-STEP 01~03은 실행 환경 확인, 데이터 로딩, 데이터 구조·품질 관찰 코드와 학생 작성 영역을 제공합니다. STEP 03에서 추가 품질 확인 항목 하나를 학생이 직접 선택합니다. STEP 04~07은 Target 확인, 탐색용 결측 처리, 컬럼 정책 검토, 교육용 인코딩을 제공합니다. 기본안은 수정 없이 순서대로 실행할 수 있으며, 학생은 각 판단란에 자신의 선택과 이유를 기록합니다. `df_work`는 STEP 05에서 한 번 만들고 유지하며, STEP 07의 `df_encoded`는 최종 모델 입력이 아닙니다. STEP 08~09는 같은 `df_work`에서 시각화와 그룹별 통계를 확인합니다. STEP 10은 별도 `feature_demo`에서 FamilySize/IsAlone을 실험하고, 학생이 결정적/학습형 규칙을 구분해 Feature Contract를 작성합니다. 추가 분석과 최종 Feature 선택은 학생 판단이며, 기본안은 추가 선택 없이도 실행됩니다. STEP 11~17은 기존 주석 골격으로 남아 있습니다.
+STEP 01~10의 학생용 탐색/EDA/Feature 학습 흐름은 구현되어 있습니다. STEP 11~17의 **공통 Feature 계약, 누수 없는 모델링 Pipeline, 저장/재로드 검증, 새로운 승객 예측, Streamlit 서비스 구현 소스도 저장소에 추가되었습니다.**
+
+현재 남은 작업은 주 실행 파일 `notebooks/titanic_ai_analysis.ipynb`의 STEP 11~17 주석 골격을 위 구현 계약과 정확히 연결한 뒤, 로컬에서 Notebook을 처음부터 끝까지 순서대로 실행하여 `PUBLIC_NOTEBOOK_EXECUTION_PASS`를 확인하는 것입니다.
