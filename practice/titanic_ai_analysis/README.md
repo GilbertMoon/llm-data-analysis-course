@@ -51,8 +51,10 @@ SibSp, Parch, Ticket, Fare, Cabin, Embarked
 - `../../src/titanic_app/features.py` : Notebook/Streamlit이 공유하는 결정적 Feature 규칙
 - `../../src/titanic_app/app.py` : STEP 17 Streamlit 예측 앱
 - `../../scripts/titanic_modeling_smoke_test.py` : STEP 11~16 모델링 계약 실행 검증 스크립트
-- `../../scripts/validate_titanic_public_release.py` : 데이터·Notebook·artifact 통합 자동 QA
-- `../../.github/workflows/titanic-public-qa.yml` : Public QA GitHub Actions
+- `../../scripts/validate_titanic_public_release.py` : 데이터·Notebook·artifact·Streamlit 통합 자동 QA
+- `../../scripts/test_titanic_streamlit_ui.py` : Streamlit form submit/prediction 분기 검증
+- `../../scripts/check_titanic_streamlit.py` : Streamlit server health/page 응답 검증
+- `../../.github/workflows/titanic-public-qa.yml` : Linux/Windows Public QA GitHub Actions
 
 ## 진행 흐름
 
@@ -84,42 +86,35 @@ SimpleImputer / OneHotEncoder / StandardScaler
 → train data에서만 Pipeline 내부 fit
 ```
 
-## STEP 11~16 모델링 계약 빠른 검증
-
-데이터 준비 후 저장소 루트에서 다음 명령을 실행할 수 있습니다.
-
-```powershell
-python scripts/titanic_modeling_smoke_test.py
-```
-
-이 스크립트는 원본 `df`에서 모델 입력을 다시 만들고 split-first 원칙, LogisticRegression Baseline, RandomForest 추가 모델, train 내부 5-Fold CV, `predict_proba()`의 class 1 위치 확인, 모델 저장/재로드 일치 여부, 새로운 승객 예측까지 검사합니다.
-
-Notebook에서 최종 모델을 선택한 뒤 artifact를 저장하는 것이 정식 흐름입니다. 실습 전 개발 검증 목적으로 Baseline artifact가 필요하면 다음 옵션을 사용할 수 있습니다.
-
-```powershell
-python scripts/titanic_modeling_smoke_test.py --save-artifacts
-```
-
-생성 파일은 다음과 같습니다.
-
-```text
-models/titanic_final_pipeline.joblib
-models/titanic_model_contract.json
-```
-
 ## 전체 자동 QA
 
-저장소 루트에서 다음 명령으로 데이터 준비부터 Notebook 순차 실행, 모델 artifact/contract 검증까지 한 번에 확인할 수 있습니다.
+저장소 루트에서 다음 한 명령으로 데이터 준비, 모델링 smoke test, Notebook 순차 실행, artifact/contract 검증, Streamlit form submit, Streamlit server health/page 응답까지 검사합니다.
 
 ```powershell
 python scripts/validate_titanic_public_release.py
 ```
 
-GitHub Actions의 `Titanic Public QA`도 같은 자동 QA를 실행하고 Streamlit을 headless 모드로 기동한 뒤 health endpoint와 첫 페이지 HTTP 응답까지 검사합니다.
+GitHub Actions의 `Titanic Public QA`는 같은 검증을 **Ubuntu와 Windows Python 3.12**에서 각각 실행합니다.
+
+검증 Gate:
+
+```text
+Titanic 891 × 12 데이터 준비/무결성
+모델링 smoke test
+Notebook nbformat / clean-state
+Notebook Code Cell 21개 순차 실행
+split-first / train-only Pipeline
+final Pipeline 저장/재로드
+Model Input Contract
+새 승객 predict / predict_proba
+Streamlit AppTest form submit / prediction result
+Streamlit headless health
+Streamlit first page HTTP 200
+```
 
 ## STEP 17 Streamlit
 
-STEP 16에서 모델과 Contract가 준비된 뒤 실행합니다.
+STEP 16에서 모델과 Contract가 준비된 뒤 직접 화면을 확인하려면 실행합니다.
 
 ```powershell
 streamlit run src/titanic_app/app.py
@@ -129,21 +124,23 @@ streamlit run src/titanic_app/app.py
 
 ## 현재 상태
 
-STEP 01~17의 학생용 주 실행 Notebook과 **공통 Feature 계약, split-first 모델링 Pipeline, Baseline/추가 모델 비교, train 내부 CV, 최종 Pipeline 저장/재로드, 새로운 승객 예측, Streamlit 서비스 코드**까지 Public 저장소에 연결되었습니다.
+STEP 01~17의 학생용 주 실행 Notebook과 **공통 Feature 계약, split-first 모델링 Pipeline, Baseline/추가 모델 비교, train 내부 CV, 최종 Pipeline 저장/재로드, 새로운 승객 예측, Streamlit 서비스**까지 Public 저장소에 연결되었습니다.
 
-2026-09-11 GitHub Actions `Titanic Public QA` 첫 실행에서 다음 자동 Gate가 모두 통과했습니다.
+2026-09-11 GitHub Actions에서 Linux와 Windows 모두 다음 실행 Gate를 통과했습니다.
 
 ```text
-Python 3.12 clean runner dependency install PASS
-Titanic 891 × 12 데이터 준비/무결성 PASS
+clean runner dependency install PASS
+Titanic 데이터 준비/무결성 PASS
 모델링 smoke test PASS
-Notebook nbformat / clean-state PASS
 Notebook Code Cell 21개 순차 실행 PASS
 final Pipeline 저장/재로드 PASS
 Model Input Contract PASS
 새 승객 predict / predict_proba PASS
-Streamlit headless health PASS
+Streamlit form submit / prediction branch PASS
+Streamlit health PASS
 Streamlit 첫 페이지 HTTP 200 PASS
 ```
 
-따라서 현재 상태는 **PUBLIC_NOTEBOOK_AUTOMATED_EXECUTION_PASS**입니다. 최종 `PUBLIC_NOTEBOOK_EXECUTION_PASS`로 올리기 전에는 Windows + VS Code 환경에서 Notebook `Run All`과 Streamlit 화면에서 실제 `예측하기` 버튼 1회 동작을 마지막으로 확인합니다. 자동 QA 결과 숫자는 수업 답안이 아니며 학생은 자신의 실행 결과를 직접 기록합니다.
+따라서 현재 상태는 **PUBLIC_NOTEBOOK_EXECUTION_PASS**입니다. 브라우저에서 화면 배치와 문구를 눈으로 확인하는 작업은 수업 전 권장 시각 QA이지만 실행 통과의 필수 Gate는 아닙니다.
+
+자동 QA에서 출력되는 정확도·확률 등의 숫자는 수업 답안이 아닙니다. 학생은 자신의 Notebook을 직접 실행한 결과를 관찰하고 기록해야 합니다.
