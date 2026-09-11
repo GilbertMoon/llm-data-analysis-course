@@ -8,60 +8,16 @@ from pathlib import Path
 
 import pandas as pd
 
+SOURCE_COMMIT = "54cf59b4fabae5db3b8c7b6b6003f9275596d5f2"
 SOURCE_URL = (
-    "https://raw.githubusercontent.com/mlcommons/croissant/"
-    "main/datasets/1.0/titanic/data/titanic.csv"
+    "https://raw.githubusercontent.com/pandas-dev/pandas/"
+    f"{SOURCE_COMMIT}/doc/data/titanic.csv"
 )
-SOURCE_SHA256 = "c617db2c7470716250f6f001be51304c76bcc8815527ab8bae734bdca0735737"
 
-RAW_COLUMNS = [
-    "pclass",
-    "survived",
-    "name",
-    "sex",
-    "age",
-    "sibsp",
-    "parch",
-    "ticket",
-    "fare",
-    "cabin",
-    "embarked",
-    "boat",
-    "body",
-    "home.dest",
-]
-
-KEEP_COLUMNS = [
-    "pclass",
-    "survived",
-    "name",
-    "sex",
-    "age",
-    "sibsp",
-    "parch",
-    "ticket",
-    "fare",
-    "cabin",
-    "embarked",
-]
-
-RENAME_COLUMNS = {
-    "pclass": "Pclass",
-    "survived": "Survived",
-    "name": "Name",
-    "sex": "Sex",
-    "age": "Age",
-    "sibsp": "SibSp",
-    "parch": "Parch",
-    "ticket": "Ticket",
-    "fare": "Fare",
-    "cabin": "Cabin",
-    "embarked": "Embarked",
-}
-
-OUTPUT_COLUMNS = [
-    "Pclass",
+EXPECTED_COLUMNS = [
+    "PassengerId",
     "Survived",
+    "Pclass",
     "Name",
     "Sex",
     "Age",
@@ -72,15 +28,13 @@ OUTPUT_COLUMNS = [
     "Cabin",
     "Embarked",
 ]
-
-EXPECTED_RAW_SHAPE = (1309, 14)
-EXPECTED_OUTPUT_SHAPE = (1309, 11)
+EXPECTED_SHAPE = (891, 12)
 EXPECTED_MISSING = {
-    "Age": 263,
-    "Fare": 1,
-    "Cabin": 1014,
+    "Age": 177,
+    "Cabin": 687,
     "Embarked": 2,
 }
+EXPECTED_TARGET_COUNTS = {0: 549, 1: 342}
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 OUTPUT_PATH = PROJECT_ROOT / "data" / "titanic" / "train.csv"
@@ -98,24 +52,44 @@ def sha256_file(path: Path) -> str:
     return digest.hexdigest()
 
 
-def validate_prepared(df: pd.DataFrame) -> None:
-    if tuple(df.shape) != EXPECTED_OUTPUT_SHAPE:
+def validate_dataset(df: pd.DataFrame) -> None:
+    if tuple(df.shape) != EXPECTED_SHAPE:
         raise ValueError(
-            f"Unexpected prepared shape: {df.shape}; expected {EXPECTED_OUTPUT_SHAPE}"
+            f"Unexpected shape: {df.shape}; expected {EXPECTED_SHAPE}"
         )
 
-    if list(df.columns) != OUTPUT_COLUMNS:
+    if list(df.columns) != EXPECTED_COLUMNS:
         raise ValueError(
-            "Unexpected prepared columns:\n"
-            f"actual={list(df.columns)}\nexpected={OUTPUT_COLUMNS}"
+            "Unexpected columns:\n"
+            f"actual={list(df.columns)}\nexpected={EXPECTED_COLUMNS}"
         )
+
+    if df["PassengerId"].isna().any():
+        raise ValueError("PassengerId contains missing values.")
+
+    if not df["PassengerId"].is_unique:
+        raise ValueError("PassengerId must be unique.")
+
+    passenger_ids = df["PassengerId"].astype(int).tolist()
+    if passenger_ids != list(range(1, 892)):
+        raise ValueError("PassengerId must be exactly 1..891 in order.")
 
     if df["Survived"].isna().any():
         raise ValueError("Target Survived contains missing values.")
 
     target_values = set(df["Survived"].astype(int).unique().tolist())
-    if not target_values.issubset({0, 1}):
+    if target_values != {0, 1}:
         raise ValueError(f"Unexpected Survived values: {sorted(target_values)}")
+
+    target_counts = {
+        int(key): int(value)
+        for key, value in df["Survived"].astype(int).value_counts().sort_index().items()
+    }
+    if target_counts != EXPECTED_TARGET_COUNTS:
+        raise ValueError(
+            "Unexpected target counts:\n"
+            f"actual={target_counts}\nexpected={EXPECTED_TARGET_COUNTS}"
+        )
 
     actual_missing = {
         column: int(df[column].isna().sum()) for column in EXPECTED_MISSING
@@ -127,49 +101,24 @@ def validate_prepared(df: pd.DataFrame) -> None:
         )
 
 
-def download_verified_source() -> bytes:
+def download_source() -> bytes:
     request = urllib.request.Request(
         SOURCE_URL,
         headers={"User-Agent": "llm-data-analysis-course/1.0"},
     )
     try:
         with urllib.request.urlopen(request, timeout=30) as response:
-            raw_bytes = response.read()
+            return response.read()
     except Exception as exc:
         raise RuntimeError(
             "Titanic source download failed. Check the network and try again."
         ) from exc
 
-    actual_sha256 = sha256_bytes(raw_bytes)
-    if actual_sha256 != SOURCE_SHA256:
-        raise RuntimeError(
-            "Source integrity check failed. Do not continue with an unverified file.\n"
-            f"actual={actual_sha256}\nexpected={SOURCE_SHA256}"
-        )
-
-    return raw_bytes
-
 
 def prepare_from_raw(raw_bytes: bytes) -> pd.DataFrame:
-    raw_df = pd.read_csv(io.BytesIO(raw_bytes), na_values=["?"])
-
-    if tuple(raw_df.shape) != EXPECTED_RAW_SHAPE:
-        raise ValueError(
-            f"Unexpected raw shape: {raw_df.shape}; expected {EXPECTED_RAW_SHAPE}"
-        )
-
-    if list(raw_df.columns) != RAW_COLUMNS:
-        raise ValueError(
-            "Unexpected raw columns:\n"
-            f"actual={list(raw_df.columns)}\nexpected={RAW_COLUMNS}"
-        )
-
-    prepared = raw_df[KEEP_COLUMNS].rename(columns=RENAME_COLUMNS).copy()
-    prepared["Age"] = pd.to_numeric(prepared["Age"], errors="coerce")
-    prepared["Fare"] = pd.to_numeric(prepared["Fare"], errors="coerce")
-
-    validate_prepared(prepared)
-    return prepared
+    df = pd.read_csv(io.BytesIO(raw_bytes))
+    validate_dataset(df)
+    return df
 
 
 def validate_existing(path: Path) -> bool:
@@ -178,7 +127,7 @@ def validate_existing(path: Path) -> bool:
 
     try:
         existing = pd.read_csv(path)
-        validate_prepared(existing)
+        validate_dataset(existing)
     except Exception as exc:
         print(f"Existing file is not valid: {path}")
         print(exc)
@@ -193,7 +142,7 @@ def validate_existing(path: Path) -> bool:
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Download, verify, and prepare the Titanic course dataset."
+        description="Download and validate the 891-row Titanic training dataset."
     )
     parser.add_argument(
         "--force",
@@ -205,24 +154,38 @@ def main() -> None:
     if not args.force and validate_existing(OUTPUT_PATH):
         return
 
-    raw_bytes = download_verified_source()
+    raw_bytes = download_source()
     prepared = prepare_from_raw(raw_bytes)
 
     OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
     prepared.to_csv(OUTPUT_PATH, index=False)
 
     written = pd.read_csv(OUTPUT_PATH)
-    validate_prepared(written)
+    validate_dataset(written)
 
     print("Titanic course dataset prepared successfully.")
+    print(f"source commit: {SOURCE_COMMIT}")
     print(f"source: {SOURCE_URL}")
-    print(f"source sha256: {SOURCE_SHA256}")
+    print(f"download sha256: {sha256_bytes(raw_bytes)}")
     print(f"path: {OUTPUT_PATH}")
     print(f"shape: {written.shape}")
     print(f"columns: {list(written.columns)}")
     print(
         "missing: "
         + str({column: int(written[column].isna().sum()) for column in EXPECTED_MISSING})
+    )
+    print(
+        "target counts: "
+        + str(
+            {
+                int(key): int(value)
+                for key, value in written["Survived"]
+                .astype(int)
+                .value_counts()
+                .sort_index()
+                .items()
+            }
+        )
     )
     print(f"output sha256: {sha256_file(OUTPUT_PATH)}")
 
