@@ -145,7 +145,7 @@ if submitted:
         st.metric("생존 확률(모델 출력)", f"{probability:.1%}")
 
         with st.expander("모델에 전달된 Feature 확인"):
-            st.dataframe(model_input, use_container_width=True)
+            st.dataframe(model_input, width="stretch")
 
         st.info(
             "이 값은 수업용 Titanic 데이터와 선택한 Feature/모델을 기반으로 한 "
