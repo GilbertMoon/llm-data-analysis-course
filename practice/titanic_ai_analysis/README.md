@@ -6,6 +6,15 @@
 
 > 코드는 AI의 도움을 받아 최소한으로 작성하지만, 분석을 단계별로 진행하고 실제 결과를 보고 다음 행동을 결정하는 사람은 학생입니다.
 
+## 실습 시작 순서
+
+1. 이 저장소를 준비하고 VS Code에서 저장소 루트 폴더를 연다.
+2. 사용할 Python 환경을 선택하고 터미널에서 `python --version`과 `python -c "import sys; print(sys.executable)"`로 확인한다.
+3. 해당 환경에 `requirements.txt`의 패키지가 설치되어 있는지 확인한다. 설치가 필요하면 저장소 루트의 같은 터미널에서 `python -m pip install -r requirements.txt`를 직접 실행한다. Notebook은 자동 설치하지 않는다.
+4. 아래 데이터 준비 명령을 실행한다.
+5. VS Code에서 `notebooks/titanic_ai_analysis.ipynb`를 열고 오른쪽 위 Kernel에서 같은 Python 환경을 선택한다. Python Interpreter와 Notebook Kernel은 다를 수 있다.
+6. STEP 01부터 순서대로 직접 실행하고 각 STEP 마지막의 빈 학생 작성 영역을 채운다. 커널 작업 경로는 저장소 루트 또는 `notebooks/`를 사용한다.
+
 ## 먼저 데이터 준비
 
 저장소 루트에서 다음 명령을 한 번 실행합니다.
@@ -57,4 +66,4 @@ model_source= STEP 11에서 df로 다시 만드는 모델링 기준 데이터
 
 ## 현재 상태
 
-학생용 전체 실행 구조, **891행 데이터 준비/검증 경로**, Notebook 골격까지 준비되어 있습니다. 다음 작업부터 Notebook의 STEP 01~03을 실제 실행 가능한 형태로 보강하고, 데이터 준비 스크립트 실행 결과와 Notebook 경로를 함께 검증합니다.
+STEP 01~03은 실행 환경 확인, 데이터 로딩, 데이터 구조·품질 관찰 코드와 학생 작성 영역을 제공합니다. STEP 03에서 추가 품질 확인 항목 하나를 학생이 직접 선택합니다. STEP 04~17은 기존 주석 골격이며, 전체 셀이 실행되더라도 이후 분석·모델링까지 완료한 것은 아닙니다.
