@@ -117,6 +117,6 @@ streamlit run src/titanic_app/app.py
 
 ## 현재 상태
 
-STEP 01~10의 학생용 탐색/EDA/Feature 학습 흐름은 구현되어 있습니다. STEP 11~17의 **공통 Feature 계약, 누수 없는 모델링 Pipeline, 저장/재로드 검증, 새로운 승객 예측, Streamlit 서비스 구현 소스도 저장소에 추가되었습니다.**
+STEP 01~17의 학생용 주 실행 Notebook과 **공통 Feature 계약, split-first 모델링 Pipeline, Baseline/추가 모델 비교, train 내부 CV, 최종 Pipeline 저장/재로드, 새로운 승객 예측, Streamlit 서비스 코드**까지 Public 저장소에 연결되었습니다.
 
-현재 남은 작업은 주 실행 파일 `notebooks/titanic_ai_analysis.ipynb`의 STEP 11~17 주석 골격을 위 구현 계약과 정확히 연결한 뒤, 로컬에서 Notebook을 처음부터 끝까지 순서대로 실행하여 `PUBLIC_NOTEBOOK_EXECUTION_PASS`를 확인하는 것입니다.
+Notebook 파일은 실행 결과를 미리 만들어 넣지 않은 clean 상태입니다. 따라서 현재 상태는 **구현 연결 완료 / 실제 전체 실행 QA 대기**입니다. 다음 단계에서 로컬의 실제 891행 데이터로 `scripts/titanic_modeling_smoke_test.py`와 Notebook `Run All`, Streamlit 실행을 검증한 뒤에만 `PUBLIC_NOTEBOOK_EXECUTION_PASS`로 올립니다.
