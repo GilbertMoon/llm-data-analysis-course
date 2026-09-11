@@ -1,0 +1,47 @@
+{
+  "dataset_name": "Titanic",
+  "course_artifact": "data/titanic/train.csv",
+  "note": "This is a course-prepared dataset derived from OpenML 40945, not Kaggle competition train.csv.",
+  "source": {
+    "openml_id": 40945,
+    "canonical_url": "https://www.openml.org/d/40945",
+    "croissant_metadata_url": "https://github.com/mlcommons/croissant/blob/main/datasets/1.0/titanic/metadata.json",
+    "raw_csv_url": "https://raw.githubusercontent.com/mlcommons/croissant/main/datasets/1.0/titanic/data/titanic.csv",
+    "metadata_version": "1.0.0",
+    "license": "AFL-3.0",
+    "raw_sha256": "c617db2c7470716250f6f001be51304c76bcc8815527ab8bae734bdca0735737",
+    "raw_size_bytes": 117743,
+    "raw_shape": [1309, 14]
+  },
+  "preparation": {
+    "script": "scripts/prepare_titanic_data.py",
+    "na_values": ["?"],
+    "dropped_columns": ["boat", "body", "home.dest"],
+    "synthetic_passenger_id": false,
+    "prepared_shape": [1309, 11],
+    "prepared_columns": [
+      "Pclass",
+      "Survived",
+      "Name",
+      "Sex",
+      "Age",
+      "SibSp",
+      "Parch",
+      "Ticket",
+      "Fare",
+      "Cabin",
+      "Embarked"
+    ]
+  },
+  "expected_missing_counts": {
+    "Age": 263,
+    "Fare": 1,
+    "Cabin": 1014,
+    "Embarked": 2
+  },
+  "target": {
+    "column": "Survived",
+    "allowed_values": [0, 1],
+    "expected_missing_count": 0
+  }
+}

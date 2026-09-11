@@ -28,6 +28,9 @@ data/external/*
 !data/external/
 !data/external/.gitkeep
 
+# Reproducibly generated Titanic course dataset
+data/titanic/train.csv
+
 # Airflow runtime
 .airflow/
 automation/airflow/.env
