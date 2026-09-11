@@ -20,7 +20,16 @@ python scripts/prepare_titanic_data.py
 data/titanic/train.csv
 ```
 
-이 파일은 Kaggle competition의 891행 `train.csv`를 복제한 것이 아닙니다. 재사용 조건이 명시된 **OpenML Titanic dataset 40945**를 검증·정규화한 1309행 수업용 데이터입니다. 자세한 출처와 라이선스는 `../../data/titanic/SOURCE.md`를 확인합니다.
+이번 실습은 강의안과 동일하게 **891행 × 12열 Titanic training set** 구조를 사용합니다.
+
+```text
+PassengerId, Survived, Pclass, Name, Sex, Age,
+SibSp, Parch, Ticket, Fare, Cabin, Embarked
+```
+
+공개 저장소에는 CSV 자체를 커밋하지 않습니다. 준비 스크립트가 pandas 공식 저장소의 고정 commit에 있는 문서용 Titanic CSV를 다운로드한 뒤 891행 구조, 컬럼, PassengerId, Target 분포, 주요 결측치를 검증합니다.
+
+자세한 출처·재배포 정책은 `../../data/titanic/SOURCE.md`를 확인합니다.
 
 ## 현재 파일
 
@@ -28,7 +37,7 @@ data/titanic/train.csv
 - `titanic_ai_analysis_template.md` : 실행 결과와 개인 판단을 기록하는 Markdown 템플릿
 - `../../notebooks/titanic_ai_analysis.ipynb` : STEP 00~17 실행 Notebook 골격
 - `../../data/titanic/README.md` : 데이터 준비/검증 방법
-- `../../data/titanic/SOURCE.md` : 출처·라이선스·변환 기준
+- `../../data/titanic/SOURCE.md` : 출처·사용 정책
 - `../../data/titanic/dataset_manifest.json` : 기계 판독 가능한 무결성 기준
 
 ## 진행 흐름
@@ -38,7 +47,7 @@ data/titanic/train.csv
 ## 중요한 데이터 객체 계약
 
 ```text
-df          = 수업용 train.csv를 읽은 원본 기준 데이터
+df          = 891행 train.csv를 읽은 원본 기준 데이터
 df_work     = STEP 5~10 탐색/EDA 작업본
 df_encoded  = STEP 7 인코딩 원리 학습용 임시 데이터
 model_source= STEP 11에서 df로 다시 만드는 모델링 기준 데이터
@@ -48,4 +57,4 @@ model_source= STEP 11에서 df로 다시 만드는 모델링 기준 데이터
 
 ## 현재 상태
 
-학생용 전체 실행 구조, 데이터 준비/검증 경로, Notebook 골격까지 준비되어 있습니다. Notebook의 단계별 완성 코드는 아직 채우지 않았으며, 다음 작업부터 STEP 01~03을 실제 실행 가능한 형태로 보강합니다.
+학생용 전체 실행 구조, **891행 데이터 준비/검증 경로**, Notebook 골격까지 준비되어 있습니다. 다음 작업부터 Notebook의 STEP 01~03을 실제 실행 가능한 형태로 보강하고, 데이터 준비 스크립트 실행 결과와 Notebook 경로를 함께 검증합니다.
