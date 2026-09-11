@@ -51,6 +51,8 @@ SibSp, Parch, Ticket, Fare, Cabin, Embarked
 - `../../src/titanic_app/features.py` : Notebook/Streamlit이 공유하는 결정적 Feature 규칙
 - `../../src/titanic_app/app.py` : STEP 17 Streamlit 예측 앱
 - `../../scripts/titanic_modeling_smoke_test.py` : STEP 11~16 모델링 계약 실행 검증 스크립트
+- `../../scripts/validate_titanic_public_release.py` : 데이터·Notebook·artifact 통합 자동 QA
+- `../../.github/workflows/titanic-public-qa.yml` : Public QA GitHub Actions
 
 ## 진행 흐름
 
@@ -105,6 +107,16 @@ models/titanic_final_pipeline.joblib
 models/titanic_model_contract.json
 ```
 
+## 전체 자동 QA
+
+저장소 루트에서 다음 명령으로 데이터 준비부터 Notebook 순차 실행, 모델 artifact/contract 검증까지 한 번에 확인할 수 있습니다.
+
+```powershell
+python scripts/validate_titanic_public_release.py
+```
+
+GitHub Actions의 `Titanic Public QA`도 같은 자동 QA를 실행하고 Streamlit을 headless 모드로 기동한 뒤 health endpoint와 첫 페이지 HTTP 응답까지 검사합니다.
+
 ## STEP 17 Streamlit
 
 STEP 16에서 모델과 Contract가 준비된 뒤 실행합니다.
@@ -119,4 +131,19 @@ streamlit run src/titanic_app/app.py
 
 STEP 01~17의 학생용 주 실행 Notebook과 **공통 Feature 계약, split-first 모델링 Pipeline, Baseline/추가 모델 비교, train 내부 CV, 최종 Pipeline 저장/재로드, 새로운 승객 예측, Streamlit 서비스 코드**까지 Public 저장소에 연결되었습니다.
 
-Notebook 파일은 실행 결과를 미리 만들어 넣지 않은 clean 상태입니다. 따라서 현재 상태는 **구현 연결 완료 / 실제 전체 실행 QA 대기**입니다. 다음 단계에서 로컬의 실제 891행 데이터로 `scripts/titanic_modeling_smoke_test.py`와 Notebook `Run All`, Streamlit 실행을 검증한 뒤에만 `PUBLIC_NOTEBOOK_EXECUTION_PASS`로 올립니다.
+2026-09-11 GitHub Actions `Titanic Public QA` 첫 실행에서 다음 자동 Gate가 모두 통과했습니다.
+
+```text
+Python 3.12 clean runner dependency install PASS
+Titanic 891 × 12 데이터 준비/무결성 PASS
+모델링 smoke test PASS
+Notebook nbformat / clean-state PASS
+Notebook Code Cell 21개 순차 실행 PASS
+final Pipeline 저장/재로드 PASS
+Model Input Contract PASS
+새 승객 predict / predict_proba PASS
+Streamlit headless health PASS
+Streamlit 첫 페이지 HTTP 200 PASS
+```
+
+따라서 현재 상태는 **PUBLIC_NOTEBOOK_AUTOMATED_EXECUTION_PASS**입니다. 최종 `PUBLIC_NOTEBOOK_EXECUTION_PASS`로 올리기 전에는 Windows + VS Code 환경에서 Notebook `Run All`과 Streamlit 화면에서 실제 `예측하기` 버튼 1회 동작을 마지막으로 확인합니다. 자동 QA 결과 숫자는 수업 답안이 아니며 학생은 자신의 실행 결과를 직접 기록합니다.
