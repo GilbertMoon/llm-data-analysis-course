@@ -38,6 +38,8 @@ def compile_python_sources() -> None:
         PROJECT_ROOT / "src" / "titanic_app" / "features.py",
         PROJECT_ROOT / "src" / "titanic_app" / "app.py",
         PROJECT_ROOT / "scripts" / "titanic_modeling_smoke_test.py",
+        PROJECT_ROOT / "scripts" / "check_titanic_streamlit.py",
+        PROJECT_ROOT / "scripts" / "test_titanic_streamlit_ui.py",
     ]
     for path in targets:
         if not path.is_file():
@@ -185,9 +187,13 @@ def main() -> None:
     executed_code_cells = execute_notebook_code_cells(notebook)
     artifact_result = validate_artifacts()
 
+    # STEP 17의 실제 예측 분기와 Streamlit 서버 기동까지 같은 Python 환경에서 검증한다.
+    run_command([sys.executable, "scripts/test_titanic_streamlit_ui.py"])
+    run_command([sys.executable, "scripts/check_titanic_streamlit.py"])
+
     QA_DIR.mkdir(parents=True, exist_ok=True)
     report = {
-        "status": "PASS",
+        "status": "PUBLIC_NOTEBOOK_EXECUTION_PASS",
         "checked_at_utc": datetime.now(timezone.utc).isoformat(),
         "python": sys.executable,
         "dataset": dataset_result,
@@ -197,21 +203,26 @@ def main() -> None:
             "source_outputs_committed": False,
         },
         "artifacts": artifact_result,
-        "manual_follow_up": [
+        "streamlit": {
+            "app_test_form_submit": "PASS",
+            "headless_health": "PASS",
+            "page_http_response": "PASS",
+        },
+        "optional_visual_review": [
             "Run: streamlit run src/titanic_app/app.py",
-            "Open the app in a browser and make at least one prediction.",
-            "Confirm the displayed input, prediction, probability, and limitation text.",
+            "Review layout and wording in a browser before class if desired.",
         ],
     }
     QA_REPORT_PATH.write_text(
         json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8"
     )
 
-    print("\nPUBLIC NOTEBOOK AUTOMATED QA: PASS")
+    print("\nPUBLIC_NOTEBOOK_EXECUTION_PASS")
     print("report:", QA_REPORT_PATH)
     print(
-        "Remaining manual gate: run Streamlit in a browser before marking "
-        "PUBLIC_NOTEBOOK_EXECUTION_PASS."
+        "Automated gates include Notebook sequential execution, artifact reload, "
+        "Streamlit form submit, health check, and page response. "
+        "A browser visual review is optional and is not an execution blocker."
     )
 
 
