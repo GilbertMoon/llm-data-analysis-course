@@ -31,6 +31,11 @@ data/external/*
 # Reproducibly generated Titanic course dataset
 data/titanic/train.csv
 
+# Generated Titanic model / QA artifacts
+models/titanic_final_pipeline.joblib
+models/titanic_model_contract.json
+tmp/titanic_public_qa/
+
 # Airflow runtime
 .airflow/
 automation/airflow/.env
