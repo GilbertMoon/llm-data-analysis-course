@@ -7,6 +7,7 @@ joblib
 streamlit
 jupyter
 notebook
+nbformat
 openpyxl
 python-dotenv
 google-genai
