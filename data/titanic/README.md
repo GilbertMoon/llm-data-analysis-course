@@ -16,15 +16,17 @@ data/titanic/train.csv
 python scripts/prepare_titanic_data.py
 ```
 
+성공하면 `data/titanic/train.csv`가 생성됩니다.
+
 스크립트는 다음 순서로 동작합니다.
 
 ```text
-검증된 원본 다운로드
-→ raw SHA-256 확인
-→ 원본 shape/columns 확인
-→ 수업에 필요한 컬럼만 선택
-→ 강의안과 맞게 컬럼명 정규화
-→ 결과 shape/Target/결측치 개수 검증
+고정된 공개 원본 URL에서 다운로드
+→ 891행 × 12열 확인
+→ 컬럼 이름/순서 확인
+→ PassengerId 1~891 및 중복 여부 확인
+→ Survived 값/분포 확인
+→ 주요 결측치 개수 확인
 → data/titanic/train.csv 저장
 → 저장 파일 재로딩 검증
 ```
@@ -35,45 +37,58 @@ python scripts/prepare_titanic_data.py
 python scripts/prepare_titanic_data.py --force
 ```
 
-## 출처와 라이선스
+## 사용 데이터
 
-기준 데이터는 **OpenML Titanic dataset 40945**입니다.
-
-- OpenML: https://www.openml.org/d/40945
-- License metadata: `AFL-3.0`
-- Source/attribution details: `SOURCE.md`
-- Machine-readable validation rules: `dataset_manifest.json`
-
-Kaggle competition 데이터 페이지는 라이선스를 `Subject to Competition Rules`로 표시하므로, Kaggle의 891행 `train.csv`를 그대로 이 공개 저장소에 복제하는 방식은 사용하지 않습니다.
-
-## 수업용 파일 기준
-
-생성되는 파일은 OpenML 40945의 1309명 labeled passenger 데이터를 기반으로 하며, STEP 11에서 학생이 직접 train/test split을 수행합니다.
+이번 강의에서는 우리가 원래 설계한 **891행 Titanic training set** 구조를 사용합니다.
 
 예상 구조:
 
 ```text
-rows: 1309
-columns: 11
+rows: 891
+columns: 12
 Target: Survived
 ```
 
 컬럼:
 
 ```text
-Pclass, Survived, Name, Sex, Age, SibSp, Parch, Ticket, Fare, Cabin, Embarked
+PassengerId, Survived, Pclass, Name, Sex, Age,
+SibSp, Parch, Ticket, Fare, Cabin, Embarked
 ```
 
-`boat`, `body`, `home.dest`는 수업용 변환에서 제외합니다. `PassengerId`는 원본에 없으므로 임의 생성하지 않습니다.
+주요 검증 기준:
+
+```text
+PassengerId: 1..891, unique
+Survived: 0/1 only
+Survived counts: 0=549, 1=342
+Age missing: 177
+Cabin missing: 687
+Embarked missing: 2
+```
+
+이 숫자는 **데이터 무결성 검증 기준**이며, 학생이 Notebook 실행 결과를 작성할 때 복사해서 제출하는 값이 아닙니다. 실제 Notebook에서 직접 실행한 결과를 사용합니다.
+
+## 출처와 재배포 정책
+
+다운로드 원본은 pandas 공식 저장소의 문서용 Titanic CSV를 사용합니다.
+
+- pandas repository: https://github.com/pandas-dev/pandas
+- source file: `doc/data/titanic.csv`
+- pinned source commit: `54cf59b4fabae5db3b8c7b6b6003f9275596d5f2`
+- pandas repository license: BSD-3-Clause
+- Kaggle Titanic schema reference: https://www.kaggle.com/competitions/titanic/data
+
+Kaggle competition 페이지는 원본 competition data를 `Subject to Competition Rules`로 표시합니다. 따라서 이 저장소는 Kaggle에서 내려받은 competition 파일을 직접 커밋하지 않습니다.
+
+또한 pandas 저장소의 BSD-3-Clause 라이선스가 이 제3자 데이터셋 자체의 모든 권리를 별도로 재허가한다고 단정하지 않습니다. 그래서 **CSV 자체는 Git에 포함하지 않고 학생이 준비 스크립트로 공개 원본을 내려받도록** 구성합니다.
+
+자세한 출처 설명은 `SOURCE.md`를 확인합니다.
 
 ## 무결성 원칙
 
-원본 raw CSV의 기대 SHA-256:
+`scripts/prepare_titanic_data.py`는 URL의 `main` 브랜치가 아니라 **고정 commit**을 사용합니다. 원본 저장소가 나중에 변경되어도 수업 입력이 갑자기 달라지지 않도록 하기 위한 것입니다.
 
-```text
-c617db2c7470716250f6f001be51304c76bcc8815527ab8bae734bdca0735737
-```
+검증에 실패하면 스크립트가 중단됩니다. 데이터가 없거나 검증에 실패했다고 해서 가짜 CSV를 만들거나 예상 숫자를 실제 결과처럼 사용하지 않습니다.
 
-SHA가 다르면 스크립트가 중단됩니다. 데이터가 없거나 검증에 실패했다고 해서 가짜 CSV를 만들거나 예상 숫자를 실제 결과처럼 사용하지 않습니다.
-
-`train.csv`는 재현 가능한 다운로드/변환 결과물이므로 기본적으로 Git에 커밋하지 않습니다. 학생은 실습 시작 시 스크립트로 생성합니다.
+`train.csv`는 재현 가능한 다운로드 결과물이므로 `.gitignore` 대상이며 기본적으로 Git에 커밋하지 않습니다.
