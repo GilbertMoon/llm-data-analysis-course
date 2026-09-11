@@ -14,6 +14,7 @@ on:
       - 'scripts/titanic_modeling_smoke_test.py'
       - 'scripts/validate_titanic_public_release.py'
       - 'scripts/check_titanic_streamlit.py'
+      - 'scripts/test_titanic_streamlit_ui.py'
       - 'src/titanic_app/**'
       - 'requirements.txt'
 
@@ -49,6 +50,10 @@ jobs:
           MPLBACKEND: Agg
         run: |
           python scripts/validate_titanic_public_release.py
+
+      - name: Exercise Streamlit prediction form with AppTest
+        run: |
+          python scripts/test_titanic_streamlit_ui.py
 
       - name: Verify Streamlit headless health and page response
         run: |
