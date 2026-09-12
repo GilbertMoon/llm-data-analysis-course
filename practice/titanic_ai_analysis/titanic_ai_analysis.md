@@ -54,7 +54,7 @@ AI에게 Notebook 전체를 한 번에 완성시키거나 실제 실행하지 �
 
 STEP 00~04에서 전체 지도, 환경, 데이터 구조, 분석 문제와 `Survived` Target을 확인합니다. STEP 05에서 `df_work = df.copy()`를 **한 번만** 만들고 STEP 10까지 이어서 사용합니다.
 
-STEP 07의 `df_encoded`는 One-hot Encoding 같은 변환의 원리를 눈으로 이해하기 위한 교육용 복사본입니다. 최종 모델 입력으로 사용하지 않습니다. STEP 08~09의 시각화와 EDA는 사람이 의미를 읽기 쉬운 `df_work`를 기본으로 사용합니다.
+STEP 07의 `df_encoded`는 One-hot Encoding 같은 변환의 원리를 눈으로 이해하기 위한 교육용 복사본입니다. 최종 모델 입력으로 사용하지 않습니다. STEP 08~09의 시각화와 EDA는 사람이 의미를 읽기 쉬운 `df_work`를 기본으로 사용합니다. STEP 08은 barplot과 boxplot을 이용해 비율과 분포를 비교하고, STEP 09는 요약 통계와 간단한 통계검정으로 관찰된 차이를 추가 확인합니다.
 
 STEP 10에서는 Feature 후보를 다음 두 종류로 구분합니다.
 
