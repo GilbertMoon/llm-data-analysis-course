@@ -57,3 +57,7 @@ Thumbs.db
 # Editor/manual backup files
 *.bak
 *.bak.ipynb
+
+# Ad-hoc local validation reports/patches (not a deliverable directory)
+outputs/*.patch
+outputs/*-validation.md
