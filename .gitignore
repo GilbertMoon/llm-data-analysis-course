@@ -53,3 +53,7 @@ book/output/docx/*
 Thumbs.db
 .vscode/
 .idea/
+
+# Editor/manual backup files
+*.bak
+*.bak.ipynb

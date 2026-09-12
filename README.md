@@ -183,7 +183,7 @@ Ch15  READY / READY_WITH_WARNINGS / BLOCKED 중 왜 그 상태인가?
 
 ## 권장 환경
 
-- Python 3.10 이상
+- Python 3.12 이상이 필요하며, 본 교재와 실습에서는 Python 3.12 사용을 권장합니다. (`requirements.txt`에 고정된 numpy 등 핵심 패키지가 Python 3.12 이상을 요구합니다.)
 - VS Code
 - Jupyter Notebook
 - Git
