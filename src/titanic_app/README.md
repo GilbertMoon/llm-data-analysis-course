@@ -1,6 +1,6 @@
 # Titanic Streamlit app
 
-이 폴더는 STEP 17에서 사용할 Titanic 예측 앱과 Notebook이 공유하는 결정적 Feature 규칙을 담습니다.
+이 폴더는 STEP 17에서 사용할 Titanic 예측 앱을 담습니다.
 
 현재 구조:
 
@@ -10,48 +10,61 @@ src/titanic_app/
 └─ features.py
 ```
 
-## `features.py`
+## 수업 기준
 
-Notebook STEP 11 이후와 Streamlit이 같은 규칙을 사용합니다.
+Notebook에서는 핵심 전처리 로직을 별도 모듈에 숨기지 않습니다. 학생이 다음 작업을 각각 직접 실행합니다.
 
 ```text
-raw input:
-Pclass, Sex, Age, SibSp, Parch, Fare, Embarked
-
-fixed derived feature:
-FamilySize = SibSp + Parch + 1
-IsAlone = 1 if FamilySize == 1 else 0
+FamilySize / IsAlone 생성
+→ 숫자형 결측치 처리
+→ 범주형 결측치 처리
+→ One-Hot Encoding
+→ StandardScaler 표준화
+→ 숫자형 + 범주형 결합
+→ 모델 예측
 ```
 
-여기에는 전체 데이터의 평균·중앙값·빈도·Target을 학습해야 하는 변환을 넣지 않습니다. 그런 학습형 전처리는 저장된 scikit-learn Pipeline이 담당합니다.
+`features.py`는 이후 실무에서 반복 코드를 함수/모듈로 정리하는 방법을 보여주기 위해 남겨 둔 참고 파일이며, 현재 학생용 Notebook과 `app.py`의 필수 의존성이 아닙니다.
 
 ## `app.py`
 
-앱의 최종 예측 흐름은 다음으로 고정합니다.
+앱은 Notebook STEP 16에서 저장한 객체를 각각 불러와 **학습 때와 같은 순서**로 적용합니다.
 
 ```text
 사용자 원본 입력
-→ 입력 검증
-→ build_model_features()
-→ Model Input Contract 컬럼 확인
-→ 저장된 final_pipeline.predict()
-→ estimator.classes_에서 class 1 위치 확인
-→ predict_proba()
+→ FamilySize / IsAlone 직접 생성
+→ numeric_imputer.transform()
+→ scaler.transform()
+→ categorical_imputer.transform()
+→ encoder.transform()
+→ 숫자형 + 범주형 결합
+→ model.predict()
+→ model.predict_proba()
 → 결과와 한계 표시
 ```
 
-앱에서 median/mode를 새로 계산하거나 `pd.get_dummies()`를 별도로 실행하거나 scaler를 다시 fit하지 않습니다.
+앱에서는 중앙값·최빈값·범주 목록·평균·표준편차를 새로 학습하지 않습니다. Notebook의 Train 데이터에서 학습해 저장한 객체를 그대로 사용합니다.
 
 ## 실행 전 준비
 
 Notebook STEP 16 또는 개발 검증 스크립트로 다음 artifact가 있어야 합니다.
 
 ```text
-models/titanic_final_pipeline.joblib
+models/titanic_model_bundle.joblib
 models/titanic_model_contract.json
 ```
 
-개발 검증용 Baseline artifact가 필요한 경우 저장소 루트에서 실행할 수 있습니다.
+`titanic_model_bundle.joblib`에는 다음 객체가 각각 저장됩니다.
+
+```text
+numeric_imputer
+categorical_imputer
+encoder
+scaler
+model
+```
+
+개발 검증용 artifact가 필요한 경우 저장소 루트에서 실행합니다.
 
 ```powershell
 python scripts/titanic_modeling_smoke_test.py --save-artifacts
