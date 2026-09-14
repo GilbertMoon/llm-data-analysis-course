@@ -18,7 +18,7 @@ import pandas as pd
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 NOTEBOOK_PATH = PROJECT_ROOT / "notebooks" / "titanic_ai_analysis.ipynb"
 DATA_PATH = PROJECT_ROOT / "data" / "titanic" / "train.csv"
-PIPELINE_PATH = PROJECT_ROOT / "models" / "titanic_final_pipeline.joblib"
+BUNDLE_PATH = PROJECT_ROOT / "models" / "titanic_model_bundle.joblib"
 CONTRACT_PATH = PROJECT_ROOT / "models" / "titanic_model_contract.json"
 QA_DIR = PROJECT_ROOT / "tmp" / "titanic_public_qa"
 QA_REPORT_PATH = QA_DIR / "qa_report.json"
@@ -83,8 +83,6 @@ def validate_clean_notebook(notebook) -> None:
 
 
 def execute_notebook_code_cells(notebook) -> int:
-    # 현재 Python 환경에서 Notebook Code Cell을 위에서 아래로 같은 namespace에서 실행한다.
-    # Notebook에는 shell/magic 명령을 넣지 않았으므로 이 방식으로 cell-order dependency를 검증할 수 있다.
     os.environ.setdefault("MPLBACKEND", "Agg")
     namespace: dict[str, object] = {"__name__": "__main__"}
     old_cwd = Path.cwd()
@@ -95,9 +93,11 @@ def execute_notebook_code_cells(notebook) -> int:
         for index, cell in enumerate(notebook.cells):
             if cell.cell_type != "code":
                 continue
-            source = cell.source
             print(f"execute notebook code cell {index}")
-            exec(compile(source, f"{NOTEBOOK_PATH.name}:cell-{index}", "exec"), namespace)
+            exec(
+                compile(cell.source, f"{NOTEBOOK_PATH.name}:cell-{index}", "exec"),
+                namespace,
+            )
             executed += 1
             plt = namespace.get("plt")
             if plt is not None:
@@ -110,22 +110,24 @@ def execute_notebook_code_cells(notebook) -> int:
 
 
 def validate_artifacts() -> dict[str, object]:
-    if not PIPELINE_PATH.is_file():
-        raise FileNotFoundError(PIPELINE_PATH)
+    if not BUNDLE_PATH.is_file():
+        raise FileNotFoundError(BUNDLE_PATH)
     if not CONTRACT_PATH.is_file():
         raise FileNotFoundError(CONTRACT_PATH)
 
-    src_path = PROJECT_ROOT / "src"
-    if str(src_path) not in sys.path:
-        sys.path.insert(0, str(src_path))
-
-    from titanic_app.features import MODEL_FEATURE_COLUMNS, build_model_features
-
+    bundle = joblib.load(BUNDLE_PATH)
     contract = json.loads(CONTRACT_PATH.read_text(encoding="utf-8"))
-    if contract.get("model_feature_columns") != MODEL_FEATURE_COLUMNS:
-        raise RuntimeError("Model contract and shared feature module disagree.")
 
-    pipeline = joblib.load(PIPELINE_PATH)
+    required_bundle_keys = {
+        "numeric_imputer",
+        "categorical_imputer",
+        "encoder",
+        "scaler",
+        "model",
+    }
+    if set(bundle) != required_bundle_keys:
+        raise RuntimeError(f"Unexpected bundle keys: {sorted(bundle)}")
+
     new_passenger = pd.DataFrame(
         [
             {
@@ -139,19 +141,41 @@ def validate_artifacts() -> dict[str, object]:
             }
         ]
     )
-    model_input = build_model_features(new_passenger)[MODEL_FEATURE_COLUMNS]
-    prediction = int(pipeline.predict(model_input)[0])
+    new_passenger["FamilySize"] = (
+        new_passenger["SibSp"] + new_passenger["Parch"] + 1
+    )
+    new_passenger["IsAlone"] = (
+        new_passenger["FamilySize"] == 1
+    ).astype(int)
 
-    estimator = pipeline.named_steps["model"]
-    positions = np.where(estimator.classes_ == int(contract.get("positive_class", 1)))[0]
+    numeric_features = contract["numeric_features"]
+    categorical_features = contract["categorical_features"]
+
+    num_imputed = bundle["numeric_imputer"].transform(new_passenger[numeric_features])
+    num_scaled = bundle["scaler"].transform(num_imputed)
+
+    cat_imputed = bundle["categorical_imputer"].transform(
+        new_passenger[categorical_features]
+    )
+    cat_encoded = bundle["encoder"].transform(cat_imputed)
+
+    prepared_array = np.hstack([num_scaled, cat_encoded])
+    prepared_columns = contract["prepared_feature_columns"]
+    model_input = pd.DataFrame(prepared_array, columns=prepared_columns)
+
+    model = bundle["model"]
+    prediction = int(model.predict(model_input)[0])
+    positive_class = int(contract.get("positive_class", 1))
+    positions = np.where(model.classes_ == positive_class)[0]
     if len(positions) != 1:
-        raise RuntimeError(f"Positive class not found in classes_: {estimator.classes_}")
-    probability = float(pipeline.predict_proba(model_input)[:, positions[0]][0])
+        raise RuntimeError(f"Positive class not found in classes_: {model.classes_}")
+    probability = float(model.predict_proba(model_input)[:, positions[0]][0])
 
     print("artifact/contract PASS")
     print("sample prediction:", prediction, "class-1 probability:", round(probability, 4))
     return {
         "final_estimator": contract.get("final_estimator"),
+        "scaling": contract.get("scaling"),
         "sample_prediction": prediction,
         "sample_class_1_probability": probability,
     }
@@ -187,7 +211,6 @@ def main() -> None:
     executed_code_cells = execute_notebook_code_cells(notebook)
     artifact_result = validate_artifacts()
 
-    # STEP 17의 실제 예측 분기와 Streamlit 서버 기동까지 같은 Python 환경에서 검증한다.
     run_command([sys.executable, "scripts/test_titanic_streamlit_ui.py"])
     run_command([sys.executable, "scripts/check_titanic_streamlit.py"])
 
@@ -208,10 +231,6 @@ def main() -> None:
             "headless_health": "PASS",
             "page_http_response": "PASS",
         },
-        "optional_visual_review": [
-            "Run: streamlit run src/titanic_app/app.py",
-            "Review layout and wording in a browser before class if desired.",
-        ],
     }
     QA_REPORT_PATH.write_text(
         json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8"
@@ -219,11 +238,6 @@ def main() -> None:
 
     print("\nPUBLIC_NOTEBOOK_EXECUTION_PASS")
     print("report:", QA_REPORT_PATH)
-    print(
-        "Automated gates include Notebook sequential execution, artifact reload, "
-        "Streamlit form submit, health check, and page response. "
-        "A browser visual review is optional and is not an execution blocker."
-    )
 
 
 if __name__ == "__main__":
