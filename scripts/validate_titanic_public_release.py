@@ -28,9 +28,19 @@ EXPECTED_TARGET_COUNTS = {0: 549, 1: 342}
 EXPECTED_MISSING = {"Age": 177, "Cabin": 687, "Embarked": 2}
 
 
+def configure_utf8_console() -> None:
+    """Keep Korean Notebook output safe on Windows GitHub Actions."""
+    for stream in (sys.stdout, sys.stderr):
+        reconfigure = getattr(stream, "reconfigure", None)
+        if reconfigure is not None:
+            reconfigure(encoding="utf-8", errors="replace")
+
+
 def run_command(args: list[str]) -> None:
     print("\n$", " ".join(args))
-    subprocess.run(args, cwd=PROJECT_ROOT, check=True)
+    env = os.environ.copy()
+    env.setdefault("PYTHONIOENCODING", "utf-8")
+    subprocess.run(args, cwd=PROJECT_ROOT, check=True, env=env)
 
 
 def compile_python_sources() -> None:
@@ -182,6 +192,8 @@ def validate_artifacts() -> dict[str, object]:
 
 
 def main() -> None:
+    configure_utf8_console()
+
     parser = argparse.ArgumentParser(
         description="Validate the public Titanic student notebook and model-serving contract."
     )
