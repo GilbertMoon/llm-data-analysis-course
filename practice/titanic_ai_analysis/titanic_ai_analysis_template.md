@@ -52,25 +52,52 @@
 | 5 | | | | |
 | 추가 | | | | |
 
+## 전처리 기록
+
+- 숫자형 결측치 처리 방법:
+- 숫자형 결측치 기준을 학습한 데이터:
+- 범주형 결측치 처리 방법:
+- 범주형 결측치 기준을 학습한 데이터:
+- One-Hot Encoding 대상:
+- 생성된 인코딩 컬럼 확인:
+- 정규화(Normalization) 개념 확인 방법:
+- 실제 모델에 사용한 표준화(Standardization) 방법:
+- Train에 사용한 메서드:
+- Test에 사용한 메서드:
+- 데이터 누수를 막기 위해 확인한 점:
+
 ## 최종 모델 기록
 
-- Baseline Pipeline:
-- 추가 모델 Pipeline:
-- 최종 선택 Pipeline:
+- Baseline 모델:
+- 추가 모델:
+- 최종 선택 모델:
 - 최종 선택 이유:
 - 평가 방식의 한계:
-- Pipeline 입력 Feature:
+- 모델 입력 Feature:
 - 숫자형 Feature:
 - 범주형 Feature:
 - 결정적 파생 Feature:
 - positive class:
 - 저장 artifact:
 
+## 저장 객체 기록
+
+- numeric_imputer:
+- categorical_imputer:
+- encoder:
+- scaler:
+- model:
+- Model Contract 파일:
+
 ## Streamlit 연결 기록
 
 - 사용자 직접 입력값:
-- 앱 내부 결정적 계산값:
-- Pipeline 내부 전처리:
+- 앱 내부 파생 Feature:
+- 숫자형 결측치 처리 객체:
+- 범주형 결측치 처리 객체:
+- 인코딩 객체:
+- 표준화 객체:
+- 최종 모델:
 - 여러 입력 조합 테스트 여부:
 - 확인한 오류와 해결 방법:
 
@@ -79,5 +106,7 @@
 - 가장 중요한 데이터 관찰:
 - 가장 어려웠던 판단:
 - AI 제안을 그대로 사용하지 않고 수정/거절한 사례:
+- 정규화와 표준화의 차이를 내가 이해한 방식:
+- `fit_transform()`과 `transform()`을 구분해야 하는 이유:
 - 현재 모델이 설명하지 못하는 한계:
-- 다음에 자동화하고 싶은 작업:
+- 다음에 자동화하거나 모듈화하고 싶은 작업:
