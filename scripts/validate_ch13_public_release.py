@@ -331,7 +331,7 @@ def main() -> None:
             "versioned_snapshot_path",
             "validate_external_dataframe",
             "merge_external_data",
-            "SYNTHETIC",
+            "합성 예제",
         ]
         missing_notebook = [m for m in notebook_markers if m not in notebook_text]
         record(
