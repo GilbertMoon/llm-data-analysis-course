@@ -6,15 +6,15 @@
 # Run:
 #   cd automation/airflow
 #   cp .env.example .env
-#   # Edit every value marked CHANGE_ME before starting.
+#   # Fill the three empty secret values in the untracked .env file.
 #   docker compose build
 #   docker compose up airflow-init
 #   docker compose up -d
 #
-# Stop:
+# Stop while preserving the Postgres volume:
 #   docker compose down
 #
-# Reset metadata and account data:
+# Destructive learning-environment reset (metadata/account/run history can be lost):
 #   docker compose down --volumes --remove-orphans
 
 x-airflow-common: &airflow-common
@@ -22,7 +22,7 @@ x-airflow-common: &airflow-common
     context: .
     args:
       AIRFLOW_VERSION: ${AIRFLOW_VERSION:-3.3.0}
-  image: llm-data-analysis-course-airflow:${AIRFLOW_VERSION:-3.3.0}
+  image: llm-data-analysis-ebook-airflow:${AIRFLOW_VERSION:-3.3.0}
   environment: &airflow-common-env
     AIRFLOW__CORE__EXECUTOR: LocalExecutor
     AIRFLOW__CORE__LOAD_EXAMPLES: "false"
@@ -54,7 +54,7 @@ x-airflow-common: &airflow-common
 services:
   postgres:
     image: postgres:16
-    container_name: llm-course-airflow-postgres
+    container_name: llm-ebook-airflow-postgres
     environment:
       POSTGRES_USER: airflow
       POSTGRES_PASSWORD: ${AIRFLOW_DB_PASSWORD:?Set AIRFLOW_DB_PASSWORD in .env}
@@ -71,7 +71,7 @@ services:
 
   airflow-init:
     <<: *airflow-common
-    container_name: llm-course-airflow-init
+    container_name: llm-ebook-airflow-init
     entrypoint: /bin/bash
     command:
       - -c
@@ -82,7 +82,7 @@ services:
 
   airflow-api-server:
     <<: *airflow-common
-    container_name: llm-course-airflow-api-server
+    container_name: llm-ebook-airflow-api-server
     command: api-server
     ports:
       - "${AIRFLOW_UI_PORT:-8080}:8080"
@@ -101,7 +101,7 @@ services:
 
   airflow-scheduler:
     <<: *airflow-common
-    container_name: llm-course-airflow-scheduler
+    container_name: llm-ebook-airflow-scheduler
     command: scheduler
     depends_on:
       postgres:
@@ -114,7 +114,7 @@ services:
 
   airflow-dag-processor:
     <<: *airflow-common
-    container_name: llm-course-airflow-dag-processor
+    container_name: llm-ebook-airflow-dag-processor
     command: dag-processor
     depends_on:
       postgres:
@@ -127,7 +127,7 @@ services:
 
   airflow-triggerer:
     <<: *airflow-common
-    container_name: llm-course-airflow-triggerer
+    container_name: llm-ebook-airflow-triggerer
     command: triggerer
     depends_on:
       postgres:
