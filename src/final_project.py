@@ -43,6 +43,7 @@ from src.external_data_collection import merge_external_data, redact_url, sha256
 from src.midterm_project import (
     build_analysis_tables,
     build_key_duplicate_checks,
+    build_project_validation as build_midterm_project_validation,
     summarize_datasets,
 )
 from src.preprocessing import (
@@ -269,7 +270,11 @@ def prepare_core_analysis(base_dir: str | Path = ".") -> dict[str, Any]:
         "amount_scope_summary": tables["amount_scope_summary"],
         "merge_checks": tables["merge_checks"],
         "total_consistency_check": tables["total_consistency_check"],
-        "core_validation": tables["project_validation"],
+        "core_validation": build_midterm_project_validation(
+    key_duplicate_checks,
+    relationship_checks,
+    tables,
+),
     }
 
     return {
