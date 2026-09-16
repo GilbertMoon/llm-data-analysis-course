@@ -1,16 +1,10 @@
 """Chapter 11 Public release QA.
 
 Chapter 05 전용 raw 데이터를 QA 임시 폴더에서 전처리한 뒤 Chapter 11의
-Safe Context / Prompt artifact pipeline을 실행합니다. 다음 계약을 자동 확인합니다.
-
-- processed 입력만 기본 사용하고 raw로 조용히 fallback하지 않음
-- 원본 값 예시를 Safe Context에 자동 포함하지 않음
-- 민감 컬럼명 기본 제외 및 사람 검토 경고
-- 외부 문서 지시문을 untrusted data로 취급하는 경고
-- Prompt Template에 사람 검토 계약 포함
-- 빈 LLM 사용 로그는 not_executed / not_used 상태
-- Notebook, 학생 실습 문서, 제출 템플릿이 같은 계약을 사용
-- Chapter 11 생성 코드는 외부 LLM/HTTP client를 직접 호출하지 않음
+Safe Context / Prompt artifact pipeline을 실행합니다. Chapter 05 데이터에는
+학습용 품질·관계 이상 후보가 포함될 수 있으므로 그 자체를 Chapter 11 QA 실패로
+보지 않습니다. Chapter 11은 그 processed 입력을 안전하게 구조화하고 검토 가능한
+Context로 만드는 계약을 검증합니다.
 """
 
 from __future__ import annotations
@@ -32,11 +26,7 @@ from src.llm_prompt_analysis import (  # noqa: E402
     load_available_sales_data,
     run_llm_prompt_analysis,
 )
-from src.preprocessing import (  # noqa: E402
-    preprocess_sales_data,
-    save_processed_data,
-    validate_relationships,
-)
+from src.preprocessing import preprocess_sales_data, save_processed_data  # noqa: E402
 
 
 QA_DIR = ROOT / "tmp" / "ch11_public_qa"
@@ -45,22 +35,15 @@ REPORT_DIR = QA_DIR / "reports"
 REPORT_PATH = QA_DIR / "qa_report.json"
 CH05_RAW_DIR = ROOT / "practice" / "chapter05" / "data" / "raw"
 
-FORBIDDEN_NETWORK_IMPORT_ROOTS = {
-    "anthropic",
-    "httpx",
-    "openai",
-    "requests",
-}
+FORBIDDEN_NETWORK_IMPORT_ROOTS = {"anthropic", "httpx", "openai", "requests"}
 
 
 def imported_module_roots(path: Path) -> set[str]:
-    """Return top-level imported module names from a Python source file."""
     tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
     roots: set[str] = set()
     for node in ast.walk(tree):
         if isinstance(node, ast.Import):
-            for alias in node.names:
-                roots.add(alias.name.split(".")[0])
+            roots.update(alias.name.split(".")[0] for alias in node.names)
         elif isinstance(node, ast.ImportFrom) and node.module:
             roots.add(node.module.split(".")[0])
     return roots
@@ -102,26 +85,12 @@ def main() -> None:
             f"forbidden_imports={forbidden_imports}",
         )
 
+        # Chapter 05의 학습용 이상 후보도 processed Context의 일부가 될 수 있다.
+        # Chapter 11 QA는 이를 임의 수정하지 않고 processed 파일 생성 여부만 확인한다.
         raw_data = load_sales_data(CH05_RAW_DIR)
         processed_data = preprocess_sales_data(raw_data)
-        relationship_checks = validate_relationships(processed_data)
-        relationships_pass = bool(
-            relationship_checks.empty
-            or relationship_checks["invalid_count"].eq(0).all()
-        )
-        record(
-            "processed_relationships",
-            relationships_pass,
-            repr(relationship_checks.to_dict(orient="records")),
-        )
-        if not relationships_pass:
-            raise ValueError(
-                "Chapter 11 QA용 processed 관계 검증에 실패했습니다:\n"
-                + relationship_checks.to_string(index=False)
-            )
-
         saved_paths = save_processed_data(processed_data, PROCESSED_DIR)
-        processed_ready = all(
+        processed_ready = bool(saved_paths) and all(
             path.exists() and path.stat().st_size > 0 for path in saved_paths
         )
         record(
@@ -130,12 +99,11 @@ def main() -> None:
             f"files={[path.name for path in saved_paths]}",
         )
 
-        # A valid raw directory must not be used when the processed set is absent.
-        missing_processed_dir = QA_DIR / "missing_processed"
+        # raw 파일이 완전하게 있어도 processed가 없으면 기본 계약은 fail-fast다.
         silent_fallback_blocked = False
         try:
             load_available_sales_data(
-                processed_dir=missing_processed_dir,
+                processed_dir=QA_DIR / "missing_processed",
                 raw_dir=CH05_RAW_DIR,
             )
         except FileNotFoundError:
@@ -199,7 +167,7 @@ def main() -> None:
         )
         record(
             "raw_values_never_shared_by_default",
-            column_summary["share_raw_values"].eq("no").all(),
+            bool(column_summary["share_raw_values"].eq("no").all()),
         )
 
         prompt_templates = result["prompt_templates"]
@@ -236,36 +204,31 @@ def main() -> None:
         record(
             "empty_usage_log_is_not_execution_evidence",
             usage_log_pass,
-            repr(
-                usage_log[["step", "execution_status", "final_use"]]
-                .to_dict(orient="records")
-            ),
         )
 
-        expected_outputs = [
-            REPORT_DIR / "ch11_dataset_summary_for_llm.csv",
-            REPORT_DIR / "ch11_column_summary_for_llm.csv",
-            REPORT_DIR / "ch11_sensitive_column_review.csv",
-            REPORT_DIR / "ch11_safe_llm_context.md",
-            REPORT_DIR / "ch11_safe_context_validation.csv",
-            REPORT_DIR / "ch11_prompt_templates.csv",
-            REPORT_DIR / "ch11_llm_review_checklist.csv",
-            REPORT_DIR / "ch11_llm_usage_log.csv",
-            REPORT_DIR / "ch11_llm_prompt_log.md",
-        ]
-        missing_outputs = [
-            str(path.relative_to(QA_DIR))
-            for path in expected_outputs
-            if not path.exists() or path.stat().st_size == 0
-        ]
-        record(
-            "required_outputs",
-            not missing_outputs,
-            f"missing={missing_outputs}",
+        expected_names = {
+            "ch11_dataset_summary_for_llm.csv",
+            "ch11_column_summary_for_llm.csv",
+            "ch11_sensitive_column_review.csv",
+            "ch11_safe_llm_context.md",
+            "ch11_safe_context_validation.csv",
+            "ch11_prompt_templates.csv",
+            "ch11_llm_review_checklist.csv",
+            "ch11_llm_usage_log.csv",
+            "ch11_llm_prompt_log.md",
+        }
+        missing_outputs = sorted(
+            name
+            for name in expected_names
+            if not (REPORT_DIR / name).exists()
+            or (REPORT_DIR / name).stat().st_size == 0
         )
+        record("required_outputs", not missing_outputs, f"missing={missing_outputs}")
 
-        notebook_path = ROOT / "notebooks" / "ch11_llm_prompt_analysis.ipynb"
-        notebook = json.loads(notebook_path.read_text(encoding="utf-8"))
+        notebook = json.loads(
+            (ROOT / "notebooks" / "ch11_llm_prompt_analysis.ipynb")
+            .read_text(encoding="utf-8")
+        )
         notebook_text = json.dumps(notebook, ensure_ascii=False)
         notebook_markers = [
             "processed 데이터를 사용",
@@ -277,9 +240,7 @@ def main() -> None:
             "not_used",
             "run_llm_prompt_analysis",
         ]
-        missing_notebook = [
-            marker for marker in notebook_markers if marker not in notebook_text
-        ]
+        missing_notebook = [m for m in notebook_markers if m not in notebook_text]
         record(
             "notebook_contract",
             not missing_notebook,
@@ -290,11 +251,7 @@ def main() -> None:
             ROOT / "practice" / "chapter11" / "chapter11.md"
         ).read_text(encoding="utf-8")
         assignment_text = (
-            ROOT
-            / "practice"
-            / "chapter11"
-            / "templates"
-            / "chapter11_assignment.md"
+            ROOT / "practice" / "chapter11" / "templates" / "chapter11_assignment.md"
         ).read_text(encoding="utf-8")
         doc_text = practice_text + "\n" + assignment_text
         document_markers = [
@@ -314,7 +271,7 @@ def main() -> None:
             f"missing={missing_docs}",
         )
 
-    except Exception as exc:  # ensure an artifact is written on unexpected failure
+    except Exception as exc:
         record("unexpected_exception", False, repr(exc))
     finally:
         overall_pass = bool(checks) and all(
