@@ -14,7 +14,13 @@
 notebooks/ch09_regression_analysis.ipynb
 ```
 
-보조 실행 스크립트:
+Chapter09 입력 준비:
+
+```text
+scripts/prepare_ch09_data.py
+```
+
+회귀 전체 실행:
 
 ```text
 scripts/run_regression_analysis.py
@@ -24,7 +30,7 @@ scripts/run_regression_analysis.py
 
 ---
 
-## STEP 0. 제출용 Notebook 준비
+## STEP 0. 제출용 Notebook과 모델링 입력 준비
 
 공식 Notebook을 복사해 개인 저장소의 다음 파일로 사용합니다.
 
@@ -32,19 +38,42 @@ scripts/run_regression_analysis.py
 chapter09/chapter09.ipynb
 ```
 
-실습 시작 전 processed 파일을 확인합니다.
+Chapter09는 Chapter05의 **오류 탐지용 전용 Raw**인 `practice/chapter05/data/raw`를 모델링 입력으로 사용하지 않습니다.
+
+Chapter08에서 검증한 것과 같은 공통 프로젝트 데이터를 사용합니다.
+
+```text
+data/raw/customers.csv
+data/raw/products.csv
+data/raw/orders.csv
+data/raw/order_items.csv
+```
+
+Public 프로젝트 루트에서 다음 명령을 먼저 실행합니다.
+
+```powershell
+python scripts/prepare_ch09_data.py
+```
+
+이 명령은 다음 순서로 실행됩니다.
+
+```text
+공통 data/raw 로드
+→ 공통 전처리 적용
+→ FK 관계 검증
+→ 검증 통과 시 data/processed 저장
+```
+
+생성 파일:
 
 ```text
 data/processed/customers_clean.csv
+data/processed/products_clean.csv
 data/processed/orders_clean.csv
 data/processed/order_items_clean.csv
 ```
 
-없다면 Public 프로젝트 루트에서 먼저 실행합니다.
-
-```powershell
-python scripts/preprocess_data.py
-```
+관계 검증이 실패하면 모델링으로 넘어가지 않습니다.
 
 ---
 
@@ -68,7 +97,7 @@ order_total = 같은 order_id의 line_total 합계
 line_total = quantity × unit_price
 ```
 
-중요한 것은 `quantity`, `unit_price`, `line_total`을 Target 생성에는 사용하지만 feature에는 넣지 않는 것입니다.
+`quantity`, `unit_price`, `line_total`은 Target 생성에는 사용하지만 feature에는 넣지 않습니다.
 
 ---
 
@@ -80,7 +109,7 @@ line_total = quantity × unit_price
 | --- | --- | --- | --- | --- |
 |  |  |  |  |  |
 
-이번 실습의 허용 feature:
+허용 feature:
 
 ```text
 order_month
@@ -113,13 +142,13 @@ product_id
 reports/ch09_regression_feature_audit.csv
 ```
 
-누수 위험 feature를 조용히 삭제해서 넘어가는 것이 아니라 **왜 사용할 수 없는지 설명할 수 있어야 합니다.**
+누수 위험 feature는 조용히 지우는 것이 아니라 **왜 사용할 수 없는지 설명할 수 있어야 합니다.**
 
 ---
 
 ## STEP 3. Target 생성과 관계 검증
 
-공식 Notebook은 다음을 확인합니다.
+공식 Notebook은 다음 계산 관계를 확인합니다.
 
 ```text
 line_total = quantity × unit_price
@@ -142,19 +171,14 @@ orders → customers       many_to_one
 이번 장에서는 랜덤 분할보다 시간 순서를 사용합니다.
 
 ```text
-과거 주문
-→ Train
-
-미래에 가까운 마지막 기간
-→ Final Test
+과거 주문 → Train
+미래에 가까운 마지막 기간 → Final Test
 ```
 
 같은 달력 날짜가 양쪽에 동시에 포함되지 않아야 합니다.
 
 ```text
-train max date
-<
-final test min date
+train max date < final test min date
 ```
 
 자동 Evidence:
@@ -163,7 +187,7 @@ final test min date
 reports/ch09_regression_split_summary.csv
 ```
 
-Final Test는 이 시점부터 **보호 구간**으로 생각합니다. 모델과 feature를 선택하는 데 반복 사용하지 않습니다.
+Final Test는 이 시점부터 **보호 구간**으로 생각합니다.
 
 ---
 
@@ -183,7 +207,7 @@ most_frequent imputation
 → OneHotEncoder(handle_unknown="ignore")
 ```
 
-이 처리를 전체 데이터에 미리 `fit`하지 않습니다.
+전체 데이터에 미리 `fit`하지 않습니다.
 
 ```text
 Pipeline
@@ -203,15 +227,7 @@ Linear Regression
 Random Forest
 ```
 
-Baseline은 단순한 참고용 장식이 아닙니다.
-
-```text
-복잡한 모델
-vs
-훈련 기간 평균만 예측하는 단순 모델
-```
-
-을 비교해 현재 feature가 실제로 유용한 신호를 제공하는지 판단합니다.
+Baseline은 복잡한 모델이 실제로 추가 가치를 만드는지 확인하기 위한 비교 기준입니다.
 
 ---
 
@@ -219,12 +235,10 @@ vs
 
 **이 단계에서는 Final Test 성능을 보지 않습니다.**
 
-공식 흐름:
-
 ```text
 Train
 → TimeSeriesSplit
-→ 각 후보의 cv_MAE_mean / cv_MAE_std / cv_R2_mean 확인
+→ cv_MAE_mean / cv_MAE_std / cv_R2_mean 확인
 ```
 
 자동 Evidence:
@@ -239,24 +253,23 @@ reports/ch09_regression_cv_summary.csv
 
 ## STEP 8. Selected Model을 고정
 
-다음 순서가 중요합니다.
+순서를 반드시 지킵니다.
 
 ```text
 Train CV 결과 확인
 → Selected Model 결정
 → 선택 고정
+→ 그 뒤 Final Test 사용
 ```
 
-그 뒤에야 Final Test를 사용합니다.
+다음 순서는 사용하지 않습니다.
 
 ```text
-테스트 MAE 확인
+Final Test MAE 확인
 → 모델 선택
 ```
 
-순서로 진행하면 안 됩니다.
-
-Notebook에 선택된 모델 이름을 기록하고 왜 선택되었는지 Train CV 결과로 설명합니다.
+선택된 모델 이름과 선택 근거를 Train CV 결과로 설명합니다.
 
 ---
 
@@ -292,7 +305,7 @@ Final Test 결과가 기대보다 낮더라도 같은 Test를 보고 다른 후�
 
 ## STEP 10. MAE, RMSE, R² 해석
 
-점수만 복사하지 말고 다음 질문에 답합니다.
+점수만 복사하지 말고 다음에 답합니다.
 
 ```text
 MAE는 평균적으로 얼마만큼 틀린다는 뜻인가?
@@ -302,8 +315,6 @@ Baseline 대비 MAE가 실제로 개선되었는가?
 ```
 
 R²가 음수라고 해서 코드가 반드시 틀린 것은 아닙니다.
-
-현재 feature만으로 예측 신호가 약할 수 있습니다.
 
 ---
 
@@ -318,14 +329,7 @@ residual
 abs_error
 ```
 
-대표 큰 오차 사례 2~3개를 골라 다음을 작성합니다.
-
-```text
-무엇을 관찰했는가?
-어떤 이유가 가능해 보이는가?
-현재 데이터로 원인을 확정할 수 있는가?
-추가로 어떤 정보가 필요한가?
-```
+대표 큰 오차 사례 2~3개를 골라 관찰, 가능한 이유 후보, 추가 확인 사항을 기록합니다.
 
 내부 진단 파일:
 
@@ -362,13 +366,14 @@ test_rows_for_r2 = PASS
 
 ## STEP 13. 전체 스크립트 재실행
 
-프로젝트 루트에서 실행합니다.
+모델링 입력 준비 후 회귀 분석을 실행합니다.
 
 ```powershell
+python scripts/prepare_ch09_data.py
 python scripts/run_regression_analysis.py
 ```
 
-다음 출력 순서를 확인합니다.
+출력 순서:
 
 ```text
 시간 순서 분할
@@ -381,7 +386,7 @@ python scripts/run_regression_analysis.py
 → 저장 결과
 ```
 
-Notebook의 중간 메모리 상태가 아니라 새 실행에서도 같은 절차가 재현되어야 합니다.
+Notebook의 메모리 상태가 아니라 새 실행에서도 같은 절차가 재현되어야 합니다.
 
 ---
 
@@ -395,19 +400,9 @@ Notebook의 중간 메모리 상태가 아니라 새 실행에서도 같은 절�
 현재 데이터로는 사용 보류
 ```
 
-최소 다음을 근거로 사용합니다.
+근거에는 Train CV 안정성, Baseline 대비 Final Test 성능, MAE/RMSE/R², 누수 검증, 시간 분할, 오류 패턴, 데이터 한계를 포함합니다.
 
-```text
-Train CV 안정성
-Baseline 대비 Final Test 성능
-MAE / RMSE / R²
-누수 검증
-시간 분할
-대표 오류 패턴
-현재 데이터의 한계
-```
-
-낮은 성능도 숨기지 않습니다. 누수 feature를 넣어 점수를 높이는 것은 개선이 아닙니다.
+낮은 성능을 숨기거나 누수 feature를 넣어 점수를 높이지 않습니다.
 
 ---
 
@@ -457,6 +452,7 @@ https://github.com/<ID>/llm-data-analysis-study/blob/main/chapter09/chapter09.ip
 
 ## 완료 체크
 
+- [ ] `prepare_ch09_data.py`로 공통 모델링 입력을 준비했습니다.
 - [ ] Target과 예측 시점을 정의했습니다.
 - [ ] Feature Leakage Audit을 수행했습니다.
 - [ ] Target 계산 관계와 병합 관계를 확인했습니다.
