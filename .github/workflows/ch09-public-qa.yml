@@ -8,11 +8,14 @@ on:
     paths:
       - '.github/workflows/ch09-public-qa.yml'
       - 'src/regression.py'
+      - 'src/data_loader.py'
+      - 'src/preprocessing.py'
+      - 'scripts/prepare_ch09_data.py'
       - 'scripts/run_regression_analysis.py'
       - 'scripts/validate_ch09_public_release.py'
       - 'notebooks/ch09_regression_analysis.ipynb'
       - 'practice/chapter09/**'
-      - 'data/processed/**'
+      - 'data/raw/**'
       - 'requirements.txt'
 
 jobs:
