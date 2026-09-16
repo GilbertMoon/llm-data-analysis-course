@@ -27,6 +27,7 @@ from src.preprocessing import (  # noqa: E402
 )
 from src.regression import (  # noqa: E402
     FORBIDDEN_FEATURES,
+    public_prediction_result,
     run_regression_analysis,
 )
 
@@ -196,17 +197,20 @@ def main() -> None:
         internal_predictions = pd.read_csv(
             REPORT_DIR / "ch09_regression_predictions_internal.csv"
         )
-        report_text = (
-            REPORT_DIR / "ch09_regression_report.md"
-        ).read_text(encoding="utf-8")
+        public_errors = public_prediction_result(
+            result["prediction_result"]
+        )
         internal_public_pass = (
             "order_id" in internal_predictions.columns
-            and "order_id" not in report_text
+            and "order_id" not in public_errors.columns
         )
         record(
             "internal_public_separation",
             internal_public_pass,
-            f"internal_columns={internal_predictions.columns.tolist()}",
+            "internal_columns="
+            f"{internal_predictions.columns.tolist()}, "
+            "public_columns="
+            f"{public_errors.columns.tolist()}",
         )
 
         notebook_path = ROOT / "notebooks" / "ch09_regression_analysis.ipynb"
