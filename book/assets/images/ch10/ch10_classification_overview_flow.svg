@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">주문 취소 분류 분석 전체 흐름</title>
+  <desc id="desc">타깃 범위에서 개인정보를 제거한 결과 저장까지 이어지는 Chapter 10 분류 분석 흐름</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#2b6cb0"/></marker>
+    <style>
+      .t{font-family:'Malgun Gothic','Pretendard','Noto Sans KR',sans-serif;fill:#14213d}.h{font-size:46px;font-weight:700}.s{font-size:24px}.c{font-size:23px;font-weight:700}.n{font-size:18px}.card{fill:#f8fbff;stroke:#8fb7df;stroke-width:2}.warn{fill:#fff7ed;stroke:#f59e0b;stroke-width:2}.ok{fill:#ecfdf5;stroke:#22c55e;stroke-width:2}.arrow{stroke:#2b6cb0;stroke-width:4;fill:none;marker-end:url(#arrow)}
+    </style>
+  </defs>
+  <rect width="1600" height="900" fill="#ffffff"/>
+  <text x="80" y="90" class="t h">주문 취소 분류 분석 전체 흐름</text>
+  <text x="80" y="132" class="t s">선택은 Validation에서 끝내고, Final Test는 마지막에 한 번만 사용합니다.</text>
+
+  <g transform="translate(70 195)">
+    <rect class="card" x="0" y="0" rx="18" width="250" height="115"/><text class="t c" x="125" y="45" text-anchor="middle">1. Target Scope</text><text class="t n" x="125" y="78" text-anchor="middle">completed=0 · cancelled=1</text>
+    <rect class="card" x="300" y="0" rx="18" width="250" height="115"/><text class="t c" x="425" y="45" text-anchor="middle">2. Prediction Time</text><text class="t n" x="425" y="78" text-anchor="middle">주문 생성 직후</text>
+    <rect class="card" x="600" y="0" rx="18" width="250" height="115"/><text class="t c" x="725" y="45" text-anchor="middle">3. Order Features</text><text class="t n" x="725" y="78" text-anchor="middle">주문 1건 = 1행</text>
+    <rect class="card" x="900" y="0" rx="18" width="250" height="115"/><text class="t c" x="1025" y="45" text-anchor="middle">4. Merge Validation</text><text class="t n" x="1025" y="78" text-anchor="middle">관계 · 행 수 · 미매칭</text>
+    <rect class="card" x="1200" y="0" rx="18" width="250" height="115"/><text class="t c" x="1325" y="45" text-anchor="middle">5. Split</text><text class="t n" x="1325" y="78" text-anchor="middle">Train · Validation · Test</text>
+    <path class="arrow" d="M250 58 H292"/><path class="arrow" d="M550 58 H592"/><path class="arrow" d="M850 58 H892"/><path class="arrow" d="M1150 58 H1192"/>
+
+    <rect class="card" x="0" y="210" rx="18" width="250" height="115"/><text class="t c" x="125" y="255" text-anchor="middle">6. Baseline / Models</text><text class="t n" x="125" y="288" text-anchor="middle">Dummy · Logistic · RF</text>
+    <rect class="ok" x="300" y="210" rx="18" width="250" height="115"/><text class="t c" x="425" y="252" text-anchor="middle">7. Model Selection</text><text class="t n" x="425" y="285" text-anchor="middle">Validation에서 선택</text>
+    <rect class="ok" x="600" y="210" rx="18" width="250" height="115"/><text class="t c" x="725" y="252" text-anchor="middle">8. Threshold</text><text class="t n" x="725" y="285" text-anchor="middle">Validation에서 선택</text>
+    <rect class="warn" x="900" y="210" rx="18" width="250" height="115"/><text class="t c" x="1025" y="252" text-anchor="middle">9. Frozen Final Test</text><text class="t n" x="1025" y="285" text-anchor="middle">선택 고정 후 1회</text>
+    <rect class="card" x="1200" y="210" rx="18" width="250" height="115"/><text class="t c" x="1325" y="252" text-anchor="middle">10. Error Analysis</text><text class="t n" x="1325" y="285" text-anchor="middle">Precision · Recall · FP/FN</text>
+    <path class="arrow" d="M250 268 H292"/><path class="arrow" d="M550 268 H592"/><path class="arrow" d="M850 268 H892"/><path class="arrow" d="M1150 268 H1192"/>
+
+    <rect class="card" x="390" y="425" rx="18" width="310" height="120"/><text class="t c" x="545" y="470" text-anchor="middle">11. Privacy-safe Output</text><text class="t n" x="545" y="505" text-anchor="middle">공개 결과에서 식별자 제거</text>
+    <rect class="ok" x="750" y="425" rx="18" width="310" height="120"/><text class="t c" x="905" y="470" text-anchor="middle">12. Validation Evidence</text><text class="t n" x="905" y="505" text-anchor="middle">계약과 결과를 파일로 증명</text>
+    <path class="arrow" d="M700 485 H742"/>
+  </g>
+
+  <rect x="160" y="785" width="1280" height="72" rx="16" fill="#eef6ff" stroke="#2b6cb0" stroke-width="2"/>
+  <text x="800" y="830" class="t c" text-anchor="middle">높은 점수보다 타깃 · 누수 · 선택 과정 · 최종 평가의 독립성이 먼저입니다.</text>
+</svg>
