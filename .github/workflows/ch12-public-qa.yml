@@ -30,6 +30,8 @@ jobs:
           - windows-latest
     runs-on: ${{ matrix.os }}
     timeout-minutes: 20
+    env:
+      PYTHONUTF8: '1'
 
     steps:
       - name: Checkout
