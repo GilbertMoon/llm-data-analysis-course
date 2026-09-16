@@ -9,14 +9,18 @@
     data/raw/orders.csv
     data/raw/order_items.csv
 
-출력:
+주요 출력:
     data/processed/*_clean.csv
     reports/ch08_dataset_summary.csv
     reports/ch08_preprocessing_comparison.csv
     reports/ch08_key_duplicate_checks.csv
     reports/ch08_relationship_checks.csv
     reports/ch08_merge_checks.csv
+    reports/ch08_line_total_check.csv
+    reports/ch08_date_checks.csv
     reports/ch08_amount_scope_summary.csv
+    reports/ch08_total_consistency_check.csv
+    reports/ch08_project_validation.csv
     reports/ch08_category_sales.csv
     reports/ch08_monthly_sales.csv
     reports/ch08_customer_sales.csv
@@ -50,25 +54,42 @@ def main() -> None:
     )
 
     print("8장 중간 프로젝트 완료")
+
     print("\n[데이터 개요]")
     print(result["dataset_summary"].to_string(index=False))
 
     print("\n[전처리 전후 비교]")
     print(result["preprocessing_comparison"].to_string(index=False))
 
-    print("\n[키 중복 점검]")
+    print("\n[PK 검증]")
     print(result["key_duplicate_checks"].to_string(index=False))
+
+    print("\n[FK 검증]")
+    print(result["relationship_checks"].to_string(index=False))
 
     print("\n[병합 검증]")
     print(result["analysis_tables"]["merge_checks"].to_string(index=False))
 
-    print("\n[전체 주문 금액과 완료 주문 매출 구분]")
+    print("\n[line_total 검증]")
+    print(result["analysis_tables"]["line_total_check"].to_string(index=False))
+
+    print("\n[전체 주문 상세 금액과 completed 주문 기준 금액]")
     print(result["analysis_tables"]["amount_scope_summary"].to_string(index=False))
 
-    print("\n[카테고리별 완료 주문 매출 상위 5개]")
+    print("\n[Total consistency]")
+    print(
+        result["analysis_tables"]["total_consistency_check"].to_string(
+            index=False
+        )
+    )
+
+    print("\n[최종 Validation]")
+    print(result["project_validation"].to_string(index=False))
+
+    print("\n[카테고리별 completed 주문 기준 금액 상위 5개]")
     print(result["analysis_tables"]["category_sales"].head().to_string(index=False))
 
-    print("\n[월별 완료 주문 매출]")
+    print("\n[월별 completed 주문 기준 금액]")
     print(result["analysis_tables"]["monthly_sales"].to_string(index=False))
 
     print("\n[저장된 결과표]")
