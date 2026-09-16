@@ -21,23 +21,7 @@ jobs:
       - name: Fix Chapter15 bracket typo
         shell: bash
         run: |
-          python - <<'PY'
-          from pathlib import Path
-
-          path = Path("src/final_project.py")
-          text = path.read_text(encoding="utf-8")
-          bad = '''            "total_completed_amount",
-        ]
-    )
-    both_day_types = set(comparison["day_type"]) == {"일반일", "공휴일"}'''
-          good = '''            "total_completed_amount",
-        ]
-    ]
-    both_day_types = set(comparison["day_type"]) == {"일반일", "공휴일"}'''
-          if text.count(bad) != 1:
-              raise SystemExit(f"expected exactly one target block, found {text.count(bad)}")
-          path.write_text(text.replace(bad, good, 1), encoding="utf-8")
-          PY
+          python -c "from pathlib import Path; p=Path('src/final_project.py'); t=p.read_text(encoding='utf-8'); old='            \\\"total_completed_amount\\\",\\n        ]\\n    )\\n    both_day_types'; new='            \\\"total_completed_amount\\\",\\n        ]\\n    ]\\n    both_day_types'; c=t.count(old); assert c == 1, f'expected exactly one target block, found {c}'; p.write_text(t.replace(old, new, 1), encoding='utf-8')"
           python -m py_compile src/final_project.py
 
       - name: Commit hotfix
