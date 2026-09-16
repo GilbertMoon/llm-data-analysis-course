@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">분류 분석을 믿기 위한 Evidence</title>
+  <desc id="desc">타깃, feature, merge, split, validation, threshold, final test, privacy output을 증명하는 Chapter 10 산출물</desc>
+  <defs><style>.t{font-family:'Malgun Gothic','Pretendard','Noto Sans KR',sans-serif;fill:#14213d}.h{font-size:44px;font-weight:700}.s{font-size:23px}.ch{font-size:24px;font-weight:700}.b{font-size:17px}.card{fill:#f8fbff;stroke:#8fb7df;stroke-width:2}.ok{fill:#ecfdf5;stroke:#22c55e;stroke-width:2}.warn{fill:#fff7ed;stroke:#f59e0b;stroke-width:2}</style></defs>
+  <rect width="1600" height="900" fill="#fff"/>
+  <text x="80" y="85" class="t h">분류 분석을 믿기 위한 Evidence</text>
+  <text x="80" y="125" class="t s">실행 성공이 아니라 분석 계약이 지켜졌다는 근거를 파일로 남깁니다.</text>
+
+  <rect class="ok" x="600" y="185" width="400" height="105" rx="20"/>
+  <text x="800" y="230" class="t ch" text-anchor="middle">Classification Validation</text>
+  <text x="800" y="262" class="t b" text-anchor="middle">ch10_classification_validation.csv</text>
+
+  <g>
+    <rect class="card" x="70" y="345" width="300" height="105" rx="16"/><text x="220" y="382" class="t ch" text-anchor="middle">Target Distribution</text><text x="220" y="417" class="t b" text-anchor="middle">ch10_target_distribution.csv</text>
+    <rect class="card" x="405" y="345" width="300" height="105" rx="16"/><text x="555" y="382" class="t ch" text-anchor="middle">Feature Audit</text><text x="555" y="417" class="t b" text-anchor="middle">ch10_feature_audit.csv</text>
+    <rect class="card" x="740" y="345" width="300" height="105" rx="16"/><text x="890" y="382" class="t ch" text-anchor="middle">Merge Checks</text><text x="890" y="417" class="t b" text-anchor="middle">ch10_merge_checks.csv</text>
+    <rect class="card" x="1075" y="345" width="300" height="105" rx="16"/><text x="1225" y="382" class="t ch" text-anchor="middle">Split Summary</text><text x="1225" y="417" class="t b" text-anchor="middle">ch10_split_summary.csv</text>
+
+    <rect class="card" x="70" y="495" width="300" height="120" rx="16"/><text x="220" y="532" class="t ch" text-anchor="middle">Model Selection</text><text x="220" y="566" class="t b" text-anchor="middle">ch10_validation_model_</text><text x="220" y="590" class="t b" text-anchor="middle">comparison.csv</text>
+    <rect class="card" x="405" y="495" width="300" height="120" rx="16"/><text x="555" y="532" class="t ch" text-anchor="middle">Threshold Evidence</text><text x="555" y="566" class="t b" text-anchor="middle">ch10_validation_threshold_</text><text x="555" y="590" class="t b" text-anchor="middle">metrics.csv</text>
+    <rect class="card" x="740" y="495" width="300" height="120" rx="16"/><text x="890" y="532" class="t ch" text-anchor="middle">Final Test</text><text x="890" y="566" class="t b" text-anchor="middle">ch10_test_metrics.csv</text><text x="890" y="590" class="t b" text-anchor="middle">ch10_confusion_matrix.csv</text>
+    <rect class="card" x="1075" y="495" width="300" height="120" rx="16"/><text x="1225" y="532" class="t ch" text-anchor="middle">Privacy-safe Prediction</text><text x="1225" y="566" class="t b" text-anchor="middle">ch10_classification_</text><text x="1225" y="590" class="t b" text-anchor="middle">predictions.csv</text>
+  </g>
+
+  <rect class="warn" x="500" y="675" width="600" height="105" rx="18"/>
+  <text x="800" y="715" class="t ch" text-anchor="middle">Internal Only</text>
+  <text x="800" y="752" class="t b" text-anchor="middle">ch10_classification_model_data_internal.csv · ch10_classification_predictions_internal.csv</text>
+
+  <rect x="150" y="820" width="1300" height="58" rx="14" fill="#eef6ff" stroke="#2b6cb0" stroke-width="2"/>
+  <text x="800" y="857" class="t s" text-anchor="middle">높은 점수보다 타깃 · 누수 · 선택 과정 · 최종 평가 · 개인정보 검증이 먼저입니다.</text>
+</svg>
