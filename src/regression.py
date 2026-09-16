@@ -1,15 +1,15 @@
-"""Chapter 9 regression analysis utilities.
+"""Chapter 9 leakage-aware regression analysis utilities.
 
-The module implements the leakage-aware workflow described in
-``book/chapters/ch09_regression_analysis.md``:
+The workflow intentionally separates model selection from final test evaluation:
 
-- build ``order_total`` only as the target,
-- use only information available at the educational prediction time,
-- split train/test data in chronological order,
-- fit preprocessing inside each model pipeline,
-- compare against a mean baseline,
-- validate stability with time-series cross-validation,
-- save internal diagnostics without exposing them as public reports.
+1. build the order-level target from order details,
+2. keep target ingredients and post-outcome information out of features,
+3. split chronologically without placing the same calendar day in both sets,
+4. learn preprocessing inside sklearn Pipelines,
+5. compare candidate models with TimeSeriesSplit on the training period,
+6. freeze the selected non-baseline model before looking at final test metrics,
+7. compare the frozen model with a mean DummyRegressor on the final test period,
+8. save internal identifier-bearing diagnostics separately from public reports.
 """
 
 from __future__ import annotations
@@ -33,19 +33,8 @@ from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
 
 TARGET_COLUMN = "order_total"
-
-NUMERIC_FEATURES = [
-    "order_month",
-    "order_dayofweek",
-    "age",
-]
-
-CATEGORICAL_FEATURES = [
-    "payment_method",
-    "gender",
-    "city",
-]
-
+NUMERIC_FEATURES = ["order_month", "order_dayofweek", "age"]
+CATEGORICAL_FEATURES = ["payment_method", "gender", "city"]
 FEATURE_COLUMNS = NUMERIC_FEATURES + CATEGORICAL_FEATURES
 
 FORBIDDEN_FEATURES = {
@@ -59,15 +48,25 @@ FORBIDDEN_FEATURES = {
     "order_status",
     "order_id",
     "customer_id",
+    "product_id",
+}
+
+FORBIDDEN_REASONS = {
+    "order_total": "예측 대상 자체",
+    "line_total": "목표값을 구성하는 주문 상세 금액",
+    "quantity": "목표값 계산 재료",
+    "unit_price": "목표값 계산 재료",
+    "item_count": "주문 상세가 확인된 뒤 계산되는 사후 집계",
+    "total_quantity": "주문 상세에서 만든 목표 대리 변수",
+    "avg_unit_price": "주문 상세에서 만든 목표 대리 변수",
+    "order_status": "예측 시점 이후에 확정될 수 있는 사후 정보",
+    "order_id": "주문 식별자",
+    "customer_id": "고객 식별자",
+    "product_id": "주문 상세가 확인되어야 알 수 있는 식별자",
 }
 
 REQUIRED_COLUMNS = {
-    "customers": {
-        "customer_id",
-        "gender",
-        "age",
-        "city",
-    },
+    "customers": {"customer_id", "gender", "age", "city"},
     "orders": {
         "order_id",
         "customer_id",
@@ -75,143 +74,112 @@ REQUIRED_COLUMNS = {
         "payment_method",
         "order_status",
     },
-    "order_items": {
-        "order_id",
-        "quantity",
-        "unit_price",
-    },
+    "order_items": {"order_id", "quantity", "unit_price"},
 }
 
 
 def make_one_hot_encoder() -> OneHotEncoder:
-    """Return a dense OneHotEncoder compatible with multiple sklearn versions."""
+    """Return a dense encoder compatible with multiple sklearn versions."""
     try:
-        return OneHotEncoder(
-            handle_unknown="ignore",
-            sparse_output=False,
-        )
+        return OneHotEncoder(handle_unknown="ignore", sparse_output=False)
     except TypeError:
-        return OneHotEncoder(
-            handle_unknown="ignore",
-            sparse=False,
-        )
+        return OneHotEncoder(handle_unknown="ignore", sparse=False)
 
 
 def load_regression_source_data(
     processed_dir: str | Path = "data/processed",
 ) -> dict[str, pd.DataFrame]:
-    """Load the three processed CSV files required for Chapter 9."""
+    """Load only Chapter 5 processed files; never silently fall back to raw data."""
     input_dir = Path(processed_dir)
     file_map = {
         "customers": input_dir / "customers_clean.csv",
         "orders": input_dir / "orders_clean.csv",
         "order_items": input_dir / "order_items_clean.csv",
     }
-
-    missing_files = [
-        path
-        for path in file_map.values()
-        if not path.exists()
-    ]
+    missing_files = [path for path in file_map.values() if not path.exists()]
     if missing_files:
-        missing_text = ", ".join(str(path) for path in missing_files)
         raise FileNotFoundError(
-            "전처리 파일이 없습니다. 먼저 "
-            "`python scripts/preprocess_data.py`를 실행하세요. "
-            f"누락 파일: {missing_text}"
+            "전처리 파일이 없습니다. 먼저 `python scripts/preprocess_data.py`를 실행하세요. "
+            + "누락 파일: "
+            + ", ".join(str(path) for path in missing_files)
         )
-
-    return {
-        name: pd.read_csv(path)
-        for name, path in file_map.items()
-    }
+    return {name: pd.read_csv(path) for name, path in file_map.items()}
 
 
-def validate_required_columns(
-    datasets: dict[str, pd.DataFrame],
-) -> None:
-    """Raise a clear error when a required modeling column is missing."""
+def validate_required_columns(datasets: dict[str, pd.DataFrame]) -> None:
+    """Fail fast when a required dataset or modeling column is missing."""
+    missing_datasets = sorted(set(REQUIRED_COLUMNS) - set(datasets))
+    if missing_datasets:
+        raise KeyError(f"필수 데이터셋이 없습니다: {missing_datasets}")
     for name, columns in REQUIRED_COLUMNS.items():
-        if name not in datasets:
-            raise KeyError(f"필수 데이터셋이 없습니다: {name}")
-
-        missing_columns = columns - set(datasets[name].columns)
+        missing_columns = sorted(columns - set(datasets[name].columns))
         if missing_columns:
-            raise KeyError(
-                f"{name}에 필요한 컬럼이 없습니다: "
-                f"{sorted(missing_columns)}"
-            )
+            raise KeyError(f"{name}에 필요한 컬럼이 없습니다: {missing_columns}")
 
 
 def validate_feature_columns(
     feature_columns: Iterable[str] = FEATURE_COLUMNS,
 ) -> None:
-    """Prevent identifiers, target values, and target proxies from being used."""
+    """Reject target values, target proxies, post-outcome fields, and identifiers."""
     columns = list(feature_columns)
-    leaked_features = set(columns) & FORBIDDEN_FEATURES
+    leaked_features = sorted(set(columns) & FORBIDDEN_FEATURES)
     if leaked_features:
+        raise ValueError(f"입력값에 누수 위험 컬럼이 있습니다: {leaked_features}")
+    duplicates = pd.Index(columns)[pd.Index(columns).duplicated()].tolist()
+    if duplicates:
+        raise ValueError(f"입력값 목록에 중복 컬럼이 있습니다: {duplicates}")
+
+
+def _require_unique_key(df: pd.DataFrame, key: str, dataset: str) -> None:
+    if key not in df.columns:
+        raise KeyError(f"{dataset}.{key} 컬럼이 없습니다.")
+    missing_count = int(df[key].isna().sum())
+    duplicate_count = int(df[key].duplicated().sum())
+    if missing_count or duplicate_count:
         raise ValueError(
-            "입력값에 누수 위험 컬럼이 있습니다: "
-            f"{sorted(leaked_features)}"
+            f"{dataset}.{key} 검증 실패: "
+            f"missing={missing_count}, duplicate={duplicate_count}"
         )
 
-    duplicated_features = pd.Index(columns)[
-        pd.Index(columns).duplicated()
-    ].tolist()
-    if duplicated_features:
-        raise ValueError(
-            "입력값 목록에 중복 컬럼이 있습니다: "
-            f"{duplicated_features}"
-        )
 
-
-def build_order_totals(
-    order_items: pd.DataFrame,
-) -> pd.DataFrame:
-    """Create the order-level target without exposing detail-derived features."""
+def build_order_totals(order_items: pd.DataFrame) -> pd.DataFrame:
+    """Create order_total and verify line_total = quantity * unit_price."""
     items = order_items.copy()
+    missing = sorted({"order_id", "quantity", "unit_price"} - set(items.columns))
+    if missing:
+        raise KeyError(f"order_items에 필요한 컬럼이 없습니다: {missing}")
 
-    items["quantity"] = pd.to_numeric(
-        items["quantity"],
-        errors="coerce",
-    )
-    items["unit_price"] = pd.to_numeric(
-        items["unit_price"],
-        errors="coerce",
-    )
-
-    if "line_total" in items.columns:
-        items["line_total"] = pd.to_numeric(
-            items["line_total"],
-            errors="coerce",
-        )
-    else:
-        items["line_total"] = (
-            items["quantity"]
-            * items["unit_price"]
-        )
-
-    invalid_target_rows = items[
-        ["order_id", "line_total"]
-    ].isna().any(axis=1)
-    if invalid_target_rows.any():
-        invalid_count = int(invalid_target_rows.sum())
+    items["quantity"] = pd.to_numeric(items["quantity"], errors="coerce")
+    items["unit_price"] = pd.to_numeric(items["unit_price"], errors="coerce")
+    invalid = items[["order_id", "quantity", "unit_price"]].isna().any(axis=1)
+    if invalid.any():
         raise ValueError(
             "주문 금액 목표값을 만들 수 없는 주문 상세 행이 있습니다: "
-            f"{invalid_count}건"
+            f"{int(invalid.sum())}건"
         )
 
+    expected = items["quantity"] * items["unit_price"]
+    if "line_total" in items.columns:
+        items["line_total"] = pd.to_numeric(items["line_total"], errors="coerce")
+        if items["line_total"].isna().any():
+            raise ValueError("order_items.line_total에 숫자 변환 실패가 있습니다.")
+        mismatch = (items["line_total"] - expected).abs().gt(1e-6)
+        if mismatch.any():
+            raise ValueError(
+                "line_total과 quantity × unit_price가 일치하지 않는 행이 있습니다: "
+                f"{int(mismatch.sum())}건"
+            )
+    else:
+        items["line_total"] = expected
+
+    if (items["line_total"] <= 0).any():
+        raise ValueError("주문 금액 목표값에 0 이하의 line_total이 있습니다.")
+
     return (
-        items.groupby(
-            "order_id",
-            as_index=False,
-        )
-        .agg(
-            order_total=(
-                "line_total",
-                "sum",
-            ),
-        )
+        items.groupby("order_id", as_index=False)
+        .agg(order_total=("line_total", "sum"))
+        .sort_values("order_id")
+        .reset_index(drop=True)
     )
 
 
@@ -220,7 +188,7 @@ def build_regression_dataset(
     orders: pd.DataFrame,
     order_items: pd.DataFrame,
 ) -> pd.DataFrame:
-    """Build a leakage-aware order-level regression dataset."""
+    """Build one-row-per-order modeling data and reject silent join losses."""
     datasets = {
         "customers": customers.copy(),
         "orders": orders.copy(),
@@ -233,114 +201,93 @@ def build_regression_dataset(
     orders_data = datasets["orders"]
     items_data = datasets["order_items"]
 
-    if customers_data["customer_id"].isna().any():
-        raise ValueError("customers.customer_id에 결측치가 있습니다.")
-    if customers_data["customer_id"].duplicated().any():
-        raise ValueError("customers.customer_id에 중복이 있습니다.")
-    if orders_data["order_id"].isna().any():
-        raise ValueError("orders.order_id에 결측치가 있습니다.")
-    if orders_data["order_id"].duplicated().any():
-        raise ValueError("orders.order_id에 중복이 있습니다.")
+    _require_unique_key(customers_data, "customer_id", "customers")
+    _require_unique_key(orders_data, "order_id", "orders")
+    if orders_data["customer_id"].isna().any():
+        raise ValueError("orders.customer_id에 결측치가 있습니다.")
+    if items_data["order_id"].isna().any():
+        raise ValueError("order_items.order_id에 결측치가 있습니다.")
 
     order_totals = build_order_totals(items_data)
-
-    orders_data["order_date"] = pd.to_datetime(
-        orders_data["order_date"],
-        errors="coerce",
-    )
-
-    model_data = orders_data.merge(
+    merged = orders_data.merge(
         order_totals,
         on="order_id",
-        how="inner",
+        how="outer",
         validate="one_to_one",
+        indicator=True,
     )
+    unmatched = merged.loc[merged["_merge"].ne("both")]
+    if not unmatched.empty:
+        raise ValueError(
+            "orders와 주문별 목표값의 관계가 완전하지 않습니다: "
+            f"{merged['_merge'].value_counts().to_dict()}"
+        )
+    model_data = merged.drop(columns="_merge")
 
     model_data = model_data.merge(
-        customers_data[
-            [
-                "customer_id",
-                "gender",
-                "age",
-                "city",
-            ]
-        ],
+        customers_data[["customer_id", "gender", "age", "city"]],
         on="customer_id",
         how="left",
         validate="many_to_one",
+        indicator=True,
     )
+    unmatched_customer_count = int(model_data["_merge"].eq("left_only").sum())
+    if unmatched_customer_count:
+        raise ValueError(
+            "orders.customer_id가 customers에 연결되지 않는 주문이 있습니다: "
+            f"{unmatched_customer_count}건"
+        )
+    model_data = model_data.drop(columns="_merge")
 
-    model_data["age"] = pd.to_numeric(
-        model_data["age"],
-        errors="coerce",
-    )
-    model_data[TARGET_COLUMN] = pd.to_numeric(
-        model_data[TARGET_COLUMN],
-        errors="coerce",
-    )
+    model_data["order_date"] = pd.to_datetime(model_data["order_date"], errors="coerce")
+    if model_data["order_date"].isna().any():
+        raise ValueError(
+            "order_date 날짜 변환 실패가 있습니다: "
+            f"{int(model_data['order_date'].isna().sum())}건"
+        )
+    model_data["age"] = pd.to_numeric(model_data["age"], errors="coerce")
+    model_data[TARGET_COLUMN] = pd.to_numeric(model_data[TARGET_COLUMN], errors="coerce")
+    if model_data[TARGET_COLUMN].isna().any():
+        raise ValueError("order_total 목표값에 결측치가 있습니다.")
+    if (model_data[TARGET_COLUMN] <= 0).any():
+        raise ValueError("order_total 목표값에 0 이하 값이 있습니다.")
+
     model_data["order_month"] = model_data["order_date"].dt.month
     model_data["order_dayofweek"] = model_data["order_date"].dt.dayofweek
-
-    # Date and target are indispensable. Feature missing values are intentionally
-    # left for the pipelines so imputation is learned from training data only.
-    model_data = model_data.dropna(
-        subset=[
-            "order_date",
-            TARGET_COLUMN,
-        ]
-    ).copy()
-
-    if model_data.empty:
-        raise ValueError("모델링에 사용할 수 있는 주문 데이터가 없습니다.")
-
-    return model_data.sort_values(
-        ["order_date", "order_id"]
-    ).reset_index(drop=True)
+    return model_data.sort_values(["order_date", "order_id"]).reset_index(drop=True)
 
 
 def split_model_data_by_time(
     model_data: pd.DataFrame,
     test_size: float = 0.2,
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
-    """Split chronologically so later orders remain unseen test data."""
+    """Split by calendar-day groups; the same date cannot appear in both sets."""
     if not 0 < test_size < 1:
         raise ValueError("test_size는 0과 1 사이여야 합니다.")
 
-    required = {
-        "order_date",
-        "order_id",
-        TARGET_COLUMN,
-        *FEATURE_COLUMNS,
-    }
-    missing = required - set(model_data.columns)
+    required = {"order_date", "order_id", TARGET_COLUMN, *FEATURE_COLUMNS}
+    missing = sorted(required - set(model_data.columns))
     if missing:
-        raise KeyError(
-            "시간 분할에 필요한 컬럼이 없습니다: "
-            f"{sorted(missing)}"
-        )
+        raise KeyError(f"시간 분할에 필요한 컬럼이 없습니다: {missing}")
 
-    sorted_data = model_data.sort_values(
-        ["order_date", "order_id"]
-    ).reset_index(drop=True)
+    data = model_data.sort_values(["order_date", "order_id"]).reset_index(drop=True).copy()
+    data["_split_day"] = data["order_date"].dt.normalize()
+    unique_days = pd.Index(data["_split_day"].drop_duplicates())
+    if len(unique_days) < 2:
+        raise ValueError("시간 순서 분할에는 최소 2개의 서로 다른 주문일이 필요합니다.")
 
-    if len(sorted_data) < 5:
-        raise ValueError(
-            "시간 순서 훈련·테스트 분할에는 최소 5개 주문이 필요합니다."
-        )
+    split_day_index = int(len(unique_days) * (1 - test_size))
+    split_day_index = min(max(split_day_index, 1), len(unique_days) - 1)
+    test_start_day = unique_days[split_day_index]
 
-    split_index = int(len(sorted_data) * (1 - test_size))
-    split_index = min(
-        max(split_index, 1),
-        len(sorted_data) - 1,
-    )
+    train_data = data.loc[data["_split_day"] < test_start_day].drop(columns="_split_day")
+    test_data = data.loc[data["_split_day"] >= test_start_day].drop(columns="_split_day")
+    if len(train_data) < 2 or len(test_data) < 2:
+        raise ValueError("훈련·테스트에 각각 최소 2개 주문이 필요합니다.")
+    if train_data["order_date"].max().normalize() >= test_data["order_date"].min().normalize():
+        raise ValueError("같은 주문일이 훈련과 테스트에 동시에 포함되었습니다.")
 
-    train_data = sorted_data.iloc[:split_index].copy()
-    test_data = sorted_data.iloc[split_index:].copy()
-
-    if train_data["order_date"].max() > test_data["order_date"].min():
-        raise ValueError("훈련 기간과 테스트 기간의 시간 순서가 올바르지 않습니다.")
-
-    return train_data, test_data
+    return train_data.reset_index(drop=True), test_data.reset_index(drop=True)
 
 
 def split_features_target(
@@ -348,19 +295,10 @@ def split_features_target(
     test_size: float = 0.2,
     random_state: int | None = None,
 ) -> tuple[pd.DataFrame, pd.DataFrame, pd.Series, pd.Series]:
-    """Backward-compatible wrapper returning chronological X/y splits.
-
-    ``random_state`` is accepted for compatibility with earlier course code,
-    but chronological splitting is deterministic and does not use it.
-    """
+    """Compatibility wrapper returning chronological X/y splits."""
     _ = random_state
     validate_feature_columns()
-
-    train_data, test_data = split_model_data_by_time(
-        model_data,
-        test_size=test_size,
-    )
-
+    train_data, test_data = split_model_data_by_time(model_data, test_size=test_size)
     return (
         train_data[FEATURE_COLUMNS].copy(),
         test_data[FEATURE_COLUMNS].copy(),
@@ -371,83 +309,38 @@ def split_features_target(
 
 def make_preprocessor() -> ColumnTransformer:
     """Create train-only numeric and categorical preprocessing pipelines."""
-    numeric_pipeline = Pipeline(
+    numeric = Pipeline(
         steps=[
-            (
-                "imputer",
-                SimpleImputer(strategy="median"),
-            ),
-            (
-                "scaler",
-                StandardScaler(),
-            ),
+            ("imputer", SimpleImputer(strategy="median")),
+            ("scaler", StandardScaler()),
         ]
     )
-
-    categorical_pipeline = Pipeline(
+    categorical = Pipeline(
         steps=[
-            (
-                "imputer",
-                SimpleImputer(strategy="most_frequent"),
-            ),
-            (
-                "encoder",
-                make_one_hot_encoder(),
-            ),
+            ("imputer", SimpleImputer(strategy="most_frequent")),
+            ("encoder", make_one_hot_encoder()),
         ]
     )
-
     return ColumnTransformer(
         transformers=[
-            (
-                "numeric",
-                numeric_pipeline,
-                NUMERIC_FEATURES,
-            ),
-            (
-                "categorical",
-                categorical_pipeline,
-                CATEGORICAL_FEATURES,
-            ),
+            ("numeric", numeric, NUMERIC_FEATURES),
+            ("categorical", categorical, CATEGORICAL_FEATURES),
         ]
     )
 
 
-def make_regression_models(
-    random_state: int = 42,
-) -> dict[str, Pipeline]:
-    """Create baseline, linear, and random-forest regression pipelines."""
+def make_regression_models(random_state: int = 42) -> dict[str, Pipeline]:
+    """Create fixed candidates used for training-period model selection."""
     return {
         "Baseline Mean": Pipeline(
-            steps=[
-                (
-                    "preprocessor",
-                    make_preprocessor(),
-                ),
-                (
-                    "model",
-                    DummyRegressor(strategy="mean"),
-                ),
-            ]
+            [("preprocessor", make_preprocessor()), ("model", DummyRegressor(strategy="mean"))]
         ),
         "Linear Regression": Pipeline(
-            steps=[
-                (
-                    "preprocessor",
-                    make_preprocessor(),
-                ),
-                (
-                    "model",
-                    LinearRegression(),
-                ),
-            ]
+            [("preprocessor", make_preprocessor()), ("model", LinearRegression())]
         ),
         "Random Forest": Pipeline(
-            steps=[
-                (
-                    "preprocessor",
-                    make_preprocessor(),
-                ),
+            [
+                ("preprocessor", make_preprocessor()),
                 (
                     "model",
                     RandomForestRegressor(
@@ -466,107 +359,25 @@ def evaluate_predictions(
     y_true: pd.Series | np.ndarray,
     y_pred: np.ndarray,
 ) -> dict[str, float]:
-    """Evaluate regression predictions with MAE, RMSE, and R²."""
-    mse = mean_squared_error(
-        y_true,
-        y_pred,
-    )
+    mse = mean_squared_error(y_true, y_pred)
     return {
-        "MAE": float(
-            mean_absolute_error(
-                y_true,
-                y_pred,
-            )
-        ),
+        "MAE": float(mean_absolute_error(y_true, y_pred)),
         "RMSE": float(np.sqrt(mse)),
-        "R2": float(
-            r2_score(
-                y_true,
-                y_pred,
-            )
-        ),
+        "R2": float(r2_score(y_true, y_pred)),
     }
 
 
-def train_and_evaluate_models(
-    X_train: pd.DataFrame,
-    X_test: pd.DataFrame,
-    y_train: pd.Series,
-    y_test: pd.Series,
-    random_state: int = 42,
-) -> tuple[
-    dict[str, Pipeline],
-    pd.DataFrame,
-    dict[str, np.ndarray],
-]:
-    """Fit all models and compare train/test performance against baseline."""
-    validate_feature_columns(X_train.columns)
-    if list(X_train.columns) != list(X_test.columns):
-        raise ValueError("훈련·테스트 입력 컬럼 구성이 다릅니다.")
-
-    models = make_regression_models(
-        random_state=random_state
-    )
-    rows: list[dict[str, Any]] = []
-    predictions: dict[str, np.ndarray] = {}
-
-    for model_name, model in models.items():
-        model.fit(
-            X_train,
-            y_train,
-        )
-        train_pred = model.predict(X_train)
-        test_pred = model.predict(X_test)
-
-        train_metrics = evaluate_predictions(
-            y_train,
-            train_pred,
-        )
-        test_metrics = evaluate_predictions(
-            y_test,
-            test_pred,
-        )
-
-        rows.append(
-            {
-                "model": model_name,
-                "train_MAE": train_metrics["MAE"],
-                "test_MAE": test_metrics["MAE"],
-                "test_RMSE": test_metrics["RMSE"],
-                "test_R2": test_metrics["R2"],
-            }
-        )
-        predictions[model_name] = test_pred
-
-    comparison = pd.DataFrame(rows).sort_values(
-        "test_MAE"
-    ).reset_index(drop=True)
-
-    baseline_rows = comparison.loc[
-        comparison["model"].eq("Baseline Mean"),
-        "test_MAE",
+def _choose_time_series_splits(n_rows: int, max_splits: int = 5) -> int:
+    candidates = [
+        n
+        for n in range(2, min(max_splits, n_rows - 1) + 1)
+        if n_rows // (n + 1) >= 2
     ]
-    if baseline_rows.empty:
-        raise RuntimeError("Baseline Mean 평가 결과가 없습니다.")
-
-    baseline_mae = float(baseline_rows.iloc[0])
-    if baseline_mae == 0:
-        comparison[
-            "MAE_improvement_vs_baseline_pct"
-        ] = np.nan
-    else:
-        comparison[
-            "MAE_improvement_vs_baseline_pct"
-        ] = (
-            (
-                baseline_mae
-                - comparison["test_MAE"]
-            )
-            / baseline_mae
-            * 100
-        ).round(2)
-
-    return models, comparison, predictions
+    if not candidates:
+        raise ValueError(
+            "시간 순서 교차검증에는 각 validation fold에 최소 2개 행이 필요합니다."
+        )
+    return max(candidates)
 
 
 def cross_validate_regression_models(
@@ -575,81 +386,144 @@ def cross_validate_regression_models(
     y_train: pd.Series,
     max_splits: int = 5,
 ) -> pd.DataFrame:
-    """Evaluate non-baseline models with chronological cross-validation."""
+    """Compare all fixed candidates using training-period TimeSeriesSplit only."""
+    validate_feature_columns(X_train.columns)
     if len(X_train) < 6:
         raise ValueError("시간 순서 교차검증에는 최소 6개의 훈련 행이 필요합니다.")
 
-    # Keep at least two validation rows per fold so R² is meaningful.
-    max_splits_for_two_test_rows = max(
-        2,
-        len(X_train) // 2 - 1,
-    )
-    n_splits = min(
-        max_splits,
-        max_splits_for_two_test_rows,
-        len(X_train) - 1,
-    )
-    if n_splits < 2:
-        raise ValueError("TimeSeriesSplit의 n_splits는 최소 2여야 합니다.")
-
-    time_cv = TimeSeriesSplit(
-        n_splits=n_splits
-    )
-    rows: list[dict[str, float | str]] = []
-
-    for model_name in [
-        "Linear Regression",
-        "Random Forest",
-    ]:
-        if model_name not in models:
-            raise KeyError(f"교차검증할 모델이 없습니다: {model_name}")
-
+    n_splits = _choose_time_series_splits(len(X_train), max_splits)
+    time_cv = TimeSeriesSplit(n_splits=n_splits)
+    rows: list[dict[str, Any]] = []
+    for model_name, model in models.items():
         cv_result = cross_validate(
-            models[model_name],
+            model,
             X_train,
             y_train,
             cv=time_cv,
-            scoring={
-                "mae": "neg_mean_absolute_error",
-                "r2": "r2",
-            },
+            scoring={"mae": "neg_mean_absolute_error", "r2": "r2"},
             error_score="raise",
         )
-
         rows.append(
             {
                 "model": model_name,
-                "cv_MAE_mean": float(
-                    -cv_result["test_mae"].mean()
-                ),
-                "cv_MAE_std": float(
-                    cv_result["test_mae"].std()
-                ),
-                "cv_R2_mean": float(
-                    cv_result["test_r2"].mean()
-                ),
+                "n_splits": n_splits,
+                "cv_MAE_mean": float(-cv_result["test_mae"].mean()),
+                "cv_MAE_std": float(cv_result["test_mae"].std()),
+                "cv_R2_mean": float(cv_result["test_r2"].mean()),
             }
         )
-
-    return pd.DataFrame(rows).sort_values(
-        "cv_MAE_mean"
-    ).reset_index(drop=True)
+    return pd.DataFrame(rows).sort_values(["cv_MAE_mean", "model"]).reset_index(drop=True)
 
 
-def select_diagnostic_model(
-    model_comparison: pd.DataFrame,
-) -> str:
-    """Select the lowest-test-MAE non-baseline model for diagnostics."""
-    candidates = model_comparison.loc[
-        ~model_comparison["model"].eq(
-            "Baseline Mean"
-        )
-    ].sort_values("test_MAE")
-
+def select_diagnostic_model(cv_summary: pd.DataFrame) -> str:
+    """Freeze the best non-baseline candidate using training-only CV MAE."""
+    required = {"model", "cv_MAE_mean"}
+    missing = sorted(required - set(cv_summary.columns))
+    if missing:
+        raise KeyError(f"CV 요약에 필요한 컬럼이 없습니다: {missing}")
+    candidates = cv_summary.loc[
+        ~cv_summary["model"].eq("Baseline Mean")
+    ].sort_values(["cv_MAE_mean", "model"])
     if candidates.empty:
-        raise ValueError("진단할 비베이스라인 모델 결과가 없습니다.")
-
+        raise ValueError("선택할 비베이스라인 모델 결과가 없습니다.")
     return str(candidates.iloc[0]["model"])
+
+
+def train_and_evaluate_models(
+    models: dict[str, Pipeline],
+    selected_model_name: str,
+    X_train: pd.DataFrame,
+    X_test: pd.DataFrame,
+    y_train: pd.Series,
+    y_test: pd.Series,
+) -> tuple[pd.DataFrame, dict[str, np.ndarray]]:
+    """Evaluate only baseline and the frozen selected model on final test."""
+    validate_feature_columns(X_train.columns)
+    if list(X_train.columns) != list(X_test.columns):
+        raise ValueError("훈련·테스트 입력 컬럼 구성이 다릅니다.")
+    if selected_model_name == "Baseline Mean":
+        raise ValueError("선택 모델은 비베이스라인 후보여야 합니다.")
+    if selected_model_name not in models or "Baseline Mean" not in models:
+        raise KeyError("최종 평가에 필요한 모델이 없습니다.")
+
+    rows: list[dict[str, Any]] = []
+    predictions: dict[str, np.ndarray] = {}
+    for model_name in ["Baseline Mean", selected_model_name]:
+        model = models[model_name]
+        model.fit(X_train, y_train)
+        train_pred = model.predict(X_train)
+        test_pred = model.predict(X_test)
+        train_metrics = evaluate_predictions(y_train, train_pred)
+        test_metrics = evaluate_predictions(y_test, test_pred)
+        rows.append(
+            {
+                "model": model_name,
+                "selection_role": (
+                    "baseline" if model_name == "Baseline Mean" else "selected_by_train_cv"
+                ),
+                "train_MAE": train_metrics["MAE"],
+                "test_MAE": test_metrics["MAE"],
+                "test_RMSE": test_metrics["RMSE"],
+                "test_R2": test_metrics["R2"],
+            }
+        )
+        predictions[model_name] = test_pred
+
+    comparison = pd.DataFrame(rows)
+    baseline_mae = float(
+        comparison.loc[comparison["model"].eq("Baseline Mean"), "test_MAE"].iloc[0]
+    )
+    if baseline_mae == 0:
+        comparison["MAE_improvement_vs_baseline_pct"] = np.nan
+    else:
+        comparison["MAE_improvement_vs_baseline_pct"] = (
+            (baseline_mae - comparison["test_MAE"]) / baseline_mae * 100
+        ).round(2)
+    return comparison.reset_index(drop=True), predictions
+
+
+def build_split_summary(train_data: pd.DataFrame, test_data: pd.DataFrame) -> pd.DataFrame:
+    total_rows = len(train_data) + len(test_data)
+    return pd.DataFrame(
+        [
+            {
+                "split": "train",
+                "rows": len(train_data),
+                "ratio_pct": round(len(train_data) / total_rows * 100, 2),
+                "start_date": train_data["order_date"].min(),
+                "end_date": train_data["order_date"].max(),
+            },
+            {
+                "split": "test",
+                "rows": len(test_data),
+                "ratio_pct": round(len(test_data) / total_rows * 100, 2),
+                "start_date": test_data["order_date"].min(),
+                "end_date": test_data["order_date"].max(),
+            },
+        ]
+    )
+
+
+def build_feature_audit() -> pd.DataFrame:
+    allowed = [
+        {
+            "column": column,
+            "selected": True,
+            "role": "allowed_feature",
+            "reason": "교육용 예측 시점에 사용 가능하다고 가정",
+        }
+        for column in FEATURE_COLUMNS
+    ]
+    forbidden = [
+        {
+            "column": column,
+            "selected": False,
+            "role": "forbidden",
+            "reason": FORBIDDEN_REASONS[column],
+        }
+        for column in sorted(FORBIDDEN_FEATURES)
+    ]
+    return pd.DataFrame(allowed + forbidden)
 
 
 def create_prediction_result(
@@ -658,57 +532,43 @@ def create_prediction_result(
     y_pred: np.ndarray,
     model_name: str,
 ) -> pd.DataFrame:
-    """Create an internal-only residual table with order identifiers."""
     if len(test_data) != len(y_test) or len(y_test) != len(y_pred):
         raise ValueError("테스트 데이터와 예측값의 길이가 일치하지 않습니다.")
-
-    result = (
-        test_data[
-            [
-                "order_id",
-                "order_date",
-            ]
-        ]
-        .reset_index(drop=True)
-        .copy()
-    )
-    result["actual_order_total"] = (
-        y_test.reset_index(drop=True)
-    )
+    result = test_data[["order_id", "order_date"]].reset_index(drop=True).copy()
+    result["actual_order_total"] = y_test.reset_index(drop=True)
     result["predicted_order_total"] = y_pred
-    result["residual"] = (
-        result["actual_order_total"]
-        - result["predicted_order_total"]
-    )
+    result["residual"] = result["actual_order_total"] - result["predicted_order_total"]
     result["abs_error"] = result["residual"].abs()
     result["model"] = model_name
+    return result.sort_values("abs_error", ascending=False).reset_index(drop=True)
 
-    return result.sort_values(
-        "abs_error",
-        ascending=False,
-    ).reset_index(drop=True)
+
+def public_prediction_result(prediction_result: pd.DataFrame) -> pd.DataFrame:
+    return prediction_result[
+        [
+            "order_date",
+            "actual_order_total",
+            "predicted_order_total",
+            "residual",
+            "abs_error",
+            "model",
+        ]
+    ].copy()
 
 
 def configure_korean_font() -> bool:
-    """Configure an installed Korean font and return whether one was found."""
-    available_fonts = {
-        font.name
-        for font in font_manager.fontManager.ttflist
-    }
-    candidates = [
+    available_fonts = {font.name for font in font_manager.fontManager.ttflist}
+    for font_name in [
         "Malgun Gothic",
         "AppleGothic",
         "NanumGothic",
         "Noto Sans CJK KR",
         "Noto Sans KR",
-    ]
-
-    for font_name in candidates:
+    ]:
         if font_name in available_fonts:
             plt.rcParams["font.family"] = font_name
             plt.rcParams["axes.unicode_minus"] = False
             return True
-
     return False
 
 
@@ -716,22 +576,14 @@ def create_diagnostic_figures(
     prediction_result: pd.DataFrame,
     figure_dir: str | Path = "reports/figures",
 ) -> dict[str, Path]:
-    """Save actual-vs-predicted and residual diagnostic figures."""
+    if prediction_result.empty:
+        raise ValueError("예측 진단 결과가 비어 있습니다.")
     output_dir = Path(figure_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
-
-    model_name = str(
-        prediction_result["model"].iloc[0]
-    )
-    korean_font_available = configure_korean_font()
-    actual_path = (
-        output_dir
-        / "ch09_actual_vs_predicted.png"
-    )
-    residual_path = (
-        output_dir
-        / "ch09_residual_histogram.png"
-    )
+    model_name = str(prediction_result["model"].iloc[0])
+    korean = configure_korean_font()
+    actual_path = output_dir / "ch09_actual_vs_predicted.png"
+    residual_path = output_dir / "ch09_residual_histogram.png"
 
     fig, ax = plt.subplots(figsize=(7, 6))
     ax.scatter(
@@ -739,7 +591,6 @@ def create_diagnostic_figures(
         prediction_result["predicted_order_total"],
         alpha=0.7,
     )
-
     min_value = min(
         prediction_result["actual_order_total"].min(),
         prediction_result["predicted_order_total"].min(),
@@ -748,56 +599,27 @@ def create_diagnostic_figures(
         prediction_result["actual_order_total"].max(),
         prediction_result["predicted_order_total"].max(),
     )
-    ax.plot(
-        [min_value, max_value],
-        [min_value, max_value],
-        linestyle="--",
+    ax.plot([min_value, max_value], [min_value, max_value], linestyle="--")
+    ax.set_title(
+        f"실제 주문 금액과 예측값: {model_name}"
+        if korean
+        else f"Actual vs. predicted order total: {model_name}"
     )
-    if korean_font_available:
-        ax.set_title(
-            f"실제 주문 금액과 예측값: {model_name}"
-        )
-        ax.set_xlabel("실제 주문 금액")
-        ax.set_ylabel("예측 주문 금액")
-    else:
-        ax.set_title(
-            f"Actual vs. predicted order total: {model_name}"
-        )
-        ax.set_xlabel("Actual order total")
-        ax.set_ylabel("Predicted order total")
+    ax.set_xlabel("실제 주문 금액" if korean else "Actual order total")
+    ax.set_ylabel("예측 주문 금액" if korean else "Predicted order total")
     fig.tight_layout()
-    fig.savefig(
-        actual_path,
-        dpi=150,
-        bbox_inches="tight",
-    )
+    fig.savefig(actual_path, dpi=150, bbox_inches="tight")
     plt.close(fig)
 
     fig, ax = plt.subplots(figsize=(8, 5))
-    ax.hist(
-        prediction_result["residual"],
-        bins=15,
-    )
-    ax.axvline(
-        0,
-        linestyle="--",
-    )
-    if korean_font_available:
-        ax.set_title("예측 잔차 분포")
-        ax.set_xlabel("잔차(실제값 - 예측값)")
-        ax.set_ylabel("주문 수")
-    else:
-        ax.set_title("Prediction residual distribution")
-        ax.set_xlabel("Residual (actual - predicted)")
-        ax.set_ylabel("Order count")
+    ax.hist(prediction_result["residual"], bins=15)
+    ax.axvline(0, linestyle="--")
+    ax.set_title("예측 잔차 분포" if korean else "Prediction residual distribution")
+    ax.set_xlabel("잔차(실제값 - 예측값)" if korean else "Residual (actual - predicted)")
+    ax.set_ylabel("주문 수" if korean else "Order count")
     fig.tight_layout()
-    fig.savefig(
-        residual_path,
-        dpi=150,
-        bbox_inches="tight",
-    )
+    fig.savefig(residual_path, dpi=150, bbox_inches="tight")
     plt.close(fig)
-
     return {
         "actual_vs_predicted_figure": actual_path,
         "residual_figure": residual_path,
@@ -805,226 +627,203 @@ def create_diagnostic_figures(
 
 
 def build_leakage_checklist() -> pd.DataFrame:
-    """Return the review checklist used in the chapter and LLM prompts."""
     check_items = [
         "예측 시점이 명확한가?",
         "목표값과 목표값의 계산 재료를 입력에서 제외했는가?",
         "예측 이후에 알 수 있는 정보를 사용하지 않았는가?",
         "식별자를 일반 숫자 변수로 사용하지 않았는가?",
         "전처리기가 훈련 데이터 안에서만 학습되는가?",
-        "시간 순서 또는 업무 목적에 맞는 분할을 사용했는가?",
-        "단순 베이스라인과 비교했는가?",
-        "테스트 데이터로 최종 성능을 평가했는가?",
+        "같은 날짜가 train과 test에 동시에 포함되지 않는가?",
+        "후보 모델 선택을 훈련 기간 TimeSeriesSplit에서만 수행했는가?",
+        "모델 선택을 고정한 뒤 test를 최종 평가에만 사용했는가?",
+        "DummyRegressor 베이스라인과 비교했는가?",
         "MAE, RMSE, R²를 올바르게 해석했는가?",
         "음수 R²와 낮은 성능을 숨기지 않았는가?",
-        "훈련 성능과 테스트 성능을 비교했는가?",
         "식별자가 포함된 내부 결과를 외부에 공개하지 않았는가?",
     ]
-    return pd.DataFrame(
-        {
-            "check_item": check_items,
-            "status": ["□"] * len(check_items),
-        }
+    return pd.DataFrame({"check_item": check_items, "status": ["□"] * len(check_items)})
+
+
+def build_regression_validation(
+    train_data: pd.DataFrame,
+    test_data: pd.DataFrame,
+    cv_summary: pd.DataFrame,
+    selected_model_name: str,
+    model_comparison: pd.DataFrame,
+) -> pd.DataFrame:
+    """Create machine-checkable evidence for the core Chapter09 rules."""
+    leaked_features = sorted(set(FEATURE_COLUMNS) & FORBIDDEN_FEATURES)
+    strict_time_order = (
+        train_data["order_date"].max().normalize()
+        < test_data["order_date"].min().normalize()
     )
+    selected_in_cv = selected_model_name in set(cv_summary["model"])
+    baseline_present = "Baseline Mean" in set(model_comparison["model"])
+    selected_present = selected_model_name in set(model_comparison["model"])
+    rows = [
+        ["forbidden_feature_overlap", len(leaked_features), not leaked_features],
+        ["strict_train_before_test", strict_time_order, strict_time_order],
+        ["selected_model_exists_in_train_cv", selected_in_cv, selected_in_cv],
+        ["final_test_contains_baseline", baseline_present, baseline_present],
+        [
+            "final_test_contains_frozen_selected_model",
+            selected_present,
+            selected_present,
+        ],
+        ["test_rows_for_r2", len(test_data), len(test_data) >= 2],
+    ]
+    validation = pd.DataFrame(rows, columns=["check", "value", "passed"])
+    validation["status"] = validation["passed"].map({True: "PASS", False: "FAIL"})
+    failed = validation.loc[validation["status"].eq("FAIL")]
+    if not failed.empty:
+        raise ValueError(
+            "회귀 분석 핵심 검증에 실패했습니다:\n" + failed.to_string(index=False)
+        )
+    return validation.drop(columns="passed")
 
 
 def build_regression_report(
     model_data: pd.DataFrame,
-    train_data: pd.DataFrame,
-    test_data: pd.DataFrame,
-    model_comparison: pd.DataFrame,
+    split_summary: pd.DataFrame,
+    feature_audit: pd.DataFrame,
     cv_summary: pd.DataFrame,
-    prediction_result: pd.DataFrame,
-    checklist: pd.DataFrame,
     selected_model_name: str,
+    model_comparison: pd.DataFrame,
+    prediction_result: pd.DataFrame,
+    validation: pd.DataFrame,
+    checklist: pd.DataFrame,
 ) -> str:
-    """Build a Markdown report aligned with the Chapter 9 interpretation."""
-    baseline_mae = model_comparison.loc[
-        model_comparison["model"].eq("Baseline Mean"),
-        "test_MAE",
-    ].iloc[0]
+    baseline_mae = float(
+        model_comparison.loc[
+            model_comparison["model"].eq("Baseline Mean"), "test_MAE"
+        ].iloc[0]
+    )
     selected_row = model_comparison.loc[
         model_comparison["model"].eq(selected_model_name)
     ].iloc[0]
-    improvement = selected_row[
-        "MAE_improvement_vs_baseline_pct"
-    ]
-
+    improvement = selected_row["MAE_improvement_vs_baseline_pct"]
     if pd.isna(improvement):
-        baseline_interpretation = (
-            "베이스라인 MAE가 0이어서 개선율을 계산하지 않았습니다."
-        )
+        baseline_text = "베이스라인 MAE가 0이어서 개선율을 계산하지 않았습니다."
     elif improvement > 0:
-        baseline_interpretation = (
-            f"{selected_model_name}의 테스트 MAE가 "
+        baseline_text = (
+            f"{selected_model_name}의 최종 테스트 MAE가 "
             f"베이스라인보다 {improvement:.2f}% 낮았습니다."
         )
     else:
-        baseline_interpretation = (
-            f"{selected_model_name}의 테스트 MAE가 "
-            "베이스라인보다 개선되지 않았습니다."
+        baseline_text = (
+            f"{selected_model_name}의 최종 테스트 MAE가 베이스라인보다 개선되지 않았습니다."
         )
 
+    public_errors = public_prediction_result(prediction_result).head(10)
     return f"""# Chapter 9 회귀 분석 요약 보고서
 
-## 1. 분석 목적
+## 1. 분석 목적과 예측 시점
+주문 상세 수량·단가·금액은 모델 입력에서 제외하고, 주문 시점 정보와 고객의 비식별 특성만으로 주문별 `order_total`을 추정합니다.
 
-주문 상세 수량·단가·금액을 모델 입력에서 제외한 상태에서,
-주문 시점 정보와 고객의 비식별 특성만으로 주문별 상세 금액 합계를
-추정하는 교육용 회귀 모델을 비교했습니다.
+후보 모델 선택은 **훈련 기간 내부 TimeSeriesSplit**으로만 수행했고, 선택 모델을 고정한 뒤 테스트 기간을 최종 평가에 사용했습니다.
 
-## 2. 모델링 데이터 개요
-
+## 2. 모델링 데이터와 분할
 - 전체 행 수: {model_data.shape[0]}
-- 훈련 행 수: {train_data.shape[0]}
-- 테스트 행 수: {test_data.shape[0]}
-- 훈련 기간: {train_data["order_date"].min()} ~ {train_data["order_date"].max()}
-- 테스트 기간: {test_data["order_date"].min()} ~ {test_data["order_date"].max()}
 - 예측 대상: {TARGET_COLUMN}
 - 입력값: {", ".join(FEATURE_COLUMNS)}
-- 베이스라인 테스트 MAE: {baseline_mae:,.2f}
-
-## 3. 모델 비교 결과
 
 ```text
-{model_comparison.to_string(index=False)}
+{split_summary.to_string(index=False)}
 ```
 
-{baseline_interpretation}
+## 3. Feature Audit
+```text
+{feature_audit.to_string(index=False)}
+```
 
-## 4. 시간 순서 교차검증
-
+## 4. 훈련 기간 후보 모델 비교
 ```text
 {cv_summary.to_string(index=False)}
 ```
 
-교차검증 평균과 표준편차가 불안정하거나 R²가 반복적으로 음수라면,
-현재 입력 변수만으로는 주문 금액을 안정적으로 예측하기 어렵다는 뜻일 수 있습니다.
+선택 모델: **{selected_model_name}**
 
-## 5. 내부 예측 오차 상위 10건
-
-아래 결과에는 주문 식별자가 포함되어 있으므로 외부 공개용이 아닙니다.
-
+## 5. 최종 테스트 평가
 ```text
-{prediction_result.head(10).to_string(index=False)}
+{model_comparison.to_string(index=False)}
 ```
 
-## 6. 모델링 검토 체크리스트
+{baseline_text}
 
+## 6. 공개 가능한 오차 상위 10건
+```text
+{public_errors.to_string(index=False)}
+```
+
+## 7. 자동 검증 Evidence
+```text
+{validation.to_string(index=False)}
+```
+
+## 8. 사람 검토 체크리스트
 ```text
 {checklist.to_string(index=False)}
 ```
 
-## 7. 해석 시 주의사항
-
+## 9. 해석 시 주의사항
 - MAE와 RMSE는 주문 금액과 같은 단위로 해석합니다.
-- R²는 음수가 될 수 있으며, 이는 평균 예측보다 낮은 성능을 뜻합니다.
-- 훈련 MAE가 낮고 테스트 MAE가 크면 과적합 가능성을 확인합니다.
-- 현재 가상 데이터는 강한 예측 패턴이 설계되어 있지 않을 수 있습니다.
-- 낮은 성능을 감추기 위해 목표값의 계산 재료를 입력에 추가하면 안 됩니다.
-- 모델을 운영에 사용하지 않는 결정도 올바른 분석 결과가 될 수 있습니다.
-- 주문 식별자가 포함된 예측 결과는 내부 검토용으로만 관리합니다.
-
-## 8. 다음 단계
-
-- 예측 시점 이전의 고객 구매 이력이나 프로모션 변수를 적법하게 추가합니다.
-- 새로운 기간의 데이터로 성능을 다시 검증합니다.
-- 시간 순서 교차검증의 변동 원인을 확인합니다.
-- LLM이 만든 코드도 동일한 누수·분할·베이스라인 기준으로 검토합니다.
+- R²는 음수가 될 수 있습니다.
+- 낮은 성능을 감추기 위해 목표 계산 재료나 사후 정보를 feature로 추가하지 않습니다.
+- 테스트 결과를 본 뒤 후보를 다시 고르면 Final Test 역할이 깨집니다.
+- 모델을 운영하지 않는 결정도 올바른 분석 결과가 될 수 있습니다.
 """
 
 
 def save_regression_outputs(
     model_data: pd.DataFrame,
-    train_data: pd.DataFrame,
-    test_data: pd.DataFrame,
-    model_comparison: pd.DataFrame,
+    split_summary: pd.DataFrame,
+    feature_audit: pd.DataFrame,
     cv_summary: pd.DataFrame,
-    prediction_result: pd.DataFrame,
-    checklist: pd.DataFrame,
     selected_model_name: str,
+    model_comparison: pd.DataFrame,
+    prediction_result: pd.DataFrame,
+    validation: pd.DataFrame,
+    checklist: pd.DataFrame,
     report_dir: str | Path = "reports",
 ) -> dict[str, Path]:
-    """Save tables, internal diagnostics, report, and figures."""
     output_dir = Path(report_dir)
     figure_dir = output_dir / "figures"
     output_dir.mkdir(parents=True, exist_ok=True)
     figure_dir.mkdir(parents=True, exist_ok=True)
-
     paths = {
-        "model_data_internal": (
-            output_dir
-            / "ch09_regression_model_data_internal.csv"
-        ),
-        "model_comparison": (
-            output_dir
-            / "ch09_regression_model_comparison.csv"
-        ),
-        "cv_summary": (
-            output_dir
-            / "ch09_regression_cv_summary.csv"
-        ),
-        "predictions_internal": (
-            output_dir
-            / "ch09_regression_predictions_internal.csv"
-        ),
-        "checklist": (
-            output_dir
-            / "ch09_regression_checklist.csv"
-        ),
-        "report": (
-            output_dir
-            / "ch09_regression_report.md"
-        ),
+        "model_data_internal": output_dir / "ch09_regression_model_data_internal.csv",
+        "split_summary": output_dir / "ch09_regression_split_summary.csv",
+        "feature_audit": output_dir / "ch09_regression_feature_audit.csv",
+        "cv_summary": output_dir / "ch09_regression_cv_summary.csv",
+        "model_comparison": output_dir / "ch09_regression_model_comparison.csv",
+        "predictions_internal": output_dir / "ch09_regression_predictions_internal.csv",
+        "validation": output_dir / "ch09_regression_validation.csv",
+        "checklist": output_dir / "ch09_regression_checklist.csv",
+        "report": output_dir / "ch09_regression_report.md",
     }
-
-    model_data.to_csv(
-        paths["model_data_internal"],
-        index=False,
-        encoding="utf-8-sig",
-    )
-    model_comparison.to_csv(
-        paths["model_comparison"],
-        index=False,
-        encoding="utf-8-sig",
-    )
-    cv_summary.to_csv(
-        paths["cv_summary"],
-        index=False,
-        encoding="utf-8-sig",
-    )
+    model_data.to_csv(paths["model_data_internal"], index=False, encoding="utf-8-sig")
+    split_summary.to_csv(paths["split_summary"], index=False, encoding="utf-8-sig")
+    feature_audit.to_csv(paths["feature_audit"], index=False, encoding="utf-8-sig")
+    cv_summary.to_csv(paths["cv_summary"], index=False, encoding="utf-8-sig")
+    model_comparison.to_csv(paths["model_comparison"], index=False, encoding="utf-8-sig")
     prediction_result.to_csv(
-        paths["predictions_internal"],
-        index=False,
-        encoding="utf-8-sig",
+        paths["predictions_internal"], index=False, encoding="utf-8-sig"
     )
-    checklist.to_csv(
-        paths["checklist"],
-        index=False,
-        encoding="utf-8-sig",
-    )
-
+    validation.to_csv(paths["validation"], index=False, encoding="utf-8-sig")
+    checklist.to_csv(paths["checklist"], index=False, encoding="utf-8-sig")
     report_text = build_regression_report(
         model_data=model_data,
-        train_data=train_data,
-        test_data=test_data,
-        model_comparison=model_comparison,
+        split_summary=split_summary,
+        feature_audit=feature_audit,
         cv_summary=cv_summary,
-        prediction_result=prediction_result,
-        checklist=checklist,
         selected_model_name=selected_model_name,
-    )
-    paths["report"].write_text(
-        report_text,
-        encoding="utf-8",
-    )
-
-    figure_paths = create_diagnostic_figures(
+        model_comparison=model_comparison,
         prediction_result=prediction_result,
-        figure_dir=figure_dir,
+        validation=validation,
+        checklist=checklist,
     )
-    paths.update(figure_paths)
-
+    paths["report"].write_text(report_text, encoding="utf-8")
+    paths.update(create_diagnostic_figures(prediction_result, figure_dir))
     return paths
 
 
@@ -1034,43 +833,30 @@ def run_regression_analysis(
     test_size: float = 0.2,
     random_state: int = 42,
 ) -> dict[str, object]:
-    """Run the complete leakage-aware Chapter 9 regression workflow."""
-    data = load_regression_source_data(
-        processed_dir
-    )
+    """Run the complete Chapter09 workflow with train-only model selection."""
+    data = load_regression_source_data(processed_dir)
     model_data = build_regression_dataset(
         customers=data["customers"],
         orders=data["orders"],
         order_items=data["order_items"],
     )
-
-    train_data, test_data = split_model_data_by_time(
-        model_data,
-        test_size=test_size,
-    )
+    train_data, test_data = split_model_data_by_time(model_data, test_size=test_size)
     X_train = train_data[FEATURE_COLUMNS].copy()
     X_test = test_data[FEATURE_COLUMNS].copy()
     y_train = train_data[TARGET_COLUMN].copy()
     y_test = test_data[TARGET_COLUMN].copy()
 
-    models, model_comparison, predictions = (
-        train_and_evaluate_models(
-            X_train=X_train,
-            X_test=X_test,
-            y_train=y_train,
-            y_test=y_test,
-            random_state=random_state,
-        )
-    )
+    models = make_regression_models(random_state=random_state)
+    cv_summary = cross_validate_regression_models(models, X_train, y_train)
+    selected_model_name = select_diagnostic_model(cv_summary)
 
-    cv_summary = cross_validate_regression_models(
+    model_comparison, predictions = train_and_evaluate_models(
         models=models,
+        selected_model_name=selected_model_name,
         X_train=X_train,
+        X_test=X_test,
         y_train=y_train,
-    )
-
-    selected_model_name = select_diagnostic_model(
-        model_comparison
+        y_test=y_test,
     )
     prediction_result = create_prediction_result(
         test_data=test_data,
@@ -1078,19 +864,28 @@ def run_regression_analysis(
         y_pred=predictions[selected_model_name],
         model_name=selected_model_name,
     )
+    split_summary = build_split_summary(train_data, test_data)
+    feature_audit = build_feature_audit()
+    validation = build_regression_validation(
+        train_data=train_data,
+        test_data=test_data,
+        cv_summary=cv_summary,
+        selected_model_name=selected_model_name,
+        model_comparison=model_comparison,
+    )
     checklist = build_leakage_checklist()
     output_paths = save_regression_outputs(
         model_data=model_data,
-        train_data=train_data,
-        test_data=test_data,
-        model_comparison=model_comparison,
+        split_summary=split_summary,
+        feature_audit=feature_audit,
         cv_summary=cv_summary,
-        prediction_result=prediction_result,
-        checklist=checklist,
         selected_model_name=selected_model_name,
+        model_comparison=model_comparison,
+        prediction_result=prediction_result,
+        validation=validation,
+        checklist=checklist,
         report_dir=report_dir,
     )
-
     return {
         "data": data,
         "model_data": model_data,
@@ -1101,13 +896,15 @@ def run_regression_analysis(
         "y_train": y_train,
         "y_test": y_test,
         "models": models,
-        "model_comparison": model_comparison,
-        "predictions": predictions,
         "cv_summary": cv_summary,
         "selected_model_name": selected_model_name,
-        # Keep the earlier key as an alias for notebooks/scripts that used it.
         "best_model_name": selected_model_name,
+        "model_comparison": model_comparison,
+        "predictions": predictions,
         "prediction_result": prediction_result,
+        "split_summary": split_summary,
+        "feature_audit": feature_audit,
+        "validation": validation,
         "checklist": checklist,
         "output_paths": output_paths,
     }
