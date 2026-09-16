@@ -247,7 +247,7 @@ validation_function = '''def build_classification_validation(
     failed = validation.loc[validation["status"].eq("FAIL")]
     if not failed.empty:
         raise ValueError(
-            "분류 분석 핵심 검증에 실패했습니다:\n"
+            "분류 분석 핵심 검증에 실패했습니다:\\n"
             + failed.to_string(index=False)
         )
     return validation'''
