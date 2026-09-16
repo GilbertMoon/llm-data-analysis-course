@@ -6,7 +6,11 @@ Run from the project root or any working directory:
 
 Prerequisite:
 
-    python scripts/preprocess_data.py
+    python scripts/prepare_ch09_data.py
+
+The Chapter09 preparation step uses the common ``data/raw`` project dataset,
+validates core relationships, and writes the regression input to
+``data/processed``. It does not use the Chapter05 error-detection practice raw.
 
 The workflow selects the non-baseline candidate with TimeSeriesSplit on the
 training period, freezes that choice, and only then evaluates the frozen model
