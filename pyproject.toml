@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools>=80", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "llm-data-analysis-course"
+version = "0.1.0"
+description = "LLM 기반 데이터 분석 실무 입문 실습 프로젝트"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "pandas==3.0.5",
+    "numpy==2.5.3",
+    "matplotlib==3.11.1",
+    "seaborn==0.13.2",
+    "scikit-learn==1.9.1",
+    "scipy==1.18.1",
+    "joblib==1.6.0",
+    "streamlit==1.63.0",
+    "jupyter==1.1.1",
+    "notebook==7.6.2",
+    "nbformat==5.11.1",
+    "openpyxl==3.1.5",
+    "python-dotenv==1.2.3",
+    "google-genai==2.23.0",
+    "python-docx==1.2.0",
+    "faker==40.38.0",
+    "tabulate==0.10.0",
+    "markdown==3.10.3",
+    "requests==2.34.2",
+    "beautifulsoup4==4.15.0",
+    "ipykernel==7.3.0",
+]
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src", "src.*"]
