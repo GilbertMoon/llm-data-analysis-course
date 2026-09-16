@@ -43,6 +43,7 @@ automation/airflow/logs/
 automation/airflow/config/
 automation/airflow/plugins/
 automation/airflow/*.db
+automation/airflow/*.log
 
 # Generated Word publishing outputs
 book/output/docx/*
