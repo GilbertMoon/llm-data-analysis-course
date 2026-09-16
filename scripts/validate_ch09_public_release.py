@@ -1,6 +1,6 @@
 """Chapter 09 Public release QA.
 
-Chapter05 전처리 전용 Raw 데이터를 QA 임시 폴더에 전처리한 뒤 회귀 파이프라인을 실행하고,
+공통 data/raw를 QA 임시 폴더에 전처리한 뒤 회귀 파이프라인을 실행하고,
 Train-only 모델 선택, Final Test 보호, Evidence, Notebook, 실습 문서 계약을 확인합니다.
 """
 
@@ -20,7 +20,11 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from src.data_loader import load_sales_data  # noqa: E402
-from src.preprocessing import preprocess_sales_data, save_processed_data  # noqa: E402
+from src.preprocessing import (  # noqa: E402
+    preprocess_sales_data,
+    save_processed_data,
+    validate_relationships,
+)
 from src.regression import (  # noqa: E402
     FORBIDDEN_FEATURES,
     run_regression_analysis,
@@ -32,7 +36,7 @@ PROCESSED_DIR = QA_DIR / "processed"
 REPORT_DIR = QA_DIR / "reports"
 FIGURE_DIR = REPORT_DIR / "figures"
 REPORT_PATH = QA_DIR / "qa_report.json"
-CH05_RAW_DIR = ROOT / "practice" / "chapter05" / "data" / "raw"
+RAW_DIR = ROOT / "data" / "raw"
 
 
 def main() -> None:
@@ -54,17 +58,40 @@ def main() -> None:
     try:
         py_compile.compile(str(ROOT / "src" / "regression.py"), doraise=True)
         py_compile.compile(
+            str(ROOT / "scripts" / "prepare_ch09_data.py"),
+            doraise=True,
+        )
+        py_compile.compile(
             str(ROOT / "scripts" / "run_regression_analysis.py"),
             doraise=True,
         )
         record("python_syntax", True)
 
-        raw_data = load_sales_data(CH05_RAW_DIR)
+        raw_data = load_sales_data(RAW_DIR)
         processed_data = preprocess_sales_data(raw_data)
-        saved_paths = save_processed_data(processed_data, PROCESSED_DIR)
-        processed_ready = all(path.exists() and path.stat().st_size > 0 for path in saved_paths)
+        relationship_checks = validate_relationships(processed_data)
+        relationships_pass = bool(
+            relationship_checks.empty
+            or relationship_checks["invalid_count"].eq(0).all()
+        )
         record(
-            "chapter05_processed_prerequisite",
+            "common_raw_relationships",
+            relationships_pass,
+            repr(relationship_checks.to_dict(orient="records")),
+        )
+        if not relationships_pass:
+            raise ValueError(
+                "공통 data/raw 관계 검증에 실패했습니다:\n"
+                + relationship_checks.to_string(index=False)
+            )
+
+        saved_paths = save_processed_data(processed_data, PROCESSED_DIR)
+        processed_ready = all(
+            path.exists() and path.stat().st_size > 0
+            for path in saved_paths
+        )
+        record(
+            "regression_processed_prerequisite",
             processed_ready,
             f"files={[path.name for path in saved_paths]}",
         )
@@ -104,7 +131,10 @@ def main() -> None:
             ~cv_summary["model"].eq("Baseline Mean")
         ].sort_values(["cv_MAE_mean", "model"])
         expected_selected = str(non_baseline.iloc[0]["model"])
-        selection_pass = selected == expected_selected and selected != "Baseline Mean"
+        selection_pass = (
+            selected == expected_selected
+            and selected != "Baseline Mean"
+        )
         record(
             "train_cv_model_selection",
             selection_pass,
@@ -114,7 +144,9 @@ def main() -> None:
         comparison = result["model_comparison"]
         expected_models = {"Baseline Mean", selected}
         actual_models = set(comparison["model"])
-        roles = dict(zip(comparison["model"], comparison["selection_role"]))
+        roles = dict(
+            zip(comparison["model"], comparison["selection_role"])
+        )
         final_test_pass = (
             actual_models == expected_models
             and len(comparison) == 2
@@ -129,7 +161,10 @@ def main() -> None:
 
         feature_audit = result["feature_audit"]
         selected_features = set(
-            feature_audit.loc[feature_audit["selected"].eq(True), "column"]
+            feature_audit.loc[
+                feature_audit["selected"].eq(True),
+                "column",
+            ]
         )
         leaked = sorted(selected_features & FORBIDDEN_FEATURES)
         record(
@@ -183,14 +218,23 @@ def main() -> None:
             "model_comparison, predictions = train_and_evaluate_models",
             "build_regression_validation",
             "Final Test에서는 Baseline과 Frozen Model만",
+            "prepare_ch09_data.py",
         ]
         missing_notebook = [
-            marker for marker in notebook_markers if marker not in notebook_text
+            marker
+            for marker in notebook_markers
+            if marker not in notebook_text
         ]
         order_pass = (
-            notebook_text.find("cv_summary = cross_validate_regression_models")
-            < notebook_text.find("selected_model_name = select_diagnostic_model(cv_summary)")
-            < notebook_text.find("model_comparison, predictions = train_and_evaluate_models")
+            notebook_text.find(
+                "cv_summary = cross_validate_regression_models"
+            )
+            < notebook_text.find(
+                "selected_model_name = select_diagnostic_model(cv_summary)"
+            )
+            < notebook_text.find(
+                "model_comparison, predictions = train_and_evaluate_models"
+            )
         )
         record(
             "notebook_contract",
@@ -217,8 +261,11 @@ def main() -> None:
             "ch09_regression_validation.csv",
             "Final Test 전에 Selected Model",
             "Frozen Model",
+            "prepare_ch09_data.py",
         ]
-        missing_docs = [marker for marker in doc_markers if marker not in doc_text]
+        missing_docs = [
+            marker for marker in doc_markers if marker not in doc_text
+        ]
         record(
             "practice_document_contract",
             not missing_docs,
@@ -226,7 +273,11 @@ def main() -> None:
         )
 
     except Exception as exc:
-        record("unexpected_exception", False, f"{type(exc).__name__}: {exc}")
+        record(
+            "unexpected_exception",
+            False,
+            f"{type(exc).__name__}: {exc}",
+        )
 
     overall = all(item["status"] == "PASS" for item in checks)
     payload = {
