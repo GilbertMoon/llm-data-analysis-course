@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">타깃 범위와 예측 시점 Feature Contract</title>
+  <desc id="desc">Chapter 10 주문 취소 분류의 타깃 정의, 예측 시점, 허용 및 금지 feature</desc>
+  <defs><style>.t{font-family:'Malgun Gothic','Pretendard','Noto Sans KR',sans-serif;fill:#14213d}.h{font-size:44px;font-weight:700}.st{font-size:24px}.ch{font-size:28px;font-weight:700}.b{font-size:21px}.small{font-size:18px}.card{fill:#f8fbff;stroke:#8fb7df;stroke-width:2}.good{fill:#ecfdf5;stroke:#22c55e;stroke-width:2}.bad{fill:#fff7ed;stroke:#f59e0b;stroke-width:2}.mid{fill:#f5f3ff;stroke:#8b5cf6;stroke-width:2}</style></defs>
+  <rect width="1600" height="900" fill="#fff"/>
+  <text x="80" y="88" class="t h">타깃 범위와 예측 시점 Feature Contract</text>
+  <text x="80" y="130" class="t st">파일에 있는 컬럼이 모두 모델 입력으로 허용되는 것은 아닙니다.</text>
+
+  <rect class="card" x="70" y="190" width="430" height="520" rx="20"/>
+  <text x="285" y="245" class="t ch" text-anchor="middle">Target Scope</text>
+  <rect x="120" y="290" width="330" height="65" rx="12" fill="#ecfdf5"/><text x="285" y="332" class="t b" text-anchor="middle">completed → 0</text>
+  <rect x="120" y="375" width="330" height="65" rx="12" fill="#ecfdf5"/><text x="285" y="417" class="t b" text-anchor="middle">cancelled → 1</text>
+  <rect x="120" y="460" width="330" height="65" rx="12" fill="#f3f4f6"/><text x="285" y="502" class="t b" text-anchor="middle">refunded → 제외</text>
+  <rect x="120" y="545" width="330" height="65" rx="12" fill="#f3f4f6"/><text x="285" y="587" class="t b" text-anchor="middle">기타 상태 → 제외</text>
+  <text x="285" y="660" class="t small" text-anchor="middle">0은 단순 비취소가 아니라 completed입니다.</text>
+
+  <rect class="mid" x="555" y="190" width="350" height="520" rx="20"/>
+  <text x="730" y="245" class="t ch" text-anchor="middle">Prediction Time</text>
+  <circle cx="730" cy="390" r="105" fill="#ede9fe" stroke="#8b5cf6" stroke-width="3"/>
+  <text x="730" y="380" class="t ch" text-anchor="middle">주문 생성</text><text x="730" y="422" class="t ch" text-anchor="middle">직후</text>
+  <text x="730" y="565" class="t b" text-anchor="middle">질문</text>
+  <text x="730" y="605" class="t small" text-anchor="middle">이 값은 이 순간에도</text><text x="730" y="635" class="t small" text-anchor="middle">실제로 알 수 있는가?</text>
+
+  <rect class="good" x="960" y="190" width="270" height="520" rx="20"/>
+  <text x="1095" y="245" class="t ch" text-anchor="middle">사용 후보</text>
+  <text x="1000" y="300" class="t b">• age / gender / city</text><text x="1000" y="345" class="t b">• payment_method</text><text x="1000" y="390" class="t b">• item_count</text><text x="1000" y="435" class="t b">• total_quantity</text><text x="1000" y="480" class="t b">• order_amount</text><text x="1000" y="525" class="t b">• month / weekday</text><text x="1000" y="570" class="t b">• days_since_signup</text>
+  <text x="1095" y="650" class="t small" text-anchor="middle">시점 가정이 바뀌면</text><text x="1095" y="678" class="t small" text-anchor="middle">허용 범위도 바뀝니다.</text>
+
+  <rect class="bad" x="1260" y="190" width="270" height="520" rx="20"/>
+  <text x="1395" y="245" class="t ch" text-anchor="middle">금지</text>
+  <text x="1300" y="300" class="t b">• order_status</text><text x="1300" y="345" class="t b">• is_cancelled</text><text x="1300" y="390" class="t b">• order_id</text><text x="1300" y="435" class="t b">• customer_id</text><text x="1300" y="480" class="t b">• product_id</text><text x="1300" y="525" class="t b">• cancel_reason</text><text x="1300" y="570" class="t b">• cancelled_at</text>
+  <text x="1395" y="650" class="t small" text-anchor="middle">Target · ID · 사후 정보는</text><text x="1395" y="678" class="t small" text-anchor="middle">입력에서 제외합니다.</text>
+
+  <rect x="180" y="780" width="1240" height="72" rx="16" fill="#eef6ff" stroke="#2b6cb0" stroke-width="2"/>
+  <text x="800" y="826" class="t ch" text-anchor="middle">파일에 존재 ≠ 예측 시점에 사용 가능</text>
+</svg>
