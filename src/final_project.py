@@ -879,7 +879,7 @@ def run_external_integration_stage(
             "avg_completed_order_count",
             "total_completed_amount",
         ]
-    )
+    ]
     both_day_types = set(comparison["day_type"]) == {"일반일", "공휴일"}
     stage_status = "completed" if left_only_count == 0 and both_day_types else "warning"
     note = (
