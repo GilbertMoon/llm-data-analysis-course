@@ -1,16 +1,24 @@
-"""Chapter 10 분류 분석 공통 함수 모음.
+"""Chapter 10 leakage-aware classification analysis utilities.
 
-온라인 쇼핑몰 데이터를 사용해 완료 주문과 취소 주문을 구분하고,
-주문 취소 여부(is_cancelled)를 예측하는 분류 모델링 흐름을 제공합니다.
+The workflow protects target definition, merge integrity, model selection,
+threshold selection, final test independence, and public-result privacy.
 
-모델 선택과 임계값 조정에는 검증 데이터를 사용하고, 테스트 데이터는
-최종 성능 확인에 한 번만 사용합니다.
+Core contract:
+1. completed=0 and cancelled=1 only; other statuses are excluded,
+2. validate line_total = quantity * unit_price before aggregation,
+3. fail on broken order/customer joins instead of silently filling unmatched rows,
+4. keep target, identifiers, and post-outcome fields out of features,
+5. learn preprocessing inside sklearn Pipelines,
+6. select the model on validation data,
+7. select the probability threshold on validation data,
+8. freeze model and threshold before final test evaluation,
+9. separate identifier-bearing internal outputs from public predictions.
 """
 
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any
+from typing import Any, Iterable
 
 import numpy as np
 import pandas as pd
@@ -31,15 +39,10 @@ from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
-from src.eda import load_processed_sales_data
-
 
 TARGET_COLUMN = "is_cancelled"
 ALLOWED_TARGET_STATUSES = {"completed", "cancelled"}
-LEAKAGE_COLUMNS = {
-    "order_status",
-    TARGET_COLUMN,
-}
+
 CANDIDATE_NUMERIC_FEATURES = [
     "age",
     "item_count",
@@ -55,9 +58,46 @@ CANDIDATE_CATEGORICAL_FEATURES = [
     "payment_method",
 ]
 
+FORBIDDEN_FEATURES = {
+    "order_status",
+    TARGET_COLUMN,
+    "order_id",
+    "customer_id",
+    "product_id",
+    "cancel_reason",
+    "cancelled_at",
+}
+FORBIDDEN_REASONS = {
+    "order_status": "예측 결과와 직접 연결되는 주문 상태",
+    TARGET_COLUMN: "예측 대상 자체",
+    "order_id": "주문 식별자",
+    "customer_id": "고객 식별자",
+    "product_id": "주문 상세 식별 정보",
+    "cancel_reason": "취소 이후 생성되는 사후 정보",
+    "cancelled_at": "취소 이후 생성되는 사후 정보",
+}
+LEAKAGE_COLUMNS = {"order_status", TARGET_COLUMN}
+
+REQUIRED_COLUMNS = {
+    "customers": {"customer_id", "gender", "age", "city", "signup_date"},
+    "orders": {
+        "order_id",
+        "customer_id",
+        "order_date",
+        "order_status",
+        "payment_method",
+    },
+    "order_items": {
+        "order_id",
+        "product_id",
+        "quantity",
+        "unit_price",
+    },
+}
+
 
 def make_one_hot_encoder() -> OneHotEncoder:
-    """설치된 scikit-learn 버전에 맞는 OneHotEncoder를 생성합니다."""
+    """Return a dense encoder compatible with multiple sklearn versions."""
     try:
         return OneHotEncoder(handle_unknown="ignore", sparse_output=False)
     except TypeError:
@@ -67,29 +107,111 @@ def make_one_hot_encoder() -> OneHotEncoder:
 def load_classification_source_data(
     processed_dir: str | Path = "data/processed",
 ) -> dict[str, pd.DataFrame]:
-    """5장에서 만든 전처리 데이터를 불러옵니다."""
-    return load_processed_sales_data(processed_dir)
+    """Load Chapter10 validated processed inputs without falling back to raw data."""
+    input_dir = Path(processed_dir)
+    file_map = {
+        "customers": input_dir / "customers_clean.csv",
+        "orders": input_dir / "orders_clean.csv",
+        "order_items": input_dir / "order_items_clean.csv",
+    }
+    missing = [path for path in file_map.values() if not path.exists()]
+    if missing:
+        raise FileNotFoundError(
+            "Chapter10 모델링 입력이 없습니다. 먼저 "
+            "`python scripts/prepare_ch10_data.py`를 실행하세요. "
+            + "누락 파일: "
+            + ", ".join(str(path) for path in missing)
+        )
+    return {name: pd.read_csv(path) for name, path in file_map.items()}
+
+
+def validate_required_columns(datasets: dict[str, pd.DataFrame]) -> None:
+    """Fail fast when required datasets or columns are missing."""
+    missing_datasets = sorted(set(REQUIRED_COLUMNS) - set(datasets))
+    if missing_datasets:
+        raise KeyError(f"필수 데이터셋이 없습니다: {missing_datasets}")
+
+    for name, required in REQUIRED_COLUMNS.items():
+        missing = sorted(required - set(datasets[name].columns))
+        if missing:
+            raise KeyError(f"{name}에 필요한 컬럼이 없습니다: {missing}")
+
+
+def validate_feature_columns(feature_columns: Iterable[str]) -> None:
+    """Reject target, identifier, and post-outcome fields from model input."""
+    columns = list(feature_columns)
+    forbidden = sorted(set(columns) & FORBIDDEN_FEATURES)
+    if forbidden:
+        raise ValueError(f"입력값에 누수/식별 위험 컬럼이 있습니다: {forbidden}")
+    duplicates = pd.Index(columns)[pd.Index(columns).duplicated()].tolist()
+    if duplicates:
+        raise ValueError(f"입력값 목록에 중복 컬럼이 있습니다: {duplicates}")
+
+
+def _require_unique_key(df: pd.DataFrame, key: str, dataset: str) -> None:
+    missing_count = int(df[key].isna().sum())
+    duplicate_count = int(df[key].duplicated().sum())
+    if missing_count or duplicate_count:
+        raise ValueError(
+            f"{dataset}.{key} 검증 실패: "
+            f"missing={missing_count}, duplicate={duplicate_count}"
+        )
 
 
 def build_order_item_features(order_items: pd.DataFrame) -> pd.DataFrame:
-    """주문 상세 데이터를 주문 단위 특징으로 요약합니다."""
+    """Validate line totals and aggregate order items to one row per order."""
     required = {"order_id", "product_id", "quantity", "unit_price"}
     missing = sorted(required - set(order_items.columns))
     if missing:
         raise KeyError(f"order_items에 필요한 컬럼이 없습니다: {missing}")
 
     items = order_items.copy()
-    if "line_total" not in items.columns:
-        items["line_total"] = items["quantity"] * items["unit_price"]
+    invalid_key_or_value = items[
+        ["order_id", "product_id", "quantity", "unit_price"]
+    ].isna().any(axis=1)
+    if invalid_key_or_value.any():
+        raise ValueError(
+            "주문 특징을 만들 수 없는 주문 상세 행이 있습니다: "
+            f"{int(invalid_key_or_value.sum())}건"
+        )
 
-    return (
+    items["quantity"] = pd.to_numeric(items["quantity"], errors="coerce")
+    items["unit_price"] = pd.to_numeric(items["unit_price"], errors="coerce")
+    if items[["quantity", "unit_price"]].isna().any(axis=None):
+        raise ValueError("quantity 또는 unit_price에 숫자 변환 실패가 있습니다.")
+    if (items["quantity"] <= 0).any() or (items["unit_price"] <= 0).any():
+        raise ValueError("quantity와 unit_price는 0보다 커야 합니다.")
+
+    expected_line_total = items["quantity"] * items["unit_price"]
+    if "line_total" in items.columns:
+        items["line_total"] = pd.to_numeric(items["line_total"], errors="coerce")
+        if items["line_total"].isna().any():
+            raise ValueError("order_items.line_total에 숫자 변환 실패가 있습니다.")
+        mismatch = (items["line_total"] - expected_line_total).abs().gt(1e-6)
+        if mismatch.any():
+            raise ValueError(
+                "line_total과 quantity × unit_price가 일치하지 않는 행이 있습니다: "
+                f"{int(mismatch.sum())}건"
+            )
+    else:
+        items["line_total"] = expected_line_total
+
+    if (items["line_total"] <= 0).any():
+        raise ValueError("line_total에 0 이하 값이 있습니다.")
+
+    features = (
         items.groupby("order_id", as_index=False)
         .agg(
-            item_count=("product_id", "count"),
+            item_count=("product_id", "size"),
             total_quantity=("quantity", "sum"),
             order_amount=("line_total", "sum"),
         )
+        .sort_values("order_id")
+        .reset_index(drop=True)
     )
+    if features["order_id"].duplicated().any():
+        raise ValueError("주문 단위 특징이 order_id당 한 행이 아닙니다.")
+    return features
 
 
 def _checked_left_merge(
@@ -100,7 +222,7 @@ def _checked_left_merge(
     validate: str,
     right_label: str,
 ) -> tuple[pd.DataFrame, dict[str, object]]:
-    """left merge를 실행하고 행 수와 미매칭 건수를 함께 반환합니다."""
+    """Run a validated left merge and fail on row loss/growth or unmatched rows."""
     before_rows = len(left)
     merged = left.merge(
         right,
@@ -110,15 +232,29 @@ def _checked_left_merge(
         indicator=True,
     )
     after_rows = len(merged)
-    unmatched_count = int((merged["_merge"] == "left_only").sum())
+    unmatched_count = int(merged["_merge"].eq("left_only").sum())
+    row_count_preserved = before_rows == after_rows
 
     check = {
         "merge": f"{on} → {right_label}",
         "before_rows": before_rows,
         "after_rows": after_rows,
-        "row_count_preserved": before_rows == after_rows,
+        "row_count_preserved": row_count_preserved,
         "unmatched_count": unmatched_count,
+        "status": (
+            "PASS"
+            if row_count_preserved and unmatched_count == 0
+            else "FAIL"
+        ),
     }
+
+    if not row_count_preserved or unmatched_count:
+        raise ValueError(
+            f"{on} → {right_label} 병합 검증 실패: "
+            f"before={before_rows}, after={after_rows}, "
+            f"unmatched={unmatched_count}"
+        )
+
     return merged.drop(columns="_merge"), check
 
 
@@ -133,42 +269,37 @@ def build_classification_dataset(
     pd.DataFrame,
     pd.DataFrame,
 ]:
-    """완료/취소 주문만 사용해 분류 데이터셋과 검증표를 생성합니다."""
-    required_columns = {
-        "customers": {"customer_id"},
-        "orders": {
-            "order_id",
-            "customer_id",
-            "order_date",
-            "order_status",
-        },
-        "order_items": {
-            "order_id",
-            "product_id",
-            "quantity",
-            "unit_price",
-        },
+    """Build strict one-row-per-order binary-classification data."""
+    datasets = {
+        "customers": customers.copy(),
+        "orders": orders.copy(),
+        "order_items": order_items.copy(),
     }
-    frames = {
-        "customers": customers,
-        "orders": orders,
-        "order_items": order_items,
-    }
-    for name, required in required_columns.items():
-        missing = sorted(required - set(frames[name].columns))
-        if missing:
-            raise KeyError(f"{name}에 필요한 컬럼이 없습니다: {missing}")
+    validate_required_columns(datasets)
 
-    customers_data = customers.copy()
-    orders_data = orders.copy()
+    customers_data = datasets["customers"]
+    orders_data = datasets["orders"]
+    items_data = datasets["order_items"]
+
+    _require_unique_key(customers_data, "customer_id", "customers")
+    _require_unique_key(orders_data, "order_id", "orders")
+
+    required_order_values = ["order_id", "customer_id", "order_date", "order_status"]
+    missing_order_values = orders_data[required_order_values].isna().any(axis=1)
+    if missing_order_values.any():
+        raise ValueError(
+            "orders 필수값에 결측치가 있습니다: "
+            f"{int(missing_order_values.sum())}건"
+        )
 
     orders_data["order_date"] = pd.to_datetime(
-        orders_data["order_date"],
-        errors="coerce",
+        orders_data["order_date"], errors="coerce"
     )
-    orders_data = orders_data.dropna(
-        subset=["order_id", "customer_id", "order_date", "order_status"]
-    ).copy()
+    if orders_data["order_date"].isna().any():
+        raise ValueError(
+            "order_date 날짜 변환 실패가 있습니다: "
+            f"{int(orders_data['order_date'].isna().sum())}건"
+        )
 
     status_scope = (
         orders_data["order_status"]
@@ -180,54 +311,47 @@ def build_classification_dataset(
         "order_status"
     ].isin(ALLOWED_TARGET_STATUSES)
 
-    orders_data = orders_data[
+    binary_orders = orders_data[
         orders_data["order_status"].isin(ALLOWED_TARGET_STATUSES)
     ].copy()
-    if orders_data.empty:
+    if binary_orders.empty:
         raise ValueError(
             "completed 또는 cancelled 주문이 없어 분류 데이터를 만들 수 없습니다."
         )
 
-    orders_data[TARGET_COLUMN] = (
-        orders_data["order_status"] == "cancelled"
-    ).astype(int)
-
-    target_counts = orders_data[TARGET_COLUMN].value_counts()
-    if len(target_counts) < 2:
+    binary_orders[TARGET_COLUMN] = (
+        binary_orders["order_status"].eq("cancelled").astype(int)
+    )
+    target_counts = binary_orders[TARGET_COLUMN].value_counts()
+    if set(target_counts.index) != {0, 1}:
         raise ValueError(
             "분류 학습에는 completed와 cancelled 주문이 모두 필요합니다."
         )
-    if target_counts.min() < 5:
+    if int(target_counts.min()) < 5:
         raise ValueError(
             "각 클래스에 최소 5개 이상의 주문이 필요합니다. "
             f"현재 클래스별 건수: {target_counts.to_dict()}"
         )
 
-    order_item_features = build_order_item_features(order_items)
+    order_item_features = build_order_item_features(items_data)
     model_data, order_merge_check = _checked_left_merge(
-        orders_data,
+        binary_orders,
         order_item_features,
         on="order_id",
         validate="one_to_one",
         right_label="order_item_features",
     )
 
-    customer_columns = [
-        column
-        for column in [
-            "customer_id",
-            "gender",
-            "age",
-            "city",
-            "signup_date",
-        ]
-        if column in customers_data.columns
-    ]
-    customer_lookup = customers_data[customer_columns].copy()
-    if "signup_date" in customer_lookup.columns:
-        customer_lookup["signup_date"] = pd.to_datetime(
-            customer_lookup["signup_date"],
-            errors="coerce",
+    customer_lookup = customers_data[
+        ["customer_id", "gender", "age", "city", "signup_date"]
+    ].copy()
+    customer_lookup["signup_date"] = pd.to_datetime(
+        customer_lookup["signup_date"], errors="coerce"
+    )
+    if customer_lookup["signup_date"].isna().any():
+        raise ValueError(
+            "customers.signup_date 날짜 변환 실패가 있습니다: "
+            f"{int(customer_lookup['signup_date'].isna().sum())}건"
         )
 
     model_data, customer_merge_check = _checked_left_merge(
@@ -238,53 +362,40 @@ def build_classification_dataset(
         right_label="customers",
     )
 
-    for column in ["item_count", "total_quantity", "order_amount"]:
-        if column in model_data.columns:
-            model_data[column] = model_data[column].fillna(0)
-
+    model_data["age"] = pd.to_numeric(model_data["age"], errors="coerce")
     model_data["order_month"] = model_data["order_date"].dt.month
-    model_data["order_dayofweek"] = model_data[
-        "order_date"
-    ].dt.dayofweek
+    model_data["order_dayofweek"] = model_data["order_date"].dt.dayofweek
+    model_data["days_since_signup"] = (
+        model_data["order_date"] - model_data["signup_date"]
+    ).dt.days
 
-    temporal_invalid_count = 0
-    if "signup_date" in model_data.columns:
-        model_data["days_since_signup"] = (
-            model_data["order_date"] - model_data["signup_date"]
-        ).dt.days
-        invalid_temporal = model_data["days_since_signup"] < 0
-        temporal_invalid_count = int(invalid_temporal.sum())
-        model_data.loc[invalid_temporal, "days_since_signup"] = np.nan
+    negative_days = model_data["days_since_signup"].lt(0)
+    if negative_days.any():
+        raise ValueError(
+            "signup_date가 order_date보다 늦은 주문이 있습니다: "
+            f"{int(negative_days.sum())}건"
+        )
 
     numeric_features = [
         column
         for column in CANDIDATE_NUMERIC_FEATURES
-        if (
-            column in model_data.columns
-            and model_data[column].notna().any()
-        )
+        if column in model_data.columns and model_data[column].notna().any()
     ]
     categorical_features = [
         column
         for column in CANDIDATE_CATEGORICAL_FEATURES
-        if (
-            column in model_data.columns
-            and model_data[column].notna().any()
-        )
+        if column in model_data.columns and model_data[column].notna().any()
     ]
     features = numeric_features + categorical_features
-
-    leakage_found = sorted(LEAKAGE_COLUMNS.intersection(features))
-    if leakage_found:
-        raise ValueError(
-            "데이터 누수 위험 컬럼이 입력값에 포함되었습니다: "
-            f"{leakage_found}"
-        )
     if not features:
         raise ValueError("사용 가능한 입력 feature가 없습니다.")
+    validate_feature_columns(features)
 
-    merge_checks = pd.DataFrame(
-        [order_merge_check, customer_merge_check]
+    merge_checks = pd.DataFrame([order_merge_check, customer_merge_check])
+    excluded_rows = int(
+        status_scope.loc[
+            ~status_scope["used_for_binary_target"], "order_count"
+        ].sum()
     )
     data_quality_checks = pd.DataFrame(
         {
@@ -293,68 +404,79 @@ def build_classification_dataset(
                 "completed_rows",
                 "cancelled_rows",
                 "excluded_status_rows",
+                "line_total_mismatch",
                 "negative_days_since_signup",
                 "missing_order_item_features",
                 "missing_customer_match",
             ],
             "count": [
                 len(model_data),
-                int((model_data[TARGET_COLUMN] == 0).sum()),
-                int((model_data[TARGET_COLUMN] == 1).sum()),
-                int(
-                    (
-                        ~status_scope["used_for_binary_target"]
-                    ).mul(status_scope["order_count"]).sum()
-                ),
-                temporal_invalid_count,
+                int(model_data[TARGET_COLUMN].eq(0).sum()),
+                int(model_data[TARGET_COLUMN].eq(1).sum()),
+                excluded_rows,
+                0,
+                0,
                 order_merge_check["unmatched_count"],
                 customer_merge_check["unmatched_count"],
             ],
         }
     )
-
     status_checks = status_scope.assign(
-        check_item=lambda frame: (
-            "status_scope:" + frame["order_status"].astype(str)
-        ),
+        check_item=lambda frame: "status_scope:" + frame["order_status"].astype(str),
         count=lambda frame: frame["order_count"],
     )[["check_item", "count"]]
 
     return (
-        model_data,
+        model_data.sort_values(["order_date", "order_id"]).reset_index(drop=True),
         numeric_features,
         categorical_features,
         merge_checks,
-        pd.concat(
-            [data_quality_checks, status_checks],
-            ignore_index=True,
-        ),
+        pd.concat([data_quality_checks, status_checks], ignore_index=True),
     )
+
+
+def build_feature_audit(
+    numeric_features: list[str],
+    categorical_features: list[str],
+) -> pd.DataFrame:
+    """Document selected features and explicitly forbidden fields."""
+    selected = numeric_features + categorical_features
+    validate_feature_columns(selected)
+
+    rows = [
+        {
+            "column": column,
+            "selected": True,
+            "role": "allowed_feature",
+            "reason": "교육용 예측 시점에 사용 가능하다고 가정",
+        }
+        for column in selected
+    ]
+    rows.extend(
+        {
+            "column": column,
+            "selected": False,
+            "role": "forbidden",
+            "reason": FORBIDDEN_REASONS[column],
+        }
+        for column in sorted(FORBIDDEN_FEATURES)
+    )
+    return pd.DataFrame(rows)
 
 
 def target_distribution(model_data: pd.DataFrame) -> pd.DataFrame:
-    """타깃 클래스 분포를 개수와 비율로 반환합니다."""
-    counts = (
-        model_data[TARGET_COLUMN]
-        .value_counts(dropna=False)
-        .sort_index()
-    )
+    """Return target class counts and ratios."""
+    counts = model_data[TARGET_COLUMN].value_counts(dropna=False).sort_index()
     ratios = (
         model_data[TARGET_COLUMN]
         .value_counts(normalize=True, dropna=False)
         .sort_index()
     )
-    labels = {
-        0: "completed",
-        1: "cancelled",
-    }
+    labels = {0: "completed", 1: "cancelled"}
     return pd.DataFrame(
         {
             TARGET_COLUMN: counts.index,
-            "class_label": [
-                labels.get(value, str(value))
-                for value in counts.index
-            ],
+            "class_label": [labels.get(value, str(value)) for value in counts.index],
             "count": counts.values,
             "ratio": ratios.round(4).values,
         }
@@ -378,31 +500,19 @@ def split_train_validation_test(
     pd.Series,
     list[str],
 ]:
-    """입력값과 타깃을 train/validation/test로 나눕니다."""
+    """Create educational stratified train/validation/test splits."""
     if test_size <= 0 or validation_size <= 0:
-        raise ValueError(
-            "test_size와 validation_size는 0보다 커야 합니다."
-        )
+        raise ValueError("test_size와 validation_size는 0보다 커야 합니다.")
     if test_size + validation_size >= 1:
-        raise ValueError(
-            "test_size와 validation_size의 합은 1보다 작아야 합니다."
-        )
+        raise ValueError("test_size와 validation_size의 합은 1보다 작아야 합니다.")
 
     features = numeric_features + categorical_features
-    leakage_found = sorted(LEAKAGE_COLUMNS.intersection(features))
-    if leakage_found:
-        raise ValueError(
-            "데이터 누수 위험 컬럼이 입력값에 포함되었습니다: "
-            f"{leakage_found}"
-        )
-
+    validate_feature_columns(features)
     X = model_data[features].copy()
     y = model_data[TARGET_COLUMN].copy()
 
-    if y.nunique() != 2:
-        raise ValueError(
-            "이진 분류에는 두 개의 타깃 클래스가 필요합니다."
-        )
+    if set(y.dropna().unique()) != {0, 1}:
+        raise ValueError("이진 분류에는 0과 1 두 타깃 클래스가 필요합니다.")
 
     X_train_valid, X_test, y_train_valid, y_test = train_test_split(
         X,
@@ -411,14 +521,11 @@ def split_train_validation_test(
         random_state=random_state,
         stratify=y,
     )
-
-    validation_ratio_within_train_valid = (
-        validation_size / (1 - test_size)
-    )
+    validation_ratio = validation_size / (1 - test_size)
     X_train, X_valid, y_train, y_valid = train_test_split(
         X_train_valid,
         y_train_valid,
-        test_size=validation_ratio_within_train_valid,
+        test_size=validation_ratio,
         random_state=random_state,
         stratify=y_train_valid,
     )
@@ -428,7 +535,7 @@ def split_train_validation_test(
         "validation": y_valid,
         "test": y_test,
     }.items():
-        if target.nunique() != 2:
+        if set(target.unique()) != {0, 1}:
             raise ValueError(
                 f"{split_name} 데이터에 두 클래스가 모두 포함되지 않았습니다."
             )
@@ -449,7 +556,7 @@ def build_split_summary(
     y_valid: pd.Series,
     y_test: pd.Series,
 ) -> pd.DataFrame:
-    """데이터 분할별 클래스 건수와 비율을 요약합니다."""
+    """Summarize class counts and ratios for each split."""
     rows: list[dict[str, object]] = []
     for split_name, target in {
         "train": y_train,
@@ -465,16 +572,10 @@ def build_split_summary(
                     "split": split_name,
                     TARGET_COLUMN: class_value,
                     "class_label": (
-                        "cancelled"
-                        if class_value == 1
-                        else "completed"
+                        "cancelled" if class_value == 1 else "completed"
                     ),
                     "count": count,
-                    "ratio": (
-                        round(count / total, 4)
-                        if total
-                        else 0
-                    ),
+                    "ratio": round(count / total, 4) if total else 0,
                 }
             )
     return pd.DataFrame(rows)
@@ -484,37 +585,29 @@ def make_preprocessor(
     numeric_features: list[str],
     categorical_features: list[str],
 ) -> ColumnTransformer:
-    """숫자형/범주형 컬럼 전처리 파이프라인을 만듭니다."""
+    """Create train-only numeric and categorical preprocessing."""
     transformers: list[tuple[str, Pipeline, list[str]]] = []
 
     if numeric_features:
-        numeric_transformer = Pipeline(
+        numeric = Pipeline(
             steps=[
                 ("imputer", SimpleImputer(strategy="median")),
                 ("scaler", StandardScaler()),
             ]
         )
-        transformers.append(
-            ("num", numeric_transformer, numeric_features)
-        )
+        transformers.append(("num", numeric, numeric_features))
 
     if categorical_features:
-        categorical_transformer = Pipeline(
+        categorical = Pipeline(
             steps=[
-                (
-                    "imputer",
-                    SimpleImputer(strategy="most_frequent"),
-                ),
+                ("imputer", SimpleImputer(strategy="most_frequent")),
                 ("onehot", make_one_hot_encoder()),
             ]
         )
-        transformers.append(
-            ("cat", categorical_transformer, categorical_features)
-        )
+        transformers.append(("cat", categorical, categorical_features))
 
     if not transformers:
         raise ValueError("전처리할 feature가 없습니다.")
-
     return ColumnTransformer(transformers=transformers)
 
 
@@ -523,38 +616,26 @@ def make_classification_models(
     categorical_features: list[str],
     random_state: int = 42,
 ) -> dict[str, Pipeline]:
-    """기준 모델과 비교 모델을 생성합니다."""
+    """Create the fixed baseline and candidate models."""
     return {
         "Dummy Most Frequent": Pipeline(
             steps=[
                 (
                     "preprocessor",
-                    make_preprocessor(
-                        numeric_features,
-                        categorical_features,
-                    ),
+                    make_preprocessor(numeric_features, categorical_features),
                 ),
-                (
-                    "model",
-                    DummyClassifier(strategy="most_frequent"),
-                ),
+                ("model", DummyClassifier(strategy="most_frequent")),
             ]
         ),
         "Logistic Regression": Pipeline(
             steps=[
                 (
                     "preprocessor",
-                    make_preprocessor(
-                        numeric_features,
-                        categorical_features,
-                    ),
+                    make_preprocessor(numeric_features, categorical_features),
                 ),
                 (
                     "model",
-                    LogisticRegression(
-                        max_iter=1000,
-                        class_weight="balanced",
-                    ),
+                    LogisticRegression(max_iter=1000, class_weight="balanced"),
                 ),
             ]
         ),
@@ -562,10 +643,7 @@ def make_classification_models(
             steps=[
                 (
                     "preprocessor",
-                    make_preprocessor(
-                        numeric_features,
-                        categorical_features,
-                    ),
+                    make_preprocessor(numeric_features, categorical_features),
                 ),
                 (
                     "model",
@@ -584,30 +662,12 @@ def evaluate_classification_predictions(
     y_true: pd.Series,
     y_pred: np.ndarray,
 ) -> dict[str, float]:
-    """분류 예측을 accuracy, precision, recall, f1로 평가합니다."""
+    """Evaluate predictions with accuracy, precision, recall, and F1."""
     return {
         "accuracy": float(accuracy_score(y_true, y_pred)),
-        "precision": float(
-            precision_score(
-                y_true,
-                y_pred,
-                zero_division=0,
-            )
-        ),
-        "recall": float(
-            recall_score(
-                y_true,
-                y_pred,
-                zero_division=0,
-            )
-        ),
-        "f1": float(
-            f1_score(
-                y_true,
-                y_pred,
-                zero_division=0,
-            )
-        ),
+        "precision": float(precision_score(y_true, y_pred, zero_division=0)),
+        "recall": float(recall_score(y_true, y_pred, zero_division=0)),
+        "f1": float(f1_score(y_true, y_pred, zero_division=0)),
     }
 
 
@@ -625,13 +685,16 @@ def train_and_compare_on_validation(
     dict[str, np.ndarray],
     dict[str, np.ndarray],
 ]:
-    """train으로 학습하고 validation 성능을 비교합니다."""
+    """Fit on train and compare fixed candidates on validation only."""
+    validate_feature_columns(X_train.columns)
+    if list(X_train.columns) != list(X_valid.columns):
+        raise ValueError("Train과 Validation 입력 컬럼 구성이 다릅니다.")
+
     models = make_classification_models(
         numeric_features=numeric_features,
         categorical_features=categorical_features,
         random_state=random_state,
     )
-
     rows: list[dict[str, Any]] = []
     predictions: dict[str, np.ndarray] = {}
     probabilities: dict[str, np.ndarray] = {}
@@ -639,33 +702,44 @@ def train_and_compare_on_validation(
     for model_name, model in models.items():
         model.fit(X_train, y_train)
         y_pred = model.predict(X_valid)
-        metrics = evaluate_classification_predictions(
-            y_valid,
-            y_pred,
-        )
         rows.append(
             {
                 "model": model_name,
                 "evaluation_split": "validation",
-                **metrics,
+                **evaluate_classification_predictions(y_valid, y_pred),
             }
         )
         predictions[model_name] = y_pred
-
         if hasattr(model, "predict_proba"):
-            probabilities[model_name] = model.predict_proba(
-                X_valid
-            )[:, 1]
+            probabilities[model_name] = model.predict_proba(X_valid)[:, 1]
 
     comparison = (
         pd.DataFrame(rows)
         .sort_values(
-            ["f1", "recall", "precision"],
-            ascending=False,
+            ["f1", "recall", "precision", "model"],
+            ascending=[False, False, False, True],
         )
         .reset_index(drop=True)
     )
     return models, comparison, predictions, probabilities
+
+
+def select_validation_model(validation_comparison: pd.DataFrame) -> str:
+    """Freeze the best non-dummy model using validation metrics only."""
+    required = {"model", "f1", "recall", "precision"}
+    missing = sorted(required - set(validation_comparison.columns))
+    if missing:
+        raise KeyError(f"Validation 모델 비교표에 필요한 컬럼이 없습니다: {missing}")
+
+    candidates = validation_comparison.loc[
+        ~validation_comparison["model"].eq("Dummy Most Frequent")
+    ].sort_values(
+        ["f1", "recall", "precision", "model"],
+        ascending=[False, False, False, True],
+    )
+    if candidates.empty:
+        raise ValueError("선택할 비베이스라인 모델이 없습니다.")
+    return str(candidates.iloc[0]["model"])
 
 
 def threshold_metrics(
@@ -673,21 +747,17 @@ def threshold_metrics(
     y_proba: np.ndarray,
     thresholds: list[float] | None = None,
 ) -> pd.DataFrame:
-    """검증 데이터에서 여러 임계값의 분류 지표를 계산합니다."""
+    """Evaluate probability thresholds on validation data."""
     thresholds = thresholds or [
-        round(value, 2)
-        for value in np.arange(0.2, 0.81, 0.05)
+        round(value, 2) for value in np.arange(0.2, 0.81, 0.05)
     ]
     rows = []
     for threshold in thresholds:
         y_pred = (y_proba >= threshold).astype(int)
         rows.append(
             {
-                "threshold": threshold,
-                **evaluate_classification_predictions(
-                    y_true,
-                    y_pred,
-                ),
+                "threshold": float(threshold),
+                **evaluate_classification_predictions(y_true, y_pred),
             }
         )
     return pd.DataFrame(rows)
@@ -698,10 +768,9 @@ def choose_threshold(
     *,
     default_threshold: float = 0.5,
 ) -> float:
-    """검증 데이터에서 F1, recall, precision 순으로 임계값을 선택합니다."""
+    """Choose validation threshold by F1, recall, precision, then lower threshold."""
     if threshold_df.empty:
         return default_threshold
-
     ranked = threshold_df.sort_values(
         ["f1", "recall", "precision", "threshold"],
         ascending=[False, False, False, True],
@@ -716,7 +785,9 @@ def final_test_evaluation(
     *,
     threshold: float,
 ) -> tuple[np.ndarray, np.ndarray, pd.DataFrame]:
-    """선택한 모델과 임계값을 테스트 데이터에서 한 번 평가합니다."""
+    """Evaluate one frozen model/threshold pair on final test."""
+    if not 0 <= threshold <= 1:
+        raise ValueError("threshold는 0과 1 사이여야 합니다.")
     y_proba = model.predict_proba(X_test)[:, 1]
     y_pred = (y_proba >= threshold).astype(int)
     metrics = pd.DataFrame(
@@ -724,10 +795,7 @@ def final_test_evaluation(
             {
                 "evaluation_split": "test",
                 "threshold": threshold,
-                **evaluate_classification_predictions(
-                    y_test,
-                    y_pred,
-                ),
+                **evaluate_classification_predictions(y_test, y_pred),
             }
         ]
     )
@@ -738,7 +806,7 @@ def confusion_matrix_dataframe(
     y_true: pd.Series,
     y_pred: np.ndarray,
 ) -> pd.DataFrame:
-    """혼동행렬을 읽기 쉬운 DataFrame으로 반환합니다."""
+    """Return a readable binary confusion matrix."""
     matrix = confusion_matrix(y_true, y_pred, labels=[0, 1])
     return pd.DataFrame(
         matrix,
@@ -751,7 +819,7 @@ def classification_report_dataframe(
     y_true: pd.Series,
     y_pred: np.ndarray,
 ) -> pd.DataFrame:
-    """classification_report를 DataFrame으로 반환합니다."""
+    """Return sklearn classification_report as a DataFrame."""
     report = classification_report(
         y_true,
         y_pred,
@@ -760,11 +828,7 @@ def classification_report_dataframe(
         zero_division=0,
         output_dict=True,
     )
-    return (
-        pd.DataFrame(report)
-        .T.reset_index()
-        .rename(columns={"index": "label"})
-    )
+    return pd.DataFrame(report).T.reset_index().rename(columns={"index": "label"})
 
 
 def create_prediction_result(
@@ -776,12 +840,14 @@ def create_prediction_result(
     model_name: str,
     threshold: float,
 ) -> pd.DataFrame:
-    """개인정보를 제외한 테스트 예측 결과표를 생성합니다."""
+    """Create internal test predictions with a source index for traceability."""
+    if not (len(source_index) == len(y_test) == len(y_pred) == len(y_proba)):
+        raise ValueError("테스트 데이터와 예측 결과 길이가 일치하지 않습니다.")
+
     return pd.DataFrame(
         {
             "record_id": [
-                f"test_{position:04d}"
-                for position in range(1, len(y_test) + 1)
+                f"test_{position:04d}" for position in range(1, len(y_test) + 1)
             ],
             "source_index": source_index.to_numpy(),
             "actual_is_cancelled": y_test.to_numpy(),
@@ -793,32 +859,118 @@ def create_prediction_result(
     )
 
 
+def public_prediction_result(prediction_result: pd.DataFrame) -> pd.DataFrame:
+    """Remove internal source references from public predictions."""
+    public_columns = [
+        "record_id",
+        "actual_is_cancelled",
+        "predicted_is_cancelled",
+        "cancel_probability",
+        "model",
+        "threshold",
+    ]
+    return prediction_result[public_columns].copy()
+
+
 def build_classification_checklist() -> pd.DataFrame:
-    """분류 모델링과 LLM 생성 코드 검토 체크리스트를 반환합니다."""
+    """Return the human-review checklist for classification and LLM code."""
     items = [
         "completed와 cancelled만 사용해 이진 타깃을 만들었는가?",
         "refunded 등 다른 상태를 0 클래스에 섞지 않았는가?",
-        "order_status와 타깃 파생 컬럼을 feature에서 제외했는가?",
-        "병합에 validate를 사용하고 미매칭 건수를 확인했는가?",
+        "예측 시점과 feature 가용성 가정을 설명할 수 있는가?",
+        "line_total = quantity × unit_price를 검증했는가?",
+        "병합에 validate를 사용하고 미매칭 0건을 확인했는가?",
+        "order_status, target, ID, 사후 정보를 feature에서 제외했는가?",
         "train, validation, test를 분리했는가?",
-        "모델과 임계값은 validation에서 선택했는가?",
-        "test는 최종 평가에 한 번만 사용했는가?",
+        "모델과 threshold는 validation에서 선택했는가?",
+        "모델과 threshold를 고정한 뒤 test를 한 번만 사용했는가?",
         "Dummy 기준 모델과 비교했는가?",
-        "accuracy 외 precision, recall, f1을 함께 확인했는가?",
+        "accuracy 외 precision, recall, F1과 FP/FN을 함께 확인했는가?",
+        "공개 prediction에서 내부 source index와 식별자를 제거했는가?",
+        "random split의 교육용 한계를 기록했는가?",
         "모델 결과를 취소 원인으로 단정하지 않았는가?",
-        "예측 결과에 고객명 등 개인정보가 포함되지 않았는가?",
     ]
-    return pd.DataFrame(
-        {
-            "check_item": items,
-            "status": ["□"] * len(items),
-        }
+    return pd.DataFrame({"check_item": items, "status": ["□"] * len(items)})
+
+
+def build_classification_validation(
+    *,
+    model_data: pd.DataFrame,
+    features: list[str],
+    merge_checks: pd.DataFrame,
+    y_train: pd.Series,
+    y_valid: pd.Series,
+    y_test: pd.Series,
+    validation_comparison: pd.DataFrame,
+    selected_model_name: str,
+    threshold_df: pd.DataFrame,
+    selected_threshold: float,
+    prediction_result_public: pd.DataFrame,
+) -> pd.DataFrame:
+    """Create machine-checkable Chapter10 contract evidence."""
+    target_ok = set(model_data[TARGET_COLUMN].dropna().unique()) == {0, 1}
+    leaked = sorted(set(features) & FORBIDDEN_FEATURES)
+    merge_ok = bool(
+        not merge_checks.empty
+        and merge_checks["row_count_preserved"].eq(True).all()
+        and merge_checks["unmatched_count"].eq(0).all()
     )
+    split_ok = all(
+        set(target.unique()) == {0, 1}
+        for target in [y_train, y_valid, y_test]
+    )
+    selected_model_ok = (
+        selected_model_name in set(validation_comparison["model"])
+        and selected_model_name != "Dummy Most Frequent"
+    )
+    selected_threshold_ok = bool(
+        np.isclose(
+            threshold_df["threshold"].astype(float).to_numpy(),
+            selected_threshold,
+        ).any()
+    )
+    public_forbidden = {
+        "source_index",
+        "order_id",
+        "customer_id",
+        "product_id",
+    }
+    public_privacy_ok = not (
+        set(prediction_result_public.columns) & public_forbidden
+    )
+
+    rows = [
+        ["binary_target_contract", target_ok, target_ok],
+        ["forbidden_feature_overlap", len(leaked), not leaked],
+        ["strict_merge_contract", merge_ok, merge_ok],
+        ["all_splits_have_two_classes", split_ok, split_ok],
+        ["selected_model_from_validation", selected_model_ok, selected_model_ok],
+        [
+            "selected_threshold_from_validation",
+            selected_threshold_ok,
+            selected_threshold_ok,
+        ],
+        ["public_prediction_privacy", public_privacy_ok, public_privacy_ok],
+        ["test_rows_for_metrics", len(y_test), len(y_test) >= 2],
+    ]
+    validation = pd.DataFrame(rows, columns=["check", "value", "passed"])
+    validation["status"] = validation["passed"].map(
+        {True: "PASS", False: "FAIL"}
+    )
+    failed = validation.loc[validation["status"].eq("FAIL")]
+    if not failed.empty:
+        raise ValueError(
+            "Chapter10 핵심 검증에 실패했습니다:\n"
+            + failed.to_string(index=False)
+        )
+    return validation.drop(columns="passed")
 
 
 def build_classification_report_text(
     model_data: pd.DataFrame,
     target_dist: pd.DataFrame,
+    feature_audit: pd.DataFrame,
+    merge_checks: pd.DataFrame,
     split_summary: pd.DataFrame,
     validation_comparison: pd.DataFrame,
     selected_model_name: str,
@@ -826,77 +978,84 @@ def build_classification_report_text(
     threshold_df: pd.DataFrame,
     test_metrics: pd.DataFrame,
     confusion_df: pd.DataFrame,
+    validation: pd.DataFrame,
     checklist: pd.DataFrame,
 ) -> str:
-    """분류 분석 결과 보고서 Markdown 문자열을 생성합니다."""
+    """Build the public Markdown summary report."""
     return f"""# Chapter 10 분류 분석 요약 보고서
 
-## 1. 분석 목적
+## 1. 분석 목적과 타깃
+완료 주문과 취소 주문만 사용해 주문 취소 여부를 예측합니다.
 
-온라인 쇼핑몰의 완료 주문과 취소 주문을 사용해 주문 취소 여부를 예측하는 이진 분류 모델을 만들었습니다.
+- completed = 0
+- cancelled = 1
+- refunded 및 기타 상태 = 모델링 범위 제외
 
-## 2. 모델링 데이터 개요
-
+## 2. 모델링 데이터
 - 행 수: {model_data.shape[0]}
-- 열 수: {model_data.shape[1]}
-- 0 클래스: completed
-- 1 클래스: cancelled
-- refunded 등 다른 주문 상태는 이진 분류 대상에서 제외
+- 예측 대상: {TARGET_COLUMN}
 
 ## 3. 타깃 클래스 분포
-
 ```text
 {target_dist.to_string(index=False)}
 ```
 
-## 4. 데이터 분할
+## 4. Feature Audit
+```text
+{feature_audit.to_string(index=False)}
+```
 
+## 5. 병합 검증
+```text
+{merge_checks.to_string(index=False)}
+```
+
+## 6. Train / Validation / Test
 ```text
 {split_summary.to_string(index=False)}
 ```
 
-## 5. 검증 데이터 모델 비교
-
+## 7. Validation 모델 비교
 ```text
 {validation_comparison.to_string(index=False)}
 ```
 
-- 선택 모델: {selected_model_name}
+선택 모델: **{selected_model_name}**
 
-## 6. 검증 데이터 임계값 비교
-
+## 8. Validation Threshold 비교
 ```text
 {threshold_df.to_string(index=False)}
 ```
 
-- 선택 임계값: {selected_threshold:.2f}
+선택 threshold: **{selected_threshold:.2f}**
 
-## 7. 최종 테스트 성능
-
+## 9. Final Test
 ```text
 {test_metrics.to_string(index=False)}
 ```
 
-## 8. 테스트 혼동행렬
-
+## 10. Confusion Matrix
 ```text
 {confusion_df.to_string()}
 ```
 
-## 9. LLM 코드 검토 체크리스트
+## 11. 자동 Validation Evidence
+```text
+{validation.to_string(index=False)}
+```
 
+## 12. 사람 검토 체크리스트
 ```text
 {checklist.to_string(index=False)}
 ```
 
-## 10. 해석 시 주의사항
-
-- 모델과 임계값은 validation 데이터에서 선택했습니다.
-- test 데이터는 최종 성능 확인에 한 번만 사용했습니다.
-- 정확도만 보지 않고 precision, recall, f1을 함께 확인했습니다.
-- 현재 결과는 샘플 데이터와 선택한 feature 범위에 한정됩니다.
-- 모델이 학습한 것은 상관 패턴이며 주문 취소의 원인을 증명하지 않습니다.
-- 실제 서비스 적용 전에는 시간 순서 분할, 비용 기준, 재학습 주기, 공정성 검토가 필요합니다.
+## 13. 해석 시 주의사항
+- 모델과 threshold는 Validation에서 선택했습니다.
+- Final Test는 선택이 끝난 뒤 마지막 평가에만 사용했습니다.
+- accuracy뿐 아니라 precision, recall, F1과 FP/FN을 함께 봅니다.
+- random split은 교육용 설계이며 실제 운영 전에는 out-of-time 평가가 필요합니다.
+- 모델이 학습한 예측 패턴을 취소의 원인으로 단정하지 않습니다.
+- 공개 prediction에는 내부 source index나 원본 식별자를 포함하지 않습니다.
 """
 
 
@@ -904,25 +1063,28 @@ def save_classification_outputs(
     *,
     model_data: pd.DataFrame,
     target_dist: pd.DataFrame,
+    feature_audit: pd.DataFrame,
     merge_checks: pd.DataFrame,
     data_quality_checks: pd.DataFrame,
     split_summary: pd.DataFrame,
     validation_comparison: pd.DataFrame,
     threshold_df: pd.DataFrame,
     test_metrics: pd.DataFrame,
-    prediction_result: pd.DataFrame,
+    prediction_result_internal: pd.DataFrame,
+    prediction_result_public: pd.DataFrame,
     confusion_df: pd.DataFrame,
     report_df: pd.DataFrame,
+    validation: pd.DataFrame,
     checklist: pd.DataFrame,
     selected_model_name: str,
     selected_threshold: float,
     report_dir: str | Path = "reports",
 ) -> dict[str, Path]:
-    """분류 분석 결과표와 보고서를 저장합니다."""
+    """Save internal evidence and privacy-safe public outputs separately."""
     output_dir = Path(report_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    safe_model_columns = [
+    internal_columns = [
         column
         for column in [
             "order_id",
@@ -933,19 +1095,16 @@ def save_classification_outputs(
         ]
         if column in model_data.columns
     ]
-    safe_model_data = model_data[safe_model_columns].copy()
+    internal_model_data = model_data[internal_columns].copy()
 
     paths = {
-        "model_data": (
-            output_dir / "ch10_classification_model_data.csv"
+        "model_data_internal": (
+            output_dir / "ch10_classification_model_data_internal.csv"
         ),
-        "target_distribution": (
-            output_dir / "ch10_target_distribution.csv"
-        ),
+        "target_distribution": output_dir / "ch10_target_distribution.csv",
+        "feature_audit": output_dir / "ch10_feature_audit.csv",
         "merge_checks": output_dir / "ch10_merge_checks.csv",
-        "data_quality_checks": (
-            output_dir / "ch10_data_quality_checks.csv"
-        ),
+        "data_quality_checks": output_dir / "ch10_data_quality_checks.csv",
         "split_summary": output_dir / "ch10_split_summary.csv",
         "validation_comparison": (
             output_dir / "ch10_validation_model_comparison.csv"
@@ -954,84 +1113,44 @@ def save_classification_outputs(
             output_dir / "ch10_validation_threshold_metrics.csv"
         ),
         "test_metrics": output_dir / "ch10_test_metrics.csv",
-        "predictions": (
-            output_dir / "ch10_classification_predictions.csv"
+        "predictions_internal": (
+            output_dir / "ch10_classification_predictions_internal.csv"
         ),
-        "confusion_matrix": (
-            output_dir / "ch10_confusion_matrix.csv"
-        ),
+        "predictions": output_dir / "ch10_classification_predictions.csv",
+        "confusion_matrix": output_dir / "ch10_confusion_matrix.csv",
         "classification_report": (
             output_dir / "ch10_classification_report.csv"
         ),
-        "checklist": (
-            output_dir / "ch10_classification_checklist.csv"
-        ),
+        "validation": output_dir / "ch10_classification_validation.csv",
+        "checklist": output_dir / "ch10_classification_checklist.csv",
         "report": output_dir / "ch10_classification_summary.md",
     }
 
-    safe_model_data.to_csv(
-        paths["model_data"],
-        index=False,
-        encoding="utf-8-sig",
-    )
-    target_dist.to_csv(
-        paths["target_distribution"],
-        index=False,
-        encoding="utf-8-sig",
-    )
-    merge_checks.to_csv(
-        paths["merge_checks"],
-        index=False,
-        encoding="utf-8-sig",
-    )
-    data_quality_checks.to_csv(
-        paths["data_quality_checks"],
-        index=False,
-        encoding="utf-8-sig",
-    )
-    split_summary.to_csv(
-        paths["split_summary"],
-        index=False,
-        encoding="utf-8-sig",
-    )
-    validation_comparison.to_csv(
-        paths["validation_comparison"],
-        index=False,
-        encoding="utf-8-sig",
-    )
-    threshold_df.to_csv(
-        paths["threshold_metrics"],
-        index=False,
-        encoding="utf-8-sig",
-    )
-    test_metrics.to_csv(
-        paths["test_metrics"],
-        index=False,
-        encoding="utf-8-sig",
-    )
-    prediction_result.to_csv(
-        paths["predictions"],
-        index=False,
-        encoding="utf-8-sig",
-    )
-    confusion_df.to_csv(
-        paths["confusion_matrix"],
-        encoding="utf-8-sig",
-    )
-    report_df.to_csv(
-        paths["classification_report"],
-        index=False,
-        encoding="utf-8-sig",
-    )
-    checklist.to_csv(
-        paths["checklist"],
-        index=False,
-        encoding="utf-8-sig",
-    )
+    csv_objects = {
+        "model_data_internal": internal_model_data,
+        "target_distribution": target_dist,
+        "feature_audit": feature_audit,
+        "merge_checks": merge_checks,
+        "data_quality_checks": data_quality_checks,
+        "split_summary": split_summary,
+        "validation_comparison": validation_comparison,
+        "threshold_metrics": threshold_df,
+        "test_metrics": test_metrics,
+        "predictions_internal": prediction_result_internal,
+        "predictions": prediction_result_public,
+        "classification_report": report_df,
+        "validation": validation,
+        "checklist": checklist,
+    }
+    for key, frame in csv_objects.items():
+        frame.to_csv(paths[key], index=False, encoding="utf-8-sig")
+    confusion_df.to_csv(paths["confusion_matrix"], encoding="utf-8-sig")
 
     report_text = build_classification_report_text(
         model_data=model_data,
         target_dist=target_dist,
+        feature_audit=feature_audit,
+        merge_checks=merge_checks,
         split_summary=split_summary,
         validation_comparison=validation_comparison,
         selected_model_name=selected_model_name,
@@ -1039,6 +1158,7 @@ def save_classification_outputs(
         threshold_df=threshold_df,
         test_metrics=test_metrics,
         confusion_df=confusion_df,
+        validation=validation,
         checklist=checklist,
     )
     paths["report"].write_text(report_text, encoding="utf-8")
@@ -1050,7 +1170,7 @@ def run_classification_analysis(
     report_dir: str | Path = "reports",
     random_state: int = 42,
 ) -> dict[str, object]:
-    """10장 분류 분석 전체 파이프라인을 실행합니다."""
+    """Run the complete Chapter10 pipeline with protected final test."""
     data = load_classification_source_data(processed_dir)
 
     (
@@ -1063,6 +1183,11 @@ def run_classification_analysis(
         customers=data["customers"],
         orders=data["orders"],
         order_items=data["order_items"],
+    )
+    features = numeric_features + categorical_features
+    feature_audit = build_feature_audit(
+        numeric_features=numeric_features,
+        categorical_features=categorical_features,
     )
     target_dist = target_distribution(model_data)
 
@@ -1080,11 +1205,7 @@ def run_classification_analysis(
         categorical_features=categorical_features,
         random_state=random_state,
     )
-    split_summary = build_split_summary(
-        y_train,
-        y_valid,
-        y_test,
-    )
+    split_summary = build_split_summary(y_train, y_valid, y_test)
 
     (
         models,
@@ -1101,22 +1222,14 @@ def run_classification_analysis(
         random_state=random_state,
     )
 
-    non_dummy_comparison = validation_comparison[
-        validation_comparison["model"] != "Dummy Most Frequent"
-    ]
-    if non_dummy_comparison.empty:
-        raise ValueError("비교 가능한 학습 모델이 없습니다.")
-
-    selected_model_name = str(
-        non_dummy_comparison.iloc[0]["model"]
-    )
+    selected_model_name = select_validation_model(validation_comparison)
     selected_model = models[selected_model_name]
-    validation_proba = validation_probabilities[
-        selected_model_name
-    ]
+    if selected_model_name not in validation_probabilities:
+        raise ValueError("선택 모델의 Validation probability가 없습니다.")
+
     threshold_df = threshold_metrics(
         y_valid,
-        validation_proba,
+        validation_probabilities[selected_model_name],
     )
     selected_threshold = choose_threshold(threshold_df)
 
@@ -1126,15 +1239,10 @@ def run_classification_analysis(
         y_test,
         threshold=selected_threshold,
     )
-    confusion_df = confusion_matrix_dataframe(
-        y_test,
-        y_pred_test,
-    )
-    report_df = classification_report_dataframe(
-        y_test,
-        y_pred_test,
-    )
-    prediction_result = create_prediction_result(
+    confusion_df = confusion_matrix_dataframe(y_test, y_pred_test)
+    report_df = classification_report_dataframe(y_test, y_pred_test)
+
+    prediction_result_internal = create_prediction_result(
         source_index=X_test.index,
         y_test=y_test,
         y_pred=y_pred_test,
@@ -1142,20 +1250,39 @@ def run_classification_analysis(
         model_name=selected_model_name,
         threshold=selected_threshold,
     )
+    prediction_result_public = public_prediction_result(
+        prediction_result_internal
+    )
+    validation = build_classification_validation(
+        model_data=model_data,
+        features=features,
+        merge_checks=merge_checks,
+        y_train=y_train,
+        y_valid=y_valid,
+        y_test=y_test,
+        validation_comparison=validation_comparison,
+        selected_model_name=selected_model_name,
+        threshold_df=threshold_df,
+        selected_threshold=selected_threshold,
+        prediction_result_public=prediction_result_public,
+    )
     checklist = build_classification_checklist()
 
     output_paths = save_classification_outputs(
         model_data=model_data,
         target_dist=target_dist,
+        feature_audit=feature_audit,
         merge_checks=merge_checks,
         data_quality_checks=data_quality_checks,
         split_summary=split_summary,
         validation_comparison=validation_comparison,
         threshold_df=threshold_df,
         test_metrics=test_metrics,
-        prediction_result=prediction_result,
+        prediction_result_internal=prediction_result_internal,
+        prediction_result_public=prediction_result_public,
         confusion_df=confusion_df,
         report_df=report_df,
+        validation=validation,
         checklist=checklist,
         selected_model_name=selected_model_name,
         selected_threshold=selected_threshold,
@@ -1168,6 +1295,7 @@ def run_classification_analysis(
         "numeric_features": numeric_features,
         "categorical_features": categorical_features,
         "features": features,
+        "feature_audit": feature_audit,
         "target_distribution": target_dist,
         "merge_checks": merge_checks,
         "data_quality_checks": data_quality_checks,
@@ -1186,9 +1314,11 @@ def run_classification_analysis(
         "selected_threshold": selected_threshold,
         "threshold_metrics": threshold_df,
         "test_metrics": test_metrics,
-        "prediction_result": prediction_result,
+        "prediction_result": prediction_result_public,
+        "prediction_result_internal": prediction_result_internal,
         "confusion_matrix": confusion_df,
         "classification_report": report_df,
+        "validation": validation,
         "checklist": checklist,
         "output_paths": output_paths,
     }
