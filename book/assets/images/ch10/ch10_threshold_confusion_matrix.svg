@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">임계값에 따라 달라지는 Precision Recall FP FN</title>
+  <desc id="desc">Threshold 변화와 confusion matrix의 FP FN 의미를 설명하는 Chapter 10 도식</desc>
+  <defs><style>.t{font-family:'Malgun Gothic','Pretendard','Noto Sans KR',sans-serif;fill:#14213d}.h{font-size:44px;font-weight:700}.s{font-size:24px}.ch{font-size:28px;font-weight:700}.b{font-size:21px}.small{font-size:18px}.card{fill:#f8fbff;stroke:#8fb7df;stroke-width:2}.good{fill:#ecfdf5}.warn{fill:#fff7ed}.bad{fill:#fff1f2}</style></defs>
+  <rect width="1600" height="900" fill="#fff"/>
+  <text x="80" y="88" class="t h">임계값에 따라 달라지는 Precision · Recall · FP · FN</text>
+  <text x="80" y="130" class="t s">기본값 0.5를 자동으로 믿지 말고 Validation에서 업무 기준과 함께 선택합니다.</text>
+
+  <rect class="card" x="80" y="195" width="650" height="520" rx="22"/>
+  <text x="405" y="250" class="t ch" text-anchor="middle">Threshold 변화</text>
+  <line x1="165" y1="390" x2="645" y2="390" stroke="#64748b" stroke-width="10" stroke-linecap="round"/>
+  <circle cx="405" cy="390" r="28" fill="#2563eb"/>
+  <text x="405" y="345" class="t b" text-anchor="middle">현재 임계값</text>
+  <text x="165" y="430" class="t small" text-anchor="middle">낮음</text><text x="645" y="430" class="t small" text-anchor="middle">높음</text>
+
+  <rect x="130" y="490" width="250" height="150" rx="16" class="good" stroke="#22c55e" stroke-width="2"/>
+  <text x="255" y="535" class="t ch" text-anchor="middle">Threshold ↓</text><text x="255" y="575" class="t b" text-anchor="middle">Recall ↑ 가능</text><text x="255" y="610" class="t b" text-anchor="middle">FP ↑ 가능</text>
+  <rect x="430" y="490" width="250" height="150" rx="16" class="warn" stroke="#f59e0b" stroke-width="2"/>
+  <text x="555" y="535" class="t ch" text-anchor="middle">Threshold ↑</text><text x="555" y="575" class="t b" text-anchor="middle">FP ↓ 가능</text><text x="555" y="610" class="t b" text-anchor="middle">FN ↑ 가능</text>
+
+  <rect class="card" x="790" y="195" width="730" height="520" rx="22"/>
+  <text x="1155" y="250" class="t ch" text-anchor="middle">Confusion Matrix</text>
+  <text x="1120" y="310" class="t b" text-anchor="middle">예측 완료</text><text x="1375" y="310" class="t b" text-anchor="middle">예측 취소</text>
+  <text x="865" y="390" class="t b">실제 완료</text><text x="865" y="545" class="t b">실제 취소</text>
+  <rect x="1000" y="335" width="230" height="130" rx="14" class="good" stroke="#22c55e" stroke-width="2"/><text x="1115" y="395" class="t ch" text-anchor="middle">TN</text><text x="1115" y="430" class="t small" text-anchor="middle">완료를 완료로</text>
+  <rect x="1260" y="335" width="230" height="130" rx="14" class="warn" stroke="#f59e0b" stroke-width="2"/><text x="1375" y="395" class="t ch" text-anchor="middle">FP</text><text x="1375" y="430" class="t small" text-anchor="middle">불필요한 위험 경고</text>
+  <rect x="1000" y="490" width="230" height="130" rx="14" class="bad" stroke="#ef4444" stroke-width="2"/><text x="1115" y="550" class="t ch" text-anchor="middle">FN</text><text x="1115" y="585" class="t small" text-anchor="middle">실제 취소를 놓침</text>
+  <rect x="1260" y="490" width="230" height="130" rx="14" class="good" stroke="#22c55e" stroke-width="2"/><text x="1375" y="550" class="t ch" text-anchor="middle">TP</text><text x="1375" y="585" class="t small" text-anchor="middle">취소를 취소로</text>
+
+  <rect x="170" y="775" width="1260" height="72" rx="16" fill="#eef6ff" stroke="#2b6cb0" stroke-width="2"/>
+  <text x="800" y="821" class="t ch" text-anchor="middle">어떤 오류가 더 비싼지는 모델이 아니라 업무 목적과 비용이 결정합니다.</text>
+</svg>
