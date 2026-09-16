@@ -1,5 +1,6 @@
 name: Chapter15 Public QA
 
+# Final-project release QA. Keep Linux and Windows behavior aligned.
 on:
   workflow_dispatch:
   push:
