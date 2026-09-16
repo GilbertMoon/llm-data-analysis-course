@@ -1,6 +1,6 @@
 name: Chapter15 Public QA
 
-# Final-project release QA after Chapter10/15 compatibility alignment.
+# Final-project release QA after Chapter10 and public Chapter08 contract alignment.
 on:
   workflow_dispatch:
   push:
