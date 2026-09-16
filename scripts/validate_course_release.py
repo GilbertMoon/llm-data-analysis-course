@@ -12,6 +12,11 @@ import sys
 from pathlib import Path
 
 
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
+if hasattr(sys.stderr, "reconfigure"):
+    sys.stderr.reconfigure(encoding="utf-8")
+
 ROOT = Path(__file__).resolve().parents[1]
 REPORT_DIR = ROOT / "tmp" / "course_release_qa"
 REPORT_PATH = REPORT_DIR / "qa_report.json"
@@ -84,7 +89,11 @@ def validate_notebook(path: Path, chapter: int) -> tuple[bool, str]:
         for cell in data.get("cells", [])
         if cell.get("cell_type") == "markdown"
     )
-    chapter_marker = re.search(rf"(?:Chapter\s*{chapter:02d}|Chapter\s*{chapter}|{chapter}장)", markdown, re.I)
+    chapter_marker = re.search(
+        rf"(?:Chapter\s*{chapter:02d}|Chapter\s*{chapter}|{chapter}장)",
+        markdown,
+        re.I,
+    )
     return bool(valid_format and chapter_marker), (
         f"nbformat={data.get('nbformat')}; cells={len(data.get('cells', []))}; "
         f"chapter_marker={bool(chapter_marker)}"
