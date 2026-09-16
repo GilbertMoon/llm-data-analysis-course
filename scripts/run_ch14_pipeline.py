@@ -1,10 +1,11 @@
 """Run the Chapter 14 validated local analysis pipeline.
 
-Run from any working directory:
+Run from the project root or any working directory:
 
     python scripts/run_ch14_pipeline.py
 
-The same functions are used by the Airflow TaskFlow Dag.
+The same core functions are used by the canonical Airflow TaskFlow DAG.  This
+script performs no Docker/Airflow startup and no external delivery.
 """
 
 from __future__ import annotations
@@ -22,10 +23,12 @@ from src.automation_pipeline import run_local_pipeline  # noqa: E402
 
 
 def main() -> None:
-    """Run the local pipeline and print the validation summary."""
+    """Run the local pipeline and print validation evidence."""
     result = run_local_pipeline(PROJECT_ROOT)
 
     print("14장 로컬 분석 파이프라인 완료")
+    print(f"Pipeline Run ID: {result['pipeline_run_id']}")
+
     print("\n[입력 파일 확인]")
     print(result["input_check"].to_string(index=False))
 
@@ -51,9 +54,10 @@ def main() -> None:
         result["validation_log"]["status"].ne("ok")
     ]
     if not failed.empty:
-        raise SystemExit("검증 실패 항목이 있습니다.")
+        raise SystemExit("검증 실패 항목이 있습니다. 외부 전달 단계로 진행하지 마세요.")
 
     print("\n모든 검증 항목이 ok입니다.")
+    print("외부 전달을 설계한다면 이 validation PASS 이후 단계에서만 진행합니다.")
 
 
 if __name__ == "__main__":
