@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Train Validation Test의 서로 다른 역할</title>
+  <desc id="desc">학습, 선택, 최종 평가를 분리하는 Chapter 10 데이터 분할 역할 설명</desc>
+  <defs><marker id="a" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#2b6cb0"/></marker><style>.t{font-family:'Malgun Gothic','Pretendard','Noto Sans KR',sans-serif;fill:#14213d}.h{font-size:44px;font-weight:700}.s{font-size:24px}.ch{font-size:30px;font-weight:700}.b{font-size:21px}.small{font-size:18px}.train{fill:#eff6ff;stroke:#3b82f6;stroke-width:3}.valid{fill:#ecfdf5;stroke:#22c55e;stroke-width:3}.test{fill:#fff7ed;stroke:#f59e0b;stroke-width:3}.bad{fill:#fff1f2;stroke:#ef4444;stroke-width:2}.arrow{stroke:#2b6cb0;stroke-width:5;fill:none;marker-end:url(#a)}</style></defs>
+  <rect width="1600" height="900" fill="#fff"/>
+  <text x="80" y="88" class="t h">Train · Validation · Test의 서로 다른 역할</text>
+  <text x="80" y="130" class="t s">Validation은 선택하는 곳, Test는 선택이 끝난 뒤 확인하는 곳입니다.</text>
+
+  <rect class="train" x="110" y="220" width="380" height="300" rx="24"/>
+  <text x="300" y="285" class="t ch" text-anchor="middle">Train</text>
+  <text x="300" y="355" class="t b" text-anchor="middle">전처리 규칙 학습</text><text x="300" y="400" class="t b" text-anchor="middle">모델 파라미터 학습</text><text x="300" y="455" class="t small" text-anchor="middle">Pipeline fit은 여기서만</text>
+
+  <rect class="valid" x="610" y="220" width="380" height="300" rx="24"/>
+  <text x="800" y="285" class="t ch" text-anchor="middle">Validation</text>
+  <text x="800" y="355" class="t b" text-anchor="middle">모델 선택</text><text x="800" y="400" class="t b" text-anchor="middle">Threshold 선택</text><text x="800" y="455" class="t small" text-anchor="middle">선택 완료 → Freeze</text>
+
+  <rect class="test" x="1110" y="220" width="380" height="300" rx="24"/>
+  <text x="1300" y="285" class="t ch" text-anchor="middle">Final Test</text>
+  <text x="1300" y="355" class="t b" text-anchor="middle">Frozen Model 평가</text><text x="1300" y="400" class="t b" text-anchor="middle">Frozen Threshold 평가</text><text x="1300" y="455" class="t small" text-anchor="middle">마지막 확인에만 사용</text>
+
+  <path class="arrow" d="M490 370 H598"/><path class="arrow" d="M990 370 H1098"/>
+
+  <rect class="bad" x="160" y="600" width="1280" height="105" rx="18"/>
+  <text x="800" y="640" class="t ch" text-anchor="middle">잘못된 흐름</text>
+  <text x="800" y="680" class="t b" text-anchor="middle">Test 확인 → 모델 또는 Threshold 변경 → 같은 Test 재확인</text>
+  <text x="1370" y="665" font-family="Arial,sans-serif" font-size="52" font-weight="700" fill="#ef4444">×</text>
+
+  <rect x="160" y="760" width="1280" height="85" rx="16" fill="#f8fafc" stroke="#94a3b8" stroke-width="2"/>
+  <text x="800" y="795" class="t small" text-anchor="middle">이 교재의 stratified random split은 Validation/Test 역할을 배우기 위한 교육용 설계입니다.</text>
+  <text x="800" y="825" class="t small" text-anchor="middle">실제 운영 전에는 시간 순서 또는 out-of-time 평가를 추가해야 합니다.</text>
+</svg>
