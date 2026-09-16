@@ -49,8 +49,8 @@ def prepare_workspace(path: Path) -> None:
         shutil.copy2(source, raw_dir / name)
 
 
-def read_csv(path: Path) -> pd.DataFrame:
-    return pd.read_csv(path)
+def read_csv(path: Path, **kwargs: object) -> pd.DataFrame:
+    return pd.read_csv(path, **kwargs)
 
 
 def main() -> None:
