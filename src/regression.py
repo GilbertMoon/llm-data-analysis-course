@@ -89,7 +89,7 @@ def make_one_hot_encoder() -> OneHotEncoder:
 def load_regression_source_data(
     processed_dir: str | Path = "data/processed",
 ) -> dict[str, pd.DataFrame]:
-    """Load only Chapter 5 processed files; never silently fall back to raw data."""
+    """Load Chapter09 validated processed files; never silently fall back to raw data."""
     input_dir = Path(processed_dir)
     file_map = {
         "customers": input_dir / "customers_clean.csv",
@@ -99,7 +99,7 @@ def load_regression_source_data(
     missing_files = [path for path in file_map.values() if not path.exists()]
     if missing_files:
         raise FileNotFoundError(
-            "전처리 파일이 없습니다. 먼저 `python scripts/preprocess_data.py`를 실행하세요. "
+            "Chapter09 모델링 입력이 없습니다. 먼저 `python scripts/prepare_ch09_data.py`를 실행하세요. "
             + "누락 파일: "
             + ", ".join(str(path) for path in missing_files)
         )
