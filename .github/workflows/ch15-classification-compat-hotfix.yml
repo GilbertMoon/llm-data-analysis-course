@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/ch15-classification-compat-hotfix.yml'
+      - 'scripts/_ch15_patch_classification_compat.py'
 
 permissions:
   contents: write
