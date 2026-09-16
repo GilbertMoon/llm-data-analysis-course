@@ -1,0 +1,57 @@
+name: Course Release QA
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "README.md"
+      - "notebooks/**"
+      - "practice/**"
+      - "scripts/validate_course_release.py"
+      - ".github/workflows/ch*-public-qa.yml"
+      - ".github/workflows/course-release-qa.yml"
+      - ".gitignore"
+      - "automation/airflow/**"
+  pull_request:
+    paths:
+      - "README.md"
+      - "notebooks/**"
+      - "practice/**"
+      - "scripts/validate_course_release.py"
+      - ".github/workflows/ch*-public-qa.yml"
+      - ".github/workflows/course-release-qa.yml"
+      - ".gitignore"
+      - "automation/airflow/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Run course release QA
+        run: python scripts/validate_course_release.py
+
+      - name: Upload QA report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: course-release-qa-${{ runner.os }}
+          path: tmp/course_release_qa/qa_report.json
+          if-no-files-found: warn
