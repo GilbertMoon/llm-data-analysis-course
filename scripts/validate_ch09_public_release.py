@@ -1,6 +1,6 @@
 """Chapter 09 Public release QA.
 
-실제 data/processed를 사용해 회귀 파이프라인을 임시 출력 폴더에서 실행하고,
+Chapter05 전처리 전용 Raw 데이터를 QA 임시 폴더에 전처리한 뒤 회귀 파이프라인을 실행하고,
 Train-only 모델 선택, Final Test 보호, Evidence, Notebook, 실습 문서 계약을 확인합니다.
 """
 
@@ -19,6 +19,8 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from src.data_loader import load_sales_data  # noqa: E402
+from src.preprocessing import preprocess_sales_data, save_processed_data  # noqa: E402
 from src.regression import (  # noqa: E402
     FORBIDDEN_FEATURES,
     run_regression_analysis,
@@ -26,9 +28,11 @@ from src.regression import (  # noqa: E402
 
 
 QA_DIR = ROOT / "tmp" / "ch09_public_qa"
+PROCESSED_DIR = QA_DIR / "processed"
 REPORT_DIR = QA_DIR / "reports"
 FIGURE_DIR = REPORT_DIR / "figures"
 REPORT_PATH = QA_DIR / "qa_report.json"
+CH05_RAW_DIR = ROOT / "practice" / "chapter05" / "data" / "raw"
 
 
 def main() -> None:
@@ -55,8 +59,18 @@ def main() -> None:
         )
         record("python_syntax", True)
 
+        raw_data = load_sales_data(CH05_RAW_DIR)
+        processed_data = preprocess_sales_data(raw_data)
+        saved_paths = save_processed_data(processed_data, PROCESSED_DIR)
+        processed_ready = all(path.exists() and path.stat().st_size > 0 for path in saved_paths)
+        record(
+            "chapter05_processed_prerequisite",
+            processed_ready,
+            f"files={[path.name for path in saved_paths]}",
+        )
+
         result = run_regression_analysis(
-            processed_dir=ROOT / "data" / "processed",
+            processed_dir=PROCESSED_DIR,
             report_dir=REPORT_DIR,
             test_size=0.2,
             random_state=42,
@@ -90,10 +104,7 @@ def main() -> None:
             ~cv_summary["model"].eq("Baseline Mean")
         ].sort_values(["cv_MAE_mean", "model"])
         expected_selected = str(non_baseline.iloc[0]["model"])
-        selection_pass = (
-            selected == expected_selected
-            and selected != "Baseline Mean"
-        )
+        selection_pass = selected == expected_selected and selected != "Baseline Mean"
         record(
             "train_cv_model_selection",
             selection_pass,
