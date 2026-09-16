@@ -1,0 +1,58 @@
+name: Chapter10 Public QA
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/ch10-public-qa.yml'
+      - 'src/classification.py'
+      - 'src/data_loader.py'
+      - 'src/preprocessing.py'
+      - 'scripts/prepare_ch10_data.py'
+      - 'scripts/run_classification_analysis.py'
+      - 'scripts/validate_ch10_public_release.py'
+      - 'notebooks/ch10_llm_code_generation.ipynb'
+      - 'practice/chapter10/**'
+      - 'data/raw/**'
+      - 'requirements.txt'
+
+jobs:
+  validate:
+    name: validate (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install Chapter10 QA dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pandas numpy scikit-learn
+
+      - name: Run Chapter10 public release QA
+        run: |
+          python scripts/validate_ch10_public_release.py
+
+      - name: Upload QA report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: chapter10-public-qa-${{ runner.os }}
+          path: tmp/ch10_public_qa/qa_report.json
+          if-no-files-found: warn
