@@ -1,6 +1,6 @@
 # 14장 실습. 반복되는 분석 흐름을 안전하게 자동화하기
 
-> 목표는 Airflow 화면을 띄우는 것이 아니라 **검증된 로컬 분석을 반복 실행 가능한 Task로 나누고, 실패·재시도·멱등성·산출물 Validation을 확인한 뒤 검증된 결과만 다음 단계로 전달하는 것**입니다.
+> 목표는 Airflow 화면을 띄우는 것이 아니라 **검증된 로컬 분석을 반복 실행 가능한 Task로 나누고, 같은 실행의 산출물인지 검증하고, 실패·재시도·멱등성·Freshness를 확인한 뒤 Validation을 통과한 결과만 다음 단계로 전달하는 것**입니다.
 
 ## 공통 제출 기준
 - 공통 가이드: `practice/SUBMISSION_GUIDE.md`
@@ -14,161 +14,242 @@
 notebooks/ch14_airflow_pipeline.ipynb
 ```
 
-주요 스크립트/자산:
+Canonical DAG:
+
+```text
+automation/airflow/dags/ch14_local_analysis_pipeline.py
+```
+
+로컬 실행:
 
 ```text
 scripts/run_ch14_pipeline.py
-scripts/ch14_preprocessing.py
-scripts/ch14_analysis.py
-scripts/ch14_visualization.py
-scripts/ch14_report.py
-scripts/ch14_validate_outputs.py
-automation/airflow/
-docs/ch14_docker_airflow_guide.md
 ```
 
 ## STEP 0. 제출용 Notebook 준비
 공식 Notebook을 복사해 `chapter14/chapter14.ipynb`로 사용합니다. Docker/Airflow UI와 터미널 Evidence는 `chapter14/images/`에 저장합니다.
 
-## STEP 1. 자동화 전에 로컬 분석 검증
-Airflow를 먼저 실행하지 않습니다.
-
-프로젝트 루트에서:
+## STEP 1. Airflow 전에 Local Pipeline PASS
+프로젝트 루트에서 먼저 실행합니다.
 
 ```powershell
+python scripts/generate_sample_data.py
 python scripts/run_ch14_pipeline.py
 ```
 
 확인할 것:
-- 입력 파일 존재/범위
-- 전처리 성공
-- 분석 결과 생성
-- 시각화/보고서 생성
-- 최종 산출물 Validation
+- raw CSV 4개가 존재하고 0 byte가 아닌가
+- `customers.customer_id`, `products.product_id`, `orders.order_id`, `order_items.order_item_id` PK가 정상인가
+- FK와 `line_total = quantity × unit_price`가 정상인가
+- 금액성 집계 범위가 `order_status == "completed"`인가
+- daily/category 총합이 일치하는가
+- Validation Log가 모두 `ok`인가
 
 ```text
-로컬 Python 분석 정상
-→ 산출물 Validation 정상
-→ 그 다음 자동화
+Local Python PASS
+→ Validation PASS
+→ 그다음 Airflow
 ```
 
-## STEP 2. 같은 입력으로 재실행
-같은 입력으로 다시 실행했을 때 뜻하지 않은 중복·누적·혼합 결과가 생기지 않는지 확인합니다.
+## STEP 2. Pipeline Run ID와 같은 실행 결과 확인
+실행 후 다음 파일을 확인합니다.
 
-답안에 기록:
-- 첫 실행 결과
-- 두 번째 실행 결과
-- 새로 생긴/변경된 파일
-- 중복 누적 여부
-- 같은 입력으로 같은 의미의 결과가 나왔는가
+```text
+reports/ch14_daily_sales.csv
+reports/ch14_category_sales.csv
+reports/ch14_pipeline_run_metadata.csv
+reports/ch14_airflow_report.md
+```
 
-### 해석 포인트
-멱등성(idempotency)이 왜 자동화에서 중요한지 자신의 말로 설명합니다.
+관련 산출물은 같은 `pipeline_run_id`를 가져야 합니다.
 
-## STEP 3. Task 계약 정리
-각 Task에 대해 최소 다음을 작성합니다.
+```text
+파일 존재 = PASS가 아님
+mtime 최신 = 같은 실행 결과라는 뜻이 아님
+```
 
-| Task | 입력 | 출력 | 실패 기준 | Retry 가능 여부 | 이유 |
-| --- | --- | --- | --- | --- | --- |
-| preprocessing | | | | | |
-| analysis | | | | | |
-| visualization/report | | | | | |
-| validation | | | | | |
+답안에는 실제 Run ID와 서로 일치했는지 기록합니다.
 
-데이터 컬럼 누락처럼 **결정적 오류(deterministic failure)**는 무의미하게 반복 retry하지 않습니다.
+## STEP 3. 같은 입력 재실행과 멱등성 확인
+같은 입력으로 `python scripts/run_ch14_pipeline.py`를 다시 실행합니다.
 
-## STEP 4. Docker 환경 확인
-실습 환경에서 다음을 확인합니다.
+확인할 것:
+- CSV가 append되어 행이 두 배로 늘지 않는가
+- 이전 실행과 현재 실행 산출물이 섞이지 않는가
+- 결과 파일은 전체 재생성 후 교체되는가
+- 새 실행에는 새로운 `pipeline_run_id`가 부여되는가
+
+파일 하나의 원자적 교체는 여러 파일 전체의 transaction과 같지 않습니다. 그래서 Run ID 검증이 필요합니다.
+
+## STEP 4. Task 계약 정리
+각 Task의 입력·출력·실패 기준·retry 정책을 정리합니다.
+
+| Task | 입력 | 출력 | 대표 실패 | 기본 retry |
+| --- | --- | --- | --- | --- |
+| `check_input_files` | raw CSV | 입력 상태 | 누락·0 byte | 0 |
+| `run_preprocessing` | raw CSV | processed CSV | schema·PK·FK·금액식 오류 | 0 |
+| `run_analysis` | processed CSV | 집계·Run Metadata | completed 0건·관계·총합 오류 | 0 |
+| `generate_visualizations` | 검증된 집계 | PNG | 일시적 저장 실패 등 | 최대 1회 예시 |
+| `generate_report` | 집계·Run Metadata | Markdown | Run ID 불일치 | 0 |
+| `validate_outputs` | 전체 산출물 | Validation Log | Freshness·Run ID·총합·Scope 오류 | 0 |
+
+결정적 데이터 오류는 blind retry하지 않습니다.
+
+## STEP 5. Freshness와 교차 집계 검증
+Validation Evidence에서 다음을 확인합니다.
+
+```text
+output mtime >= latest raw mtime
+completed source total = daily total = category total
+category amount ratio ≈ 100%
+```
+
+오래된 파일이 남아 있는 것과 이번 실행의 정상 결과는 구분합니다.
+
+## STEP 6. Artifact Manifest 확인
+로컬 파이프라인은 주요 산출물의 manifest를 만듭니다.
+
+```text
+reports/ch14_artifact_manifest.csv
+```
+
+확인할 항목:
+- artifact 경로
+- `pipeline_run_id`
+- 생성 시각
+- 파일 크기
+- SHA-256
+
+SHA-256은 파일 내용 변경 확인용이며 분석 타당성 보증이 아닙니다.
+
+## STEP 7. Docker Compose 환경 확인
+다음을 확인합니다.
 
 ```powershell
 docker --version
 docker compose version
-docker run hello-world
+docker run --rm hello-world
 ```
 
-Docker가 정상이어도 분석 코드가 맞다는 뜻은 아닙니다.
+Docker가 정상이어도 분석 결과가 정확하다는 뜻은 아닙니다.
 
-Evidence:
-- Docker 버전/hello-world 핵심 화면
-- 실패했다면 오류와 해결 과정
-
-## STEP 5. Airflow 초기화와 DAG 확인
-`docs/ch14_docker_airflow_guide.md` 기준으로 Airflow를 초기화하고 DAG를 확인합니다.
-
-대표 흐름:
+`.env.example`의 Secret 값은 빈 상태가 정상이며 실제 값은 untracked `.env`에만 설정합니다.
 
 ```text
+AIRFLOW_DB_PASSWORD=
+AIRFLOW_API_JWT_SECRET=
+_AIRFLOW_WWW_USER_PASSWORD=
+```
+
+실제 Secret은 Notebook·로그·캡처·Git에 남기지 않습니다.
+
+## STEP 8. Airflow 초기화와 Canonical DAG 확인
+`docs/ch14_docker_airflow_guide.md`를 따라 실행합니다.
+
+```powershell
 cd automation/airflow
-.env.example → .env
-Docker Compose 초기화
-Airflow 실행
-DAG 확인
+Copy-Item .env.example .env
+# 실제 .env에서 서로 다른 Secret을 설정
+
+docker compose build
+docker compose up airflow-init
+docker compose up -d
+docker compose ps
 ```
 
-Secret은 `.env`에만 두고 화면 캡처에 노출하지 않습니다.
-
-## STEP 6. DAG 실행과 Task 상태 확인
-DAG를 실행하고 Task별 상태와 로그를 확인합니다.
-
-Evidence 예:
-- DAG graph
-- Task 성공/실패 상태
-- 실패 원인이 드러나는 핵심 로그
-
-하지만 다음 원칙을 반드시 적용합니다.
+Canonical DAG는 하나만 사용합니다.
 
 ```text
-Task 초록색 ≠ 분석 결과 검증 성공
+automation/airflow/dags/ch14_local_analysis_pipeline.py
 ```
 
-## STEP 7. 최종 산출물 Validation
-Airflow Task가 성공한 뒤에도 최종 결과를 별도로 검증합니다.
+루트 `dags/ch14_local_analysis_pipeline.py`는 legacy 안내 파일이며 실제 DAG를 정의하지 않습니다.
 
-확인할 것:
-- 파일 존재
-- 파일이 이번 실행의 결과인가
-- 기대 행/컬럼/총합
-- 최신성(freshness)
-- 여러 산출물이 같은 run에 속하는가
-- Validation PASS/FAIL
+## STEP 9. DAG 수동 실행과 Task 의존성 확인
+처음에는 `schedule=None` 상태에서 수동 실행합니다.
 
-가능하면 `scripts/ch14_validate_outputs.py` 또는 Notebook의 검증 로직을 사용합니다.
+```text
+check_input_files
+→ run_preprocessing
+→ run_analysis
+   ├→ generate_visualizations ─┐
+   └→ generate_report ─────────┤
+                              ↓
+                       validate_outputs
+```
 
-## STEP 8. 실패·Retry 판단
-실패 사례 또는 가정 사례 하나 이상을 정해 다음을 작성합니다.
+확인할 설정:
+- `catchup=False`
+- `max_active_runs=1`
+- `max_active_tasks=2`
+- 기본 `retries=0`
+- Task별 `execution_timeout`
+- 시각화 Task만 제한적 1회 retry 예시
+
+Task가 모두 초록색이어도 최종 `validate_outputs`가 실패하면 배포 가능한 성공이 아닙니다.
+
+## STEP 10. 실패와 Retry 판단
+다음 중 하나의 실패 사례를 선택하거나 안전한 샘플 복사본에서 재현합니다.
+
+```text
+입력 파일 누락
+PK 중복
+FK 미매칭
+line_total 불일치
+Run ID 불일치
+일시적 파일 쓰기 실패
+```
+
+답안에 다음을 기록합니다.
 
 ```text
 오류 유형
-→ 일시적(transient) / 결정적(deterministic)
+→ deterministic / transient
 → retry 여부
-→ retry 횟수/timeout을 제한해야 하는 이유
-→ 실패 후 다음 단계로 결과를 전달해도 되는가
+→ retry 횟수·timeout 제한 이유
+→ 다음 단계 전달 가능 여부
 ```
 
-검증 실패 상태에서는 외부 전달 단계로 넘어가지 않습니다.
+실제 업무 raw 데이터는 삭제하지 않습니다.
 
-## STEP 9. 외부 전달 Gate 설계
-Make/n8n/이메일/Slack 등 외부 전달을 연결한다면 다음 조건을 먼저 둡니다.
+## STEP 11. 외부 전달 Gate 설계
+Make/n8n/Gmail/Slack/Drive 같은 side effect는 분석과 분리합니다.
 
 ```text
 Task 성공
 AND
-최종 산출물 Validation PASS
-→ 전달 가능
+validate_outputs PASS
+→ 외부 전달 가능
 ```
 
-중복 전달 방지를 위한 idempotency key 또는 run identifier가 필요한 이유를 설명합니다.
+재실행·retry로 같은 보고서가 중복 발송되지 않도록 Airflow Dag Run ID 또는 별도의 delivery idempotency key를 둡니다.
 
-## STEP 10. 최종 자동화 판단
+## STEP 12. 종료와 파괴적 초기화 구분
+일반 종료:
+
+```powershell
+docker compose down
+```
+
+학습 환경을 완전히 초기화할 의도가 있을 때만:
+
+```powershell
+docker compose down --volumes --remove-orphans
+```
+
+두 번째 명령은 Postgres volume, 실행 기록과 계정 metadata를 삭제할 수 있습니다.
+
+## STEP 13. 최종 판단
 답안에 다음을 작성합니다.
 
-1. 자동화 전에 로컬 검증이 필요한 이유
-2. 가장 위험한 실패 유형
-3. retry하면 안 되는 오류 사례
-4. Task 성공과 분석 Validation의 차이
-5. 같은 run 산출물을 확인하는 방법
-6. 자동화했을 때 얻는 이점
-7. 자동화가 오히려 위험을 키울 수 있는 경우
+1. Airflow 전에 Local Pipeline을 검증해야 하는 이유
+2. Pipeline Run ID가 필요한 이유
+3. 파일 단위 atomicity와 전체 transaction의 차이
+4. Freshness만으로 mixed-run을 막을 수 없는 이유
+5. retry하면 안 되는 오류와 제한적으로 retry할 수 있는 오류
+6. Task Green과 Validation PASS의 차이
+7. 외부 전달을 Validation 뒤에 두어야 하는 이유
+8. 로컬 Compose 환경을 운영 환경으로 그대로 사용하면 안 되는 이유
 
 ## 최종 제출
 
@@ -185,13 +266,17 @@ https://github.com/<ID>/llm-data-analysis-study/blob/main/chapter14/chapter14.ip
 ```
 
 ## 완료 체크
-- [ ] 로컬 파이프라인 먼저 검증
-- [ ] 산출물 Validation 확인
-- [ ] 같은 입력 재실행/멱등성 확인
-- [ ] Task 입력·출력·실패 계약 작성
-- [ ] Docker/Airflow 실행 Evidence
-- [ ] DAG/Task 상태 확인
-- [ ] Task 성공과 분석 성공을 구분
-- [ ] retry 판단 근거 작성
-- [ ] 검증 전 외부 전달 금지 원칙 확인
+- [ ] Local Pipeline PASS 확인
+- [ ] `order_item_id` 포함 PK/FK·금액식 검증
+- [ ] completed 집계 Scope 확인
+- [ ] Pipeline Run ID 일치 확인
+- [ ] Freshness·daily/category 총합 확인
+- [ ] Artifact Manifest 확인
+- [ ] 같은 입력 재실행과 멱등성 확인
+- [ ] Task 계약과 retry 근거 작성
+- [ ] Canonical DAG 수동 실행 Evidence
+- [ ] Task Green과 Validation PASS 구분
+- [ ] Secret 비노출 확인
+- [ ] 외부 전달 Gate 설명
+- [ ] 일반 종료와 파괴적 초기화 구분
 - [ ] 최종 Notebook URL 제출
