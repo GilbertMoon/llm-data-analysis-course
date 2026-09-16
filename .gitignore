@@ -35,6 +35,7 @@ data/titanic/train.csv
 models/titanic_final_pipeline.joblib
 models/titanic_model_contract.json
 tmp/titanic_public_qa/
+tmp/course_release_qa/
 
 # Airflow runtime
 .airflow/
