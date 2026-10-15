@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="780" viewBox="0 0 1400 780">
+  <rect width="1400" height="780" fill="#ffffff"/>
+  <style>
+    .t{font-family:Arial,'Noto Sans KR',sans-serif;fill:#0f2747}
+    .title{font-size:42px;font-weight:700}
+    .sub{font-size:24px;font-weight:600}
+    .h{font-size:24px;font-weight:700}
+    .b{font-size:19px;font-weight:500}
+    .s{font-size:16px;font-weight:500}
+    .box{fill:#f7fbff;stroke:#8abce8;stroke-width:2}
+    .box2{fill:#f2fbf8;stroke:#72c7af;stroke-width:2}
+    .note{fill:#fff8df;stroke:#e7c75c;stroke-width:2}
+    .arrow{stroke:#2f78b7;stroke-width:5;fill:none;marker-end:url(#a)}
+  </style>
+  <defs>
+    <marker id="a" markerWidth="12" markerHeight="12" refX="10" refY="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#2f78b7"/>
+    </marker>
+  </defs>
+  <text x="70" y="75" class="t title">PART 1 · 로컬 Python Pipeline</text>
+  <rect x="70" y="100" width="1260" height="58" rx="20" fill="#eaf5ff"/>
+  <text x="700" y="138" text-anchor="middle" class="t sub">학생은 python run_pipeline.py 하나만 실행하고 단계별 결과를 검증합니다</text>
+  <rect x="80" y="220" width="210" height="120" rx="20" class="box"/>
+  <text x="185" y="270" text-anchor="middle" class="t h">run_pipeline.py</text>
+  <text x="185" y="305" text-anchor="middle" class="t s">전체 실행 진입점</text>
+
+  <path d="M290 280 L350 280" class="arrow"/>
+  <rect x="350" y="220" width="210" height="120" rx="20" class="box"/>
+  <text x="455" y="265" text-anchor="middle" class="t h">API 수집</text>
+  <text x="455" y="300" text-anchor="middle" class="t s">NAVER · 관광공사</text>
+
+  <path d="M560 280 L620 280" class="arrow"/>
+  <rect x="620" y="220" width="210" height="120" rx="20" class="box"/>
+  <text x="725" y="265" text-anchor="middle" class="t h">데이터 검증</text>
+  <text x="725" y="300" text-anchor="middle" class="t s">행 · 컬럼 · 타입 · 결측</text>
+
+  <path d="M830 280 L890 280" class="arrow"/>
+  <rect x="890" y="220" width="210" height="120" rx="20" class="box"/>
+  <text x="995" y="265" text-anchor="middle" class="t h">분석 · 그래프</text>
+  <text x="995" y="300" text-anchor="middle" class="t s">pandas · matplotlib</text>
+
+  <path d="M1100 280 L1160 280" class="arrow"/>
+  <rect x="1160" y="220" width="160" height="120" rx="20" class="box"/>
+  <text x="1240" y="265" text-anchor="middle" class="t h">LLM</text>
+  <text x="1240" y="300" text-anchor="middle" class="t s">해석 · 요약</text>
+
+  <path d="M1240 340 L1240 405 L700 405 L700 450" class="arrow"/>
+  <rect x="520" y="450" width="360" height="120" rx="24" class="box2"/>
+  <text x="700" y="500" text-anchor="middle" class="t h">PDF 보고서 생성</text>
+  <text x="700" y="535" text-anchor="middle" class="t b">reports/tourism_trend_report_YYYY-MM-DD.pdf</text>
+
+  <rect x="280" y="625" width="840" height="70" rx="22" class="note"/>
+  <text x="700" y="654" text-anchor="middle" class="t b">앞 단계 FAIL → 뒤 단계 실행 중단</text>
+  <text x="700" y="681" text-anchor="middle" class="t s">API 호출 성공 ≠ 분석 성공 · 자동 실행 성공 ≠ 결과 검증 완료</text></svg>
