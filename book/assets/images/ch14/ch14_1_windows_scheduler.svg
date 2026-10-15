@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="780" viewBox="0 0 1400 780">
+  <rect width="1400" height="780" fill="#ffffff"/>
+  <style>
+    .t{font-family:Arial,'Noto Sans KR',sans-serif;fill:#0f2747}
+    .title{font-size:42px;font-weight:700}
+    .sub{font-size:24px;font-weight:600}
+    .h{font-size:24px;font-weight:700}
+    .b{font-size:19px;font-weight:500}
+    .s{font-size:16px;font-weight:500}
+    .box{fill:#f7fbff;stroke:#8abce8;stroke-width:2}
+    .box2{fill:#f2fbf8;stroke:#72c7af;stroke-width:2}
+    .note{fill:#fff8df;stroke:#e7c75c;stroke-width:2}
+    .arrow{stroke:#2f78b7;stroke-width:5;fill:none;marker-end:url(#a)}
+  </style>
+  <defs>
+    <marker id="a" markerWidth="12" markerHeight="12" refX="10" refY="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#2f78b7"/>
+    </marker>
+  </defs>
+  <text x="70" y="75" class="t title">Windows 작업 스케줄러로 로컬 자동 실행</text>
+  <rect x="70" y="100" width="1260" height="58" rx="20" fill="#eaf5ff"/>
+  <text x="700" y="138" text-anchor="middle" class="t sub">수동 실행과 결과 검증을 끝낸 뒤에만 예약 실행을 등록합니다</text>
+  <rect x="90" y="250" width="220" height="135" rx="24" class="box"/>
+  <text x="200" y="300" text-anchor="middle" class="t h">예약 시간</text>
+  <text x="200" y="342" text-anchor="middle" class="t b">매주 월요일 09:00</text>
+
+  <path d="M310 318 L390 318" class="arrow"/>
+  <rect x="390" y="250" width="250" height="135" rx="24" class="box"/>
+  <text x="515" y="300" text-anchor="middle" class="t h">Task Scheduler</text>
+  <text x="515" y="342" text-anchor="middle" class="t b">run_pipeline.bat 실행</text>
+
+  <path d="M640 318 L720 318" class="arrow"/>
+  <rect x="720" y="250" width="250" height="135" rx="24" class="box"/>
+  <text x="845" y="300" text-anchor="middle" class="t h">Python Pipeline</text>
+  <text x="845" y="342" text-anchor="middle" class="t b">수집 · 분석 · LLM</text>
+
+  <path d="M970 318 L1050 318" class="arrow"/>
+  <rect x="1050" y="250" width="260" height="135" rx="24" class="box2"/>
+  <text x="1180" y="300" text-anchor="middle" class="t h">reports/</text>
+  <text x="1180" y="342" text-anchor="middle" class="t b">PDF 생성</text>
+
+  <rect x="210" y="465" width="980" height="150" rx="28" fill="#f7fbff" stroke="#b4d3ef" stroke-width="2"/>
+  <text x="700" y="510" text-anchor="middle" class="t h">등록 전에 먼저 확인</text>
+  <text x="375" y="558" text-anchor="middle" class="t b">① python run_pipeline.py PASS</text>
+  <text x="700" y="558" text-anchor="middle" class="t b">② PDF 직접 열어 확인</text>
+  <text x="1025" y="558" text-anchor="middle" class="t b">③ 재실행 PASS</text>
+  <text x="700" y="592" text-anchor="middle" class="t s">그 다음 작업 스케줄러에서 수동 실행 → 예약 실행 순서로 확인</text>
+
+  <rect x="360" y="660" width="680" height="60" rx="22" class="note"/>
+  <text x="700" y="699" text-anchor="middle" class="t b">PC가 꺼져 있으면 이 로컬 자동화는 실행되지 않습니다.</text></svg>
