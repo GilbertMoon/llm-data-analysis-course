@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="780" viewBox="0 0 1400 780">
+  <rect width="1400" height="780" fill="#ffffff"/>
+  <style>
+    .t{font-family:Arial,'Noto Sans KR',sans-serif;fill:#0f2747}
+    .title{font-size:42px;font-weight:700}
+    .sub{font-size:24px;font-weight:600}
+    .h{font-size:24px;font-weight:700}
+    .b{font-size:19px;font-weight:500}
+    .s{font-size:16px;font-weight:500}
+    .box{fill:#f7fbff;stroke:#8abce8;stroke-width:2}
+    .box2{fill:#f2fbf8;stroke:#72c7af;stroke-width:2}
+    .note{fill:#fff8df;stroke:#e7c75c;stroke-width:2}
+    .arrow{stroke:#2f78b7;stroke-width:5;fill:none;marker-end:url(#a)}
+  </style>
+  <defs>
+    <marker id="a" markerWidth="12" markerHeight="12" refX="10" refY="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#2f78b7"/>
+    </marker>
+  </defs>
+  <text x="70" y="75" class="t title">PART 2 · Make 온라인 자동화</text>
+  <rect x="70" y="100" width="1260" height="58" rx="20" fill="#eaf5ff"/>
+  <text x="700" y="138" text-anchor="middle" class="t sub">로컬 Python이나 PDF를 사용하지 않고 Make가 온라인에서 독립 실행합니다</text>
+  <rect x="70" y="250" width="185" height="130" rx="22" class="box2"/>
+  <text x="162" y="300" text-anchor="middle" class="t h">Scheduler</text>
+  <text x="162" y="338" text-anchor="middle" class="t s">정해진 시간 시작</text>
+
+  <path d="M255 315 L315 315" class="arrow"/>
+  <rect x="315" y="250" width="200" height="130" rx="22" class="box"/>
+  <text x="415" y="300" text-anchor="middle" class="t h">NAVER HTTP</text>
+  <text x="415" y="338" text-anchor="middle" class="t s">검색 관심도 API</text>
+
+  <path d="M515 315 L575 315" class="arrow"/>
+  <rect x="575" y="250" width="200" height="130" rx="22" class="box"/>
+  <text x="675" y="300" text-anchor="middle" class="t h">관광 HTTP</text>
+  <text x="675" y="338" text-anchor="middle" class="t s">공공데이터 API</text>
+
+  <path d="M775 315 L835 315" class="arrow"/>
+  <rect x="835" y="250" width="180" height="130" rx="22" fill="#f6f2ff" stroke="#aa91df" stroke-width="2"/>
+  <text x="925" y="300" text-anchor="middle" class="t h">LLM</text>
+  <text x="925" y="338" text-anchor="middle" class="t s">보고서 본문 생성</text>
+
+  <path d="M1015 315 L1075 315" class="arrow"/>
+  <rect x="1075" y="250" width="245" height="130" rx="22" class="box2"/>
+  <text x="1197" y="300" text-anchor="middle" class="t h">Gmail</text>
+  <text x="1197" y="338" text-anchor="middle" class="t s">정기 이메일 발송</text>
+
+  <rect x="210" y="465" width="980" height="150" rx="28" fill="#f7fbff" stroke="#b4d3ef" stroke-width="2"/>
+  <text x="700" y="510" text-anchor="middle" class="t h">초보자 진행 원칙</text>
+  <text x="310" y="558" text-anchor="middle" class="t b">① 모듈 하나 추가</text>
+  <text x="550" y="558" text-anchor="middle" class="t b">② Run once</text>
+  <text x="800" y="558" text-anchor="middle" class="t b">③ Input / Output 확인</text>
+  <text x="1080" y="558" text-anchor="middle" class="t b">④ 다음 모듈 추가</text>
+  <text x="700" y="592" text-anchor="middle" class="t s">전체가 검증된 뒤에만 Schedule을 활성화합니다.</text>
+
+  <rect x="315" y="660" width="770" height="60" rx="22" class="note"/>
+  <text x="700" y="699" text-anchor="middle" class="t b">Make Scenario Green ≠ 데이터가 올바르다는 뜻</text></svg>
