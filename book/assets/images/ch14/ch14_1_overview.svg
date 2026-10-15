@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="780" viewBox="0 0 1400 780">
+  <rect width="1400" height="780" fill="#ffffff"/>
+  <style>
+    .t{font-family:Arial,'Noto Sans KR',sans-serif;fill:#0f2747}
+    .title{font-size:42px;font-weight:700}
+    .sub{font-size:24px;font-weight:600}
+    .h{font-size:24px;font-weight:700}
+    .b{font-size:19px;font-weight:500}
+    .s{font-size:16px;font-weight:500}
+    .box{fill:#f7fbff;stroke:#8abce8;stroke-width:2}
+    .box2{fill:#f2fbf8;stroke:#72c7af;stroke-width:2}
+    .note{fill:#fff8df;stroke:#e7c75c;stroke-width:2}
+    .arrow{stroke:#2f78b7;stroke-width:5;fill:none;marker-end:url(#a)}
+  </style>
+  <defs>
+    <marker id="a" markerWidth="12" markerHeight="12" refX="10" refY="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#2f78b7"/>
+    </marker>
+  </defs>
+  <text x="70" y="75" class="t title">Chapter 14-1 자동화 실습 전체 구조</text>
+  <rect x="70" y="100" width="1260" height="58" rx="20" fill="#eaf5ff"/>
+  <text x="700" y="138" text-anchor="middle" class="t sub">두 자동화는 서로 연결하지 않고 각각 독립적으로 완성합니다</text>
+  <rect x="90" y="210" width="560" height="420" rx="28" class="box"/>
+  <rect x="90" y="210" width="560" height="66" rx="28" fill="#2f78b7"/>
+  <text x="370" y="254" text-anchor="middle" fill="#ffffff" class="h" font-family="Arial,'Noto Sans KR',sans-serif">PART 1 · 로컬 Python 자동화</text>
+  <text x="370" y="325" text-anchor="middle" class="t b">Windows 작업 스케줄러</text>
+  <path d="M370 342 L370 382" class="arrow"/>
+  <text x="370" y="415" text-anchor="middle" class="t b">Python · requests · pandas</text>
+  <path d="M370 432 L370 472" class="arrow"/>
+  <text x="370" y="505" text-anchor="middle" class="t b">API 수집 → 검증 → 분석 → LLM 요약</text>
+  <path d="M370 522 L370 562" class="arrow"/>
+  <text x="370" y="598" text-anchor="middle" class="t h">최종 결과: PDF 보고서</text>
+
+  <rect x="750" y="210" width="560" height="420" rx="28" class="box2"/>
+  <rect x="750" y="210" width="560" height="66" rx="28" fill="#2a9d78"/>
+  <text x="1030" y="254" text-anchor="middle" fill="#ffffff" class="h" font-family="Arial,'Noto Sans KR',sans-serif">PART 2 · Make 온라인 자동화</text>
+  <text x="1030" y="325" text-anchor="middle" class="t b">Make Scheduler</text>
+  <path d="M1030 342 L1030 382" class="arrow"/>
+  <text x="1030" y="415" text-anchor="middle" class="t b">HTTP 모듈로 API 직접 호출</text>
+  <path d="M1030 432 L1030 472" class="arrow"/>
+  <text x="1030" y="505" text-anchor="middle" class="t b">간단한 값 처리 → LLM 요약</text>
+  <path d="M1030 522 L1030 562" class="arrow"/>
+  <text x="1030" y="598" text-anchor="middle" class="t h">최종 결과: Gmail 정기 보고서</text>
+
+  <rect x="300" y="665" width="800" height="62" rx="22" class="note"/>
+  <text x="700" y="704" text-anchor="middle" class="t b">로컬 PDF를 Make로 보내지 않으며, 두 실습은 서로 의존하지 않습니다.</text></svg>
