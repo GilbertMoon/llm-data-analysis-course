@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="780" viewBox="0 0 1400 780">
+  <rect width="1400" height="780" fill="#ffffff"/>
+  <style>
+    .t{font-family:Arial,'Noto Sans KR',sans-serif;fill:#0f2747}
+    .title{font-size:42px;font-weight:700}
+    .sub{font-size:24px;font-weight:600}
+    .h{font-size:24px;font-weight:700}
+    .b{font-size:19px;font-weight:500}
+    .s{font-size:16px;font-weight:500}
+    .box{fill:#f7fbff;stroke:#8abce8;stroke-width:2}
+    .box2{fill:#f2fbf8;stroke:#72c7af;stroke-width:2}
+    .note{fill:#fff8df;stroke:#e7c75c;stroke-width:2}
+    .arrow{stroke:#2f78b7;stroke-width:5;fill:none;marker-end:url(#a)}
+  </style>
+  <defs>
+    <marker id="a" markerWidth="12" markerHeight="12" refX="10" refY="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#2f78b7"/>
+    </marker>
+  </defs>
+  <text x="70" y="75" class="t title">Python · LLM · 사람의 역할 구분</text>
+  <rect x="70" y="100" width="1260" height="58" rx="20" fill="#eaf5ff"/>
+  <text x="700" y="138" text-anchor="middle" class="t sub">계산과 검증은 코드가, 설명은 LLM이, 최종 판단은 사람이 담당합니다</text>
+  <rect x="100" y="240" width="330" height="270" rx="28" class="box"/>
+  <text x="265" y="295" text-anchor="middle" class="t h">Python / pandas</text>
+  <text x="265" y="350" text-anchor="middle" class="t b">수치 계산</text>
+  <text x="265" y="392" text-anchor="middle" class="t b">데이터 검증</text>
+  <text x="265" y="434" text-anchor="middle" class="t b">그래프 생성</text>
+  <text x="265" y="476" text-anchor="middle" class="t b">핵심 수치 확정</text>
+
+  <path d="M430 375 L535 375" class="arrow"/>
+  <text x="482" y="345" text-anchor="middle" class="t s">검증된 결과</text>
+
+  <rect x="535" y="240" width="330" height="270" rx="28" fill="#f6f2ff" stroke="#aa91df" stroke-width="2"/>
+  <text x="700" y="295" text-anchor="middle" class="t h">LLM</text>
+  <text x="700" y="350" text-anchor="middle" class="t b">요약</text>
+  <text x="700" y="392" text-anchor="middle" class="t b">설명</text>
+  <text x="700" y="434" text-anchor="middle" class="t b">보고서 문장 초안</text>
+  <text x="700" y="476" text-anchor="middle" class="t b">한계 표현 보조</text>
+
+  <path d="M865 375 L970 375" class="arrow"/>
+  <text x="917" y="345" text-anchor="middle" class="t s">초안</text>
+
+  <rect x="970" y="240" width="330" height="270" rx="28" class="box2"/>
+  <text x="1135" y="295" text-anchor="middle" class="t h">사람</text>
+  <text x="1135" y="350" text-anchor="middle" class="t b">실제 수치 대조</text>
+  <text x="1135" y="392" text-anchor="middle" class="t b">과장 표현 수정</text>
+  <text x="1135" y="434" text-anchor="middle" class="t b">인과관계 판단</text>
+  <text x="1135" y="476" text-anchor="middle" class="t b">최종 승인</text>
+
+  <rect x="270" y="600" width="860" height="76" rx="22" class="note"/>
+  <text x="700" y="632" text-anchor="middle" class="t b">원본 데이터를 바로 LLM에 맡기기보다 Python에서 먼저 계산하고 검증합니다.</text>
+  <text x="700" y="660" text-anchor="middle" class="t s">LLM이 작성한 문장 ≠ 검증된 사실</text></svg>
