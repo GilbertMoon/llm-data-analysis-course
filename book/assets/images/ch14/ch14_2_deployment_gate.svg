@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="800" viewBox="0 0 1400 800">
+<rect width="1400" height="800" fill="#ffffff"/>
+<style>
+.t{font-family:Arial,'Noto Sans KR',sans-serif;fill:#16324f}
+.title{font-size:40px;font-weight:700}
+.sub{font-size:22px;font-weight:600}
+.h{font-size:23px;font-weight:700}
+.b{font-size:18px;font-weight:500}
+.s{font-size:15px;font-weight:500}
+.box{fill:#f7fbff;stroke:#7eb3df;stroke-width:2}
+.box2{fill:#f2fbf8;stroke:#6fc2a7;stroke-width:2}
+.box3{fill:#f8f4ff;stroke:#aa91df;stroke-width:2}
+.note{fill:#fff8df;stroke:#e7c75c;stroke-width:2}
+.arrow{stroke:#2f78b7;stroke-width:5;fill:none;marker-end:url(#a)}
+.arrow2{stroke:#2a9d78;stroke-width:5;fill:none;marker-end:url(#b)}
+</style>
+<defs>
+<marker id="a" markerWidth="12" markerHeight="12" refX="10" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2f78b7"/></marker>
+<marker id="b" markerWidth="12" markerHeight="12" refX="10" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2a9d78"/></marker>
+</defs>
+<text x="70" y="72" class="t title">개발·배포 Gate</text>
+<rect x="70" y="98" width="1260" height="58" rx="20" fill="#eaf5ff"/>
+<text x="700" y="136" text-anchor="middle" class="t sub">로컬과 데이터 검증을 통과한 뒤 GitHub와 Vercel로 배포합니다</text>
+<rect x="70" y="285" width="160" height="100" rx="20" class="box3"/><text x="150" y="325" text-anchor="middle" class="t h">Seed Data</text><text x="150" y="358" text-anchor="middle" class="t s">Supabase PASS</text>
+<path d="M230 335 L280 335" class="arrow"/>
+<rect x="280" y="285" width="160" height="100" rx="20" class="box2"/><text x="360" y="325" text-anchor="middle" class="t h">Make</text><text x="360" y="358" text-anchor="middle" class="t s">Daily PASS</text>
+<path d="M440 335 L490 335" class="arrow"/>
+<rect x="490" y="285" width="170" height="100" rx="20" class="box"/><text x="575" y="325" text-anchor="middle" class="t h">DB Validation</text><text x="575" y="358" text-anchor="middle" class="t s">Supabase PASS</text>
+<path d="M660 335 L710 335" class="arrow"/>
+<rect x="710" y="285" width="180" height="100" rx="20" class="box"/><text x="800" y="325" text-anchor="middle" class="t h">Local Dashboard</text><text x="800" y="358" text-anchor="middle" class="t s">PASS</text>
+<path d="M890 335 L940 335" class="arrow"/>
+<rect x="940" y="285" width="145" height="100" rx="20" class="box2"/><text x="1012" y="325" text-anchor="middle" class="t h">GitHub</text><text x="1012" y="358" text-anchor="middle" class="t s">Push</text>
+<path d="M1085 335 L1135 335" class="arrow"/>
+<rect x="1135" y="250" width="195" height="170" rx="22" class="box3"/><text x="1232" y="292" text-anchor="middle" class="t h">Vercel</text><text x="1232" y="330" text-anchor="middle" class="t s">Preview PASS</text><text x="1232" y="365" text-anchor="middle" class="t s">Production Deploy</text><text x="1232" y="397" text-anchor="middle" class="t s">운영 URL 확인</text>
+
+<rect x="265" y="510" width="870" height="120" rx="26" fill="#f7fbff" stroke="#b4d3ef" stroke-width="2"/>
+<text x="700" y="550" text-anchor="middle" class="t h">배포 후 최종 확인</text>
+<text x="430" y="592" text-anchor="middle" class="t b">지도 / Marker</text><text x="700" y="592" text-anchor="middle" class="t b">KPI / 차트 / 최신일</text><text x="970" y="592" text-anchor="middle" class="t b">Secret 노출 없음</text>
+
+<rect x="330" y="680" width="740" height="60" rx="22" class="note"/><text x="700" y="718" text-anchor="middle" class="t b">로컬에서 확인하지 않은 상태로 바로 Production에 배포하지 않습니다.</text></svg>
