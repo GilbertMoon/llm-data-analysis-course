@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="800" viewBox="0 0 1400 800">
+<rect width="1400" height="800" fill="#ffffff"/>
+<style>
+.t{font-family:Arial,'Noto Sans KR',sans-serif;fill:#16324f}
+.title{font-size:40px;font-weight:700}
+.sub{font-size:22px;font-weight:600}
+.h{font-size:23px;font-weight:700}
+.b{font-size:18px;font-weight:500}
+.s{font-size:15px;font-weight:500}
+.box{fill:#f7fbff;stroke:#7eb3df;stroke-width:2}
+.box2{fill:#f2fbf8;stroke:#6fc2a7;stroke-width:2}
+.box3{fill:#f8f4ff;stroke:#aa91df;stroke-width:2}
+.note{fill:#fff8df;stroke:#e7c75c;stroke-width:2}
+.arrow{stroke:#2f78b7;stroke-width:5;fill:none;marker-end:url(#a)}
+.arrow2{stroke:#2a9d78;stroke-width:5;fill:none;marker-end:url(#b)}
+</style>
+<defs>
+<marker id="a" markerWidth="12" markerHeight="12" refX="10" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2f78b7"/></marker>
+<marker id="b" markerWidth="12" markerHeight="12" refX="10" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2a9d78"/></marker>
+</defs>
+<text x="70" y="72" class="t title">NAVER Local API와 NAVER Maps API 역할 차이</text>
+<rect x="70" y="98" width="1260" height="58" rx="20" fill="#eaf5ff"/>
+<text x="700" y="136" text-anchor="middle" class="t sub">장소를 찾는 API와 지도를 그리는 API는 서로 다른 역할입니다</text>
+<rect x="120" y="230" width="470" height="360" rx="28" class="box"/>
+<text x="355" y="285" text-anchor="middle" class="t h">NAVER Local Search API</text>
+<text x="355" y="335" text-anchor="middle" class="t b">장소 정보를 찾는다</text>
+<text x="190" y="395" class="t s">강릉 카페</text><text x="190" y="430" class="t s">강릉 맛집</text><text x="190" y="465" class="t s">강릉 숙박</text><text x="190" y="500" class="t s">강릉 관광지</text>
+<rect x="315" y="385" width="210" height="125" rx="18" fill="#eef6fd"/><text x="420" y="420" text-anchor="middle" class="t s">name</text><text x="420" y="448" text-anchor="middle" class="t s">address</text><text x="420" y="476" text-anchor="middle" class="t s">category · location</text>
+
+<path d="M590 410 L810 410" class="arrow"/><rect x="640" y="340" width="120" height="70" rx="18" class="box3"/><text x="700" y="383" text-anchor="middle" class="t h">Supabase</text>
+
+<rect x="810" y="230" width="470" height="360" rx="28" class="box2"/>
+<text x="1045" y="285" text-anchor="middle" class="t h">NAVER Maps JavaScript API</text>
+<text x="1045" y="335" text-anchor="middle" class="t b">저장된 장소를 지도에 보여준다</text>
+<rect x="885" y="380" width="320" height="155" rx="18" fill="#edf7f3" stroke="#8ec8b8" stroke-width="2"/>
+<circle cx="955" cy="445" r="11" fill="#2f78b7"/><circle cx="1040" cy="485" r="11" fill="#2a9d78"/><circle cx="1130" cy="430" r="11" fill="#9b79d1"/>
+<text x="1045" y="515" text-anchor="middle" class="t s">Marker · 중심 이동 · Zoom · Overlay</text>
+
+<rect x="335" y="655" width="730" height="62" rx="22" class="note"/><text x="700" y="694" text-anchor="middle" class="t b">Local Search = 데이터 수집 · Maps API = 화면 시각화</text></svg>
