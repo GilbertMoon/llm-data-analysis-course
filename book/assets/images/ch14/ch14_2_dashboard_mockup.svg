@@ -1,43 +1,28 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1400" height="800" viewBox="0 0 1400 800">
 <rect width="1400" height="800" fill="#ffffff"/>
-<style>
-.t{font-family:Arial,'Noto Sans KR',sans-serif;fill:#16324f}
-.title{font-size:40px;font-weight:700}
-.sub{font-size:22px;font-weight:600}
-.h{font-size:23px;font-weight:700}
-.b{font-size:18px;font-weight:500}
-.s{font-size:15px;font-weight:500}
-.box{fill:#f7fbff;stroke:#7eb3df;stroke-width:2}
-.box2{fill:#f2fbf8;stroke:#6fc2a7;stroke-width:2}
-.box3{fill:#f8f4ff;stroke:#aa91df;stroke-width:2}
-.note{fill:#fff8df;stroke:#e7c75c;stroke-width:2}
-.arrow{stroke:#2f78b7;stroke-width:5;fill:none;marker-end:url(#a)}
-.arrow2{stroke:#2a9d78;stroke-width:5;fill:none;marker-end:url(#b)}
-</style>
-<defs>
-<marker id="a" markerWidth="12" markerHeight="12" refX="10" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2f78b7"/></marker>
-<marker id="b" markerWidth="12" markerHeight="12" refX="10" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2a9d78"/></marker>
-</defs>
+<style>.t{font-family:Arial,'Noto Sans KR',sans-serif;fill:#16324f}.title{font-size:40px;font-weight:700}.sub{font-size:22px;font-weight:600}.h{font-size:23px;font-weight:700}.b{font-size:18px;font-weight:500}.s{font-size:15px;font-weight:500}.box{fill:#f7fbff;stroke:#7eb3df;stroke-width:2}.box2{fill:#f2fbf8;stroke:#6fc2a7;stroke-width:2}.box3{fill:#f8f4ff;stroke:#aa91df;stroke-width:2}.note{fill:#fff8df;stroke:#e7c75c;stroke-width:2}</style>
 <text x="70" y="72" class="t title">지도 기반 관광 데이터 Dashboard</text>
-<rect x="70" y="98" width="1260" height="58" rx="20" fill="#eaf5ff"/>
-<text x="700" y="136" text-anchor="middle" class="t sub">사용자는 지역을 선택하고 지도·KPI·트렌드·AI 요약을 한 화면에서 확인합니다</text>
+<rect x="70" y="98" width="1260" height="58" rx="20" fill="#eaf5ff"/><text x="700" y="136" text-anchor="middle" class="t sub">Trigger가 만든 정제 테이블을 Next.js가 조회하여 지도·KPI·트렌드·AI 요약을 표시합니다</text>
+
 <rect x="80" y="205" width="1240" height="500" rx="24" fill="#f8fafc" stroke="#bdd1e3" stroke-width="2"/>
 <rect x="100" y="225" width="260" height="460" rx="18" fill="#ffffff" stroke="#d5e1eb"/>
 <text x="130" y="265" class="t h">필터</text>
 <rect x="125" y="295" width="210" height="48" rx="12" fill="#eef6fd"/><text x="145" y="326" class="t b">지역 선택</text>
 <rect x="125" y="360" width="210" height="48" rx="12" fill="#eef6fd"/><text x="145" y="391" class="t b">기간 선택</text>
 <rect x="125" y="425" width="210" height="48" rx="12" fill="#eef6fd"/><text x="145" y="456" class="t b">장소 카테고리</text>
-<text x="130" y="535" class="t h">AI 지역 요약</text><text x="130" y="570" class="t s">체류·소비 강도와 장소 데이터를</text><text x="130" y="595" class="t s">기반으로 해석과 한계를 표시</text>
+<text x="130" y="535" class="t h">AI 지역 요약</text><text x="130" y="570" class="t s">체류·소비 강도와 대표 장소를</text><text x="130" y="595" class="t s">기반으로 해석과 한계를 표시</text>
 
-<rect x="385" y="225" width="280" height="95" rx="18" class="box2"/><text x="525" y="258" text-anchor="middle" class="t s">최근 분석일</text><text x="525" y="295" text-anchor="middle" class="t h">2026-10-16</text>
+<rect x="385" y="225" width="280" height="95" rx="18" class="box2"/><text x="525" y="258" text-anchor="middle" class="t s">최근 분석일</text><text x="525" y="295" text-anchor="middle" class="t h">최신 기준일</text>
 <rect x="685" y="225" width="280" height="95" rx="18" class="box"/><text x="825" y="258" text-anchor="middle" class="t s">체류 강도</text><text x="825" y="295" text-anchor="middle" class="t h">지역 KPI</text>
-<rect x="985" y="225" width="315" height="95" rx="18" class="box3"/><text x="1142" y="258" text-anchor="middle" class="t s">소비 강도 / 장소 수</text><text x="1142" y="295" text-anchor="middle" class="t h">지역 KPI</text>
+<rect x="985" y="225" width="315" height="95" rx="18" class="box3"/><text x="1142" y="258" text-anchor="middle" class="t s">소비 강도 / 대표 장소 수</text><text x="1142" y="295" text-anchor="middle" class="t h">지역 KPI</text>
 
 <rect x="385" y="345" width="565" height="325" rx="18" fill="#edf7f3" stroke="#8ec8b8" stroke-width="2"/>
 <text x="667" y="390" text-anchor="middle" class="t h">NAVER MAPS</text>
 <circle cx="520" cy="475" r="12" fill="#2f78b7"/><circle cx="640" cy="545" r="12" fill="#2a9d78"/><circle cx="760" cy="455" r="12" fill="#9b79d1"/><circle cx="860" cy="565" r="12" fill="#e1a52b"/>
-<text x="667" y="625" text-anchor="middle" class="t s">관광지 · 맛집 · 카페 · 숙박 Marker</text>
+<text x="667" y="625" text-anchor="middle" class="t s">HTTP 4에서 수집한 대표 관광지 Marker 1~5개</text>
 
 <rect x="975" y="345" width="325" height="145" rx="18" class="box"/><text x="1137" y="385" text-anchor="middle" class="t h">NAVER Trend</text><path d="M1025 455 C1070 410 1120 465 1170 420 S1240 440 1270 395" stroke="#2f78b7" stroke-width="4" fill="none"/>
-<rect x="975" y="510" width="325" height="160" rx="18" class="box2"/><text x="1137" y="550" text-anchor="middle" class="t h">선택 지역 상세</text><text x="1005" y="588" class="t s">· 체류 / 소비 강도</text><text x="1005" y="618" class="t s">· 대표 장소</text><text x="1005" y="648" class="t s">· 최신 AI 요약</text>
-<rect x="360" y="730" width="680" height="48" rx="20" class="note"/><text x="700" y="761" text-anchor="middle" class="t b">Dashboard는 조회와 시각화에 집중하고 데이터 수집은 Make가 담당합니다.</text></svg>
+<rect x="975" y="510" width="325" height="160" rx="18" class="box2"/><text x="1137" y="550" text-anchor="middle" class="t h">선택 지역 상세</text><text x="1005" y="588" class="t s">· 체류 / 소비 강도</text><text x="1005" y="618" class="t s">· 대표 장소 1~5건</text><text x="1005" y="648" class="t s">· 최신 AI 요약</text>
+
+<rect x="290" y="730" width="820" height="48" rx="20" class="note"/><text x="700" y="761" text-anchor="middle" class="t b">Dashboard는 외부 API를 직접 호출하지 않고 Supabase 정제 테이블만 조회합니다.</text>
+</svg>
