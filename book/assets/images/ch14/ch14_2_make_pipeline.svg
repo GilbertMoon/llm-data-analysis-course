@@ -1,27 +1,29 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1400" height="820" viewBox="0 0 1400 820">
-<rect width="1400" height="820" fill="#fff"/>
+<rect width="1400" height="820" fill="#ffffff"/>
 <style>
 .t{font-family:Arial,'Noto Sans KR',sans-serif;fill:#16324f}.title{font-size:40px;font-weight:700}.sub{font-size:21px;font-weight:600}.h{font-size:21px;font-weight:700}.b{font-size:17px;font-weight:600}.s{font-size:14px;font-weight:500}
 .blue{fill:#f7fbff;stroke:#7eb3df;stroke-width:2}.green{fill:#f2fbf8;stroke:#6fc2a7;stroke-width:2}.purple{fill:#f8f4ff;stroke:#aa91df;stroke-width:2}.warn{fill:#fff8df;stroke:#e7c75c;stroke-width:2}.red{fill:#fff3f3;stroke:#e59a9a;stroke-width:2}
 .a{stroke:#2f78b7;stroke-width:4;fill:none;marker-end:url(#m)}.ag{stroke:#2a9d78;stroke-width:4;fill:none;marker-end:url(#g)}
 </style>
 <defs><marker id="m" markerWidth="12" markerHeight="12" refX="10" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10z" fill="#2f78b7"/></marker><marker id="g" markerWidth="12" markerHeight="12" refX="10" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10z" fill="#2a9d78"/></marker></defs>
-<text x="70" y="70" class="t title">Make 최소화 Pipeline</text>
+<text x="70" y="70" class="t title">Make 최소화 Pipeline · HTTP 4개 + INSERT 1회</text>
 <rect x="70" y="96" width="1260" height="58" rx="18" fill="#eaf5ff"/>
-<text x="700" y="133" text-anchor="middle" class="t sub">Make는 API 3개 호출과 Supabase INSERT 1회만 수행합니다</text>
+<text x="700" y="133" text-anchor="middle" class="t sub">API 응답은 Make에서 풀지 않고 원본 문자열 그대로 Supabase에 전달합니다</text>
 
-<rect x="65" y="265" width="220" height="130" rx="22" class="blue"/><text x="175" y="305" text-anchor="middle" class="t h">HTTP 1</text><text x="175" y="337" text-anchor="middle" class="t b">NAVER Trend</text><text x="175" y="368" text-anchor="middle" class="t s">Parse response = No</text>
-<path d="M285 330 L350 330" class="a"/>
-<rect x="350" y="265" width="220" height="130" rx="22" class="blue"/><text x="460" y="305" text-anchor="middle" class="t h">HTTP 2</text><text x="460" y="337" text-anchor="middle" class="t b">관광 체류 강도</text><text x="460" y="368" text-anchor="middle" class="t s">26건 · 원본 문자열</text>
-<path d="M570 330 L635 330" class="a"/>
-<rect x="635" y="265" width="220" height="130" rx="22" class="blue"/><text x="745" y="305" text-anchor="middle" class="t h">HTTP 3</text><text x="745" y="337" text-anchor="middle" class="t b">관광 소비 강도</text><text x="745" y="368" text-anchor="middle" class="t s">26건 · 원본 문자열</text>
-<path d="M855 330 L920 330" class="a"/>
-<rect x="920" y="245" width="300" height="170" rx="24" class="green"/><text x="1070" y="290" text-anchor="middle" class="t h">Supabase · Create a Row</text><text x="1070" y="326" text-anchor="middle" class="t s">source = BATCH_RAW</text><text x="1070" y="354" text-anchor="middle" class="t s">원본 3개를 한 행에 저장</text><text x="1070" y="385" text-anchor="middle" class="t b">Make 작업 끝</text>
+<rect x="35" y="250" width="195" height="130" rx="22" class="blue"/><text x="132" y="292" text-anchor="middle" class="t h">HTTP 1</text><text x="132" y="324" text-anchor="middle" class="t b">NAVER Trend</text><text x="132" y="354" text-anchor="middle" class="t s">Parse response = No</text>
+<path d="M230 315 L275 315" class="a"/>
+<rect x="275" y="250" width="195" height="130" rx="22" class="blue"/><text x="372" y="292" text-anchor="middle" class="t h">HTTP 2</text><text x="372" y="324" text-anchor="middle" class="t b">관광 체류</text><text x="372" y="354" text-anchor="middle" class="t s">26건 원본</text>
+<path d="M470 315 L515 315" class="a"/>
+<rect x="515" y="250" width="195" height="130" rx="22" class="blue"/><text x="612" y="292" text-anchor="middle" class="t h">HTTP 3</text><text x="612" y="324" text-anchor="middle" class="t b">관광 소비</text><text x="612" y="354" text-anchor="middle" class="t s">26건 원본</text>
+<path d="M710 315 L755 315" class="a"/>
+<rect x="755" y="250" width="195" height="130" rx="22" class="blue"/><text x="852" y="292" text-anchor="middle" class="t h">HTTP 4</text><text x="852" y="324" text-anchor="middle" class="t b">NAVER Local</text><text x="852" y="354" text-anchor="middle" class="t s">대표 장소 1~5건</text>
+<path d="M950 315 L995 315" class="a"/>
+<rect x="995" y="225" width="330" height="180" rx="24" class="green"/><text x="1160" y="270" text-anchor="middle" class="t h">Supabase · Create a Row</text><text x="1160" y="307" text-anchor="middle" class="t s">source = BATCH_RAW</text><text x="1160" y="337" text-anchor="middle" class="t s">Raw 4개를 한 행에 저장</text><text x="1160" y="372" text-anchor="middle" class="t b">Make 작업 끝</text>
 
-<path d="M1070 415 L1070 485" class="ag"/>
-<rect x="895" y="485" width="350" height="150" rx="24" class="purple"/><text x="1070" y="525" text-anchor="middle" class="t h">Supabase Trigger</text><text x="1070" y="558" text-anchor="middle" class="t s">process_naver_trend_raw()</text><text x="1070" y="586" text-anchor="middle" class="t s">process_tourism_demand_raw()</text><text x="1070" y="615" text-anchor="middle" class="t s">정제 · 결합 · Upsert · 상태 기록</text>
+<path d="M1160 405 L1160 475" class="ag"/>
+<rect x="930" y="475" width="460" height="170" rx="24" class="purple"/><text x="1160" y="515" text-anchor="middle" class="t h">Supabase Trigger</text><text x="1160" y="550" text-anchor="middle" class="t s">process_naver_trend_raw()</text><text x="1160" y="578" text-anchor="middle" class="t s">process_tourism_demand_raw()</text><text x="1160" y="606" text-anchor="middle" class="t s">process_naver_local_raw()</text><text x="1160" y="633" text-anchor="middle" class="t s">정제 · 결합 · Upsert · 상태 기록</text>
 
-<rect x="90" y="500" width="660" height="135" rx="24" class="warn"/><text x="420" y="540" text-anchor="middle" class="t h">왜 Make에서 처리하지 않나요?</text><text x="420" y="574" text-anchor="middle" class="t s">Iterator / Router가 늘면 Operation 수와 유지보수 난이도가 함께 증가합니다.</text><text x="420" y="603" text-anchor="middle" class="t s">DB 함수는 JSON 배열 처리·결합·중복 Upsert를 코드 한 곳에서 반복 가능하게 관리합니다.</text>
+<rect x="75" y="480" width="745" height="165" rx="24" class="warn"/><text x="447" y="520" text-anchor="middle" class="t h">Make에서 복잡하게 처리하지 않는 이유</text><text x="447" y="555" text-anchor="middle" class="t s">Iterator / Router가 늘면 후속 모듈 실행 횟수와 유지보수 지점이 함께 늘어납니다.</text><text x="447" y="585" text-anchor="middle" class="t s">DB Function은 JSON 배열 해체, 26+26 결합, Local 1~5건 Upsert를 한 곳에서 관리합니다.</text><text x="447" y="615" text-anchor="middle" class="t s">AI API를 전처리에 쓰지 않아 추가 비용과 비결정성도 줄입니다.</text>
 
-<rect x="185" y="690" width="1030" height="68" rx="20" class="red"/><text x="700" y="719" text-anchor="middle" class="t b">핵심 금지: Iterator 다중 중첩 · Router 분기 · AI 전처리 · Make Code/pandas를 기본 Pipeline에 넣지 않습니다.</text><text x="700" y="746" text-anchor="middle" class="t s">AI는 검증된 DB 데이터의 최종 설명/요약에만 사용합니다.</text>
+<rect x="185" y="700" width="1030" height="68" rx="20" class="red"/><text x="700" y="729" text-anchor="middle" class="t b">핵심: Make는 “이동”, Supabase는 “정리”, Dashboard는 “조회와 시각화”만 담당합니다.</text><text x="700" y="756" text-anchor="middle" class="t s">역할을 분리하면 초보자가 어디에서 문제가 생겼는지 단계별로 확인하기 쉽습니다.</text>
 </svg>
