@@ -1,47 +1,31 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1400" height="800" viewBox="0 0 1400 800">
 <rect width="1400" height="800" fill="#ffffff"/>
-<style>
-.t{font-family:Arial,'Noto Sans KR',sans-serif;fill:#16324f}
-.title{font-size:40px;font-weight:700}
-.sub{font-size:22px;font-weight:600}
-.h{font-size:23px;font-weight:700}
-.b{font-size:18px;font-weight:500}
-.s{font-size:15px;font-weight:500}
-.box{fill:#f7fbff;stroke:#7eb3df;stroke-width:2}
-.box2{fill:#f2fbf8;stroke:#6fc2a7;stroke-width:2}
-.box3{fill:#f8f4ff;stroke:#aa91df;stroke-width:2}
-.note{fill:#fff8df;stroke:#e7c75c;stroke-width:2}
-.arrow{stroke:#2f78b7;stroke-width:5;fill:none;marker-end:url(#a)}
-.arrow2{stroke:#2a9d78;stroke-width:5;fill:none;marker-end:url(#b)}
-</style>
-<defs>
-<marker id="a" markerWidth="12" markerHeight="12" refX="10" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2f78b7"/></marker>
-<marker id="b" markerWidth="12" markerHeight="12" refX="10" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2a9d78"/></marker>
-</defs>
-<text x="70" y="72" class="t title">3개 데이터 소스의 역할</text>
-<rect x="70" y="98" width="1260" height="58" rx="20" fill="#eaf5ff"/>
-<text x="700" y="136" text-anchor="middle" class="t sub">같은 관광 주제를 보지만 서로 다른 질문에 답하는 데이터입니다</text>
+<style>.t{font-family:Arial,'Noto Sans KR',sans-serif;fill:#16324f}.title{font-size:40px;font-weight:700}.sub{font-size:22px;font-weight:600}.h{font-size:23px;font-weight:700}.b{font-size:18px;font-weight:500}.s{font-size:15px;font-weight:500}.box{fill:#f7fbff;stroke:#7eb3df;stroke-width:2}.box2{fill:#f2fbf8;stroke:#6fc2a7;stroke-width:2}.box3{fill:#f8f4ff;stroke:#aa91df;stroke-width:2}.note{fill:#fff8df;stroke:#e7c75c;stroke-width:2}</style>
+<text x="70" y="72" class="t title">3개 데이터 소스 · 4개 HTTP 요청</text>
+<rect x="70" y="98" width="1260" height="58" rx="20" fill="#eaf5ff"/><text x="700" y="136" text-anchor="middle" class="t sub">관광공사 체류·소비가 별도 Endpoint라 데이터 소스는 3종, HTTP 모듈은 4개입니다</text>
+
 <rect x="90" y="235" width="350" height="300" rx="28" class="box"/>
-<text x="265" y="292" text-anchor="middle" class="t h">NAVER Trend</text>
+<text x="265" y="292" text-anchor="middle" class="t h">HTTP 1 · NAVER Trend</text>
 <text x="265" y="345" text-anchor="middle" class="t b">요즘 무엇에 관심이 있는가?</text>
 <text x="265" y="400" text-anchor="middle" class="t s">여행 · 축제 · 캠핑 · 맛집</text>
 <text x="265" y="438" text-anchor="middle" class="t s">기간별 상대 검색 관심도</text>
 <rect x="145" y="470" width="240" height="40" rx="16" fill="#eaf5ff"/><text x="265" y="496" text-anchor="middle" class="t s">지역 차원 없음</text>
 
 <rect x="525" y="235" width="350" height="300" rx="28" class="box2"/>
-<text x="700" y="292" text-anchor="middle" class="t h">관광공사 수요 강도</text>
+<text x="700" y="292" text-anchor="middle" class="t h">HTTP 2 + 3 · 관광공사</text>
 <text x="700" y="345" text-anchor="middle" class="t b">어느 지역의 관광 수요가 강한가?</text>
-<text x="700" y="400" text-anchor="middle" class="t s">지역별 체류 강도</text>
-<text x="700" y="438" text-anchor="middle" class="t s">지역별 소비 강도</text>
+<text x="700" y="400" text-anchor="middle" class="t s">HTTP 2 · 관광 체류 강도</text>
+<text x="700" y="438" text-anchor="middle" class="t s">HTTP 3 · 관광 소비 강도</text>
 <rect x="580" y="470" width="240" height="40" rx="16" fill="#eaf8f3"/><text x="700" y="496" text-anchor="middle" class="t s">지역 기준 데이터</text>
 
 <rect x="960" y="235" width="350" height="300" rx="28" class="box3"/>
-<text x="1135" y="292" text-anchor="middle" class="t h">NAVER Local</text>
-<text x="1135" y="345" text-anchor="middle" class="t b">그 지역에 어떤 장소가 있는가?</text>
-<text x="1135" y="400" text-anchor="middle" class="t s">관광지 · 맛집 · 카페 · 숙박</text>
-<text x="1135" y="438" text-anchor="middle" class="t s">이름 · 주소 · 위치 정보</text>
-<rect x="1015" y="470" width="240" height="40" rx="16" fill="#f0eaff"/><text x="1135" y="496" text-anchor="middle" class="t s">지도 Marker 데이터</text>
+<text x="1135" y="292" text-anchor="middle" class="t h">HTTP 4 · NAVER Local</text>
+<text x="1135" y="345" text-anchor="middle" class="t b">대표 장소는 어디에 있는가?</text>
+<text x="1135" y="400" text-anchor="middle" class="t s">기본 실습: 서울 관광지</text>
+<text x="1135" y="438" text-anchor="middle" class="t s">이름 · 주소 · WGS84 좌표</text>
+<rect x="1015" y="470" width="240" height="40" rx="16" fill="#f0eaff"/><text x="1135" y="496" text-anchor="middle" class="t s">최대 5건 · 지도 Marker</text>
 
-<rect x="305" y="625" width="790" height="70" rx="22" class="note"/>
+<rect x="265" y="625" width="870" height="70" rx="22" class="note"/>
 <text x="700" y="655" text-anchor="middle" class="t b">Trend를 지역 데이터와 억지로 JOIN하지 않습니다.</text>
-<text x="700" y="682" text-anchor="middle" class="t s">각 데이터의 분석 단위를 유지한 채 하나의 Dashboard에서 함께 보여줍니다.</text></svg>
+<text x="700" y="682" text-anchor="middle" class="t s">각 데이터의 분석 단위를 유지하고 Dashboard에서 역할별로 함께 보여줍니다.</text>
+</svg>
