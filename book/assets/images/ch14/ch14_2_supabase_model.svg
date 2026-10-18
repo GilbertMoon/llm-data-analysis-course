@@ -1,43 +1,20 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="800" viewBox="0 0 1400 800">
-<rect width="1400" height="800" fill="#ffffff"/>
-<style>
-.t{font-family:Arial,'Noto Sans KR',sans-serif;fill:#16324f}
-.title{font-size:40px;font-weight:700}
-.sub{font-size:22px;font-weight:600}
-.h{font-size:23px;font-weight:700}
-.b{font-size:18px;font-weight:500}
-.s{font-size:15px;font-weight:500}
-.box{fill:#f7fbff;stroke:#7eb3df;stroke-width:2}
-.box2{fill:#f2fbf8;stroke:#6fc2a7;stroke-width:2}
-.box3{fill:#f8f4ff;stroke:#aa91df;stroke-width:2}
-.note{fill:#fff8df;stroke:#e7c75c;stroke-width:2}
-.arrow{stroke:#2f78b7;stroke-width:5;fill:none;marker-end:url(#a)}
-.arrow2{stroke:#2a9d78;stroke-width:5;fill:none;marker-end:url(#b)}
-</style>
-<defs>
-<marker id="a" markerWidth="12" markerHeight="12" refX="10" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2f78b7"/></marker>
-<marker id="b" markerWidth="12" markerHeight="12" refX="10" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2a9d78"/></marker>
-</defs>
-<text x="70" y="72" class="t title">Supabase 데이터 모델</text>
-<rect x="70" y="98" width="1260" height="58" rx="20" fill="#eaf5ff"/>
-<text x="700" y="136" text-anchor="middle" class="t sub">수집 원천과 역할을 분리해 저장하고 지역을 공통 기준으로 연결합니다</text>
-<rect x="90" y="220" width="240" height="160" rx="22" class="box3"/>
-<text x="210" y="260" text-anchor="middle" class="t h">regions</text><text x="120" y="302" class="t s">region_code</text><text x="120" y="330" class="t s">region_name</text><text x="120" y="358" class="t s">center_lat / lng</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="820" viewBox="0 0 1400 820">
+<rect width="1400" height="820" fill="#fff"/>
+<style>.t{font-family:Arial,'Noto Sans KR',sans-serif;fill:#16324f}.title{font-size:40px;font-weight:700}.sub{font-size:21px;font-weight:600}.h{font-size:22px;font-weight:700}.s{font-size:14px;font-weight:500}.b1{fill:#f7fbff;stroke:#7eb3df;stroke-width:2}.b2{fill:#f2fbf8;stroke:#6fc2a7;stroke-width:2}.b3{fill:#f8f4ff;stroke:#aa91df;stroke-width:2}.note{fill:#fff8df;stroke:#e7c75c;stroke-width:2}.a{stroke:#2f78b7;stroke-width:4;fill:none;marker-end:url(#m)}.ag{stroke:#2a9d78;stroke-width:4;fill:none;marker-end:url(#g)}</style>
+<defs><marker id="m" markerWidth="12" markerHeight="12" refX="10" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10z" fill="#2f78b7"/></marker><marker id="g" markerWidth="12" markerHeight="12" refX="10" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10z" fill="#2a9d78"/></marker></defs>
+<text x="70" y="70" class="t title">Supabase 데이터 모델 · Raw와 정제 데이터 분리</text>
+<rect x="70" y="96" width="1260" height="58" rx="18" fill="#eaf5ff"/><text x="700" y="133" text-anchor="middle" class="t sub">원본을 먼저 보존하고 Trigger가 정제 테이블을 생성하면 재처리와 오류 추적이 쉬워집니다</text>
 
-<rect x="430" y="190" width="270" height="190" rx="22" class="box2"/>
-<text x="565" y="232" text-anchor="middle" class="t h">tourism_demand</text><text x="455" y="272" class="t s">reference_date</text><text x="455" y="300" class="t s">region_code</text><text x="455" y="328" class="t s">stay_strength</text><text x="455" y="356" class="t s">consumption_strength</text>
+<rect x="65" y="210" width="340" height="290" rx="24" class="b3"/><text x="235" y="250" text-anchor="middle" class="t h">raw_api_data</text><text x="95" y="290" class="t s">id · run_id · source</text><text x="95" y="320" class="t s">naver_trend_raw</text><text x="95" y="350" class="t s">tourism_demand_raw</text><text x="95" y="380" class="t s">tourism_consumption_raw</text><text x="95" y="420" class="t s">process_status</text><text x="95" y="450" class="t s">processed_at · error_message</text>
 
-<rect x="430" y="430" width="270" height="190" rx="22" class="box"/>
-<text x="565" y="472" text-anchor="middle" class="t h">local_places</text><text x="455" y="512" class="t s">place_id · region_code</text><text x="455" y="540" class="t s">category · name</text><text x="455" y="568" class="t s">address · latitude · longitude</text><text x="455" y="596" class="t s">updated_at</text>
+<path d="M405 300 L505 265" class="ag"/><path d="M405 400 L505 430" class="ag"/>
+<rect x="505" y="190" width="300" height="190" rx="22" class="b1"/><text x="655" y="232" text-anchor="middle" class="t h">naver_trend</text><text x="535" y="275" class="t s">raw_id → raw_api_data.id</text><text x="535" y="305" class="t s">reference_date · keyword</text><text x="535" y="335" class="t s">ratio · collected_at</text>
+<rect x="505" y="420" width="300" height="210" rx="22" class="b2"/><text x="655" y="462" text-anchor="middle" class="t h">tourism_demand</text><text x="535" y="505" class="t s">raw_id → raw_api_data.id</text><text x="535" y="535" class="t s">reference_date · region_code</text><text x="535" y="565" class="t s">stay_strength</text><text x="535" y="595" class="t s">consumption_strength</text>
 
-<rect x="790" y="190" width="260" height="170" rx="22" class="box"/>
-<text x="920" y="232" text-anchor="middle" class="t h">naver_trend</text><text x="815" y="272" class="t s">reference_date</text><text x="815" y="300" class="t s">keyword</text><text x="815" y="328" class="t s">ratio</text>
+<rect x="900" y="190" width="260" height="180" rx="22" class="b1"/><text x="1030" y="232" text-anchor="middle" class="t h">local_places</text><text x="930" y="275" class="t s">Seed / 별도 보강 수집</text><text x="930" y="305" class="t s">name · category</text><text x="930" y="335" class="t s">latitude · longitude</text>
+<rect x="900" y="420" width="260" height="180" rx="22" class="b3"/><text x="1030" y="462" text-anchor="middle" class="t h">ai_region_analysis</text><text x="930" y="505" class="t s">검증된 정제 데이터 사용</text><text x="930" y="535" class="t s">summary · limitations</text><text x="930" y="565" class="t s">provider · model</text>
 
-<rect x="790" y="430" width="260" height="190" rx="22" class="box3"/>
-<text x="920" y="472" text-anchor="middle" class="t h">ai_region_analysis</text><text x="815" y="512" class="t s">analysis_date</text><text x="815" y="540" class="t s">region_code</text><text x="815" y="568" class="t s">summary · limitations</text><text x="815" y="596" class="t s">provider · model</text>
+<rect x="1205" y="305" width="155" height="180" rx="22" class="b2"/><text x="1282" y="347" text-anchor="middle" class="t h">regions</text><text x="1225" y="390" class="t s">region_code</text><text x="1225" y="420" class="t s">region_name</text><text x="1225" y="450" class="t s">center lat/lng</text>
 
-<rect x="1125" y="305" width="210" height="190" rx="22" class="box2"/>
-<text x="1230" y="347" text-anchor="middle" class="t h">collection_runs</text><text x="1150" y="387" class="t s">run_id · source</text><text x="1150" y="415" class="t s">status</text><text x="1150" y="443" class="t s">row_count</text><text x="1150" y="471" class="t s">started_at · finished_at</text>
-
-<path d="M330 285 L430 285" class="arrow"/><path d="M330 325 L430 515" class="arrow"/><path d="M330 345 L790 525" class="arrow"/>
-<rect x="285" y="670" width="830" height="62" rx="22" class="note"/><text x="700" y="709" text-anchor="middle" class="t b">Supabase를 처음부터 운영 DB로 사용하고 CSV는 Seed 또는 보조 파일로만 사용합니다.</text></svg>
+<rect x="260" y="690" width="880" height="65" rx="20" class="note"/><text x="700" y="729" text-anchor="middle" class="t s">raw_id를 남기면 “이 숫자가 어떤 원본 API 응답에서 만들어졌는가?”를 언제든 추적할 수 있습니다.</text>
+</svg>
