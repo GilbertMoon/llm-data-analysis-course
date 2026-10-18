@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="880" viewBox="0 0 1400 880">
+<rect width="1400" height="880" fill="#ffffff"/>
+<style>
+.t{font-family:Arial,'Noto Sans KR',sans-serif;fill:#16324f}.title{font-size:40px;font-weight:700}.sub{font-size:21px;font-weight:600}.h{font-size:24px;font-weight:700}.b{font-size:17px;font-weight:600}.s{font-size:14px;font-weight:500}.tiny{font-size:12px;font-weight:500}
+.blue{fill:#f7fbff;stroke:#7eb3df;stroke-width:2}.green{fill:#f2fbf8;stroke:#6fc2a7;stroke-width:2}.purple{fill:#f8f4ff;stroke:#aa91df;stroke-width:2}.yellow{fill:#fff8df;stroke:#e7c75c;stroke-width:2}.red{fill:#fff3f3;stroke:#e59a9a;stroke-width:2}
+.a{stroke:#2f78b7;stroke-width:3;fill:none;marker-end:url(#m)}.ag{stroke:#2a9d78;stroke-width:3;fill:none;marker-end:url(#g)}.ar{stroke:#c85b5b;stroke-width:3;fill:none;marker-end:url(#r)}
+</style>
+<defs><marker id="m" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10z" fill="#2f78b7"/></marker><marker id="g" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10z" fill="#2a9d78"/></marker><marker id="r" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10z" fill="#c85b5b"/></marker></defs>
+<text x="70" y="68" class="t title">Make 안에서 모두 처리하면 얼마나 복잡해질까?</text>
+<rect x="70" y="92" width="1260" height="58" rx="18" fill="#eaf5ff"/><text x="700" y="129" text-anchor="middle" class="t sub">같은 목표라도 “Make 직접 전처리”와 “Raw 저장 + DB Trigger”의 구조 차이는 매우 큽니다</text>
+
+<rect x="55" y="190" width="625" height="595" rx="28" class="red"/>
+<text x="367" y="235" text-anchor="middle" class="t h">A. Make에서 각 API를 직접 정리하는 예</text>
+<text x="367" y="266" text-anchor="middle" class="t s">구현 방법에 따라 다르지만 쉽게 15개 이상 모듈로 늘어날 수 있습니다</text>
+
+<rect x="90" y="305" width="110" height="62" rx="16" class="blue"/><text x="145" y="332" text-anchor="middle" class="t b">HTTP 1</text><text x="145" y="353" text-anchor="middle" class="t tiny">Trend</text>
+<path d="M200 336 L235 336" class="ar"/><rect x="235" y="305" width="105" height="62" rx="16" class="purple"/><text x="287" y="342" text-anchor="middle" class="t s">JSON Parse</text>
+<path d="M340 336 L375 336" class="ar"/><rect x="375" y="305" width="105" height="62" rx="16" class="yellow"/><text x="427" y="342" text-anchor="middle" class="t s">Iterator 1</text>
+<path d="M480 336 L515 336" class="ar"/><rect x="515" y="305" width="120" height="62" rx="16" class="green"/><text x="575" y="332" text-anchor="middle" class="t s">Iterator 2</text><text x="575" y="353" text-anchor="middle" class="t tiny">→ Upsert</text>
+
+<rect x="90" y="395" width="110" height="62" rx="16" class="blue"/><text x="145" y="422" text-anchor="middle" class="t b">HTTP 2</text><text x="145" y="443" text-anchor="middle" class="t tiny">체류</text>
+<path d="M200 426 L235 426" class="ar"/><rect x="235" y="395" width="105" height="62" rx="16" class="purple"/><text x="287" y="432" text-anchor="middle" class="t s">JSON Parse</text>
+<path d="M340 426 L375 426" class="ar"/><rect x="375" y="395" width="105" height="62" rx="16" class="yellow"/><text x="427" y="432" text-anchor="middle" class="t s">Iterator</text>
+<path d="M480 426 L515 426" class="ar"/><rect x="515" y="395" width="120" height="62" rx="16" class="green"/><text x="575" y="432" text-anchor="middle" class="t s">임시 저장</text>
+
+<rect x="90" y="485" width="110" height="62" rx="16" class="blue"/><text x="145" y="512" text-anchor="middle" class="t b">HTTP 3</text><text x="145" y="533" text-anchor="middle" class="t tiny">소비</text>
+<path d="M200 516 L235 516" class="ar"/><rect x="235" y="485" width="105" height="62" rx="16" class="purple"/><text x="287" y="522" text-anchor="middle" class="t s">JSON Parse</text>
+<path d="M340 516 L375 516" class="ar"/><rect x="375" y="485" width="105" height="62" rx="16" class="yellow"/><text x="427" y="522" text-anchor="middle" class="t s">Iterator</text>
+<path d="M480 516 L515 516" class="ar"/><rect x="515" y="485" width="120" height="62" rx="16" class="green"/><text x="575" y="512" text-anchor="middle" class="t s">Router / Merge</text><text x="575" y="533" text-anchor="middle" class="t tiny">체류+소비</text>
+
+<rect x="90" y="575" width="110" height="62" rx="16" class="blue"/><text x="145" y="602" text-anchor="middle" class="t b">HTTP 4</text><text x="145" y="623" text-anchor="middle" class="t tiny">Local</text>
+<path d="M200 606 L235 606" class="ar"/><rect x="235" y="575" width="105" height="62" rx="16" class="purple"/><text x="287" y="612" text-anchor="middle" class="t s">JSON Parse</text>
+<path d="M340 606 L375 606" class="ar"/><rect x="375" y="575" width="105" height="62" rx="16" class="yellow"/><text x="427" y="612" text-anchor="middle" class="t s">Iterator</text>
+<path d="M480 606 L515 606" class="ar"/><rect x="515" y="575" width="120" height="62" rx="16" class="green"/><text x="575" y="602" text-anchor="middle" class="t s">HTML 제거</text><text x="575" y="623" text-anchor="middle" class="t tiny">좌표 변환 → Upsert</text>
+
+<rect x="105" y="675" width="520" height="75" rx="18" fill="#ffffff" stroke="#e59a9a" stroke-width="2"/><text x="365" y="706" text-anchor="middle" class="t b">결과: Mapping 지점 다수 + Bundle 증가 + 수정 위치 분산</text><text x="365" y="733" text-anchor="middle" class="t s">작동은 가능하지만 초보자 수업과 유지보수에는 부담이 큽니다</text>
+
+<rect x="720" y="190" width="625" height="595" rx="28" class="green"/>
+<text x="1032" y="235" text-anchor="middle" class="t h">B. 이번 강의의 최소 Make 구조</text>
+<text x="1032" y="266" text-anchor="middle" class="t s">Make는 5개 모듈로 끝내고 실제 데이터 처리는 DB로 이동합니다</text>
+
+<rect x="760" y="330" width="95" height="70" rx="16" class="blue"/><text x="807" y="360" text-anchor="middle" class="t b">HTTP 1</text><text x="807" y="382" text-anchor="middle" class="t tiny">Trend</text>
+<path d="M855 365 L885 365" class="ag"/><rect x="885" y="330" width="95" height="70" rx="16" class="blue"/><text x="932" y="360" text-anchor="middle" class="t b">HTTP 2</text><text x="932" y="382" text-anchor="middle" class="t tiny">체류</text>
+<path d="M980 365 L1010 365" class="ag"/><rect x="1010" y="330" width="95" height="70" rx="16" class="blue"/><text x="1057" y="360" text-anchor="middle" class="t b">HTTP 3</text><text x="1057" y="382" text-anchor="middle" class="t tiny">소비</text>
+<path d="M1105 365 L1135 365" class="ag"/><rect x="1135" y="330" width="95" height="70" rx="16" class="blue"/><text x="1182" y="360" text-anchor="middle" class="t b">HTTP 4</text><text x="1182" y="382" text-anchor="middle" class="t tiny">Local</text>
+<path d="M1230 365 L1260 365" class="ag"/><rect x="1260" y="315" width="70" height="100" rx="16" class="purple"/><text x="1295" y="350" text-anchor="middle" class="t s">Supabase</text><text x="1295" y="375" text-anchor="middle" class="t tiny">INSERT</text><text x="1295" y="397" text-anchor="middle" class="t tiny">1회</text>
+
+<path d="M1035 430 L1035 490" class="ag"/>
+<rect x="835" y="490" width="400" height="155" rx="22" class="yellow"/><text x="1035" y="530" text-anchor="middle" class="t h">DB Trigger + Functions</text><text x="1035" y="565" text-anchor="middle" class="t s">JSON 해체 · 타입 변환 · 체류+소비 결합</text><text x="1035" y="593" text-anchor="middle" class="t s">Local HTML 제거 · 좌표 저장 · Upsert</text><text x="1035" y="620" text-anchor="middle" class="t s">오류 상태와 원본 추적도 DB에서 관리</text>
+
+<rect x="825" y="675" width="420" height="75" rx="18" fill="#ffffff" stroke="#6fc2a7" stroke-width="2"/><text x="1035" y="706" text-anchor="middle" class="t b">결과: Make는 5개 모듈 · 처리 로직은 DB 3개 Function</text><text x="1035" y="733" text-anchor="middle" class="t s">각 계층의 역할이 분리되어 수정·검증 위치가 명확합니다</text>
+
+<rect x="250" y="815" width="900" height="42" rx="18" class="yellow"/><text x="700" y="843" text-anchor="middle" class="t s">모듈 수는 구현 방식에 따라 달라질 수 있지만, 배열을 Make 안에서 풀수록 Bundle과 후속 실행 지점은 빠르게 증가합니다.</text>
+</svg>
