@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="820" viewBox="0 0 1400 820">
+<rect width="1400" height="820" fill="#ffffff"/>
+<style>
+.t{font-family:Arial,'Noto Sans KR',sans-serif;fill:#16324f}
+.title{font-size:40px;font-weight:700}.sub{font-size:21px;font-weight:600}
+.h{font-size:24px;font-weight:700}.b{font-size:18px;font-weight:600}.s{font-size:15px;font-weight:500}
+.blue{fill:#f7fbff;stroke:#7eb3df;stroke-width:2}
+.green{fill:#f2fbf8;stroke:#6fc2a7;stroke-width:2}
+.purple{fill:#f8f4ff;stroke:#aa91df;stroke-width:2}
+.yellow{fill:#fff8df;stroke:#e7c75c;stroke-width:2}
+.red{fill:#fff3f3;stroke:#e59a9a;stroke-width:2}
+.a{stroke:#2f78b7;stroke-width:5;fill:none;marker-end:url(#m)}
+.ag{stroke:#2a9d78;stroke-width:5;fill:none;marker-end:url(#g)}
+</style>
+<defs>
+<marker id="m" markerWidth="12" markerHeight="12" refX="10" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10z" fill="#2f78b7"/></marker>
+<marker id="g" markerWidth="12" markerHeight="12" refX="10" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10z" fill="#2a9d78"/></marker>
+</defs>
+
+<text x="70" y="68" class="t title">Trigger와 Function / Procedure는 무엇이 다를까?</text>
+<rect x="70" y="92" width="1260" height="58" rx="18" fill="#eaf5ff"/>
+<text x="700" y="129" text-anchor="middle" class="t sub">Trigger는 “언제 실행할까?”, Function / Procedure는 “무슨 일을 할까?”를 담당합니다</text>
+
+<rect x="65" y="220" width="220" height="125" rx="22" class="blue"/>
+<text x="175" y="264" text-anchor="middle" class="t h">Make</text>
+<text x="175" y="300" text-anchor="middle" class="t b">BATCH_RAW INSERT</text>
+<text x="175" y="326" text-anchor="middle" class="t s">원본 3개를 한 행에 저장</text>
+
+<path d="M285 282 L365 282" class="a"/>
+
+<rect x="365" y="205" width="260" height="155" rx="24" class="purple"/>
+<text x="495" y="250" text-anchor="middle" class="t h">raw_api_data</text>
+<text x="495" y="286" text-anchor="middle" class="t b">INSERT 이벤트 발생</text>
+<text x="495" y="317" text-anchor="middle" class="t s">새 행이 들어왔다는 사실</text>
+<text x="495" y="340" text-anchor="middle" class="t s">자체는 아직 정제 작업이 아님</text>
+
+<path d="M625 282 L705 282" class="ag"/>
+
+<rect x="705" y="190" width="250" height="185" rx="24" class="yellow"/>
+<text x="830" y="235" text-anchor="middle" class="t h">Trigger</text>
+<text x="830" y="273" text-anchor="middle" class="t b">자동 감지 + 자동 시작</text>
+<text x="830" y="310" text-anchor="middle" class="t s">AFTER INSERT</text>
+<text x="830" y="338" text-anchor="middle" class="t s">조건이 맞으면 DB가</text>
+<text x="830" y="360" text-anchor="middle" class="t s">다음 로직을 자동 호출</text>
+
+<path d="M955 282 L1035 282" class="ag"/>
+
+<rect x="1035" y="175" width="300" height="215" rx="24" class="green"/>
+<text x="1185" y="220" text-anchor="middle" class="t h">Function / Procedure</text>
+<text x="1185" y="257" text-anchor="middle" class="t b">DB 안에 저장된 작업 절차</text>
+<text x="1185" y="292" text-anchor="middle" class="t s">JSON 해체 · 타입 변환</text>
+<text x="1185" y="320" text-anchor="middle" class="t s">체류 + 소비 결합 · Upsert</text>
+<text x="1185" y="348" text-anchor="middle" class="t s">이번 실습은 Function 사용</text>
+<text x="1185" y="373" text-anchor="middle" class="t s">Procedure는 보통 CALL로 실행</text>
+
+<path d="M1185 390 L1185 475" class="a"/>
+
+<rect x="930" y="475" width="510" height="145" rx="24" class="blue"/>
+<text x="1185" y="515" text-anchor="middle" class="t h">정제 결과</text>
+<text x="1185" y="550" text-anchor="middle" class="t s">naver_trend → 검색 관심도 정제</text>
+<text x="1185" y="580" text-anchor="middle" class="t s">tourism_demand → 체류·소비 강도 결합</text>
+<text x="1185" y="607" text-anchor="middle" class="t s">raw_api_data → PROCESSED / ERROR 상태 기록</text>
+
+<rect x="70" y="465" width="725" height="155" rx="24" class="red"/>
+<text x="432" y="505" text-anchor="middle" class="t h">쉽게 비유하면</text>
+<text x="432" y="543" text-anchor="middle" class="t b">Trigger = 자동문 센서</text>
+<text x="432" y="573" text-anchor="middle" class="t s">사람이 오면 자동으로 작동을 시작합니다.</text>
+<text x="432" y="603" text-anchor="middle" class="t b">Function / Procedure = 안에서 실제 일을 하는 작업 절차</text>
+
+<rect x="180" y="680" width="1040" height="78" rx="22" class="yellow"/>
+<text x="700" y="711" text-anchor="middle" class="t b">기억할 한 문장: Trigger는 실행 시점을 자동화하고, Function / Procedure는 실제 처리 내용을 정의합니다.</text>
+<text x="700" y="741" text-anchor="middle" class="t s">이번 장: AFTER INSERT Trigger → process_naver_trend_raw() + process_tourism_demand_raw()</text>
+</svg>
