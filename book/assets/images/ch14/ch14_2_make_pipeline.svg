@@ -1,35 +1,70 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="800" viewBox="0 0 1400 800">
-<rect width="1400" height="800" fill="#ffffff"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="820" viewBox="0 0 1400 820">
+<rect width="1400" height="820" fill="#ffffff"/>
 <style>
 .t{font-family:Arial,'Noto Sans KR',sans-serif;fill:#16324f}
-.title{font-size:40px;font-weight:700}
-.sub{font-size:22px;font-weight:600}
-.h{font-size:23px;font-weight:700}
-.b{font-size:18px;font-weight:500}
-.s{font-size:15px;font-weight:500}
-.box{fill:#f7fbff;stroke:#7eb3df;stroke-width:2}
-.box2{fill:#f2fbf8;stroke:#6fc2a7;stroke-width:2}
-.box3{fill:#f8f4ff;stroke:#aa91df;stroke-width:2}
-.note{fill:#fff8df;stroke:#e7c75c;stroke-width:2}
-.arrow{stroke:#2f78b7;stroke-width:5;fill:none;marker-end:url(#a)}
-.arrow2{stroke:#2a9d78;stroke-width:5;fill:none;marker-end:url(#b)}
+.title{font-size:40px;font-weight:700}.sub{font-size:21px;font-weight:600}.h{font-size:22px;font-weight:700}.b{font-size:17px;font-weight:600}.s{font-size:14px;font-weight:500}
+.box{fill:#f7fbff;stroke:#7eb3df;stroke-width:2}.green{fill:#f2fbf8;stroke:#6fc2a7;stroke-width:2}.purple{fill:#f8f4ff;stroke:#aa91df;stroke-width:2}.warn{fill:#fff8df;stroke:#e7c75c;stroke-width:2}.red{fill:#fff3f3;stroke:#e59a9a;stroke-width:2}
+.a{stroke:#2f78b7;stroke-width:4;fill:none;marker-end:url(#m)}.ag{stroke:#2a9d78;stroke-width:4;fill:none;marker-end:url(#mg)}
 </style>
 <defs>
-<marker id="a" markerWidth="12" markerHeight="12" refX="10" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2f78b7"/></marker>
-<marker id="b" markerWidth="12" markerHeight="12" refX="10" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2a9d78"/></marker>
+<marker id="m" markerWidth="12" markerHeight="12" refX="10" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2f78b7"/></marker>
+<marker id="mg" markerWidth="12" markerHeight="12" refX="10" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2a9d78"/></marker>
 </defs>
-<text x="70" y="72" class="t title">Make 매일 수집 Pipeline</text>
-<rect x="70" y="98" width="1260" height="58" rx="20" fill="#eaf5ff"/>
-<text x="700" y="136" text-anchor="middle" class="t sub">매일 1회 수집하고 검증된 결과만 Supabase에 Upsert합니다</text>
-<rect x="80" y="260" width="170" height="105" rx="20" class="box2"/><text x="165" y="302" text-anchor="middle" class="t h">Scheduler</text><text x="165" y="337" text-anchor="middle" class="t s">매일 1회</text>
-<path d="M250 312 L310 312" class="arrow2"/>
-<rect x="310" y="220" width="200" height="185" rx="22" class="box"/><text x="410" y="260" text-anchor="middle" class="t h">HTTP APIs</text><text x="410" y="300" text-anchor="middle" class="t s">NAVER Trend</text><text x="410" y="330" text-anchor="middle" class="t s">관광공사</text><text x="410" y="360" text-anchor="middle" class="t s">NAVER Local</text>
-<path d="M510 312 L570 312" class="arrow"/>
-<rect x="570" y="245" width="190" height="135" rx="22" class="box"/><text x="665" y="288" text-anchor="middle" class="t h">검증</text><text x="665" y="325" text-anchor="middle" class="t s">필수 값 · 빈 응답</text><text x="665" y="352" text-anchor="middle" class="t s">기준일 · 상태코드</text>
-<path d="M760 312 L820 312" class="arrow2"/>
-<rect x="820" y="245" width="190" height="135" rx="22" class="box3"/><text x="915" y="288" text-anchor="middle" class="t h">Supabase</text><text x="915" y="325" text-anchor="middle" class="t s">Insert / Upsert</text><text x="915" y="352" text-anchor="middle" class="t s">중복 방지</text>
-<path d="M1010 312 L1070 312" class="arrow"/>
-<rect x="1070" y="220" width="240" height="185" rx="22" class="box2"/><text x="1190" y="260" text-anchor="middle" class="t h">AI API</text><text x="1190" y="300" text-anchor="middle" class="t s">검증된 값만 전달</text><text x="1190" y="330" text-anchor="middle" class="t s">지역별 요약·한계 생성</text><text x="1190" y="360" text-anchor="middle" class="t s">Supabase에 결과 저장</text>
-<path d="M1190 405 L1190 470 L700 470 L700 525" class="arrow2"/>
-<rect x="515" y="525" width="370" height="110" rx="22" class="box2"/><text x="700" y="567" text-anchor="middle" class="t h">collection_runs 기록</text><text x="700" y="602" text-anchor="middle" class="t s">SUCCESS / FAIL · row_count · 실행 시각</text>
-<rect x="330" y="680" width="740" height="60" rx="22" class="note"/><text x="700" y="718" text-anchor="middle" class="t b">실패한 응답을 저장하거나 AI 단계로 넘기지 않는 것이 핵심입니다.</text></svg>
+<text x="70" y="70" class="t title">Make 운영 전처리: 복잡도와 비용을 함께 선택</text>
+<rect x="70" y="95" width="1260" height="58" rx="18" fill="#eaf5ff"/>
+<text x="700" y="132" text-anchor="middle" class="t sub">pandas를 기본 전제로 두지 않고, 세 가지 경로를 상황에 맞게 선택합니다.</text>
+
+<rect x="70" y="245" width="210" height="110" rx="22" class="box"/>
+<text x="175" y="288" text-anchor="middle" class="t h">HTTP 응답</text>
+<text x="175" y="323" text-anchor="middle" class="t s">NAVER / 관광공사 JSON</text>
+
+<path d="M280 300 L360 300" class="a"/>
+
+<rect x="360" y="205" width="245" height="190" rx="24" class="box"/>
+<text x="482" y="245" text-anchor="middle" class="t h">경로 A</text>
+<text x="482" y="278" text-anchor="middle" class="t b">Make 기본 모듈</text>
+<text x="482" y="315" text-anchor="middle" class="t s">JSON Parse → Iterator</text>
+<text x="482" y="343" text-anchor="middle" class="t s">Router / Filter → Mapping</text>
+<text x="482" y="372" text-anchor="middle" class="t s">추가 AI 비용 없음</text>
+
+<rect x="665" y="205" width="245" height="190" rx="24" class="green"/>
+<text x="787" y="245" text-anchor="middle" class="t h">경로 B</text>
+<text x="787" y="278" text-anchor="middle" class="t b">AI 구조화</text>
+<text x="787" y="315" text-anchor="middle" class="t s">AI 모듈 1회</text>
+<text x="787" y="343" text-anchor="middle" class="t s">→ 표준 JSON → Iterator 1개</text>
+<text x="787" y="372" text-anchor="middle" class="t s">구조 단순 · 비용 발생 가능</text>
+
+<rect x="970" y="205" width="275" height="190" rx="24" class="purple"/>
+<text x="1107" y="245" text-anchor="middle" class="t h">경로 C</text>
+<text x="1107" y="278" text-anchor="middle" class="t b">Make Code + pandas</text>
+<text x="1107" y="315" text-anchor="middle" class="t s">Pro 이상 수업 환경에서</text>
+<text x="1107" y="343" text-anchor="middle" class="t s">pandas 동작 확인 시 선택</text>
+<text x="1107" y="372" text-anchor="middle" class="t s">학생 전체 기본 경로 아님</text>
+
+<path d="M482 395 L482 480" class="ag"/>
+<path d="M787 395 L787 480" class="ag"/>
+<path d="M1107 395 L1107 480" class="ag"/>
+
+<rect x="480" y="480" width="630" height="100" rx="24" class="purple"/>
+<text x="795" y="521" text-anchor="middle" class="t h">Supabase Upsert</text>
+<text x="795" y="554" text-anchor="middle" class="t s">원본 샘플과 값 비교 · 필수 필드 검증 · 중복 Key 확인</text>
+
+<path d="M795 580 L795 630" class="ag"/>
+
+<rect x="570" y="630" width="450" height="90" rx="22" class="green"/>
+<text x="795" y="667" text-anchor="middle" class="t h">AI 지역 분석 요약</text>
+<text x="795" y="698" text-anchor="middle" class="t s">전처리 AI와 별도 역할 · 검증된 DB 데이터만 설명</text>
+
+<rect x="85" y="470" width="310" height="120" rx="22" class="warn"/>
+<text x="240" y="510" text-anchor="middle" class="t b">복잡도 판단 기준</text>
+<text x="240" y="542" text-anchor="middle" class="t s">Iterator 1개 정도 → 경로 A</text>
+<text x="240" y="570" text-anchor="middle" class="t s">Iterator 2개+ / 다중 Router → 경로 B 고려</text>
+
+<rect x="1040" y="470" width="290" height="120" rx="22" class="red"/>
+<text x="1185" y="510" text-anchor="middle" class="t b">AI 비용 주의</text>
+<text x="1185" y="542" text-anchor="middle" class="t s">Iterator 안에서 AI 호출 금지</text>
+<text x="1185" y="570" text-anchor="middle" class="t s">가능하면 실행당 1회만 호출</text>
+
+<rect x="260" y="755" width="880" height="48" rx="18" class="warn"/>
+<text x="700" y="786" text-anchor="middle" class="t b">편한 구조와 낮은 비용은 같은 목표가 아닙니다. 수업에서는 둘의 Trade-off를 직접 비교합니다.</text>
+</svg>
